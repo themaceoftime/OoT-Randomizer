@@ -109,6 +109,10 @@ DPAD_TEXTURE:
 .incbin("../resources/dpad.bin")
 TRIFORCE_ICON_TEXTURE:
 .incbin("../resources/triforce_sprite.bin")
+CHEST_FRONT_TEXTURE:
+.incbin("../resources/chest_front.bin")
+CHEST_BASE_TEXTURE:
+.incbin("../resources/chest_base.bin")
 
 .align 0x10
 PAYLOAD_END:
