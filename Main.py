@@ -280,7 +280,7 @@ def patch_and_output(settings, window, spoiler, rom):
             filename = '%s.z64' % outfilebase
         output_path = os.path.join(output_dir, filename)
         rom.write_to_file(output_path)
-        if settings.compress_rom == 'True':
+        if settings.compress_rom == 'True' or settings.compress_rom == 'Wad':
             window.update_status('Compressing ROM')
             logger.info('Compressing ROM.')
 
@@ -310,6 +310,32 @@ def patch_and_output(settings, window, spoiler, rom):
                 run_process(window, logger, [compressor_path, output_path, output_compress_path])
             os.remove(output_path)
             logger.info("Created compressed rom at: %s" % output_compress_path)
+            if settings.compress_rom == 'Wad':
+                window.update_progress(90)
+                wadpath = settings.wad_file
+                if wadpath == "" or wadpath == None:
+                    raise Exception("Unspecified wad file")
+                if not os.path.isfile(wadpath):
+                    raise Exception("Cannot open wad file")
+                if platform.system() == 'Windows':
+                    gzinject_path = 'gzinject\\gzinject.exe'
+                elif platform.system() == 'Linux':
+                    gzinject_path = './gzinject/gzinject'
+                elif platform.system() == 'Darwin':
+                    gzinject_path = './gzinject/gzinject.out'
+
+                channel_title = settings.wad_channel_title if settings.wad_channel_title != "" and settings.wad_channel_title != None else "OoTRandomizer"
+                channel_id = settings.wad_channel_id if settings.wad_channel_id != "" and settings.wad_channel_id != None else "OOTE"
+
+                
+                window.update_status('Generated Wad')
+                run_process(window, logger,[gzinject_path, "-a","genkey"], b'45e')
+                logger.info("Common Key Generated")
+                run_process(window, logger,[gzinject_path, "-a","inject", "--rom", output_compress_path, "--wad", wadpath, "-o",os.path.join(output_dir, '%s.wad' % output_compress_path.split('.')[0].split('/')[-1]), "-i", channel_id, "-t", channel_title])
+                logger.info("Wad Generated")
+                os.remove(os.path.join(output_dir, output_compress_path))
+                os.remove("common-key.bin")
+
         else:
             logger.info("Created uncompressed rom at: %s" % output_path)
         window.update_progress(95)
@@ -394,7 +420,7 @@ def from_patch_file(settings, window=dummy_window()):
     window.update_status('Saving Uncompressed ROM')
     uncompressed_output_path = output_path + '.z64'
     rom.write_to_file(uncompressed_output_path)
-    if settings.compress_rom == 'True':
+    if settings.compress_rom == 'True' or settings.compress_rom == 'Wad':
         window.update_status('Compressing ROM')
         logger.info('Compressing ROM.')
 
@@ -420,6 +446,30 @@ def from_patch_file(settings, window=dummy_window()):
         if compressor_path != "":
             run_process(window, logger, [compressor_path, uncompressed_output_path, output_compress_path])
         os.remove(uncompressed_output_path)
+        if settings.compress_rom == 'Wad':
+                window.update_progress(90)
+                wadpath = settings.wad_file
+                if wadpath == "" or wadpath == None:
+                    raise Exception("Unspecified wad file")
+                if not os.path.isfile(wadpath):
+                    raise Exception("Cannot open wad file")
+                if platform.system() == 'Windows':
+                    gzinject_path = 'gzinject\\gzinject.exe'
+                elif platform.system() == 'Linux':
+                    gzinject_path = './gzinject/gzinject'
+                elif platform.system() == 'Darwin':
+                    gzinject_path = './gzinject/gzinject.out'
+
+                channel_title = settings.wad_channel_title if settings.wad_channel_title != "" and settings.wad_channel_title != None else "OoTRandomizer"
+                channel_id = settings.wad_channel_id if settings.wad_channel_id != "" and settings.wad_channel_id != None else "OOTE"
+                
+                window.update_status('Generated Wad')
+                run_process(window, logger,[gzinject_path, "-a","genkey"], b'45e')
+                logger.info("Common Key Generated")
+                run_process(window, logger,[gzinject_path, "-a","inject", "--rom", output_compress_path, "--wad", wadpath, "-o",os.path.join(output_dir, '%s.wad' % output_compress_path.split('.')[0].split('/')[-1]), "-i", channel_id, "-t", channel_title])
+                logger.info("Wad Generated")
+                os.remove(os.path.join(output_dir, output_compress_path))
+                os.remove("common-key.bin")
         logger.info("Created compressed rom at: %s" % output_compress_path)
     else:
         logger.info("Created uncompressed rom at: %s" % output_path)
@@ -522,21 +572,24 @@ def cosmetic_patch(settings, window=dummy_window()):
     return True
 
 
-def run_process(window, logger, args):
-    process = subprocess.Popen(args, **subprocess_args(True))
+def run_process(window, logger, args, stdin=None):
+    process = subprocess.Popen(args, bufsize=1, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
     filecount = None
-    while True:
-        line = process.stdout.readline()
-        if line != b'':
-            find_index = line.find(b'files remaining')
-            if find_index > -1:
-                files = int(line[:find_index].strip())
-                if filecount == None:
-                    filecount = files
-                window.update_progress(65 + 30*(1 - files/filecount))
-            logger.info(line.decode('utf-8').strip('\n'))
-        else:
-            break
+    if stdin is not None:
+        process.communicate(input=stdin)
+    else:
+        while True:
+            line = process.stdout.readline()
+            if line != b'':
+                find_index = line.find(b'files remaining')
+                if find_index > -1:
+                    files = int(line[:find_index].strip())
+                    if filecount == None:
+                        filecount = files
+                    window.update_progress(65 + 30*(1 - files/filecount))
+                logger.info(line.decode('utf-8').strip('\n'))
+            else:
+                break
 
 
 def copy_worlds(worlds):

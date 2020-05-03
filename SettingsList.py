@@ -1938,6 +1938,7 @@ setting_infos = [
         gui_type       = "Radiobutton",
         shared         = False,
         choices        = {
+            'Wad':  'Wad File [Stable]',
             'True':  'Compressed [Stable]',
             'False': 'Uncompressed [Crashes]',
             'Patch': 'Patch File',
@@ -1945,8 +1946,10 @@ setting_infos = [
         },
         default        = 'True',
         disable        = {
-            'None'  : {'settings' : ['player_num', 'create_cosmetics_log', 'enable_cosmetic_file', 'cosmetic_file', 'rom']},
-            'Patch' : {'settings' : ['player_num']}
+            'None'  : {'settings' : ['player_num', 'create_cosmetics_log', 'enable_cosmetic_file', 'cosmetic_file', 'rom', 'wad_file', 'wad_channel_title', 'wad_channel_id']},
+            'Patch' : {'settings' : ['player_num', 'wad_file', 'wad_channel_title', 'wad_channel_id']},
+            'False' : {'settings' : ['player_num', 'wad_file', 'wad_channel_title', 'wad_channel_id']},
+            'True' : {'settings' : ['wad_file', 'wad_channel_title', 'wad_channel_id']},
         },
         gui_tooltip = '''\
             The first time compressed generation will take a while,
@@ -1956,10 +1959,68 @@ setting_infos = [
 
             Patch files are used to send the patched data to other
             people without sending the ROM file.
+
+            Wad files are used to play on Wii Virtual Console or Dolphin Emulator
         ''',
         gui_params={
             'horizontal': True
         },
+    ),
+    Setting_Info(
+        name        = 'wad_file',
+        type        = str,
+        gui_text    = "WAD File",
+        gui_type    = "Fileinput",
+        shared      = False,
+        choices     = {},
+        gui_tooltip = "Your original OoT 1.2 NTSC-U / NTSC-J WAD file (.wad)",
+        gui_params  = {
+            "file_types": [
+                {
+                  "name": "WAD Files",
+                  "extensions": [ "wad" ]
+                },
+                {
+                  "name": "All Files",
+                  "extensions": [ "*" ]
+                }
+            ],
+            "hide_when_disabled": True,
+        }
+    ),
+    Setting_Info(
+        name        = 'wad_channel_id',
+        type        = str,
+        gui_text    = "WAD Channel ID",
+        gui_type    = "Textinput",
+        shared      = False,
+        choices     = {},
+        default     = "OOTE",
+        gui_tooltip = """\
+            4 characters, should end with E to ensure Dolphin compatibility.
+            Note: If you have multiple OoTR WAD files with different Channel IDs installed, the game can crash on a soft reset. Use a Title Deleter to remove old WADs.
+        """,
+        gui_params  = {
+            "size"               : "small",
+            "max_length"         : 4,
+            "no_line_break"      : True,
+            "hide_when_disabled" : True,
+        }
+    ),
+    Setting_Info(
+        name        = 'wad_channel_title',
+        type        = str,
+        gui_text    = "WAD Channel Title",
+        gui_type    = "Textinput",
+        shared      = False,
+        choices     = {},
+        default     = "OoTRandomizer",
+        gui_tooltip = "20 characters max",
+        gui_params  = {
+            "size"               : "medium",
+            "max_length"         : 20,
+            "hide_when_disabled" : True,
+        }
     ),
     Checkbutton(
         name           = 'randomize_settings',
