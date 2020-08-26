@@ -2249,19 +2249,35 @@ setting_infos = [
         gui_params     = {
             'randomize_key': 'randomize_settings',
         },
-    ), 
-    Checkbutton(
+    ),
+    Combobox(
         name           = 'mix_entrance_pools',
         gui_text       = 'Mix Entrance Pools',
+        default        = 'off',
+        choices        = {
+            'off':       'Off',
+            'non-ow':    'Non-Overworld',
+            'all':       'All Entrances',
+        },
         gui_tooltip    = '''\
+            'Non-Overworld':
+            Shuffle all interior entrances into a single mixed pool.
+            This means any shuffled entrance could lead to any type
+            of area: Dungeon, Grotto, or Interior. Overworld
+            entrances are kept in a separate pool if randomized.
+    
+            'All Entrances':
             Shuffle all entrances into a single mixed pool.
             This means any shuffled entrance could lead to any type 
             of area: Dungeon, Grotto, Interior or Overworld.
         ''',
-        default        = False,
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
+            'distribution':  [
+                ('off', 1),
+                ('on', 1),
+            ],
         },
     ),
     Checkbutton(
