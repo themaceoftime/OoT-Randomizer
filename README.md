@@ -121,10 +121,17 @@ player.
 * New cosmetic setting `Item Model Colors Match Cosmetics`
   * Freestanding models like heart containers, gauntlets, and heart/magic drops will match their respective color settings.
   * Tunics are not affected, in order to keep freestanding tunics recognizable.
+* New "Hint Distribution" customization options
+  * Old hardcoded hint distributions are now defined by json files in `data/Hints`.
+  * Custom hint distributions can be added to this folder, or defined directly in Plando files.
+  * Many locations that did not previously have item hints now have hints, in case a custom hint distribution makes use of them.
 * Added options to `Background Music` and `Fanfares` for randomly selecting only from [custom music](https://wiki.ootrandomizer.com/index.php?title=Readme#Custom_Music_and_Fanfares).
 * Tricks can be filtered in the GUI using a new dropdown.
 
 #### Bug Fixes
+* Bunny Hood speed bonus now applies correctly in cases other than child running at full speed.
+* Avoid crashing on some systems when using child items as adult.
+* Ensure Ice Traps have valid models if they can be seen.
 * Limit Kokiri Tunic RGB values in Glitched Logic to prevent Weirdshot crashes.
 * Prevent an errant `@` from showing up in Triforce Hunt.
 * Allow playthrough to collect a second 'Bottle with Letter' as its first empty bottle.
@@ -148,6 +155,7 @@ player.
 * The number of Triforces available in Triforce Hunt now rounds to the nearest whole number instead of the nearest whole **even** number.
 * Performance improvements to seed generation.
 * Updated development n64 compilation process to use latest available toolchain.
+* Changed some C code to support GCC 10 in development n64 compilation.
 * Added decompressor source and updated Decompress binaries.
 * OoTRandomizer.py returns an error code on failure to interact better with user scripting.
 * Plandomizer distribution files are copied to the Output directory next to the Spoiler and Cosmetics logs.
