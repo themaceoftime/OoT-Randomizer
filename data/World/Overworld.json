@@ -117,14 +117,14 @@
             #Entrance rando cannot rely on this for the case forest completion was done on non
             #repeatable access.
             "Deku Baba Sticks": "(is_adult and not entrance_shuffle) or Kokiri_Sword or Boomerang",
-            "Deku Baba Nuts": "
-                (is_adult and not entrance_shuffle) or Slingshot or Sticks or 
-                has_explosives or Kokiri_Sword or can_use(Dins_Fire)",
+            "Deku Baba Nuts": "is_adult and not entrance_shuffle",
             "KF Deku Tree Gossip Stone (Left)": "True",
             "KF Deku Tree Gossip Stone (Right)": "True"
         },
         "exits": {
-            "Deku Tree Lobby": "is_child or (shuffle_dungeon_entrances and 'Showed Mido Sword & Shield')",
+            "Deku Tree Lobby": "
+                is_child or
+                (shuffle_dungeon_entrances and (open_forest == 'open' or 'Showed Mido Sword & Shield'))",
             "Kokiri Forest": "is_adult or open_forest == 'open' or 'Showed Mido Sword & Shield'"
         }
     },
