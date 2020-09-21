@@ -1002,7 +1002,7 @@
                     (is_adult or at_day or Slingshot or has_bombchus or 
                         (logic_kakariko_tower_gs and (Sticks or Kokiri_Sword) and
                             (damage_multiplier != 'ohko' or Fairy or can_use(Nayrus_Love)))))",
-            "Kak Backyard": "is_adult and at_day",
+            "Kak Backyard": "is_adult or at_day",
             "Graveyard": "True",
             "Kak Behind Gate": "is_adult or 'Kakariko Village Gate Open'"
         }
