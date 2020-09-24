@@ -295,6 +295,26 @@ def get_start_button_color_options():
     return meta_color_choices + get_start_button_colors()
 
 
+def contrast_ratio(color1, color2):
+    # Based on accessibility standards (WCAG 2.0)
+    lum1 = relative_luminance(color1)
+    lum2 = relative_luminance(color2)
+    return (max(lum1, lum2) + 0.05) / (min(lum1, lum2) + 0.05)
+
+
+def relative_luminance(color):
+    color_ratios = list(map(lum_color_ratio, color))
+    return color_ratios[0] * 0.299 + color_ratios[1] * 0.587 + color_ratios[2] * 0.114
+
+
+def lum_color_ratio(val):
+    val /= 255
+    if val <= 0.03928:
+        return val / 12.92
+    else:
+        return pow((val + 0.055) / 1.055, 2.4)
+
+
 def patch_targeting(rom, settings, log, symbols):
     # Set default targeting option to Hold
     if settings.default_targeting == 'hold':
@@ -647,7 +667,11 @@ def patch_button_colors(rom, settings, log, symbols):
             button_option = random.choice(list(button_colors.keys()))
         # handle completely random
         if button_option == 'Completely Random':
-            color = [random.getrandbits(8), random.getrandbits(8), random.getrandbits(8)]
+            fixed_font_color = [10, 10, 10]
+            color = [0, 0, 0]
+            # Avoid colors which have a low contrast with the font inside buttons (eg. the A letter)
+            while contrast_ratio(color, fixed_font_color) <= 3:
+                color = [random.getrandbits(8), random.getrandbits(8), random.getrandbits(8)]
         # grab the color from the list
         elif button_option in button_colors:
             color_set = [button_colors[button_option]] if isinstance(button_colors[button_option][0], int) else list(button_colors[button_option])
