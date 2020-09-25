@@ -885,6 +885,15 @@ skip_GS_BGS_text:
     jal     fishing_bite_when_stable
     lwc1    f10, 0x0198(s0)
 
+; Prevent fish from losing interest seemingly randomly
+; Replaces: sh      v0, 0x0148(s0)
+;           swc1    f20, 0x0180(s0)
+;           swc1    f10, 0x0184(s0)
+.orga 0xDC6300
+    nop
+    nop
+    nop
+
 ; Remove most fish loss branches
 .orga 0xDC87A0
     nop
