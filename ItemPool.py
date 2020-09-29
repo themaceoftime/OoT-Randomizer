@@ -1042,6 +1042,8 @@ def get_pool_core(world):
             placed_items['TH South 2F Blue Jail Gerudo Key'] = 'Recovery Heart'
         else:
             pool.extend(['Small Key (Thieves Hideout)'] * 4)
+        if world.item_pool_value == 'plentiful':
+            pending_junk_pool.append('Small Key (Thieves Hideout)')
     else:
         if world.gerudo_fortress == 'fast':
             placed_items['TH North 1F Red Jail Gerudo Key'] = 'Small Key (Thieves Hideout)'
@@ -1061,6 +1063,28 @@ def get_pool_core(world):
         placed_items['TH Gerudo Membership Card'] = 'Ice Trap'
     else:
         placed_items['TH Gerudo Membership Card'] = 'Gerudo Membership Card'
+    if world.shuffle_gerudo_card and world.item_pool_value == 'plentiful':
+        pending_junk_pool.append('Gerudo Membership Card')
+
+    if world.item_pool_value == 'plentiful' and world.shuffle_smallkeys == 'keysanity':
+        pending_junk_pool.append('Small Key (Bottom of the Well)')
+        pending_junk_pool.append('Small Key (Forest Temple)')
+        pending_junk_pool.append('Small Key (Fire Temple)')
+        pending_junk_pool.append('Small Key (Water Temple)')
+        pending_junk_pool.append('Small Key (Shadow Temple)')
+        pending_junk_pool.append('Small Key (Spirit Temple)')
+        pending_junk_pool.append('Small Key (Gerudo Training Grounds)')
+        pending_junk_pool.append('Small Key (Ganons Castle)')
+
+    if world.item_pool_value == 'plentiful' and world.shuffle_bosskeys == 'keysanity':
+        pending_junk_pool.append('Boss Key (Forest Temple)')
+        pending_junk_pool.append('Boss Key (Fire Temple)')
+        pending_junk_pool.append('Boss Key (Water Temple)')
+        pending_junk_pool.append('Boss Key (Shadow Temple)')
+        pending_junk_pool.append('Boss Key (Spirit Temple)')
+
+    if world.item_pool_value == 'plentiful' and world.shuffle_ganon_bosskey == 'keysanity':
+        pending_junk_pool.append('Boss Key (Ganons Castle)')
 
     if world.shopsanity == 'off':
         placed_items.update(vanilla_shop_items)
