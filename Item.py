@@ -90,7 +90,7 @@ class Item(object):
 
     @property
     def smallkey(self):
-        return self.type == 'SmallKey' or self.type == 'FortressSmallKey'
+        return self.type == 'SmallKey' or self.type == 'HideoutSmallKey'
 
 
     @property

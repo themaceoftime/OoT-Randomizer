@@ -63,7 +63,7 @@ class Region(object):
         is_dungeon_restricted = False
         if item.map or item.compass:
             is_dungeon_restricted = self.world.shuffle_mapcompass in ['dungeon', 'vanilla']
-        elif item.smallkey and item.type != 'FortressSmallKey':
+        elif item.smallkey and item.type != 'HideoutSmallKey':
             is_dungeon_restricted = self.world.shuffle_smallkeys in ['dungeon', 'vanilla']
         elif item.bosskey and not item.name.endswith('(Ganons Castle)'):
             is_dungeon_restricted = self.world.shuffle_bosskeys in ['dungeon', 'vanilla']

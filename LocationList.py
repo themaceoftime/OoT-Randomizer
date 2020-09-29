@@ -16,6 +16,7 @@ def shop_address(shop_id, shelf_id):
 #       LW      Lost Woods
 #       OGC     Outside Ganon's Castle
 #       SFM     Sacred Forest Meadow
+#       TH      Thieves' Hideout
 #       ToT     Temple of Time
 #       ZD      Zora's Domain
 #       ZF      Zora's Fountain
@@ -114,7 +115,7 @@ location_table = {
     "GC Rolling Goron as Child":                       ("NPC",         0x62,  0x34, None,                     ("Goron City",)),
     "LH Underwater Item":                              ("NPC",         0x57,  0x15, None,                     ("Lake Hylia",)),
     "LH Sun":                                          ("NPC",         0x57,  0x58, None,                     ("Lake Hylia",)),
-    "GF Gerudo Membership Card":                       ("NPC",         0x0C,  0x3A, None,                     ("Gerudo's Fortress", "Gerudo",)),
+    "TH Gerudo Membership Card":                       ("NPC",         0x0C,  0x3A, None,                     ("Thieves' Hideout", "Gerudo",)),
     "HF Ocarina of Time Item":                         ("NPC",         0x51,  0x0C, None,                     ("Hyrule Field", "Need Spiritual Stones",)),
     "Wasteland Bombchu Salesman":                      ("NPC",         None,  None, None,                     ("Haunted Wasteland",)),
 
@@ -137,10 +138,10 @@ location_table = {
     "DMC Wall Freestanding PoH":                       ("Collectable", 0x61,  0x02, None,                     ("Death Mountain Crater", "Death Mountain",)),
     "DMC Volcano Freestanding PoH":                    ("Collectable", 0x61,  0x08, None,                     ("Death Mountain Crater", "Death Mountain",)),
     "GC Pot Freestanding PoH":                         ("Collectable", 0x62,  0x1F, None,                     ("Goron City", "Goron City",)),
-    "GF North F1 Carpenter":                           ("Collectable", 0x0C,  0x0C, None,                     ("Gerudo's Fortress", "Gerudo",)),
-    "GF North F2 Carpenter":                           ("Collectable", 0x0C,  0x0A, None,                     ("Gerudo's Fortress", "Gerudo",)),
-    "GF South F1 Carpenter":                           ("Collectable", 0x0C,  0x0E, None,                     ("Gerudo's Fortress", "Gerudo",)),
-    "GF South F2 Carpenter":                           ("Collectable", 0x0C,  0x0F, None,                     ("Gerudo's Fortress", "Gerudo",)),
+    "TH North 1F Red Jail Gerudo Key":                 ("Collectable", 0x0C,  0x0C, None,                     ("Thieves' Hideout", "Gerudo",)),
+    "TH North 2F Green Jail Gerudo Key":               ("Collectable", 0x0C,  0x0A, None,                     ("Thieves' Hideout", "Gerudo",)),
+    "TH South 1F Olive Jail Gerudo Key":               ("Collectable", 0x0C,  0x0E, None,                     ("Thieves' Hideout", "Gerudo",)),
+    "TH South 2F Blue Jail Gerudo Key":                ("Collectable", 0x0C,  0x0F, None,                     ("Thieves' Hideout", "Gerudo",)),
 
     "Pierre":                                          ("Event",       None,  None, None,                     None),
     "Deliver Ruto's Letter":                           ("Event",       None,  None, None,                     None),
