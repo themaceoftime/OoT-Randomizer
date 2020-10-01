@@ -3009,11 +3009,12 @@ setting_infos = [
         gui_tooltip    = HintDistTips(),
         shared         = True,
         disable        = {
-            'balanced'     : {'settings' : ['bingosync_url']},
-            'strong'       : {'settings' : ['bingosync_url']},
-            'tournament'   : {'settings' : ['bingosync_url']},
-            'useless'      : {'settings' : ['bingosync_url']},
-            'very_strong'  : {'settings' : ['bingosync_url']}
+            'balanced'      : {'settings' : ['bingosync_url']},
+            'strong'        : {'settings' : ['bingosync_url']},
+            'tournament'    : {'settings' : ['bingosync_url']},
+            'tournament_s3' : {'settings' : ['bingosync_url']},
+            'useless'       : {'settings' : ['bingosync_url']},
+            'very_strong'   : {'settings' : ['bingosync_url']},
         },
     ),
     Setting_Info(
