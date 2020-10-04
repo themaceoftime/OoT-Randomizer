@@ -13,9 +13,6 @@
           "settings": [
             "rom",
             "output_dir",
-            "wad_file",
-            "wad_channel_title",
-            "wad_channel_id",
             "enable_distribution_file",
             "enable_cosmetic_file",
             "distribution_file",
@@ -24,6 +21,9 @@
             "create_spoiler",
             "create_cosmetics_log",
             "compress_rom",
+            "wad_file",
+            "wad_channel_title",
+            "wad_channel_id",
             "open_output_dir",
             "open_python_dir"
           ]

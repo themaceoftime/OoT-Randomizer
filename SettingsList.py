@@ -1938,18 +1938,19 @@ setting_infos = [
         gui_type       = "Radiobutton",
         shared         = False,
         choices        = {
-            'Wad':  'Wad File [Stable]',
-            'True':  'Compressed [Stable]',
-            'False': 'Uncompressed [Crashes]',
+            'WAD':   'WAD File',
+            'True':  'Compressed ROM',
+            'False': 'Uncompressed ROM [Crashes]',
             'Patch': 'Patch File',
             'None':  'No Output',
         },
         default        = 'True',
         disable        = {
-            'None'  : {'settings' : ['player_num', 'create_cosmetics_log', 'enable_cosmetic_file', 'cosmetic_file', 'rom', 'wad_file', 'wad_channel_title', 'wad_channel_id']},
-            'Patch' : {'settings' : ['player_num', 'wad_file', 'wad_channel_title', 'wad_channel_id']},
-            'False' : {'settings' : ['player_num', 'wad_file', 'wad_channel_title', 'wad_channel_id']},
-            'True' : {'settings' : ['wad_file', 'wad_channel_title', 'wad_channel_id']},
+            'None':  {'settings' : ['player_num', 'create_cosmetics_log', 'enable_cosmetic_file', 'cosmetic_file', 'rom']},
+            'Patch': {'settings' : ['player_num']},
+            'False': {'settings' : ['player_num']},
+            '!WAD':  {'settings' : ['wad_file', 'wad_channel_title', 'wad_channel_id']},
+
         },
         gui_tooltip = '''\
             The first time compressed generation will take a while,
@@ -2003,7 +2004,6 @@ setting_infos = [
         gui_params  = {
             "size"               : "small",
             "max_length"         : 4,
-            "no_line_break"      : True,
             "hide_when_disabled" : True,
         }
     ),
@@ -2019,6 +2019,7 @@ setting_infos = [
         gui_params  = {
             "size"               : "medium",
             "max_length"         : 20,
+            "no_line_break": True,
             "hide_when_disabled" : True,
         }
     ),

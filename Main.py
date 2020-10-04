@@ -280,7 +280,7 @@ def patch_and_output(settings, window, spoiler, rom):
             filename = '%s.z64' % outfilebase
         output_path = os.path.join(output_dir, filename)
         rom.write_to_file(output_path)
-        if settings.compress_rom == 'True' or settings.compress_rom == 'Wad':
+        if settings.compress_rom == 'True' or settings.compress_rom == 'WAD':
             window.update_status('Compressing ROM')
             logger.info('Compressing ROM.')
 
@@ -310,7 +310,7 @@ def patch_and_output(settings, window, spoiler, rom):
                 run_process(window, logger, [compressor_path, output_path, output_compress_path])
             os.remove(output_path)
             logger.info("Created compressed rom at: %s" % output_compress_path)
-            if settings.compress_rom == 'Wad':
+            if settings.compress_rom == 'WAD':
                 window.update_progress(90)
                 wadpath = settings.wad_file
                 if wadpath == "" or wadpath == None:
@@ -420,7 +420,7 @@ def from_patch_file(settings, window=dummy_window()):
     window.update_status('Saving Uncompressed ROM')
     uncompressed_output_path = output_path + '.z64'
     rom.write_to_file(uncompressed_output_path)
-    if settings.compress_rom == 'True' or settings.compress_rom == 'Wad':
+    if settings.compress_rom == 'True' or settings.compress_rom == 'WAD':
         window.update_status('Compressing ROM')
         logger.info('Compressing ROM.')
 
@@ -446,7 +446,7 @@ def from_patch_file(settings, window=dummy_window()):
         if compressor_path != "":
             run_process(window, logger, [compressor_path, uncompressed_output_path, output_compress_path])
         os.remove(uncompressed_output_path)
-        if settings.compress_rom == 'Wad':
+        if settings.compress_rom == 'WAD':
                 window.update_progress(90)
                 wadpath = settings.wad_file
                 if wadpath == "" or wadpath == None:
