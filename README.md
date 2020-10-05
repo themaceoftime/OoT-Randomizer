@@ -15,6 +15,7 @@ Differences between this branch and the main Dev branch (on [Testrunner's Fork](
 * New Inventory/Equipment/Status Icons Display in File Select from [rlbond86's Menu Icons Branch](https://github.com/rlbond86/OoT-Randomizer/tree/menu_icons)
 * The Adult Temple of Time Altar provides additional information on Rainbow Bridge requirements as well as the location of Ganon's Castle Boss Key, always available under any settings.
 * Various gameplay fixes and QoL improvements, including fast Rock/Block lifting, from [Fig's QoL Branch](https://github.com/fig02/OoT-Randomizer/tree/qol)
+* Many new Cosmetic color options, including Rainbow Navi, Boomerang/Bombchu trails and Mirror Shield frame.
 
 ## Index
 

@@ -2,8 +2,9 @@ import argparse
 import re
 import math
 import json
-from Cosmetics import get_tunic_color_options, get_navi_color_options, get_sword_color_options,\
-    get_gauntlet_color_options, get_magic_color_options, get_heart_color_options, get_a_button_color_options,\
+from Cosmetics import get_tunic_color_options, get_navi_color_options, get_sword_trail_color_options, \
+    get_bombchu_trail_color_options, get_boomerang_trail_color_options, get_gauntlet_color_options, \
+    get_magic_color_options, get_heart_color_options, get_shield_frame_color_options, get_a_button_color_options, \
     get_b_button_color_options, get_c_button_color_options, get_start_button_color_options
 from Location import LocationIterator
 import Sounds as sfx
@@ -3321,7 +3322,7 @@ setting_infos = [
         ''',
         default        = False,
         disable    = {
-            True : {'sections' : [ "equipment_section", "ui_section", "navi_section" ]
+            True : {'sections' : [ "equipment_color_section", "ui_color_section", "misc_color_section" ]
             }
         }
     ),
@@ -3403,6 +3404,7 @@ setting_infos = [
             color from this list of colors.
             'Completely Random': Choose a random
             color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
         ''',
         gui_params     = {
             'no_line_break' : True,
@@ -3412,7 +3414,7 @@ setting_infos = [
             ]
         }
     ),
-        Setting_Info(
+    Setting_Info(
         name           = 'navi_color_default_outer',
         type           = str,
         gui_text       = "Outer",
@@ -3425,6 +3427,7 @@ setting_infos = [
             color from this list of colors.
             'Completely Random': Choose a random
             color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
         ''',
         gui_params     = {
             'randomize_key': 'randomize_all_cosmetics',
@@ -3447,6 +3450,7 @@ setting_infos = [
             color from this list of colors.
             'Completely Random': Choose a random
             color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
         ''',
         gui_params     = {
             'no_line_break' : True,
@@ -3470,6 +3474,7 @@ setting_infos = [
             color from this list of colors.
             'Completely Random': Choose a random
             color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
         ''',
         gui_params     = {
             'randomize_key': 'randomize_all_cosmetics',
@@ -3492,6 +3497,7 @@ setting_infos = [
             color from this list of colors.
             'Completely Random': Choose a random
             color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
         ''',
         gui_params     = {
             'no_line_break' : True,
@@ -3515,6 +3521,7 @@ setting_infos = [
             color from this list of colors.
             'Completely Random': Choose a random
             color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
         ''',
         gui_params     = {
             'randomize_key': 'randomize_all_cosmetics',
@@ -3537,6 +3544,7 @@ setting_infos = [
             color from this list of colors.
             'Completely Random': Choose a random
             color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
         ''',
         gui_params     = {
             'no_line_break' : True,
@@ -3560,6 +3568,148 @@ setting_infos = [
             color from this list of colors.
             'Completely Random': Choose a random
             color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+
+    ),
+    Setting_Info(
+        name           = 'bombchu_trail_color_inner',
+        type           = str,
+        gui_text       = 'Bombchu Trail Inner',
+        gui_type       = "Combobox",
+        shared         = False,
+        choices        = get_bombchu_trail_color_options(),
+        default        = 'Red',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'no_line_break' : True,
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+
+    ),
+    Setting_Info(
+        name           = 'bombchu_trail_color_outer',
+        type           = str,
+        gui_text       = 'Outer',
+        gui_type       = "Combobox",
+        shared         = False,
+        choices        = get_bombchu_trail_color_options(True),
+        default        = '[Same as Inner]',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+
+    ),
+    Setting_Info(
+        name           = 'boomerang_trail_color_inner',
+        type           = str,
+        gui_text       = 'Boomerang Trail Inner',
+        gui_type       = "Combobox",
+        shared         = False,
+        choices        = get_boomerang_trail_color_options(),
+        default        = 'Yellow',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'no_line_break' : True,
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+
+    ),
+    Setting_Info(
+        name           = 'boomerang_trail_color_outer',
+        type           = str,
+        gui_text       = 'Outer',
+        gui_type       = "Combobox",
+        shared         = False,
+        choices        = get_boomerang_trail_color_options(True),
+        default        = '[Same as Inner]',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+
+    ),
+    Setting_Info(
+        name           = 'sword_trail_color_inner',
+        type           = str,
+        gui_text       = 'Sword Trail Inner',
+        gui_type       = "Combobox",
+        shared         = False,
+        choices        = get_sword_trail_color_options(),
+        default        = 'White',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'no_line_break' : True,
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+
+    ),
+    Setting_Info(
+        name           = 'sword_trail_color_outer',
+        type           = str,
+        gui_text       = 'Outer',
+        gui_type       = "Combobox",
+        shared         = False,
+        choices        = get_sword_trail_color_options(True),
+        default        = '[Same as Inner]',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
         ''',
         gui_params     = {
             'randomize_key': 'randomize_all_cosmetics',
@@ -3593,52 +3743,6 @@ setting_infos = [
         }
     ),
     Setting_Info(
-        name           = 'sword_trail_color_inner',
-        type           = str,
-        gui_text       = 'Sword Trail Inner Color',
-        gui_type       = "Combobox",
-        shared         = False,
-        choices        = get_sword_color_options(),
-        default        = 'White',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Rainbow sword trails.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'sword_trail_color_outer',
-        type           = str,
-        gui_text       = 'Sword Trail Outer Color',
-        gui_type       = "Combobox",
-        shared         = False,
-        choices        = get_sword_color_options(),
-        default        = 'White',
-        gui_tooltip    = '''\
-                  'Random Choice': Choose a random
-                  color from this list of colors.
-                  'Completely Random': Choose a random
-                  color from any color the N64 can draw.
-                  'Rainbow': Rainbow sword trails.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
         name           = 'silver_gauntlets_color',
         type           = str,
         gui_text       = 'Silver Gauntlets Color',
@@ -3668,6 +3772,28 @@ setting_infos = [
         shared         = False,
         choices        = get_gauntlet_color_options(),
         default        = 'Gold',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+
+    ),
+    Setting_Info(
+        name           = 'mirror_shield_frame_color',
+        type           = str,
+        gui_text       = 'Mirror Shield Frame Color',
+        gui_type       = "Combobox",
+        shared         = False,
+        choices        = get_shield_frame_color_options(),
+        default        = 'Red',
         gui_tooltip    = '''\
             'Random Choice': Choose a random
             color from this list of colors.
