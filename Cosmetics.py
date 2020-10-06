@@ -515,9 +515,13 @@ def patch_navi_colors(rom, settings, log, symbols):
             if navi_option_inner == 'Rainbow':
                 rom.write_byte(rainbow_inner_symbol, 0x01)
                 inner_color = [0x00, 0x00, 0x00]
+            else:
+                rom.write_byte(rainbow_inner_symbol, 0x00)
             if navi_option_outer == 'Rainbow':
                 rom.write_byte(rainbow_outer_symbol, 0x01)
                 outer_color = [0x00, 0x00, 0x00]
+            else:
+                rom.write_byte(rainbow_outer_symbol, 0x00)
 
             # completely random is random for every subgroup
             if navi_option_inner == 'Completely Random':
@@ -590,9 +594,13 @@ def patch_sword_trails(rom, settings, log, symbols):
             if option_inner == 'Rainbow':
                 rom.write_byte(rainbow_inner_symbol, 0x01)
                 inner_color = [0x00, 0x00, 0x00]
+            else:
+                rom.write_byte(rainbow_inner_symbol, 0x00)
             if option_outer == 'Rainbow':
                 rom.write_byte(rainbow_outer_symbol, 0x01)
                 outer_color = [0x00, 0x00, 0x00]
+            else:
+                rom.write_byte(rainbow_outer_symbol, 0x00)
 
             # completely random is random for every subgroup
             if option_inner == 'Completely Random':
@@ -672,9 +680,13 @@ def patch_bombchu_trails(rom, settings, log, symbols):
         if option_inner == 'Rainbow':
             rom.write_byte(rainbow_inner_symbol, 0x01)
             inner_color = [0x00, 0x00, 0x00]
+        else:
+            rom.write_byte(rainbow_inner_symbol, 0x00)
         if option_outer == 'Rainbow':
             rom.write_byte(rainbow_outer_symbol, 0x01)
             outer_color = [0x00, 0x00, 0x00]
+        else:
+            rom.write_byte(rainbow_outer_symbol, 0x00)
 
         # handle completely random
         if option_inner == 'Completely Random':
