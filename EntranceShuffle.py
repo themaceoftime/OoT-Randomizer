@@ -444,7 +444,9 @@ def shuffle_random_entrances(worlds):
 
         # Shuffle all entrances among the pools to shuffle
         for pool_type, entrance_pool in one_way_entrance_pools.items():
-            shuffle_entrance_pool(world, worlds, entrance_pool, one_way_target_entrance_pools[pool_type], locations_to_ensure_reachable, check_all=True)
+            # Ensure that each warp song leads to a different region
+            target_entrances = sample_target_entrances(one_way_target_entrance_pools[pool_type]) if pool_type == 'WarpSong' else one_way_target_entrance_pools[pool_type]
+            shuffle_entrance_pool(world, worlds, entrance_pool, target_entrances, locations_to_ensure_reachable, check_all=True)
             # Delete all targets that we just placed from other one way target pools so multiple one way entrances don't use the same target
             replaced_entrances = [entrance.replaces for entrance in entrance_pool]
             for remaining_target in chain.from_iterable(one_way_target_entrance_pools.values()):
@@ -754,3 +756,9 @@ def delete_target_entrance(target_entrance):
     if target_entrance.parent_region != None:
         target_entrance.parent_region.exits.remove(target_entrance)
         target_entrance.parent_region = None
+
+
+# Sample the given list of target entrances such that each entrance has a different connected region
+def sample_target_entrances(target_entrances):
+    sample = random.sample(target_entrances, len(target_entrances))
+    return [target for target in sample if target is next(tt for tt in sample if tt.connected_region is target.connected_region)]
