@@ -602,7 +602,7 @@ def check_entrances_compatibility(entrance, target, rollbacks):
 
     # One way entrances shouldn't lead to the same scene as other already chosen one way entrances
     if (entrance.type == 'OwlDrop' or entrance.type == 'Spawn' or entrance.type == 'WarpSong') and any([rollback[0].connected_region.get_scene() == target.connected_region.get_scene() for rollback in rollbacks]):
-        raise EntranceShuffleError('A warp song already leads to %s' % target.connected_region.get_scene())
+        raise EntranceShuffleError('%s entrance already leads to %s' % (entrance.type, target.connected_region.get_scene()))
 
 
 # Validate the provided worlds' structures, raising an error if it's not valid based on our criterias
