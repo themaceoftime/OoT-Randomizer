@@ -600,8 +600,8 @@ def check_entrances_compatibility(entrance, target, rollbacks):
     if entrance.parent_region.get_scene() and entrance.parent_region.get_scene() == target.connected_region.get_scene():
         raise EntranceShuffleError('Self scene connections are forbidden')
 
-    # Warp songs shouldn't lead to the same scene as other warp songs
-    if entrance.type == 'WarpSong' and any([rollback[0].connected_region.get_scene() == target.connected_region.get_scene() for rollback in rollbacks]):
+    # One way entrances shouldn't lead to the same scene as other already chosen one way entrances
+    if (entrance.type == 'OwlDrop' or entrance.type == 'Spawn' or entrance.type == 'WarpSong') and any([rollback[0].connected_region.get_scene() == target.connected_region.get_scene() for rollback in rollbacks]):
         raise EntranceShuffleError('A warp song already leads to %s' % target.connected_region.get_scene())
 
 
