@@ -578,7 +578,7 @@ def shuffle_entrances(worlds, entrances, target_entrances, rollbacks, locations_
                 continue
 
             try:
-                check_entrances_compatibility(entrance, target)
+                check_entrances_compatibility(entrance, target, rollbacks)
                 change_connections(entrance, target)
                 validate_world(entrance.world, worlds, entrance, locations_to_ensure_reachable, complete_itempool)
                 rollbacks.append((entrance, target))
@@ -595,10 +595,15 @@ def shuffle_entrances(worlds, entrances, target_entrances, rollbacks, locations_
 
 
 # Check and validate that an entrance is compatible to replace a specific target
-def check_entrances_compatibility(entrance, target):
+def check_entrances_compatibility(entrance, target, rollbacks=[]):
     # An entrance shouldn't be connected to its own scene, so we fail in that situation
     if entrance.parent_region.get_scene() and entrance.parent_region.get_scene() == target.connected_region.get_scene():
         raise EntranceShuffleError('Self scene connections are forbidden')
+
+    # One way entrances shouldn't lead to the same scene as other already chosen one way entrances
+    if entrance.type in ('OwlDrop', 'Spawn', 'WarpSong') and \
+       any([rollback[0].connected_region.get_scene() == target.connected_region.get_scene() for rollback in rollbacks]):
+        raise EntranceShuffleError('Another %s already leads to %s' % (entrance.type, target.connected_region.get_scene()))
 
 
 # Validate the provided worlds' structures, raising an error if it's not valid based on our criterias
