@@ -642,36 +642,36 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
 
     if (world.shuffle_special_interior_entrances or world.shuffle_overworld_entrances or world.spawn_positions) and \
        (entrance_placed == None or world.mix_entrance_pools or entrance_placed.type in ['SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
-            # At least one valid starting region with all basic refills should be reachable without using any items at the beginning of the seed
-            # Note this creates an empty State rather than reuse world.state (which already has starting items).
-            no_items_search = Search([State(w) for w in worlds])
+        # At least one valid starting region with all basic refills should be reachable without using any items at the beginning of the seed
+        # Note this creates new empty states rather than reuse the worlds' states (which already have starting items)
+        no_items_search = Search([State(w) for w in worlds])
 
-            valid_starting_regions = ['Kokiri Forest', 'Kakariko Village']
-            if not any(region for region in valid_starting_regions if no_items_search.can_reach(world.get_region(region))):
-                raise EntranceShuffleError('Invalid starting area')
+        valid_starting_regions = ['Kokiri Forest', 'Kakariko Village']
+        if not any(region for region in valid_starting_regions if no_items_search.can_reach(world.get_region(region))):
+            raise EntranceShuffleError('Invalid starting area')
 
-            # Check that a region where time passes is always reachable as both ages without having collected any items (except in closed forest)
-            time_travel_search = Search.with_items([w.state for w in worlds], [ItemFactory('Time Travel', world=w) for w in worlds])
+        # Check that a region where time passes is always reachable as both ages without having collected any items
+        time_travel_search = Search.with_items([w.state for w in worlds], [ItemFactory('Time Travel', world=w) for w in worlds])
 
-            if not (any(region for region in time_travel_search.reachable_regions('child') if region.time_passes and region.world == world) and
-                    any(region for region in time_travel_search.reachable_regions('adult') if region.time_passes and region.world == world)):
-                raise EntranceShuffleError('Time passing is not guaranteed as both ages')
+        if not (any(region for region in time_travel_search.reachable_regions('child') if region.time_passes and region.world == world) and
+                any(region for region in time_travel_search.reachable_regions('adult') if region.time_passes and region.world == world)):
+            raise EntranceShuffleError('Time passing is not guaranteed as both ages')
 
-            # The player should be able to get back to ToT after going through time, without having collected any items
-            # This is important to ensure that the player never loses access to the pedestal after going through time
-            if world.starting_age == 'child' and not time_travel_search.can_reach(world.get_region('Temple of Time'), age='adult'):
-                raise EntranceShuffleError('Path to Temple of Time as adult is not guaranteed')
-            elif world.starting_age == 'adult' and not time_travel_search.can_reach(world.get_region('Temple of Time'), age='child'):
-                raise EntranceShuffleError('Path to Temple of Time as child is not guaranteed')
+        # The player should be able to get back to ToT after going through time, without having collected any items
+        # This is important to ensure that the player never loses access to the pedestal after going through time
+        if world.starting_age == 'child' and not time_travel_search.can_reach(world.get_region('Temple of Time'), age='adult'):
+            raise EntranceShuffleError('Path to Temple of Time as adult is not guaranteed')
+        elif world.starting_age == 'adult' and not time_travel_search.can_reach(world.get_region('Temple of Time'), age='child'):
+            raise EntranceShuffleError('Path to Temple of Time as child is not guaranteed')
 
     if (world.shuffle_interior_entrances or world.shuffle_overworld_entrances) and \
        (entrance_placed == None or world.mix_entrance_pools or entrance_placed.type in ['Interior', 'SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
         # The Big Poe Shop should always be accessible as adult without the need to use any bottles
-        # Since we can't guarantee that items in the pool won't be placed behind bottles, we guarantee the access without using any items
         # This is important to ensure that players can never lock their only bottles by filling them with Big Poes they can't sell
-        no_items_time_travel_search = Search.with_items([State(w) for w in worlds], [ItemFactory('Time Travel', world=w) for w in worlds])
+        # We can use starting items in this check as long as there are no exits requiring the use of a bottle without refills
+        time_travel_search = Search.with_items([w.state for w in worlds], [ItemFactory('Time Travel', world=w) for w in worlds])
 
-        if not no_items_time_travel_search.can_reach(world.get_region('Market Guard House'), age='adult'):
+        if not time_travel_search.can_reach(world.get_region('Market Guard House'), age='adult'):
             raise EntranceShuffleError('Big Poe Shop access is not guaranteed as adult')
 
         if world.shuffle_cows:
