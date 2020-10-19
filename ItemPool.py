@@ -815,6 +815,7 @@ def get_pool_core(world):
     pool = []
     placed_items = {
         'HC Zeldas Letter': 'Zeldas Letter',
+        'Gift from Sages': 'Boss Key (Ganons Castle)',
     }
 
     if world.settings.shuffle_kokiri_sword:

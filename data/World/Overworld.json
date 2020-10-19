@@ -3,7 +3,8 @@
         "region_name": "Root",
         "hint": "Link's Pocket",
         "locations": {
-            "Links Pocket": "True"
+            "Links Pocket": "True",
+            "Gift from Sages": "True"
         },
         "exits": {
             "Root Exits": "is_starting_age or Time_Travel",
