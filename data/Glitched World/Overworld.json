@@ -1267,7 +1267,7 @@
     },
     {
         "region_name": "DMT Cow Grotto",
-         "locations": {
+        "locations": {
             "DMT Cow Grotto Cow": "can_play(Eponas_Song)"
         }
     },
