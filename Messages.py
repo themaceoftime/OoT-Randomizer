@@ -15,7 +15,7 @@ JPN_TABLE_SIZE = ENG_TABLE_START - JPN_TABLE_START
 ENG_TABLE_SIZE = CREDITS_TABLE_START - ENG_TABLE_START
 
 EXTENDED_TABLE_START = JPN_TABLE_START # start writing entries to the jp table instead of english for more space
-EXTENDED_TABLE_SIZE = JPN_TABLE_SIZE + ENG_TABLE_SIZE # 0x8360 bytes, 4,204 entries
+EXTENDED_TABLE_SIZE = JPN_TABLE_SIZE + ENG_TABLE_SIZE # 0x8360 bytes, 4204 entries
 
 # name of type, followed by number of additional bytes to read, follwed by a function that prints the code
 CONTROL_CODES = {
@@ -478,10 +478,10 @@ class Message():
                 pass
             elif speed_up_text and code.code in box_breaks:
                 # some special cases for text that needs to be on a timer
-                if (self.id == 0x605A   # twinrova transformation
-                or self.id == 0x706C   # raru ending text
-                or self.id == 0x70DD   # ganondorf ending text
-                or self.id == 0x7070): # zelda ending text
+                if (self.id == 0x605A or  # twinrova transformation
+                    self.id == 0x706C or  # raru ending text
+                    self.id == 0x70DD or  # ganondorf ending text
+                    self.id == 0x7070):   # zelda ending text
                     text_codes.append(code)
                     text_codes.append(Text_Code(0x08, 0)) # allow instant
                 else:

@@ -713,16 +713,17 @@ nop
 skip_GS_BGS_text:
 
 ;==================================================================================================
-; Empty bomb fix
+; Empty Bomb Fix
 ;==================================================================================================
 
 ; Replaces:
-;   lw      a1, 0x0018 (sp) ; bomb ovl+134
-;   lw      a0, 0x001C (sp)
-.orga 0xC0E404
-    jal     empty_bomb_fix
-    lw      a1, 0x0018 (sp)
+;sw      r0, 0x0428(v0)
+;sw      t5, 0x066C(v0)
 
+.orga 0xC0E77C
+    jal     empty_bomb
+    sw      r0, 0x0428(v0)
+    
 ;==================================================================================================
 ; Damage Multiplier
 ;==================================================================================================
@@ -1043,9 +1044,14 @@ skip_GS_BGS_text:
 ; Warp song speedup
 ;==================================================================================================
 ;
-.orga 0xBEA044
+;manually set next entrance and fade out type
+.orga 0xBEA044 
    jal      warp_speedup
    nop
+
+.orga 0xB10CC0 ;set fade in type after the warp
+    jal     set_fade_in
+    lui     at, 0x0001
    
 
 ;==================================================================================================
@@ -1537,6 +1543,7 @@ skip_GS_BGS_text:
 ; Replaces: lhu     t0, 0x0EDA(v0)
 ;           or      a0, s0, zero
 ;           andi    t1, t0, 0x0008
+
 .orga 0xE565D0
     jal     kz_moved_check
     nop
@@ -1659,6 +1666,347 @@ skip_GS_BGS_text:
     or      a0, s0, r0
 
 ;==================================================================================================
+; Make Twinrova Wait For Link
+;==================================================================================================
+;Hook into twinrova update function and check for links height
+; Replaces: sw      s2, 0x44(sp)
+;           sw      s0, 0x3C(sp)
+.orga 0xD68D68
+    jal     rova_check_pos
+    sw      s2, 0x44(sp)
+
+;If the height check hasnt been met yet, branch to the end of the update function
+;This freezes twinrova until the condition is met
+; Replaces: sdc1    f24, 0x30(sp)
+;           lw      s2, 0x1C44(s3)
+;           addiu   t6, r0, 0x03
+;           sb      t6, 0x05B0(s1)
+;           lbu     t7, 0x07AF(s3)
+;           mfc1    a2, f22
+;           mfc1    a3, f20
+.orga 0xD68D70
+    la      t1, START_TWINROVA_FIGHT
+    lb      t1, 0x00(t1)
+    beqz    t1, @Twinrova_Update_Return
+    lw      ra, 0x4C(sp)
+    jal     twinrova_displaced
+    sdc1    f24, 0x30(sp)
+.orga 0xD69398
+@Twinrova_Update_Return:
+
+;nop various things in the init function
+.orga 0xD62100
+    jal     twinrova_set_action_ice
+.orga 0xD62110
+    lui     at, 0x4248
+.orga 0xD62128
+    nop
+.orga 0xD621CC
+    jal     twinrova_set_action_fire
+.orga 0xD621DC
+    lui     at, 0x4248
+.orga 0xD6215C
+    nop
+.orga 0xD6221C
+    nop
+.orga 0xD73118 ;reloc
+    nop
+.orga 0xD73128 ;reloc
+    nop
+
+;Update alpha of the portal
+;Replaces: lbu     t8, 0x00(v0)
+.orga 0xD69C80
+    jal     rova_portal
+
+;Update position of the ice portal
+.orga 0xD6CC18
+    jal     ice_pos
+    nop
+
+;Update position of the fire portal
+.orga 0xD6CDD4
+    jal     fire_pos
+    nop
+
+;==================================================================================================
+; Fix Links Angle in Fairy Fountains
+;==================================================================================================
+
+;Hook great fairy update function and set position/angle when conditions are met
+; Replaces: or      a0, s0, r0
+;           or      a1, s1, r0
+.orga 0xC8B24C
+    jal     fountain_set_posrot
+    or      a0, s0, r0
+
+;==================================================================================================
+; Speed Up Gate in Kakariko
+;==================================================================================================
+; gate opening x
+; Replaces: lui     at, 0x4000 ;2.0f
+.orga 0xDD366C
+    lui     at, 0x40D0 ;6.5f
+
+; gate opening z
+; Replaces: lui     a2, 0x3F4C
+;           sub.s   f8, f4, f6
+;           lui     a3, 0x3E99
+;           ori     a3, a3, 0x999A
+;           ori     a2, a2, 0xCCCD
+.orga 0xDD367C
+    lui     a2, 0x4000
+    sub.s   f8, f4, f6
+    lui     a3, 0x4000
+    nop
+    nop
+
+; gate closing x
+; Replaces: lui     at, 0x4000 ;2.0f
+.orga 0xDD3744
+    lui     at, 0x40D0 ;6.5f
+
+; gate closing z
+; Replaces: lui     a2, 0x3F4C
+;           add.s   f8, f4, f6
+;           lui     a3, 0x3E99
+;           ori     a3, a3, 0x999A
+;           ori     a2, a2, 0xCCCD
+.orga 0xDD3754
+    lui     a2, 0x4000
+    add.s   f8, f4, f6
+    lui     a3, 0x4000
+    nop
+    nop
+
+;==================================================================================================
+; Prevent Carpenter Boss Softlock
+;==================================================================================================
+; Replaces: or      a1, s1, r0
+;           addiu   a2, r0, 0x22 
+.orga 0xE0EC50
+    jal     prevent_carpenter_boss_softlock
+    or      a1, s1, r0
+
+;==================================================================================================
+; Skip Song Playback When Learning Songs
+;==================================================================================================
+; this hack sets the learning song ID to 0 (minuet) which forces the playback to be skipped.
+; this change does not affect the value passed to Item_Give, so you still recieve the right song.
+; this allows other actors to be responsible for showing the "you learned" text and avoids undesireable 
+; effects like suns song playback skipping time
+; 
+; Replaces: sh      a2, 0x63ED(at)
+.orga 0xB55428
+    sh      r0, 0x63ED(at)
+
+;==================================================================================================
+; Skip Song of Storms Song Demonstration
+;==================================================================================================
+;skip playing the song demonstration
+; Replaces: jal     0x800DD400 ;plays song demo
+.orga 0xE42C00
+   jal     sos_skip_demo
+
+;hook at the beginning of the song playback function to do a few things:
+;set player stateFlags2, change interface alpha, show song staff, change actionFunc
+;if songs as items is on, dont show the staff
+; Replaces: addiu    a0, a2, 0x20D8
+.orga 0xE42B5C
+   jal     sos_handle_staff
+
+;after the `sos_handle_staff` hook, skip the rest of the original function
+.orga 0xE42B64
+   b       0xE42B64 + (4 * 14)
+   nop
+
+;hook into the function where the windmill guy is waiting for song playback
+;for no songs as items: handle showing text at the right time
+;for songs as items: give the item, set flags, set actionFunc and return
+.orga 0xE429DC
+   jal     sos_handle_item
+   nop
+
+;after the `sos_handle_item` hook, skip the rest of the original function
+.orga 0xE429E4
+   b       0xE429E4 + (4 * 84)
+   nop
+
+;dont allow link to talk to the windmill guy if he is recieving an item
+; Replaces: lh      t6, 0x8A(s0)
+;           lh      t7, 0xB6(s0)
+;           lhu     t9, 0xB4AE(t9)
+;           lw      v1, 0x1C44(s1)
+.orga 0xE42C44
+   jal     sos_talk_prevention
+   lh      t6, 0x8A(s0)   ;displaced
+   bnez_a  t2, 0xE42D64
+   lw      v1, 0x1C44(s1) ;displaced
+
+;==================================================================================================
+; Fix Zelda in Final Battle
+;==================================================================================================
+;change zeldas actionFunc index from 07 to 0C
+; Replaces: addiu    t6, r0, 0x07
+.orga 0xE7CC90
+    addiu    t6, r0, 0x0C
+
+;change animation to wait anim if its not set yet
+; Replaces: beqz     a1
+;           or       a2, r0, r0
+;           lui      a1, 0x0600
+;           addiu    a1, a1, 0x6F04
+;           addiu    a3, r0, 0x0000
+.orga 0xE7D19C
+    jal      zelda_check_anim
+    lui      a1, 0x0600
+    beq_a    a1, t0, 0xE7D1B4
+    or       a2, r0, r0
+    addiu    a3, r0, 0x0000
+
+;set flag so tower collapse cs never attempts to play (tower collapse sequence on)
+; Replaces: andi     t7, t6, 0xFF7F
+.orga 0xE81128
+    ori     t7, t6, 0x0080
+
+;==================================================================================================
+; Override Links call to SkelAnime_ChangeLinkAnimDefaultStop
+;==================================================================================================
+;override the call to SkelAnime_ChangeLinkAnimDefaultStop in 80388BBC to allow for 
+;special cases when changing links animation
+; Replaces: jal      0x8008C178
+.orga 0xBCDBD8
+    jal     override_changelinkanimdefaultstop
+
+;==================================================================================================
+; Fix Royal Tombstone Cutscene
+;==================================================================================================
+;when the cutscene starts, move the grave back a bit so that the hole is not covered
+; Replaces: sw       a1, 0x44(sp)
+;           lw       t6, 0x44(sp)
+.orga 0xCF7AD4
+    jal     move_royal_tombstone
+    sw      a1, 0x44(sp)
+
+;==================================================================================================
+; Speed Up Gold Gauntlets Rock Throw
+;==================================================================================================
+;replace onepointdemo calls for the different cases so the cutscene never plays
+;for cases 0 and 4 set position so that the rock lands in the right place
+
+;case 1: light trial (breaks on impact)
+; Replaces: jal       0x8006B6FC
+.orga 0xCDF3EC
+    nop
+
+;case 0: fire trial
+; Replaces: jal       0x8006B6FC
+.orga 0xCDF404
+    nop
+
+;case 4: outside ganons castle
+; Replaces: jal       0x8006B6FC
+.orga 0xCDF420 
+    jal     heavy_block_set_switch
+
+;set links position and angle to the center of the block as its being lifted
+; Replaces: or         t9, t8, at
+;           sw         t9, 0x66C(s0)
+.orga 0xBD5C58
+    jal      heavy_block_posrot
+    or       t9, t8, at
+
+;set links action to 7 so he can move again
+; Replaces: swc1      f4, 0x34(sp)
+;           lwc1      f6, 0x0C(s0)
+.orga 0xCDF638
+    jal     heavy_block_set_link_action
+    swc1    f4, 0x34(sp)
+
+;reduce quake timer for case 1
+;Replaces: addiu      a1, r0, 0x03E7
+.orga 0xCDF790
+    addiu      a1, r0, 0x1E
+
+;skip parts of links lifting animation
+;Replaces: sw         a1, 0x34(sp)
+;          addiu      a1, s0, 0x01A4
+.orga 0xBE1BC8
+    jal    heavy_block_shorten_anim
+    sw     a1, 0x34(sp)
+
+;slightly change rock throw trajectory to land in the right place
+;Replaces: lui        at, 0x4220
+.orga 0xBE1C98
+    lui    at, 0x4218
+
+;==================================================================================================
+; Skip Malons Song Demonstration
+;==================================================================================================
+;skip function call to show song demonstration
+.orga 0xD7EB4C
+    nop
+
+;go straight to item function for songs as items
+;Replaces: sw     t0, 0x04(a2)
+;          sw     t1, 0x0180(a2)
+.orga 0xD7EB70
+    jal    malon_goto_item
+    sw     t0, 0x04(a2)
+
+;skip check for dialog state to be 7 (demonstration finished)
+.orga 0xD7EBBC
+    nop
+
+;check for songs as items to handle song staff
+;Replaces: jal    0x800DD400
+.orga 0xD7EBC8
+    jal    malon_handle_staff
+
+;various changes to final actionFunc before normal cutscene would start
+.orga 0xD7EBF0
+    addiu   sp, sp, -0x18 ;move stuff around to save ra
+    sw      ra, 0x14(sp)
+    jal     malon_ra_displaced
+    lw      v0, 0x1C44(a1)
+.skip 4 * 1
+    nop
+.skip 4 * 2
+    jal    malon_songs_as_items ;make branch fail if songs as items is on
+    lhu    t8, 0x04C6(t8)
+.skip 4 * 5
+    nop
+.skip 4 * 1
+    jal    malon_show_text  ;dont set next cutscene index, also show text if song
+.skip 4 * 2
+    nop        ;dont set transition fade type
+.skip 4 * 4    
+    nop        ;dont set load flag 
+.skip 4 * 2  
+    j      malon_check_give_item
+
+;set relevant flags and restore malon so she can talk again
+.orga 0xD7EC70
+    j    malon_reload
+
+;==================================================================================================
+; Clean Up Big Octo Room For Multiple Visits
+;==================================================================================================
+;make link drop ruto if "visited big octo" flag is set
+;Replaces: lh     t9, 0x1C(s0)
+;          lh     t6, 0x1C(s0)
+.orga 0xD4BCB0
+    jal    drop_ruto
+    lh     t9, 0x1C(s0)
+
+;kill Demo_Effect if "visited big octo" flag is set
+;Replaces: sw     a1, 0x64(sp)
+;          lh     v0, 0x1C(s0)
+.orga 0xCC85B8
+    jal    check_kill_demoeffect
+    sw     a1, 0x64(sp)
+
+;==================================================================================================
 ; Jabu Spiritual Stone Actor Override
 ;==================================================================================================
 ; Replaces: addiu   t8, zero, 0x0006
@@ -1668,20 +2016,20 @@ skip_GS_BGS_text:
     addiu   t8, zero, 0x0006
 
 ;==================================================================================================
-; Fix Equip Swap Crashes
+; Use Sticks and Masks as Adult
 ;==================================================================================================
 ; Deku Stick
 ; Replaces: lui     t2, 0x0600
 ;           addiu   t2, t2, 0x6CC0
 .orga 0xAF180C
-    jal     equip_swap_stick
+    jal     stick_as_adult
     nop
 
 ; Masks
 ; Replaces: sw      t6, 0x0004(v0)
 ;           lb      t7, 0x013F(s0)
 .orga 0xBE5D8C
-    jal     equip_swap_mask
+    jal     masks_as_adult
     nop
 
 ;==================================================================================================

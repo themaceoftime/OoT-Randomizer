@@ -164,6 +164,9 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
                      world.distribution.song_as_items or \
                      world.starting_songs
 
+    if songs_as_items:
+        rom.write_byte(rom.sym('SONGS_AS_ITEMS'), 1)
+
     # Speed learning Zelda's Lullaby
     rom.write_int32s(0x02E8E90C, [0x000003E8, 0x00000001]) # Terminator Execution
     if songs_as_items:
@@ -417,6 +420,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     rom.write_byte(0x2F5B559, 0x04)
     rom.write_byte(0x2F5B621, 0x04)
     rom.write_byte(0x2F5B761, 0x07)
+    rom.write_bytes(0x2F5B840, [0x00, 0x05, 0x00, 0x01, 0x00, 0x05, 0x00, 0x05]) #shorten white flash
 
     # Speed scene with all medallions
     rom.write_bytes(0x2512680, [0x00, 0x74, 0x00, 0x01, 0x00, 0x02, 0x00, 0x02])
@@ -902,7 +906,6 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     save_context = SaveContext()
 
     # Initial Save Data
-
     if not world.useful_cutscenes:
         save_context.write_bits(0x00D4 + 0x03 * 0x1C + 0x04 + 0x0, 0x08) # Forest Temple switch flag (Poe Sisters cutscene)
     save_context.write_bits(0x00D4 + 0x05 * 0x1C + 0x04 + 0x1, 0x01) # Water temple switch flag (Ruto)
@@ -945,8 +948,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     save_context.write_bits(0x0EE2, 0x01) # "Began Ganondorf Battle"
     save_context.write_bits(0x0EE3, 0x80) # "Began Bongo Bongo Battle"
     save_context.write_bits(0x0EE3, 0x40) # "Began Barinade Battle"
-    if not world.useful_cutscenes:
-        save_context.write_bits(0x0EE3, 0x20) # "Began Twinrova Battle"
+    save_context.write_bits(0x0EE3, 0x20) # "Began Twinrova Battle"
     save_context.write_bits(0x0EE3, 0x10) # "Began Morpha Battle"
     save_context.write_bits(0x0EE3, 0x08) # "Began Volvagia Battle"
     save_context.write_bits(0x0EE3, 0x04) # "Began Phantom Ganon Battle"
@@ -1299,13 +1301,6 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         rom.write_int32(0xE09F68, 0x8C6F00A4)
         rom.write_int32(0xE09F74, 0x01CFC024)
         rom.write_int32(0xE09FB0, 0x240F0001)
-        # epona's song
-        rom.write_int32s(0xD7E140, [0x8DCE8C24, 0x8C6F00A4])
-        rom.write_int32( 0xD7E77C, 0x8C4900A4)
-        rom.write_int32( 0xD7E784, 0x8D088C24)
-        rom.write_int32s(0xD7E8D4, [0x8DCE8C24, 0x8C4F00A4])
-        rom.write_int32( 0xD7EBBC, 0x14410008)
-        rom.write_int32( 0xD7EC1C, 0x17010010)
         # song of time
         rom.write_int32(0xDB532C, 0x24050003)
 
@@ -1338,10 +1333,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
                 rom.write_byte(0x0D12ECB, special['item_id'])
                 rom.write_byte(0x2E8E931, special['text_id']) #Fix text box
             elif location.name == 'Song from Malon':
-                rom.write_int16(0xD7E142, bit_mask_pointer)
-                rom.write_int16(0xD7E8D6, bit_mask_pointer)
-                rom.write_int16(0xD7E786, bit_mask_pointer)
-                rom.write_byte(0x29BECB9, special['text_id']) #Fix text box
+                rom.write_byte(rom.sym('MALON_TEXT_ID'), special['text_id'])
             elif location.name == 'Song from Composers Grave':
                 rom.write_int16(0xE09F66, bit_mask_pointer)
                 rom.write_byte(0x332A87D, special['text_id']) #Fix text box
@@ -1351,8 +1343,8 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             elif location.name == 'Song from Ocarina of Time':
                 rom.write_byte(0x252FC95, special['text_id']) #Fix text box
             elif location.name == 'Song from Windmill':
-                rom.write_byte(0x0E42ABF, special['item_id'])
-                rom.write_byte(0x3041091, special['text_id']) #Fix text box
+                rom.write_byte(rom.sym('WINDMILL_SONG_ID'), next_song_id)
+                rom.write_byte(rom.sym('WINDMILL_TEXT_ID'), special['text_id'])
             elif location.name == 'Sheik in Forest':
                 rom.write_byte(0x0C7BAA3, special['item_id'])
                 rom.write_byte(0x20B0815, special['text_id']) #Fix text box

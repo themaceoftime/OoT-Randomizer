@@ -1,4 +1,4 @@
-equip_swap_stick:
+stick_as_adult:
     la    t2, SAVE_CONTEXT
     lw    t2, 0x04(t2)       ; Link age
     beqz  t2, @@adult        ; Load empty display list if adult
@@ -12,7 +12,7 @@ equip_swap_stick:
     jr    ra
     nop
 
-equip_swap_mask:
+masks_as_adult:
     la    t7, SAVE_CONTEXT
     lw    t7, 0x04(t7)       ; Link age
     bnez  t7, @@return       ; Return if child
