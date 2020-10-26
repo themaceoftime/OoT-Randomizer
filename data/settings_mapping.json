@@ -171,6 +171,7 @@
             "shuffle_grotto_entrances",
             "shuffle_dungeon_entrances",
             "shuffle_overworld_entrances",
+            "shuffle_hideout_entrances",
             "owl_drops",
             "warp_songs",
             "spawn_positions",
@@ -207,7 +208,7 @@
           "settings": [
             "shuffle_mapcompass",
             "shuffle_smallkeys",
-            "shuffle_fortresskeys",
+            "shuffle_hideoutkeys",
             "shuffle_bosskeys",
             "shuffle_ganon_bosskey",
             "lacs_medallions",
