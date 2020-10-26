@@ -201,14 +201,14 @@ logic_tricks = {
                     from below, by shooting it through the vines,
                     bypassing the need to lower the staircase.
                     '''},
-    'Gerudo Fortress Ledge Jump': {
+    'Gerudo\'s Fortress Ledge Jump': {
         'name'    : 'logic_gf_jump',
         'tags'    : ("Gerudo's Fortress",),
         'tooltip' : '''\
                     From the southern roof with the guard, a jump
                     can reach the second floor of the fortress.
                     '''},
-    'Gerudo Fortress Roof Ledge Jump': {
+    'Gerudo\'s Fortress Roof Ledge Jump': {
         'name'    : 'logic_gf_jump_roof',
         'tags'    : ("Gerudo's Fortress",),
         'tooltip' : '''\
@@ -1796,12 +1796,12 @@ setting_infos = [
     ),
     Combobox(
         name           = 'gerudo_fortress',
-        gui_text       = 'Gerudo Fortress',
+        gui_text       = 'Gerudo\'s Fortress',
         default        = 'normal',
         choices        = {
             'normal': 'Default Behavior',
             'fast':   'Rescue One Carpenter',
-            'open':   'Open Gerudo Fortress',
+            'open':   'Open Gerudo\'s Fortress',
         },
         gui_tooltip    = '''\
             'Rescue One Carpenter': Only the bottom left carpenter
@@ -1809,7 +1809,7 @@ setting_infos = [
             This cell can be savewarped to from any room in the hideout.
             All but one of the Thieves' Hideout Keys are removed.
 
-            'Open Gerudo Fortress': The carpenters are rescued from
+            'Open Gerudo's Fortress': The carpenters are rescued from
             the start of the game, and if 'Shuffle Gerudo Card' is disabled,
             the player starts with the Gerudo Card in the inventory 
             allowing access to Gerudo Training Grounds.
@@ -3179,7 +3179,7 @@ setting_infos = [
             Selecting multiple progressive items will give
             the appropriate number of upgrades.
             
-            If playing with Open Zora Fountain, the Ruto's Letter
+            If playing with Open Zora's Fountain, the Ruto's Letter
             is converted to a regular Bottle.
         ''',
     ),
