@@ -783,7 +783,6 @@
     },
     {
         "region_name": "Thieves Hideout Savewarp",
-        "scene": "Thieves Hideout",
         "hint": "Thieves' Hideout",
         "exits": {
             "Thieves Hideout Red Jail": "True"
@@ -802,6 +801,7 @@
         "scene": "Thieves Hideout",
         #"room": 02,
         "hint": "Thieves' Hideout",
+        "savewarp": "Thieves Hideout Savewarp",
         "events": {
             "TH North 1F Red Jail Gerudo": "is_adult or Kokiri_Sword",
             "TH North 1F Red Jail Carpenter": "
@@ -819,8 +819,7 @@
                 (gerudo_fortress == 'normal' and 
                 'TH North 1F Red Jail Carpenter' and 'TH South 1F Olive Jail Carpenter'
                 and 'TH South 2F Blue Jail Carpenter' and 'TH North 2F Green Jail Carpenter')
-                    or (gerudo_fortress == 'fast' and 'TH North 1F Red Jail Carpenter')",
-            "Thieves Hideout Savewarp": "True"
+                    or (gerudo_fortress == 'fast' and 'TH North 1F Red Jail Carpenter')"
         }
     },
     {
@@ -828,12 +827,12 @@
         "scene": "Thieves Hideout",
         #"room": 03,
         "hint": "Thieves' Hideout",
+        "savewarp": "Thieves Hideout Savewarp",
         "exits": {
             "GF Entrances Behind Crates": "True",
             "GF Guarded Roof": "True",
             "Thieves Hideout Kitchen Front": "Gerudo_Membership_Card or can_use(Bow) or logic_gerudo_kitchen",
-            "Thieves Hideout Kitchen Rear": "Gerudo_Membership_Card or can_use(Bow) or logic_gerudo_kitchen",
-            "Thieves Hideout Savewarp": "True"
+            "Thieves Hideout Kitchen Rear": "Gerudo_Membership_Card or can_use(Bow) or logic_gerudo_kitchen"
         }
     },
     {
@@ -841,13 +840,13 @@
         "scene": "Thieves Hideout",
         #"room": 03,
         "hint": "Thieves' Hideout",
+        "savewarp": "Thieves Hideout Savewarp",
         "exits": {
             "GF Roof Entrance Cluster": "True",
             "Thieves Hideout Kitchen Rear": "
                 can_use(Hookshot) or can_use(Hover_Boots) or
                 Gerudo_Membership_Card or can_use(Bow) or logic_gerudo_kitchen",
-            "Thieves Hideout Kitchen Hallway": "Gerudo_Membership_Card or can_use(Bow) or logic_gerudo_kitchen",
-            "Thieves Hideout Savewarp": "True"
+            "Thieves Hideout Kitchen Hallway": "Gerudo_Membership_Card or can_use(Bow) or logic_gerudo_kitchen"
         }
     },
     {
@@ -855,13 +854,13 @@
         "scene": "Thieves Hideout",
         #"room": 03,
         "hint": "Thieves' Hideout",
+        "savewarp": "Thieves Hideout Savewarp",
         "exits": {
             "GF Kitchen Roof Access": "True",
             "Thieves Hideout Kitchen Front": "
                 can_use(Hookshot) or can_use(Hover_Boots) or
                 Gerudo_Membership_Card or can_use(Bow) or logic_gerudo_kitchen",
-            "Thieves Hideout Kitchen Hallway": "Gerudo_Membership_Card or can_use(Bow) or logic_gerudo_kitchen",
-            "Thieves Hideout Savewarp": "True"
+            "Thieves Hideout Kitchen Hallway": "Gerudo_Membership_Card or can_use(Bow) or logic_gerudo_kitchen"
         }
     },
     {
@@ -869,6 +868,7 @@
         "scene": "Thieves Hideout",
         #"room": 04,
         "hint": "Thieves' Hideout",
+        "savewarp": "Thieves Hideout Savewarp",
         "events": {
             "TH South 1F Olive Jail Gerudo": "is_adult or Kokiri_Sword",
             "TH South 1F Olive Jail Carpenter": "
@@ -884,8 +884,7 @@
             "Thieves Hideout Gerudo Warrior": "
                 gerudo_fortress == 'normal' and
                 'TH North 1F Red Jail Carpenter' and 'TH South 1F Olive Jail Carpenter' and
-                'TH South 2F Blue Jail Carpenter' and 'TH North 2F Green Jail Carpenter'",
-            "Thieves Hideout Savewarp": "True"
+                'TH South 2F Blue Jail Carpenter' and 'TH North 2F Green Jail Carpenter'"
         }
     },
     {
@@ -893,6 +892,7 @@
         "scene": "Thieves Hideout",
         #"room": 05,
         "hint": "Thieves' Hideout",
+        "savewarp": "Thieves Hideout Savewarp",
         "events": {
             "TH South 2F Blue Jail Gerudo": "is_adult or Kokiri_Sword",
             "TH South 2F Blue Jail Carpenter": "
@@ -908,8 +908,7 @@
             "Thieves Hideout Gerudo Warrior": "
                 gerudo_fortress == 'normal' and
                 'TH North 1F Red Jail Carpenter' and 'TH South 1F Olive Jail Carpenter' and
-                'TH South 2F Blue Jail Carpenter' and 'TH North 2F Green Jail Carpenter'",
-            "Thieves Hideout Savewarp": "True"
+                'TH South 2F Blue Jail Carpenter' and 'TH North 2F Green Jail Carpenter'"
         }
     },
     {
@@ -917,10 +916,10 @@
         "scene": "Thieves Hideout",
         #"room": 00,
         "hint": "Thieves' Hideout",
+        "savewarp": "Thieves Hideout Savewarp",
         "exits": {
             "GF Hall to Balcony Entrance": "True",
-            "TH Hall to Balcony Upper": "can_use(Hookshot)",
-            "Thieves Hideout Savewarp": "True"
+            "TH Hall to Balcony Upper": "can_use(Hookshot)"
         }
     },
     {
@@ -928,10 +927,10 @@
         "scene": "Thieves Hideout",
         #"room": 00,
         "hint": "Thieves' Hideout",
+        "savewarp": "Thieves Hideout Savewarp",
         "exits": {
             "TH Hall to Balcony Lower": "can_use(Hookshot)",
-            "GF Balcony": "True",
-            "Thieves Hideout Savewarp": "True"
+            "GF Balcony": "True"
         }
     },
     {
@@ -939,6 +938,7 @@
         "scene": "Thieves Hideout",
         #"room": 01,
         "hint": "Thieves' Hideout",
+        "savewarp": "Thieves Hideout Savewarp",
         "events": {
             "TH North 2F Green Jail Gerudo": "is_adult or Kokiri_Sword",
             "TH North 2F Green Jail Carpenter": "
@@ -953,8 +953,7 @@
             "Thieves Hideout Gerudo Warrior": "
                 gerudo_fortress == 'normal' and
                 'TH North 1F Red Jail Carpenter' and 'TH South 1F Olive Jail Carpenter' and
-                'TH South 2F Blue Jail Carpenter' and 'TH North 2F Green Jail Carpenter'",
-            "Thieves Hideout Savewarp": "True"
+                'TH South 2F Blue Jail Carpenter' and 'TH North 2F Green Jail Carpenter'"
         }
     },
     {
@@ -2187,7 +2186,7 @@
     {
         "region_name": "LLR Stables",
         "scene": "LLR Stables",
-		"locations": {
+        "locations": {
             "LLR Stables Left Cow": "can_play(Eponas_Song)",
             "LLR Stables Right Cow": "can_play(Eponas_Song)"
         },
@@ -2481,7 +2480,7 @@
     {
         "region_name": "DMT Cow Grotto",
         "scene": "DMT Cow Grotto",
-		"locations": {
+        "locations": {
             "DMT Cow Grotto Cow": "can_play(Eponas_Song)"
         },
         "exits": {
