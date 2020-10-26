@@ -6,6 +6,7 @@ from Utils import random_choices
 from Item import ItemFactory
 from ItemList import item_table
 from LocationList import location_groups
+from decimal import Decimal, ROUND_HALF_UP
 
 
 #This file sets the item pools for various modes. Timed modes and triforce hunt are enforced first, and then extra items are specified per mode to fill in the remaining space.
@@ -121,10 +122,10 @@ item_difficulty_max = {
 }
 
 TriforceCounts = {
-    'plentiful': 2.00,
-    'balanced':  1.50,
-    'scarce':    1.25,
-    'minimal':   1.00,
+    'plentiful': Decimal(2.00),
+    'balanced':  Decimal(1.50),
+    'scarce':    Decimal(1.25),
+    'minimal':   Decimal(1.00),
 }
 
 DT_vanilla = (
@@ -475,12 +476,10 @@ tradeitemoptions = (
 
 fixedlocations = {
     'Ganon': 'Triforce',
-    'HC Zeldas Letter': 'Zeldas Letter',
     'Pierre': 'Scarecrow Song',
-    'Deliver Ruto\'s Letter': 'Deliver Letter',
+    'Deliver Rutos Letter': 'Deliver Letter',
     'Master Sword Pedestal': 'Time Travel',
     'Market Bombchu Bowling Bombchus': 'Bombchu Drop',
-    'Wasteland Bombchu Salesman': 'Bombchus',
 }
 
 droplocations = {
@@ -497,7 +496,7 @@ droplocations = {
     'Wandering Bugs': 'Bugs',
     'Fairy Pot': 'Fairy',
     'Free Fairies': 'Fairy',
-    'Wall Switch Fairy': 'Fairy',
+    'Wall Fairy': 'Fairy',
     'Butterfly Fairy': 'Fairy',
     'Gossip Stone Fairy': 'Fairy',
     'Bean Plant Fairy': 'Fairy',
@@ -803,7 +802,9 @@ def collect_heart_container(world, pool):
 
 def get_pool_core(world):
     pool = []
-    placed_items = {}
+    placed_items = {
+        'HC Zeldas Letter': 'Zeldas Letter',
+    }
 
     if world.shuffle_kokiri_sword:
         pool.append('Kokiri Sword')
@@ -823,6 +824,8 @@ def get_pool_core(world):
 
     if world.shuffle_ocarinas:
         pool.extend(['Ocarina'] * 2)
+        if world.item_pool_value == 'plentiful':
+            pending_junk_pool.append('Ocarina')
     else:
         placed_items['LW Gift from Saria'] = 'Ocarina'
         placed_items['HF Ocarina of Time Item'] = 'Ocarina'
@@ -845,10 +848,17 @@ def get_pool_core(world):
     if world.shuffle_beans:
         if world.distribution.get_starting_item('Magic Bean') < 10:
             pool.append('Magic Bean Pack')
+            if world.item_pool_value == 'plentiful':
+                pending_junk_pool.append('Magic Bean Pack')
         else:
             pool.extend(get_junk_item())
     else:
         placed_items['ZR Magic Bean Salesman'] = 'Magic Bean'
+
+    if world.shuffle_medigoron_carpet_salesman:
+        pool.append('Giants Knife')
+    else:
+        placed_items['GC Medigoron'] = 'Giants Knife'
 
     if world.dungeon_mq['Deku Tree']:
         skulltula_locations_final = skulltula_locations + [
@@ -1007,6 +1017,8 @@ def get_pool_core(world):
             pool.extend(['Bombchus'])
         if world.dungeon_mq['Gerudo Training Grounds']:
             pool.extend(['Bombchus'])
+        if world.shuffle_medigoron_carpet_salesman:
+            pool.append('Bombchus')
 
     else:
         pool.extend(['Bombchus (5)'] + ['Bombchus (10)'] * 2)
@@ -1022,6 +1034,11 @@ def get_pool_core(world):
             pool.extend(['Bombchus (10)'])
         else:
             pool.extend(['Bombchus (20)'])
+        if world.shuffle_medigoron_carpet_salesman:
+            pool.append('Bombchus (10)')
+
+    if not world.shuffle_medigoron_carpet_salesman:
+        placed_items['Wasteland Bombchu Salesman'] = 'Bombchus (10)'
 
     pool.extend(['Ice Trap'])
     if not world.dungeon_mq['Gerudo Training Grounds']:
@@ -1034,7 +1051,7 @@ def get_pool_core(world):
         placed_items['TH North 2F Green Jail Gerudo Key'] = 'Recovery Heart'
         placed_items['TH South 1F Olive Jail Gerudo Key'] = 'Recovery Heart'
         placed_items['TH South 2F Blue Jail Gerudo Key'] = 'Recovery Heart'
-    elif world.shuffle_smallkeys == 'keysanity':
+    elif world.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']:
         if world.gerudo_fortress == 'fast':
             pool.append('Small Key (Thieves Hideout)')
             placed_items['TH North 2F Green Jail Gerudo Key'] = 'Recovery Heart'
@@ -1066,7 +1083,7 @@ def get_pool_core(world):
     if world.shuffle_gerudo_card and world.item_pool_value == 'plentiful':
         pending_junk_pool.append('Gerudo Membership Card')
 
-    if world.item_pool_value == 'plentiful' and world.shuffle_smallkeys == 'keysanity':
+    if world.item_pool_value == 'plentiful' and world.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity']:
         pending_junk_pool.append('Small Key (Bottom of the Well)')
         pending_junk_pool.append('Small Key (Forest Temple)')
         pending_junk_pool.append('Small Key (Fire Temple)')
@@ -1076,14 +1093,14 @@ def get_pool_core(world):
         pending_junk_pool.append('Small Key (Gerudo Training Grounds)')
         pending_junk_pool.append('Small Key (Ganons Castle)')
 
-    if world.item_pool_value == 'plentiful' and world.shuffle_bosskeys == 'keysanity':
+    if world.item_pool_value == 'plentiful' and world.shuffle_bosskeys in ['any_dungeon', 'overworld', 'keysanity']:
         pending_junk_pool.append('Boss Key (Forest Temple)')
         pending_junk_pool.append('Boss Key (Fire Temple)')
         pending_junk_pool.append('Boss Key (Water Temple)')
         pending_junk_pool.append('Boss Key (Shadow Temple)')
         pending_junk_pool.append('Boss Key (Spirit Temple)')
 
-    if world.item_pool_value == 'plentiful' and world.shuffle_ganon_bosskey == 'keysanity':
+    if world.item_pool_value == 'plentiful' and world.shuffle_ganon_bosskey in ['any_dungeon', 'overworld', 'keysanity']:
         pending_junk_pool.append('Boss Key (Ganons Castle)')
 
     if world.shopsanity == 'off':
@@ -1201,7 +1218,7 @@ def get_pool_core(world):
             bottle = random.choice(normal_bottles)
             pool.append(bottle)
         else:
-            pool.append('Ruto\'s Letter')
+            pool.append('Rutos Letter')
 
     earliest_trade = tradeitemoptions.index(world.logic_earliest_adult_trade)
     latest_trade = tradeitemoptions.index(world.logic_latest_adult_trade)
@@ -1212,6 +1229,9 @@ def get_pool_core(world):
     pool.append(tradeitem)
 
     pool.extend(songlist)
+    if world.shuffle_song_items == 'any' and world.item_pool_value == 'plentiful':
+        pending_junk_pool.extend(songlist)
+
     if world.free_scarecrow:
         world.state.collect(ItemFactory('Scarecrow Song'))
     
@@ -1275,10 +1295,10 @@ def get_pool_core(world):
         world.state.collect(ItemFactory('Small Key (Water Temple)'))
 
     if world.triforce_hunt:
-        triforce_count = int(round(world.triforce_goal_per_world * TriforceCounts[world.item_pool_value]))
+        triforce_count = int((TriforceCounts[world.item_pool_value] * world.triforce_goal_per_world).to_integral_value(rounding=ROUND_HALF_UP))
         pending_junk_pool.extend(['Triforce Piece'] * triforce_count)
 
-    if world.shuffle_ganon_bosskey in ['lacs_vanilla', 'lacs_medallions', 'lacs_stones', 'lacs_dungeons']:
+    if world.shuffle_ganon_bosskey in ['lacs_vanilla', 'lacs_medallions', 'lacs_stones', 'lacs_dungeons', 'lacs_tokens']:
         placed_items['ToT Light Arrows Cutscene'] = 'Boss Key (Ganons Castle)'
     elif world.shuffle_ganon_bosskey == 'vanilla':
         placed_items['Ganons Tower Boss Key Chest'] = 'Boss Key (Ganons Castle)'

@@ -13,7 +13,7 @@ item_table = {
     'Cojiro':                                          ('Item',     True,  0x0E, None),
     'Bottle':                                          ('Item',     True,  0x0F, {'bottle': float('Inf')}),
     'Bottle with Milk':                                ('Item',     True,  0x14, {'bottle': float('Inf')}),
-    'Ruto\'s Letter':                                  ('Item',     True,  0x15, None),
+    'Rutos Letter':                                    ('Item',     True,  0x15, None),
     'Deliver Letter':                                  ('Item',     True,  None, {'bottle': float('Inf')}),
     'Sell Big Poe':                                    ('Item',     True,  None, {'bottle': float('Inf')}),
     'Magic Bean':                                      ('Item',     True,  0x16, None),
@@ -33,6 +33,7 @@ item_table = {
     'Eyedrops':                                        ('Item',     True,  0x25, None),
     'Claim Check':                                     ('Item',     True,  0x26, None),
     'Kokiri Sword':                                    ('Item',     True,  0x27, None),
+    'Giants Knife':                                    ('Item',     True,  0x28, None),
     'Deku Shield':                                     ('Item',     None,  0x29, None),
     'Hylian Shield':                                   ('Item',     None,  0x2A, None),
     'Mirror Shield':                                   ('Item',     True,  0x2B, None),
@@ -106,7 +107,7 @@ item_table = {
     'Boss Key (Water Temple)':                         ('BossKey',  True,  0x97, None),
     'Boss Key (Spirit Temple)':                        ('BossKey',  True,  0x98, None),
     'Boss Key (Shadow Temple)':                        ('BossKey',  True,  0x99, None),
-    'Boss Key (Ganons Castle)':                        ('BossKey',  True,  0x9A, None),
+    'Boss Key (Ganons Castle)':                        ('GanonBossKey',True,0x9A,None),
     'Compass (Deku Tree)':                             ('Compass',  None,  0x9B, None),
     'Compass (Dodongos Cavern)':                       ('Compass',  None,  0x9C, None),
     'Compass (Jabu Jabus Belly)':                      ('Compass',  None,  0x9D, None),
@@ -139,7 +140,7 @@ item_table = {
     'Double Defense':                                  ('Item',     True,  0xB8, None),
     'Magic Bean Pack':                                 ('Item',     True,  0xC9, None),
     'Triforce Piece':                                  ('Item',     True,  0xCA, {'progressive': float('Inf')}),
-    'Zeldas Letter':                                   ('Item',     True,  None, None),
+    'Zeldas Letter':                                   ('Item',     True,  0x0B, None),
     'Time Travel':                                     ('Event',    True,  None, None),
     'Scarecrow Song':                                  ('Event',    True,  None, None),
     'Triforce':                                        ('Event',    True,  None, None),
@@ -278,6 +279,7 @@ item_table = {
 
     'Kokiri Emerald':                   ('DungeonReward',    True,  None,
                                             {
+                                                'stone':      True,
                                                 'addr2_data': 0x80,
                                                 'bit_mask':   0x00040000,
                                                 'item_id':    0x6C,
@@ -286,6 +288,7 @@ item_table = {
                                             }),
     'Goron Ruby':                       ('DungeonReward',    True,  None,
                                             {
+                                                'stone':      True,
                                                 'addr2_data': 0x81,
                                                 'bit_mask':   0x00080000,
                                                 'item_id':    0x6D,
@@ -294,6 +297,7 @@ item_table = {
                                             }),
     'Zora Sapphire':                    ('DungeonReward',    True,  None,
                                             {
+                                                'stone':      True,
                                                 'addr2_data': 0x82,
                                                 'bit_mask':   0x00100000,
                                                 'item_id':    0x6E,
@@ -302,6 +306,7 @@ item_table = {
                                             }),
     'Forest Medallion':                 ('DungeonReward',    True,  None,
                                             {
+                                                'medallion':  True,
                                                 'addr2_data': 0x3E,
                                                 'bit_mask':   0x00000001,
                                                 'item_id':    0x66,
@@ -310,6 +315,7 @@ item_table = {
                                             }),
     'Fire Medallion':                   ('DungeonReward',    True,  None,
                                             {
+                                                'medallion':  True,
                                                 'addr2_data': 0x3C,
                                                 'bit_mask':   0x00000002,
                                                 'item_id':    0x67,
@@ -318,6 +324,7 @@ item_table = {
                                             }),
     'Water Medallion':                  ('DungeonReward',    True,  None,
                                             {
+                                                'medallion':  True,
                                                 'addr2_data': 0x3D,
                                                 'bit_mask':   0x00000004,
                                                 'item_id':    0x68,
@@ -326,6 +333,7 @@ item_table = {
                                             }),
     'Spirit Medallion':                 ('DungeonReward',    True,  None,
                                             {
+                                                'medallion':  True,
                                                 'addr2_data': 0x3F,
                                                 'bit_mask':   0x00000008,
                                                 'item_id':    0x69,
@@ -334,6 +342,7 @@ item_table = {
                                             }),
     'Shadow Medallion':                 ('DungeonReward',    True,  None,
                                             {
+                                                'medallion':  True,
                                                 'addr2_data': 0x41,
                                                 'bit_mask':   0x00000010,
                                                 'item_id':    0x6A,
@@ -342,6 +351,7 @@ item_table = {
                                             }),
     'Light Medallion':                  ('DungeonReward',    True,  None,
                                             {
+                                                'medallion':  True,
                                                 'addr2_data': 0x40,
                                                 'bit_mask':   0x00000020,
                                                 'item_id':    0x6B,

@@ -60,13 +60,17 @@ class State(object):
         return all(map(self.prog_items.__contains__, items))
 
 
+    def count_of(self, items):
+        return len(list(filter(self.prog_items.__contains__, items)))
+
+
     def item_count(self, item):
         return self.prog_items[item]
 
 
     def has_bottle(self, **kwargs):
         # Extra Ruto's Letter are automatically emptied
-        return self.has_any_of(ItemInfo.bottles) or self.has('Ruto\'s Letter', 2)
+        return self.has_any_of(ItemInfo.bottles) or self.has('Rutos Letter', 2)
 
 
     def has_hearts(self, count):
@@ -81,6 +85,17 @@ class State(object):
             + self.item_count('Piece of Heart') // 4
             + 3 # starting hearts
         )
+
+    def has_medallions(self, count):
+        return self.count_of(ItemInfo.medallions) >= count
+
+
+    def has_stones(self, count):
+        return self.count_of(ItemInfo.stones) >= count
+
+
+    def has_dungeon_rewards(self, count):
+        return (self.count_of(ItemInfo.medallions) + self.count_of(ItemInfo.stones)) >= count
 
 
     def had_night_start(self):
