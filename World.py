@@ -343,7 +343,6 @@ class World(object):
             if 'savewarp' in region:
                 new_exit = Entrance('%s -> %s' % (new_region.name, region['savewarp']), new_region)
                 new_exit.connected_region = region['savewarp']
-                new_exit.rule_string = rule
                 new_region.exits.append(new_exit)
             self.regions.append(new_region)
 
