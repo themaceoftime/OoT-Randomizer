@@ -40,10 +40,20 @@ def assume_entrance_pool(entrance_pool):
             if not (world.mix_entrance_pools and (world.shuffle_overworld_entrances or world.shuffle_special_interior_entrances)):
                 if (entrance.type in ('Dungeon', 'Grotto', 'Grave') and entrance.reverse.name != 'Spirit Temple Lobby -> Desert Colossus From Spirit Lobby') or \
                    (entrance.type == 'Interior' and world.shuffle_special_interior_entrances):
+                    # In most cases, Dungeon, Grotto/Grave and Simple Interior exits shouldn't be assumed able to give access to their parent region
                     assumed_return.set_rule(lambda state, **kwargs: False)
             assumed_forward.bind_two_way(assumed_return)
         assumed_pool.append(assumed_forward)
     return assumed_pool
+
+
+def build_one_way_targets(world, types_to_include, exclude=[]):
+    one_way_entrances = []
+    for pool_type in types_to_include:
+        one_way_entrances += world.get_shufflable_entrances(type=pool_type)
+    valid_one_way_entrances = list(filter(lambda entrance: entrance.name not in exclude, one_way_entrances))
+    return [entrance.get_new_target() for entrance in valid_one_way_entrances]
+
 
 #   Abbreviations
 #       DMC     Death Mountain Crater
@@ -64,14 +74,6 @@ def assume_entrance_pool(entrance_pool):
 #       ZD      Zora's Domain
 #       ZF      Zora's Fountain
 #       ZR      Zora's River
-
-def build_one_way_targets(world, types_to_include, exclude=[]):
-    one_way_entrances = []
-    for pool_type in types_to_include:
-        one_way_entrances += world.get_shufflable_entrances(type=pool_type)
-    valid_one_way_entrances = list(filter(lambda entrance: entrance.name not in exclude, one_way_entrances))
-    return [entrance.get_new_target() for entrance in valid_one_way_entrances]
-
 
 entrance_shuffle_table = [
     ('Dungeon',         ('KF Outside Deku Tree -> Deku Tree Lobby',                         { 'index': 0x0000 }),
@@ -640,6 +642,14 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
                 if not max_search.visited(location):
                     raise EntranceShuffleError('%s is unreachable' % location.name)
 
+    if world.shuffle_interior_entrances and \
+       (entrance_placed == None or entrance_placed.type in ['Interior', 'SpecialInterior']):
+        # When cows are shuffled, ensure both Impa's House entrances are in the same hint region because the cow is reachable from both sides
+        if world.shuffle_cows:
+            impas_front_entrance = get_entrance_replacing(world.get_region('Kak Impas House'), 'Kakariko Village -> Kak Impas House')
+            impas_back_entrance = get_entrance_replacing(world.get_region('Kak Impas House Back'), 'Kak Impas Ledge -> Kak Impas House Back')
+            check_same_hint_region(impas_front_entrance, impas_back_entrance)
+
     if (world.shuffle_special_interior_entrances or world.shuffle_overworld_entrances or world.spawn_positions) and \
        (entrance_placed == None or world.mix_entrance_pools or entrance_placed.type in ['SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
         # At least one valid starting region with all basic refills should be reachable without using any items at the beginning of the seed
@@ -673,11 +683,6 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
 
         if not time_travel_search.can_reach(world.get_region('Market Guard House'), age='adult'):
             raise EntranceShuffleError('Big Poe Shop access is not guaranteed as adult')
-
-        if world.shuffle_cows:
-            impas_front_entrance = get_entrance_replacing(world.get_region('Kak Impas House'), 'Kakariko Village -> Kak Impas House')
-            impas_back_entrance = get_entrance_replacing(world.get_region('Kak Impas House Back'), 'Kak Impas Ledge -> Kak Impas House Back')
-            check_same_hint_region(impas_front_entrance, impas_back_entrance)
 
 
 # Returns whether or not we can affirm the entrance can never be accessed as the given age

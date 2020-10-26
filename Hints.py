@@ -120,9 +120,11 @@ def getItemGenericName(item):
 def isRestrictedDungeonItem(dungeon, item):
     if (item.map or item.compass) and dungeon.world.shuffle_mapcompass == 'dungeon':
         return item in dungeon.dungeon_items
-    if item.smallkey and dungeon.world.shuffle_smallkeys == 'dungeon':
+    if item.type == 'SmallKey' and dungeon.world.shuffle_smallkeys == 'dungeon':
         return item in dungeon.small_keys
-    if item.bosskey and dungeon.world.shuffle_bosskeys == 'dungeon':
+    if item.type == 'BossKey' and dungeon.world.shuffle_bosskeys == 'dungeon':
+        return item in dungeon.boss_key
+    if item.type == 'GanonBossKey' and dungeon.world.shuffle_ganon_bosskey == 'dungeon':
         return item in dungeon.boss_key
     return False
 
@@ -870,7 +872,13 @@ def buildBridgeReqsString(world):
         string += "The awakened ones will have #already created a bridge# to the castle where the evil dwells."
     else:
         item_req_string = getHint('bridge_' + world.bridge, world.clearer_hints).text
-        if world.bridge == 'tokens':
+        if world.bridge == 'medallions':
+            item_req_string = str(world.bridge_medallions) + ' ' + item_req_string
+        elif world.bridge == 'stones':
+            item_req_string = str(world.bridge_stones) + ' ' + item_req_string
+        elif world.bridge == 'dungeons':
+            item_req_string = str(world.bridge_rewards) + ' ' + item_req_string
+        elif world.bridge == 'tokens':
             item_req_string = str(world.bridge_tokens) + ' ' + item_req_string
         if '#' not in item_req_string:
             item_req_string = '#%s#' % item_req_string
@@ -881,16 +889,24 @@ def buildBridgeReqsString(world):
 def buildGanonBossKeyString(world):
     string = "\x13\x74" # Boss Key Icon
     if world.shuffle_ganon_bosskey == 'remove':
-        string += "And the door of the \x05\x41evil ruler\x05\x40's chamber will be left #unlocked#."
+        string += "And the door to the \x05\x41evil one\x05\x40's chamber will be left #unlocked#."
     else:
         if 'lacs_' in world.shuffle_ganon_bosskey:
             item_req_string = getHint(world.shuffle_ganon_bosskey, world.clearer_hints).text
+            if world.lacs_condition == 'medallions':
+                item_req_string = str(world.lacs_medallions) + ' ' + item_req_string
+            elif world.lacs_condition == 'stones':
+                item_req_string = str(world.lacs_stones) + ' ' + item_req_string
+            elif world.lacs_condition == 'dungeons':
+                item_req_string = str(world.lacs_rewards) + ' ' + item_req_string
+            elif world.lacs_condition == 'tokens':
+                item_req_string = str(world.lacs_tokens) + ' ' + item_req_string
             if '#' not in item_req_string:
                 item_req_string = '#%s#' % item_req_string
             bk_location_string = "provided by Zelda once %s are retrieved" % item_req_string
         else:
             bk_location_string = getHint('ganonBK_' + world.shuffle_ganon_bosskey, world.clearer_hints).text
-        string += "And the key to the \x05\x41evil\x05\x40 will be %s." % bk_location_string
+        string += "And the \x05\x41evil one\x05\x40's key will be %s." % bk_location_string
     return str(GossipText(string, ['Yellow'], prefix=''))
 
 
@@ -914,10 +930,11 @@ def buildGanonText(world, messages):
     elif world.light_arrow_location:
         text = get_raw_text(getHint('Light Arrow Location', world.clearer_hints).text)
         location = world.light_arrow_location
-        location_hint = get_hint_area(location).replace('Ganon\'s Castle', 'my castle')
+        location_hint = get_hint_area(location)
         if world.id != location.world.id:
             text += "\x05\x42Player %d's\x05\x40 %s" % (location.world.id +1, get_raw_text(location_hint))
         else:
+            location_hint = location_hint.replace('Ganon\'s Castle', 'my castle')
             text += get_raw_text(location_hint)
     else:
         text = get_raw_text(getHint('Validation Line', world.clearer_hints).text)

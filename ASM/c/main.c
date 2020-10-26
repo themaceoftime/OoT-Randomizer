@@ -12,6 +12,7 @@
 #include "z64.h"
 #include "chests.h"
 #include "ganon.h"
+#include "twinrova.h"
 #include "extern_ctxt.h"
 #include "fog.h"
 
@@ -42,6 +43,7 @@ extern uint8_t START_TWINROVA_FIGHT;
 void after_scene_init() {
     START_TWINROVA_FIGHT = 0;
     check_ganon_entry();
+    clear_twinrova_vars();
     models_reset();
     extern_scene_init();
 }

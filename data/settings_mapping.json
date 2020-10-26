@@ -14,7 +14,9 @@
             "rom",
             "output_dir",
             "enable_distribution_file",
+            "enable_cosmetic_file",
             "distribution_file",
+            "cosmetic_file",
             "count",
             "create_spoiler",
             "create_cosmetics_log",
@@ -57,7 +59,9 @@
           "row_span": [1,1,1],
           "settings": [
             "enable_distribution_file",
+            "enable_cosmetic_file",
             "distribution_file",
+            "cosmetic_file",
             "create_spoiler",
             "web_output_type",
             "rom",
@@ -101,6 +105,8 @@
           "col_span": 4,
           "row_span": [1,1,1],
           "settings": [
+            "enable_cosmetic_file",
+            "cosmetic_file",
             "web_output_type",
             "rom",
             "web_wad_file",
@@ -147,6 +153,9 @@
             "zora_fountain",
             "gerudo_fortress",
             "bridge",
+            "bridge_medallions",
+            "bridge_stones",
+            "bridge_rewards",
             "bridge_tokens",
             "triforce_hunt",
             "triforce_goal_per_world",
@@ -200,8 +209,13 @@
           "settings": [
             "shuffle_mapcompass",
             "shuffle_smallkeys",
+            "shuffle_fortresskeys",
             "shuffle_bosskeys",
             "shuffle_ganon_bosskey",
+            "lacs_medallions",
+            "lacs_stones",
+            "lacs_rewards",
+            "lacs_tokens",
             "enhance_map_compass"
           ]
         }
@@ -303,6 +317,7 @@
             "useful_cutscenes",
             "fast_chests",
             "free_scarecrow",
+            "fast_bunny_hood",
             "chicken_count_random",
             "chicken_count",
             "big_poe_count_random",

@@ -1089,7 +1089,8 @@ skip_GS_BGS_text:
 ; Warp song speedup
 ;==================================================================================================
 ;
-.orga 0xBEA044 ;manually set next entrance and fade out type
+;manually set next entrance and fade out type
+.orga 0xBEA044 
    jal      warp_speedup
    nop
 
@@ -1694,54 +1695,6 @@ skip_GS_BGS_text:
     sw      v1, 0x02A4(a0)
 
 ;==================================================================================================
-; Carpet Salesman Shop Shuffle
-;==================================================================================================
-; Replaces: sw      a1, 0x001C(sp)
-;           sw      a2, 0x0020(sp)
-.orga 0xE5B2F4
-    jal     carpet_inital_message
-    sw      a1, 0x001C(sp)
-
-; Replaces: lui     a3, 0x461C
-;           ori     a3, a3, 0x4000
-.orga 0xE5B538
-    jal     carpet_buy_item_hook
-    lui     a3, 0x461C
-
-;==================================================================================================
-; Medigoron Shop Shuffle
-;==================================================================================================
-; Replaces: lui     a3, 0x43CF
-;           ori     a3, a3, 0x8000
-.orga 0xE1FEAC
-    jal     medigoron_buy_item_hook
-    lui     a3, 0x43CF
-
-; Replaces: lui     v1, 0x8012
-;           addiu   v1, v1, 0xA5D0
-;           lw      t6, 0x0004(v1)
-;           addiu   at, zero, 0x0005
-;           addiu   v0, zero, 0x0011
-;           beq     t6, zero, @medigoron_check_2nd_part
-;           lui     a0, 0x8010
-;           b       @medigoron_check_2nd_part
-;           addiu   v0, zero, 0x0005
-; @medigoron_check_2nd_part:
-.orga 0xE1F72C
-    addiu   sp, sp, -0x18
-    sw      ra, 0x14(sp)
-    jal     medigoron_inital_check
-    nop
-    lw      ra, 0x14(sp)
-    addiu   sp, sp, 0x18
-    slti    at, v0, 5
-    bnez    at, @medigoron_check_return
-    addiu   at, zero, 0x0005
-
-.orga 0xE1F794
-@medigoron_check_return:
-
-;==================================================================================================
 ; Remove File 3 From File Select
 ;==================================================================================================
 ;Main Menu Up
@@ -1845,9 +1798,39 @@ skip_GS_BGS_text:
 .orga 0xD69398
 @Twinrova_Update_Return:
 
-;Remove the function call to set the boss music in Init
-; Replaces: jal     0x800CAA70
+;nop various things in the init function
+.orga 0xD62100
+    jal     twinrova_set_action_ice
+.orga 0xD62110
+    lui     at, 0x4248
 .orga 0xD62128
+    nop
+.orga 0xD621CC
+    jal     twinrova_set_action_fire
+.orga 0xD621DC
+    lui     at, 0x4248
+.orga 0xD6215C
+    nop
+.orga 0xD6221C
+    nop
+.orga 0xD73118 ;reloc
+    nop
+.orga 0xD73128 ;reloc
+    nop
+
+;Update alpha of the portal
+;Replaces: lbu     t8, 0x00(v0)
+.orga 0xD69C80
+    jal     rova_portal
+
+;Update position of the ice portal
+.orga 0xD6CC18
+    jal     ice_pos
+    nop
+
+;Update position of the fire portal
+.orga 0xD6CDD4
+    jal     fire_pos
     nop
 
 ;==================================================================================================
@@ -1910,38 +1893,48 @@ skip_GS_BGS_text:
     or      a1, s1, r0
 
 ;==================================================================================================
-; Skip Song of Storms Demonstration
+; Skip Song Playback When Learning Songs
 ;==================================================================================================
-;skip setting cutscene trigger
-; Replaces: sb      t0, 0xB9E4(at)
-.orga 0xE42AB4
-    nop
+; this hack sets the learning song ID to 0 (minuet) which forces the playback to be skipped.
+; this change does not affect the value passed to Item_Give, so you still recieve the right song.
+; this allows other actors to be responsible for showing the "you learned" text and avoids undesireable 
+; effects like suns song playback skipping time
+; 
+; Replaces: sh      a2, 0x63ED(at)
+.orga 0xB55428
+    sh      r0, 0x63ED(at)
 
-;if songs as items is enabled branch directly to getting the item
-; Replaces: or      a2, a0, r0
-;           or      a3, a1, r0
-;           lui     v0, 0x0001
-;           addu    v0, v0, a3   
-.orga 0xE429DC
-    jal     sos_song_as_item
-    or      a2, a0, r0
-    bnez_a  t0, 0xE42A4C
-    nop
-
-;replace the check for dialog state 7 with a function call that hides the HUD
-; Replaces: bne     v0, at
-.orga 0xE42B78
-    jal     sos_fix_alpha
-
-;if songs as items is enabled skip showing the song staff
-; Replaces: jal     0x800DD400 ;shows song staff
-.orga 0xE42B84
-    jal     sos_staff
-
-;skip playing the song demonstration and set state to prevent slashing sword
+;==================================================================================================
+; Skip Song of Storms Song Demonstration
+;==================================================================================================
+;skip playing the song demonstration
 ; Replaces: jal     0x800DD400 ;plays song demo
 .orga 0xE42C00
-    jal     sos_set_state
+   jal     sos_skip_demo
+
+;hook at the beginning of the song playback function to do a few things:
+;set player stateFlags2, change interface alpha, show song staff, change actionFunc
+;if songs as items is on, dont show the staff
+; Replaces: addiu    a0, a2, 0x20D8
+.orga 0xE42B5C
+   jal     sos_handle_staff
+
+;after the `sos_handle_staff` hook, skip the rest of the original function
+.orga 0xE42B64
+   b       0xE42B64 + (4 * 14)
+   nop
+
+;hook into the function where the windmill guy is waiting for song playback
+;for no songs as items: handle showing text at the right time
+;for songs as items: give the item, set flags, set actionFunc and return
+.orga 0xE429DC
+   jal     sos_handle_item
+   nop
+
+;after the `sos_handle_item` hook, skip the rest of the original function
+.orga 0xE429E4
+   b       0xE429E4 + (4 * 84)
+   nop
 
 ;dont allow link to talk to the windmill guy if he is recieving an item
 ; Replaces: lh      t6, 0x8A(s0)
@@ -1949,10 +1942,10 @@ skip_GS_BGS_text:
 ;           lhu     t9, 0xB4AE(t9)
 ;           lw      v1, 0x1C44(s1)
 .orga 0xE42C44
-    jal     sos_talk_prevention
-    lh      t6, 0x8A(s0)   ;displaced
-    bnez_a  t2, 0xE42D64
-    lw      v1, 0x1C44(s1) ;displaced
+   jal     sos_talk_prevention
+   lh      t6, 0x8A(s0)   ;displaced
+   bnez_a  t2, 0xE42D64
+   lw      v1, 0x1C44(s1) ;displaced
 
 ;==================================================================================================
 ; Fix Zelda in Final Battle
@@ -2020,6 +2013,13 @@ skip_GS_BGS_text:
 .orga 0xCDF420 
     jal     heavy_block_set_switch
 
+;set links position and angle to the center of the block as its being lifted
+; Replaces: or         t9, t8, at
+;           sw         t9, 0x66C(s0)
+.orga 0xBD5C58
+    jal      heavy_block_posrot
+    or       t9, t8, at
+
 ;set links action to 7 so he can move again
 ; Replaces: swc1      f4, 0x34(sp)
 ;           lwc1      f6, 0x0C(s0)
@@ -2043,29 +2043,6 @@ skip_GS_BGS_text:
 ;Replaces: lui        at, 0x4220
 .orga 0xBE1C98
     lui    at, 0x4218
-
-;==================================================================================================
-; Fix B Button Icon for Minigames When Swordless
-;==================================================================================================
-;remove both checks for gSaveContext.equips.buttonItems[0] != ITEM_NONE
-;Replaces: beq      t5, t6
-;.orga 0xAE4360
-;    nop
-;
-;;for the second check, replace it with a functon that sets a flag if current B item is ITEM_NONE
-;;Replaces: beq      t5, v1
-;.orga 0xAE43B0
-;    jal    minigames_check_b
-;
-;;if the swordless minigame flag is set, restore B back to blank and unset flag
-;;Replaces: jal      0x8006FB50
-;.orga 0xAE4BD8
-;    jal    minigames_restore_b
-;
-;;same as above for the case where you leave bowling without ending the game
-;;Replaces: jal      0x8006FB50
-;.orga 0xAE4B30
-;    jal    minigames_restore_b
 
 ;==================================================================================================
 ; Skip Malons Song Demonstration
@@ -2097,14 +2074,14 @@ skip_GS_BGS_text:
     jal     malon_ra_displaced
     lw      v0, 0x1C44(a1)
 .skip 4 * 1
-    addiu  t9, r0, 0x02AE ;from malon entrance
+    nop
 .skip 4 * 2
     jal    malon_songs_as_items ;make branch fail if songs as items is on
     lhu    t8, 0x04C6(t8)
 .skip 4 * 5
-    sh     t9, 0x02(a3) ;set entrance from cutscene
+    nop
 .skip 4 * 1
-    nop        ;dont set next cutscene index
+    jal    malon_show_text  ;dont set next cutscene index, also show text if song
 .skip 4 * 2
     nop        ;dont set transition fade type
 .skip 4 * 4    
@@ -2114,7 +2091,7 @@ skip_GS_BGS_text:
 
 ;set relevant flags and restore malon so she can talk again
 .orga 0xD7EC70
-    j    malon_set_wait
+    j    malon_reload
 
 ;==================================================================================================
 ; Clean Up Big Octo Room For Multiple Visits
@@ -2143,21 +2120,69 @@ skip_GS_BGS_text:
     addiu   t8, zero, 0x0006
 
 ;==================================================================================================
-; Fix Equip Swap Crashes
+; Use Sticks and Masks as Adult
 ;==================================================================================================
 ; Deku Stick
 ; Replaces: lui     t2, 0x0600
 ;           addiu   t2, t2, 0x6CC0
 .orga 0xAF180C
-    jal     equip_swap_stick
+    jal     stick_as_adult
     nop
 
 ; Masks
 ; Replaces: sw      t6, 0x0004(v0)
 ;           lb      t7, 0x013F(s0)
 .orga 0xBE5D8C
-    jal     equip_swap_mask
+    jal     masks_as_adult
     nop
+
+;==================================================================================================
+; Carpet Salesman Shop Shuffle
+;==================================================================================================
+; Replaces: sw      a1, 0x001C(sp)
+;           sw      a2, 0x0020(sp)
+.orga 0xE5B2F4
+    jal     carpet_inital_message
+    sw      a1, 0x001C(sp)
+
+; Replaces: lui     a3, 0x461C
+;           ori     a3, a3, 0x4000
+.orga 0xE5B538
+    jal     carpet_buy_item_hook
+    lui     a3, 0x461C
+
+;==================================================================================================
+; Medigoron Shop Shuffle
+;==================================================================================================
+; Replaces: lui     a3, 0x43CF
+;           ori     a3, a3, 0x8000
+.orga 0xE1FEAC
+    jal     medigoron_buy_item_hook
+    lui     a3, 0x43CF
+
+; Replaces: lui     v1, 0x8012
+;           addiu   v1, v1, 0xA5D0
+;           lw      t6, 0x0004(v1)
+;           addiu   at, zero, 0x0005
+;           addiu   v0, zero, 0x0011
+;           beq     t6, zero, @medigoron_check_2nd_part
+;           lui     a0, 0x8010
+;           b       @medigoron_check_2nd_part
+;           addiu   v0, zero, 0x0005
+; @medigoron_check_2nd_part:
+.orga 0xE1F72C
+    addiu   sp, sp, -0x18
+    sw      ra, 0x14(sp)
+    jal     medigoron_inital_check
+    nop
+    lw      ra, 0x14(sp)
+    addiu   sp, sp, 0x18
+    slti    at, v0, 5
+    bnez    at, @medigoron_check_return
+    addiu   at, zero, 0x0005
+
+.orga 0xE1F794
+@medigoron_check_return:
 
 ;==================================================================================================
 ; Bombchu Ticking Color
@@ -2167,3 +2192,12 @@ skip_GS_BGS_text:
 .orga 0xD5FF94
     jal     bombchu_back_color
     ctc1    t9, $31
+
+;==================================================================================================
+; Repoint English Message Table to JP
+;==================================================================================================
+;To make room for more message table entries, store the jp table pointer to the english one as well.
+;The rest of this hack is implemented in Messages.py
+; Replaces: sw      t7, 0x00(a1)
+.orga 0xB575C8
+    sw      t6, 0x00(a1)
