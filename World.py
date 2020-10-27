@@ -62,7 +62,7 @@ class World(object):
         self.disable_trade_revert = self.shuffle_interior_entrances or self.shuffle_overworld_entrances or self.warp_songs
 
         if self.open_forest == 'closed' and (self.shuffle_special_interior_entrances or self.shuffle_overworld_entrances or 
-                                             self.warp_songs or self.spawn_positions):
+                                             self.shuffle_hideout_entrances or self.warp_songs or self.spawn_positions):
             self.open_forest = 'closed_deku'
 
         self.triforce_goal = self.triforce_goal_per_world * settings.world_count
