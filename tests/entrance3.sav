@@ -29,7 +29,7 @@
 "shuffle_grotto_entrances": true,
 "shuffle_dungeon_entrances": true,
 "shuffle_overworld_entrances": true,
-"mix_entrance_pools": true,
+"mix_entrance_pools": "all",
 "decouple_entrances": true,
 "owl_drops": true,
 "warp_songs": true,

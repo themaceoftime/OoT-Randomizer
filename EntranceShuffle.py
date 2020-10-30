@@ -37,7 +37,7 @@ def assume_entrance_pool(entrance_pool):
         if entrance.reverse != None and not entrance.world.decouple_entrances:
             assumed_return = entrance.reverse.assume_reachable()
             world = entrance.world
-            if not (world.mix_entrance_pools and (world.shuffle_overworld_entrances or world.shuffle_special_interior_entrances)):
+            if not ((world.mix_entrance_pools != 'off') and (world.shuffle_overworld_entrances or world.shuffle_special_interior_entrances)):
                 if (entrance.type in ('Dungeon', 'Grotto', 'Grave') and entrance.reverse.name != 'Spirit Temple Lobby -> Desert Colossus From Spirit Lobby') or \
                    (entrance.type == 'Interior' and world.shuffle_special_interior_entrances):
                     # In most cases, Dungeon, Grotto/Grave and Simple Interior exits shouldn't be assumed able to give access to their parent region
@@ -400,7 +400,7 @@ def shuffle_random_entrances(worlds):
                 entrance_pools['GrottoGraveReverse'] = [entrance.reverse for entrance in entrance_pools['GrottoGrave']]
 
         if worlds[0].shuffle_overworld_entrances:
-            exclude_overworld_reverse = worlds[0].mix_entrance_pools and not worlds[0].decouple_entrances
+            exclude_overworld_reverse = (worlds[0].mix_entrance_pools == 'all') and not worlds[0].decouple_entrances
             entrance_pools['Overworld'] = world.get_shufflable_entrances(type='Overworld', only_primary=exclude_overworld_reverse)
             if not worlds[0].decouple_entrances:
                 entrance_pools['Overworld'].remove(world.get_entrance('GV Lower Stream -> Lake Hylia'))
@@ -412,8 +412,14 @@ def shuffle_random_entrances(worlds):
                 entrance.reverse.shuffled = True
 
         # Combine all entrance pools into one when mixing entrance pools
-        if worlds[0].mix_entrance_pools:
+        if worlds[0].mix_entrance_pools == 'all':
             entrance_pools = {'Mixed': list(chain.from_iterable(entrance_pools.values()))}
+        elif worlds[0].mix_entrance_pools == 'indoor':
+            if worlds[0].shuffle_overworld_entrances:
+                ow_entrance_pool = entrance_pools['Overworld']
+            entrance_pools = {'Mixed': list(filter(lambda entrance: entrance.type != 'Overworld', chain.from_iterable(entrance_pools.values())))}
+            if worlds[0].shuffle_overworld_entrances:
+                entrance_pools['Overworld'] = ow_entrance_pool
 
         # Build target entrance pools and set the assumption for entrances being reachable
         one_way_target_entrance_pools = {}
@@ -651,7 +657,7 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
             check_same_hint_region(impas_front_entrance, impas_back_entrance)
 
     if (world.shuffle_special_interior_entrances or world.shuffle_overworld_entrances or world.spawn_positions) and \
-       (entrance_placed == None or world.mix_entrance_pools or entrance_placed.type in ['SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
+       (entrance_placed == None or (world.mix_entrance_pools != 'off') or entrance_placed.type in ['SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
         # At least one valid starting region with all basic refills should be reachable without using any items at the beginning of the seed
         # Note this creates new empty states rather than reuse the worlds' states (which already have starting items)
         no_items_search = Search([State(w) for w in worlds])
@@ -675,7 +681,7 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
             raise EntranceShuffleError('Path to Temple of Time as child is not guaranteed')
 
     if (world.shuffle_interior_entrances or world.shuffle_overworld_entrances) and \
-       (entrance_placed == None or world.mix_entrance_pools or entrance_placed.type in ['Interior', 'SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
+       (entrance_placed == None or (world.mix_entrance_pools != 'off') or entrance_placed.type in ['Interior', 'SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
         # The Big Poe Shop should always be accessible as adult without the need to use any bottles
         # This is important to ensure that players can never lock their only bottles by filling them with Big Poes they can't sell
         # We can use starting items in this check as long as there are no exits requiring the use of a bottle without refills
