@@ -2515,7 +2515,8 @@ setting_infos = [
         gui_params     = {
             'randomize_key': 'randomize_settings',
             'distribution':  [
-                ('off', 1),
+                ('off', 2),
+                ('indoor', 1),
                 ('all', 1),
             ],
         },

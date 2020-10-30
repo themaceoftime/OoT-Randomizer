@@ -175,11 +175,11 @@
             "shuffle_grotto_entrances",
             "shuffle_dungeon_entrances",
             "shuffle_overworld_entrances",
+            "mix_entrance_pools",
+            "decouple_entrances",
             "owl_drops",
             "warp_songs",
             "spawn_positions",
-            "decouple_entrances",
-            "mix_entrance_pools",
             "mq_dungeons_random",
             "mq_dungeons"
           ]
