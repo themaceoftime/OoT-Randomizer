@@ -2078,6 +2078,20 @@ setting_infos = [
         disabled_default = 0,
     ),
     Checkbutton(
+        name           = 'skip_child_zelda',
+        gui_text       = 'Skip Child Zelda',
+        gui_tooltip    = '''\
+            Start having already met Zelda and obtained
+            Zelda's Letter along with the song from Impa.
+            This is incompatible with Song Shuffle: "Anywhere"
+            and with Shuffle Weird Egg.
+        ''',
+        shared         = True,
+        disable = {
+            True: {'settings': ['shuffle_weird_egg', 'no_guard_stealth']},
+        },
+    ),
+    Checkbutton(
         name           = 'no_escape_sequence',
         gui_text       = 'Skip Tower Escape Sequence',
         gui_tooltip    = '''\
@@ -2353,6 +2367,7 @@ setting_infos = [
             - Gerudo Training Ground's Ice Arrow Location
 
             'Anywhere': Songs can appear in any location.
+            This is incompatible with "Free Zelda".
         ''',
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -2361,6 +2376,9 @@ setting_infos = [
                 ('dungeon', 1),
                 ('any', 1),
             ],
+        },
+        disable        = {
+            'any' : {'settings' : ['skip_child_zelda']}
         },
         shared         = True,
     ),
