@@ -40,10 +40,20 @@ def assume_entrance_pool(entrance_pool):
             if not ((world.mix_entrance_pools != 'off') and (world.shuffle_overworld_entrances or world.shuffle_special_interior_entrances)):
                 if (entrance.type in ('Dungeon', 'Grotto', 'Grave') and entrance.reverse.name != 'Spirit Temple Lobby -> Desert Colossus From Spirit Lobby') or \
                    (entrance.type == 'Interior' and world.shuffle_special_interior_entrances):
+                    # In most cases, Dungeon, Grotto/Grave and Simple Interior exits shouldn't be assumed able to give access to their parent region
                     assumed_return.set_rule(lambda state, **kwargs: False)
             assumed_forward.bind_two_way(assumed_return)
         assumed_pool.append(assumed_forward)
     return assumed_pool
+
+
+def build_one_way_targets(world, types_to_include, exclude=[]):
+    one_way_entrances = []
+    for pool_type in types_to_include:
+        one_way_entrances += world.get_shufflable_entrances(type=pool_type)
+    valid_one_way_entrances = list(filter(lambda entrance: entrance.name not in exclude, one_way_entrances))
+    return [entrance.get_new_target() for entrance in valid_one_way_entrances]
+
 
 #   Abbreviations
 #       DMC     Death Mountain Crater
@@ -64,14 +74,6 @@ def assume_entrance_pool(entrance_pool):
 #       ZD      Zora's Domain
 #       ZF      Zora's Fountain
 #       ZR      Zora's River
-
-def build_one_way_targets(world, types_to_include, exclude=[]):
-    one_way_entrances = []
-    for pool_type in types_to_include:
-        one_way_entrances += world.get_shufflable_entrances(type=pool_type)
-    valid_one_way_entrances = list(filter(lambda entrance: entrance.name not in exclude, one_way_entrances))
-    return [entrance.get_new_target() for entrance in valid_one_way_entrances]
-
 
 entrance_shuffle_table = [
     ('Dungeon',         ('KF Outside Deku Tree -> Deku Tree Lobby',                         { 'index': 0x0000 }),
@@ -584,7 +586,7 @@ def shuffle_entrances(worlds, entrances, target_entrances, rollbacks, locations_
                 continue
 
             try:
-                check_entrances_compatibility(entrance, target)
+                check_entrances_compatibility(entrance, target, rollbacks)
                 change_connections(entrance, target)
                 validate_world(entrance.world, worlds, entrance, locations_to_ensure_reachable, complete_itempool)
                 rollbacks.append((entrance, target))
@@ -601,10 +603,15 @@ def shuffle_entrances(worlds, entrances, target_entrances, rollbacks, locations_
 
 
 # Check and validate that an entrance is compatible to replace a specific target
-def check_entrances_compatibility(entrance, target):
+def check_entrances_compatibility(entrance, target, rollbacks=[]):
     # An entrance shouldn't be connected to its own scene, so we fail in that situation
     if entrance.parent_region.get_scene() and entrance.parent_region.get_scene() == target.connected_region.get_scene():
         raise EntranceShuffleError('Self scene connections are forbidden')
+
+    # One way entrances shouldn't lead to the same scene as other already chosen one way entrances
+    if entrance.type in ('OwlDrop', 'Spawn', 'WarpSong') and \
+       any([rollback[0].connected_region.get_scene() == target.connected_region.get_scene() for rollback in rollbacks]):
+        raise EntranceShuffleError('Another %s already leads to %s' % (entrance.type, target.connected_region.get_scene()))
 
 
 # Validate the provided worlds' structures, raising an error if it's not valid based on our criterias
@@ -641,44 +648,47 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
                 if not max_search.visited(location):
                     raise EntranceShuffleError('%s is unreachable' % location.name)
 
-    if (world.shuffle_special_interior_entrances or world.shuffle_overworld_entrances or world.spawn_positions) and \
-       (entrance_placed == None or (world.mix_entrance_pools != 'off') or entrance_placed.type in ['SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
-            # At least one valid starting region with all basic refills should be reachable without using any items at the beginning of the seed
-            # Note this creates an empty State rather than reuse world.state (which already has starting items).
-            no_items_search = Search([State(w) for w in worlds])
-
-            valid_starting_regions = ['Kokiri Forest', 'Kakariko Village']
-            if not any(region for region in valid_starting_regions if no_items_search.can_reach(world.get_region(region))):
-                raise EntranceShuffleError('Invalid starting area')
-
-            # Check that a region where time passes is always reachable as both ages without having collected any items (except in closed forest)
-            time_travel_search = Search.with_items([w.state for w in worlds], [ItemFactory('Time Travel', world=w) for w in worlds])
-
-            if not (any(region for region in time_travel_search.reachable_regions('child') if region.time_passes and region.world == world) and
-                    any(region for region in time_travel_search.reachable_regions('adult') if region.time_passes and region.world == world)):
-                raise EntranceShuffleError('Time passing is not guaranteed as both ages')
-
-            # The player should be able to get back to ToT after going through time, without having collected any items
-            # This is important to ensure that the player never loses access to the pedestal after going through time
-            if world.starting_age == 'child' and not time_travel_search.can_reach(world.get_region('Temple of Time'), age='adult'):
-                raise EntranceShuffleError('Path to Temple of Time as adult is not guaranteed')
-            elif world.starting_age == 'adult' and not time_travel_search.can_reach(world.get_region('Temple of Time'), age='child'):
-                raise EntranceShuffleError('Path to Temple of Time as child is not guaranteed')
-
-    if (world.shuffle_interior_entrances or world.shuffle_overworld_entrances) and \
-       (entrance_placed == None or (world.mix_entrance_pools != 'off') or entrance_placed.type in ['Interior', 'SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
-        # The Big Poe Shop should always be accessible as adult without the need to use any bottles
-        # Since we can't guarantee that items in the pool won't be placed behind bottles, we guarantee the access without using any items
-        # This is important to ensure that players can never lock their only bottles by filling them with Big Poes they can't sell
-        no_items_time_travel_search = Search.with_items([State(w) for w in worlds], [ItemFactory('Time Travel', world=w) for w in worlds])
-
-        if not no_items_time_travel_search.can_reach(world.get_region('Market Guard House'), age='adult'):
-            raise EntranceShuffleError('Big Poe Shop access is not guaranteed as adult')
-
+    if world.shuffle_interior_entrances and \
+       (entrance_placed == None or entrance_placed.type in ['Interior', 'SpecialInterior']):
+        # When cows are shuffled, ensure both Impa's House entrances are in the same hint region because the cow is reachable from both sides
         if world.shuffle_cows:
             impas_front_entrance = get_entrance_replacing(world.get_region('Kak Impas House'), 'Kakariko Village -> Kak Impas House')
             impas_back_entrance = get_entrance_replacing(world.get_region('Kak Impas House Back'), 'Kak Impas Ledge -> Kak Impas House Back')
             check_same_hint_region(impas_front_entrance, impas_back_entrance)
+
+    if (world.shuffle_special_interior_entrances or world.shuffle_overworld_entrances or world.spawn_positions) and \
+       (entrance_placed == None or world.mix_entrance_pools or entrance_placed.type in ['SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
+        # At least one valid starting region with all basic refills should be reachable without using any items at the beginning of the seed
+        # Note this creates new empty states rather than reuse the worlds' states (which already have starting items)
+        no_items_search = Search([State(w) for w in worlds])
+
+        valid_starting_regions = ['Kokiri Forest', 'Kakariko Village']
+        if not any(region for region in valid_starting_regions if no_items_search.can_reach(world.get_region(region))):
+            raise EntranceShuffleError('Invalid starting area')
+
+        # Check that a region where time passes is always reachable as both ages without having collected any items
+        time_travel_search = Search.with_items([w.state for w in worlds], [ItemFactory('Time Travel', world=w) for w in worlds])
+
+        if not (any(region for region in time_travel_search.reachable_regions('child') if region.time_passes and region.world == world) and
+                any(region for region in time_travel_search.reachable_regions('adult') if region.time_passes and region.world == world)):
+            raise EntranceShuffleError('Time passing is not guaranteed as both ages')
+
+        # The player should be able to get back to ToT after going through time, without having collected any items
+        # This is important to ensure that the player never loses access to the pedestal after going through time
+        if world.starting_age == 'child' and not time_travel_search.can_reach(world.get_region('Temple of Time'), age='adult'):
+            raise EntranceShuffleError('Path to Temple of Time as adult is not guaranteed')
+        elif world.starting_age == 'adult' and not time_travel_search.can_reach(world.get_region('Temple of Time'), age='child'):
+            raise EntranceShuffleError('Path to Temple of Time as child is not guaranteed')
+
+    if (world.shuffle_interior_entrances or world.shuffle_overworld_entrances) and \
+       (entrance_placed == None or (world.mix_entrance_pools != 'off') or entrance_placed.type in ['Interior', 'SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
+        # The Big Poe Shop should always be accessible as adult without the need to use any bottles
+        # This is important to ensure that players can never lock their only bottles by filling them with Big Poes they can't sell
+        # We can use starting items in this check as long as there are no exits requiring the use of a bottle without refills
+        time_travel_search = Search.with_items([w.state for w in worlds], [ItemFactory('Time Travel', world=w) for w in worlds])
+
+        if not time_travel_search.can_reach(world.get_region('Market Guard House'), age='adult'):
+            raise EntranceShuffleError('Big Poe Shop access is not guaranteed as adult')
 
 
 # Returns whether or not we can affirm the entrance can never be accessed as the given age

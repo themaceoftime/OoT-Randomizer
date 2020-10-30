@@ -392,8 +392,6 @@ ingo_race_win:
     jr      ra
     sw      t9, 0x0000(t7)              ; Displaced Code
 
-;==================================================================================================
-
 ; Rectify the "Getting Caught By Gerudo" entrance index if necessary, based on the age and current scene
 ; In ER, Adult should be placed at the fortress entrance when getting caught in the fortress without a hookshot, instead of being thrown in the valley
 ; Child should always be thrown in the stream when caught in the valley, and placed at the fortress entrance from valley when caught in the fortress
@@ -438,16 +436,19 @@ GET_ITEM_TRIGGERED:
 .align 4
 
 fountain_set_posrot:
-    or      a1, s1, r0      ;displaced
+    or      a1, s1, r0     ;displaced
 
     la      t7, INCOMING_ITEM
     lh      t8, 0x00(t7)
-    bnez    t8, @@return    ;skip everything if recieving an item from another player
+    bnez    t8, @@return   ;skip everything if recieving an item from another player
     la      t1, GET_ITEM_TRIGGERED
     la      t2, PLAYER_ACTOR
-    lb      t3, 0x424(t2)  
+    lb      t3, 0x424(t2)  ;Get Item ID
     beqz    t3, @@skip     ;dont set flag if get item is 0
-    lb      t6, 0x0(t1)    
+    lb      t6, 0x0(t1)
+    li      t4, 0x7E       ;GI_MAX
+    beq     t3, t4, @@skip ;skip for catchable items  
+    nop 
     bnez    t6, @@skip     ;skip setting flag if its already set
     li      t4, 0x1
     sb      t4, 0x0(t1)    ;set flag
@@ -464,7 +465,6 @@ fountain_set_posrot:
     bnez    t3, @@return
     li      t5, 0x8000
     sh      t5, 0xB6(t2)   ;set angle
-
     sb      r0, 0x0(t1)    ;set flag to 0
 
 @@return:
@@ -476,60 +476,127 @@ SOS_ITEM_GIVEN:
 .byte 0x00
 .align 4
 
-sos_set_state:
+sos_skip_demo:
     la      t2, PLAYER_ACTOR
     lw      t3, 0x66C(t2)
     li      t4, 0xCFFFFFFF ;~30000000
     and     t3, t3, t4
     jr      ra
-    sw      t3, 0x66C(t2)  ;unset flag early so link can receive item asap 
+    sw      t3, 0x66C(t2)  ;unset flag early so link can receive item asap
 
-sos_fix_alpha:
-    addiu   sp, sp, -0x18
+;game has loaded 0x800000 into at, player into v0, and stateFlags2 into t6
+sos_handle_staff:
+    addiu   sp, sp, -0x20
     sw      ra, 0x14(sp)
+    sw      a0, 0x18(sp)
+    or      t7, t6, at
+    sw      t7, 0x680(v0) ;stateFlags2 |= 0x800000
     li      a0, 0x01
-    sb      a0, SOS_ITEM_GIVEN ;set item given flag
-    jal     0x8006D8E0         ;Interface_ChangeAlpha
+    jal     0x8006D8E0    ;Interface_ChangeAlpha, hide hud
     nop
-    lw      ra, 0x14(sp)
-    jr      ra
-    addiu   sp, sp, 0x18
-
-sos_staff:
-    addiu   sp, sp, -0x18
-    sw      ra, 0x14(sp)
     lb      t0, SONGS_AS_ITEMS
-    bnez    t0, @@skip_staff
+    bnez    t0, @@return
     nop
-    jal     0x800DD400 ;show song staff
+    la      a0, GLOBAL_CONTEXT
+    lb      a1, WINDMILL_SONG_ID
+    jal     0x800DD400    ;show song staff
     nop
-@@skip_staff:
-    lw      ra, 0x14(sp)
-    jr      ra
-    addiu   sp, sp, 0x18
-
-sos_song_as_item:
-    or      a3, a1, r0     ;displaced
-    lui     v0, 0x0001     ;displaced
-    lb      t0, SONGS_AS_ITEMS
-    beqz    t0, @@return
-    addu    v0, v0, a3     ;displaced
-    sw      a3, 0x1C(sp)
 @@return:
+    lw      a0, 0x18(sp)
+    lw      t0, 0x138(a0) ;overlayEntry
+    lw      t1, 0x10(t0)  ;overlay ram start
+    addiu   t2, t1, 0x3D4 ;offset in the overlay for next actionFunc
+    sw      t2, 0x29C(a0) ;set next actionFunc
+    lw      ra, 0x14(sp)
     jr      ra
+    addiu   sp, sp, 0x20
+
+sos_handle_item:
+    addiu   sp, sp, -0x20
+    sw      ra, 0x14(sp)
+    sw      a0, 0x18(sp)
+    lb      t0, SONGS_AS_ITEMS
+    bnez    t0, @@songs_as_items
+    nop
+    la      t1, 0x801D887C
+    lb      t0, 0x0(t1) ;msgMode
+    li      t3, 0x36
+    bne     t0, t3, @@next_check
+    nop
+    lb      t0, SOS_ITEM_GIVEN
+    bnez    t0, @@next_check
     nop
 
+@@passed_first_check: ;play sound, show text, set flag, return
+    li      t0, 1
+    sb      t0, SOS_ITEM_GIVEN
+    la      a0, GLOBAL_CONTEXT
+    lbu     a1, WINDMILL_TEXT_ID
+    li      a2, 0
+    jal     0x800DCE14    ;show text
+    nop
+    li      a0, 0x4802    ;NA_SE_SY_CORRECT_CHIME
+    jal     0x800646F0    ;play "correct" sound
+    nop
+    b       @@return
+    nop
+
+@@songs_as_items: ;give item then branch to the common ending code
+    la      a0, GLOBAL_CONTEXT
+    li      a1, 0x65       ;sos Item ID
+    jal     0x8006FDCC     ;Item_Give
+    nop
+    b       @@common
+    nop
+
+@@next_check:
+    lw      a0, 0x18(sp)   ;this
+    la      a1, GLOBAL_CONTEXT
+    jal     0x80022AD0     ;func_8002F334 in decomp, checks for closed text
+    nop
+    beqz    v0, @@return   ;return if text isnt closed yet
+    nop
+    lb      t0, SOS_ITEM_GIVEN
+    beqz    t0, @@return
+    nop
+@@common:
+    lw      a0, 0x18(sp)
+    lw      t0, 0x138(a0)  ;overlayEntry
+    lw      t1, 0x10(t0)   ;overlay ram start
+    addiu   t2, t1, 0x35C  ;offset in the overlay for next actionFunc
+    sw      t2, 0x29C(a0)  ;set next actionFunc
+    la      v0, SAVE_CONTEXT
+    lhu     t1, 0x0EE0(v0)
+    ori     t2, t1, 0x0020
+    sh      t2, 0x0EE0(v0) ;gSaveContext.eventChkInf[6] |= 0x20
+    lw      t0, 0x4(a0)
+    li      t1, 0xFFFEFFFF
+    and     t0, t0, t1
+    sw      t0, 0x4(a0)    ;actor.flags &= ~0x10000
+@@return:
+    lw      ra, 0x14(sp)
+    jr      ra
+    addiu   sp, sp, 0x20
+
+;if link is getting an item dont allow the windmill guy to talk
 sos_talk_prevention:
     lh      t7, 0xB6(s0)   ;displaced
     lhu     t9, 0xB4AE(t9) ;displaced
-    la      t1, SOS_ITEM_GIVEN
-    lb      t2, 0(t1)
-    beqz    t2, @@return
+    la      t1, PLAYER_ACTOR
+    lb      t2, 0x424(t1)  ;get item id
+    beqz    t2, @@no_item
     nop
-    sb      r0, 0(t1)      ;0 out the flag after 1 frame
-@@return:
+    li      t1, 0x7E
+    bne     t2, t1, @@item
+    nop
+
+@@no_item:
     jr      ra
-    nop
+    li      t2, 0
+
+@@item:
+    jr      ra
+    li      t2, 1
 
 ;==================================================================================================
 ;move royal tombstone if draw function is null
@@ -558,6 +625,15 @@ heavy_block_set_switch:
     jr      ra
     addiu   sp, sp, 0x20
 
+heavy_block_posrot:
+    sw      t9, 0x66C(s0)  ;displaced
+    lw      t2, 0x428(s0)  ;interactActor (block)
+    la      t1, PLAYER_ACTOR
+    lh      t3, 0xB6(t2)   ;block angle
+    addi    t3, t3, 0x8000 ;180 deg
+    jr      ra
+    sh      t3, 0xB6(t1)   ;store to links angle to make him face block
+
 heavy_block_set_link_action:
     la      t0, PLAYER_ACTOR
     lb      t2, 0x0434(t0)
@@ -567,7 +643,7 @@ heavy_block_set_link_action:
     sb      t1, 0x0434(t0) ;links action
 @@return:
     jr      ra
-    lwc1    f6, 0x0C(s0)   ;displaced
+lwc1    f6, 0x0C(s0)   ;displaced
     
 heavy_block_shorten_anim:
     la      t0, PLAYER_ACTOR
@@ -587,10 +663,10 @@ heavy_block_shorten_anim:
     sw      t1, 0x664(t0)
 @@return:
     jr      ra
-    addiu   a1, s0, 0x01A4      ;displaced
+    addiu   a1, s0, 0x01A4   ;displaced
     
-;==================================================================================================
-
+;==================================================================================================    
+; Override Demo_Effect init data for medallions
 demo_effect_medal_init:
     sh      t8, 0x17C(a0)      ; displaced code
 

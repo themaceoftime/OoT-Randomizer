@@ -4,6 +4,7 @@
 #include "z64.h"
 
 extern Gfx setup_db[];
+extern Gfx empty_dlist[];
 
 typedef struct {
     uint8_t *buf;
@@ -15,16 +16,16 @@ typedef struct {
     uint8_t bytes_per_texel;
 } sprite_t;
 
-sprite_t stones_sprite;
-sprite_t medals_sprite;
-sprite_t items_sprite;
-sprite_t quest_items_sprite;
-sprite_t font_sprite;
-sprite_t dpad_sprite;
-sprite_t triforce_sprite;
-sprite_t song_note_sprite;
-sprite_t key_rupee_clock_sprite;
-sprite_t item_digit_sprite;
+extern sprite_t stones_sprite;
+extern sprite_t medals_sprite;
+extern sprite_t items_sprite;
+extern sprite_t quest_items_sprite;
+extern sprite_t font_sprite;
+extern sprite_t dpad_sprite;
+extern sprite_t triforce_sprite;
+extern sprite_t song_note_sprite;
+extern sprite_t key_rupee_clock_sprite;
+extern sprite_t item_digit_sprite;
 
 void gfx_init();
 

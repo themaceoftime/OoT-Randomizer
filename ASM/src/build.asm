@@ -88,13 +88,14 @@ RANDO_CONTEXT:
 .include "file_select.asm"
 .include "zelda.asm"
 .include "link_anim.asm"
-.include "minigames.asm"
 .include "malon_hooks.asm"
 .include "bigocto.asm"
 .include "agony.asm"
 .include "horseback_archery.asm"
+.include "items_as_adult.asm"
 .include "carpet_salesman.asm"
 .include "medigoron.asm"
+.include "misc_colors.asm"
 
 .align 0x10
 .importobj "../build/bundle.o"

@@ -18,7 +18,7 @@ from Search import Search
 from Spoiler import HASH_ICONS
 from version import __version__
 from Utils import random_choices
-from JSONDump import dump_obj, CollapseList, CollapseDict, AllignedDict, SortedDict
+from JSONDump import dump_obj, CollapseList, CollapseDict, AlignedDict, SortedDict
 import StartingItems
 
 
@@ -576,7 +576,7 @@ class WorldDistribution(object):
         world = worlds[self.id]
         locations = {}
         if self.locations:
-            locations = {loc: self.locations[loc] for loc in random.sample(self.locations.keys(), len(self.locations))}
+            locations = {loc: self.locations[loc] for loc in random.sample(sorted(self.locations), len(self.locations))}
         used_items = []
         for (location_name, record) in pattern_dict_items(locations):
             if record.item is None:
@@ -617,14 +617,14 @@ class WorldDistribution(object):
             if record.item in item_groups['DungeonReward']:
                 raise RuntimeError('Cannot place dungeon reward %s in world %d in location %s.' % (record.item, self.id + 1, location_name))
 
-            if record.item == '#Junk' and location.type == 'Song' and not world.shuffle_song_items:
+            if record.item == '#Junk' and location.type == 'Song' and world.shuffle_song_items == 'song':
                 record.item = '#JunkSong'
 
             ignore_pools = None
             is_invert = pattern_matcher(record.item)('!')
-            if is_invert and location.type != 'Song' and not world.shuffle_song_items:
+            if is_invert and location.type != 'Song' and world.shuffle_song_items == 'song':
                 ignore_pools = [2]
-            if is_invert and location.type == 'Song' and not world.shuffle_song_items:
+            if is_invert and location.type == 'Song' and world.shuffle_song_items == 'song':
                 ignore_pools = [i for i in range(len(item_pools)) if i != 2]
             if location.type == 'Shop':
                 ignore_pools = [i for i in range(len(item_pools)) if i != 0]
@@ -894,7 +894,7 @@ class Distribution(object):
                     else:
                         raise KeyError("invalid special item: {}".format(item.itemname))
             else:
-                raise KeyError("invalid starting item: {}".format(item.itemname))
+                raise KeyError("invalid starting item: {}".format(itemsetting))
 
         # add ammo
         for item in list(data.keys()):
@@ -940,7 +940,7 @@ class Distribution(object):
                 self_dict.update({k: world_dist_dicts[0][k] for k in per_world_keys})
 
             if self.playthrough is not None:
-                self_dict[':playthrough'] = AllignedDict({
+                self_dict[':playthrough'] = AlignedDict({
                     sphere_nr: SortedDict({
                         name: record.to_json() for name, record in sphere.items()
                     })
@@ -948,7 +948,7 @@ class Distribution(object):
                 }, depth=2)
 
             if self.entrance_playthrough is not None and len(self.entrance_playthrough) > 0:
-                self_dict[':entrance_playthrough'] = AllignedDict({
+                self_dict[':entrance_playthrough'] = AlignedDict({
                     sphere_nr: SortedDict({
                         name: record.to_json() for name, record in sphere.items()
                     })

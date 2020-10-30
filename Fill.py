@@ -23,10 +23,32 @@ class FillError(ShuffleError):
 
 # Places all items into the world
 def distribute_items_restrictive(window, worlds, fill_locations=None):
-    song_locations = [world.get_location(location) for world in worlds for location in
-        ['Song from Composers Grave', 'Song from Impa', 'Song from Malon', 'Song from Saria',
-        'Song from Ocarina of Time', 'Song from Windmill', 'Sheik in Forest', 'Sheik at Temple',
-        'Sheik in Crater', 'Sheik in Ice Cavern', 'Sheik in Kakariko', 'Sheik at Colossus']]
+    if worlds[0].shuffle_song_items == 'song':
+        song_location_names = [
+            'Song from Composers Grave', 'Song from Impa', 'Song from Malon', 'Song from Saria',
+            'Song from Ocarina of Time', 'Song from Windmill', 'Sheik in Forest', 'Sheik at Temple',
+            'Sheik in Crater', 'Sheik in Ice Cavern', 'Sheik in Kakariko', 'Sheik at Colossus']
+    elif worlds[0].shuffle_song_items == 'dungeon':
+        song_location_names = [
+            'Deku Tree Queen Gohma Heart', 'Dodongos Cavern King Dodongo Heart',
+            'Jabu Jabus Belly Barinade Heart', 'Forest Temple Phantom Ganon Heart',
+            'Fire Temple Volvagia Heart', 'Water Temple Morpha Heart',
+            'Spirit Temple Twinrova Heart', 'Shadow Temple Bongo Bongo Heart',
+            'Sheik in Ice Cavern', 'Song from Impa',
+            'Gerudo Training Grounds MQ Ice Arrows Chest',
+            'Gerudo Training Grounds Maze Path Final Chest',
+            'Bottom of the Well Lens of Truth Chest',
+            'Bottom of the Well MQ Lens of Truth Chest']
+    else:
+        song_location_names = []
+
+    song_locations = []
+    for world in worlds:
+        for location in song_location_names:
+            try:
+                song_locations.append(world.get_location(location))
+            except KeyError:
+                pass
 
     shop_locations = [location for world in worlds for location in world.get_unfilled_locations() if location.type == 'Shop' and location.price == None]
 
@@ -46,11 +68,9 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
     songitempool = [item for world in worlds for item in world.itempool if item.type == 'Song']
     itempool =     [item for world in worlds for item in world.itempool if item.type != 'Shop' and item.type != 'Song']
 
-    if worlds[0].shuffle_song_items:
+    if worlds[0].shuffle_song_items == 'any':
         itempool.extend(songitempool)
-        fill_locations.extend(song_locations)
         songitempool = []
-        song_locations = []
 
     # add unrestricted dungeon items to main item pool
     itempool.extend([item for world in worlds for item in world.get_unrestricted_dungeon_items()])
@@ -71,7 +91,7 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
     # Extend with ice traps manually placed in plandomizer
     ice_traps.extend(
         location.item for location in cloakable_locations
-        if (location.name in location_groups['CanSee']
+        if (location.has_preview()
             and location.item is not None
             and location.item.name == 'Ice Trap'
             and location.item.looks_like_item is None))
@@ -130,7 +150,7 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
     # Placing songs on their own since they have a relatively high chance
     # of failing compared to other item type. So this way we only have retry
     # the song locations only.
-    if not worlds[0].shuffle_song_items:
+    if worlds[0].shuffle_song_items != 'any':
         logger.info('Placing song items.')
         fill_ownworld_restrictive(window, worlds, search, song_locations, songitempool, progitempool, "song")
         search.collect_locations()
@@ -210,7 +230,7 @@ def fill_dungeons_restrictive(window, worlds, search, shuffled_locations, dungeo
     # sort in the order Other, Small Key, Boss Key before placing dungeon items
     # python sort is stable, so the ordering is still random within groups
     # fill_restrictive processes the resulting list backwards so the Boss Keys will actually be placed first
-    sort_order = {"BossKey": 3, "SmallKey": 2}
+    sort_order = {"BossKey": 3, "GanonBossKey": 3, "SmallKey": 2}
     dungeon_items.sort(key=lambda item: sort_order.get(item.type, 1))
 
     # place dungeon items
@@ -251,6 +271,13 @@ def fill_dungeon_unique_item(window, worlds, search, fill_locations, itempool):
         # cache this list to flag afterwards
         all_dungeon_locations.extend(dungeon_locations)
 
+        # Sort major items in such a way that they are placed first if dungeon restricted.
+        # There still won't be enough locations for small keys in one item per dungeon mode, though.
+        for item in list(major_items):
+            if not item.world.get_region('Root').can_fill(item):
+                major_items.remove(item)
+                major_items.append(item)
+
         # place 1 item into the dungeon
         fill_restrictive(window, worlds, base_search, dungeon_locations, major_items, 1)
 
@@ -265,6 +292,11 @@ def fill_dungeon_unique_item(window, worlds, search, fill_locations, itempool):
     # locations instead of the dungeon because some locations are not in the dungeon
     for location in all_dungeon_locations:
         location.minor_only = True
+
+    # Error out if we have any items that won't be placeable in the overworld left.
+    for item in major_items:
+        if not item.world.get_region('Root').can_fill(item):
+            raise FillError(f"No more dungeon locations available for {item.name} to be placed with 'Dungeons Have One Major Item' enabled.")
 
     logger.info("Unique dungeon items placed")
 
