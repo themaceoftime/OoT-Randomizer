@@ -2496,27 +2496,27 @@ setting_infos = [
         default        = 'off',
         choices        = {
             'off':       'Off',
-            'non-ow':    'Non-Overworld',
+            'indoor':    'Indoor Entrances',
             'all':       'All Entrances',
         },
         gui_tooltip    = '''\
+            Shuffle entrances into a mixed pool instead of separate ones.
+            
             'Non-Overworld':
-            Shuffle all interior entrances into a single mixed pool.
-            This means any shuffled entrance could lead to any type
-            of area: Dungeon, Grotto, or Interior. Overworld
-            entrances are kept in a separate pool if randomized.
+            Mixes "Indoor" entrance pools, which correspond to entrances
+            of type Dungeon, Grotto, or Interior. Overworld entrances
+            are kept in their own separate pool if randomized.
     
             'All Entrances':
-            Shuffle all entrances into a single mixed pool.
-            This means any shuffled entrance could lead to any type 
-            of area: Dungeon, Grotto, Interior or Overworld.
+            Mixes all entrance pools, including both "Indoor" and
+            Overworld entrances.
         ''',
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
             'distribution':  [
                 ('off', 1),
-                ('on', 1),
+                ('all', 1),
             ],
         },
     ),

@@ -414,7 +414,7 @@ def shuffle_random_entrances(worlds):
         # Combine all entrance pools into one when mixing entrance pools
         if worlds[0].mix_entrance_pools == 'all':
             entrance_pools = {'Mixed': list(chain.from_iterable(entrance_pools.values()))}
-        if worlds[0].mix_entrance_pools == 'non-ow':
+        if worlds[0].mix_entrance_pools == 'indoor':
             if worlds[0].shuffle_overworld_entrances:
                 ow_entrance_pool = entrance_pools['Overworld']
             entrance_pools = {'Mixed': list(filter(lambda entrance: entrance.type != 'Overworld', chain.from_iterable(entrance_pools.values())))}
@@ -657,7 +657,7 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
             check_same_hint_region(impas_front_entrance, impas_back_entrance)
 
     if (world.shuffle_special_interior_entrances or world.shuffle_overworld_entrances or world.spawn_positions) and \
-       (entrance_placed == None or world.mix_entrance_pools or entrance_placed.type in ['SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
+       (entrance_placed == None or (world.mix_entrance_pools != 'off') or entrance_placed.type in ['SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
         # At least one valid starting region with all basic refills should be reachable without using any items at the beginning of the seed
         # Note this creates new empty states rather than reuse the worlds' states (which already have starting items)
         no_items_search = Search([State(w) for w in worlds])
