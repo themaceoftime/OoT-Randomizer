@@ -2083,8 +2083,7 @@ setting_infos = [
         gui_tooltip    = '''\
             Start having already met Zelda and obtained
             Zelda's Letter along with the song from Impa.
-            This is incompatible with Song Shuffle: "Anywhere"
-            and with Shuffle Weird Egg.
+            This is incompatible with Shuffle Weird Egg.
         ''',
         shared         = True,
         disable = {
@@ -2321,7 +2320,9 @@ setting_infos = [
             The Weird Egg is also required for Zelda's Letter to open 
             the Kakariko Gate as child which can lock some progression.
         ''',
-        default        = True,
+        disable        = {
+            True : {'settings' : ['skip_child_zelda']}
+        },
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -2376,9 +2377,6 @@ setting_infos = [
                 ('dungeon', 1),
                 ('any', 1),
             ],
-        },
-        disable        = {
-            'any' : {'settings' : ['skip_child_zelda']}
         },
         shared         = True,
     ),
