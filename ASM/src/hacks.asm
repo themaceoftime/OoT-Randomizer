@@ -2316,3 +2316,13 @@ skip_GS_BGS_text:
     sh      zero, 0x025E(s6) ; Replaces: sh      v1, 0x025E(s6)
 .orga 0xBC780C
     .byte 0x09               ; Replaces: 0x01
+
+;==================================================================================================
+; Prevent Mask de-equip if not on a C-button
+;==================================================================================================
+.orga 0xBCF854
+    lbu     a2, 0x8B(v1)    ; lbu     a2, 0x69(v1)
+.orga 0xBCF888
+    lbu     a0, 0x8B(v1)    ; lbu     a0, 0x6A(v1)
+.orga 0xBCF8B8
+    lbu     a2, 0x8B(v1)    ; lbu     a2, 0x6B(v1)
