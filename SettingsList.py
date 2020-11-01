@@ -229,6 +229,14 @@ logic_tricks = {
 
                     This allows completion of adult Deku Tree with no fire source.
                     '''},
+    'Deku Tree MQ Roll Under the Spiked Log': {
+        'name'    : 'logic_deku_mq_log',
+        'tags'    : ("Deku Tree",),
+        'tooltip' : '''\
+                    You can get past the spiked log by rolling
+                    to briefly shrink your hitbox. As adult,
+                    the timing is a bit more precise.
+                    '''},
     'Hammer Rusted Switches Through Walls': {
         'name'    : 'logic_rusted_switches',
         'tags'    : ("Fire Temple", "Ganon's Castle",),
@@ -245,6 +253,17 @@ logic_tricks = {
                     The chest in the basement can be reached with
                     strength by doing a jump slash with a lit
                     stick to access the bomb flowers.
+                    '''},
+    'Bottom of the Well MQ Jump Over the Pits': {
+        'name'    : 'logic_botw_mq_pits',
+        'tags'    : ("Bottom of the Well",),
+        'tooltip' : '''\
+                    While the pits in Bottom of the Well don't allow you to
+                    jump just by running straight at them, you can still get
+                    over them by side-hopping or backflipping across. With
+                    explosives, this allows you to access the central areas
+                    without Zelda's Lullaby. With Zelda's Lullaby, it allows
+                    you to access the west inner room without explosives.
                     '''},
     'Skip Forest Temple MQ Block Puzzle with Bombchu': {
         'name'    : 'logic_forest_mq_block_puzzle',
@@ -281,6 +300,19 @@ logic_tricks = {
                     Can fly behind the waterfall with
                     a cucco as child.
                     '''},
+    'Water Temple MQ Central Pillar with Fire Arrows': {
+        'name'    : 'logic_water_mq_central_pillar',
+        'tags'    : ("Water Temple",),
+        'tooltip' : '''\
+                    Slanted torches have misleading hitboxes. Whenever
+                    you see a slanted torch jutting out of the wall,
+                    you can expect most or all of its hitbox is actually
+                    on the other side that wall. This can make slanted
+                    torches very finicky to light when using arrows. The
+                    torches in the central pillar of MQ Water Temple are
+                    a particularly egregious example. Logic normally
+                    expects Din's Fire and Song of Time.
+                    '''},
     'Gerudo Training Grounds MQ Left Side Silver Rupees with Hookshot': {
         'name'    : 'logic_gtg_mq_with_hookshot',
         'tags'    : ("Gerudo Training Grounds",),
@@ -309,7 +341,7 @@ logic_tricks = {
         'tags'    : ("Forest Temple", "Entrance", "Skulltulas",),
         'tooltip' : '''\
                     Allows killing this Skulltula with Sword or Sticks by
-                    jumpslashing it as you let go from the vines. You will
+                    jump slashing it as you let go from the vines. You will
                     take fall damage.
                     Also allows killing it as Child with a Bomb throw. It's
                     much more difficult to use a Bomb as child due to
@@ -325,8 +357,18 @@ logic_tricks = {
                     required if Forest Temple is in its Master Quest
                     form.
                     '''},
-    'Reach Forest Temple MQ Twisted Hallway Switch with Hookshot': {
-        'name'    : 'logic_forest_mq_hallway_switch',
+    'Forest Temple MQ Twisted Hallway Switch with Jump Slash': {
+        'name'    : 'logic_forest_mq_hallway_switch_jumpslash',
+        'tags'    : ("Forest Temple",),
+        'tooltip' : '''\
+                    The switch to twist the hallway can be hit with
+                    a jump slash through the glass block. To get in
+                    front of the switch, either use the Hover Boots
+                    or hit the shortcut switch at the top of the
+                    room and jump from the glass blocks that spawn.
+                    '''},
+    'Forest Temple MQ Twisted Hallway Switch with Hookshot': {
+        'name'    : 'logic_forest_mq_hallway_switch_hookshot',
         'tags'    : ("Forest Temple",),
         'tooltip' : '''\
                     There's a very small gap between the glass block
@@ -448,8 +490,11 @@ logic_tricks = {
                     If you move quickly you can sneak past the edge of
                     a flame wall before it can rise up to block you.
                     To do it without taking damage is more precise.
-                    Allows you to reach a GS without needing either
-                    Song of Time or Hover Boots.
+                    Allows you to reach the side room GS without needing
+                    Song of Time or Hover Boots. If either of "Fire Temple
+                    MQ Lower to Upper Lizalfos Maze with Hover Boots" or
+                    "with Precise Jump" are enabled, this also allows you
+                    to progress deeper into the dungeon without Hookshot.
                     '''},
     'Fire Temple MQ Climb without Fire Source': {
         'name'    : 'logic_fire_mq_climb',
@@ -459,6 +504,14 @@ logic_tricks = {
                     the climbable wall, skipping the need to use a
                     fire source and spawn a Hookshot target.
                     '''},
+    'Fire Temple MQ Lower to Upper Lizalfos Maze with Hover Boots': {
+        'name'    : 'logic_fire_mq_maze_hovers',
+        'tags'    : ("Fire Temple",),
+        'tooltip' : '''\
+                    Use the Hover Boots off of a crate to
+                    climb to the upper maze without needing
+                    to spawn and use the Hookshot targets.
+                    '''},
     'Fire Temple MQ Chest Near Boss without Breaking Crate': {
         'name'    : 'logic_fire_mq_near_boss',
         'tags'    : ("Fire Temple",),
@@ -467,23 +520,35 @@ logic_tricks = {
                     Shoot a flaming arrow at the side of the crate to light the
                     torch without needing to get over there and break the crate.
                     '''},
-    'Fire Temple MQ Boulder Maze Side Room without Box': {
+    'Fire Temple MQ Lizalfos Maze Side Room without Box': {
         'name'    : 'logic_fire_mq_maze_side_room',
         'tags'    : ("Fire Temple",),
         'tooltip' : '''\
                     You can walk from the blue switch to the door and
                     quickly open the door before the bars reclose. This
-                    skips needing the Hookshot in order to reach a box
-                    to place on the switch.
+                    skips needing to reach the upper sections of the
+                    maze to get a box to place on the switch.
                     '''},
     'Fire Temple MQ Boss Key Chest without Bow': {
         'name'    : 'logic_fire_mq_bk_chest',
         'tags'    : ("Fire Temple",),
         'tooltip' : '''\
-                    Din\'s alone can be used to unbar the door to
-                    the boss key chest's room thanks to an
+                    It is possible to light both of the timed torches
+                    to unbar the door to the boss key chest's room
+                    with just Din's Fire if you move very quickly
+                    between the two torches. It is also possible to
+                    unbar the door with just Din's by abusing an
                     oversight in the way the game counts how many
                     torches have been lit.
+                    '''},
+    'Fire Temple MQ Above Flame Wall Maze GS from Below with Longshot': {
+        'name'    : 'logic_fire_mq_above_maze_gs',
+        'tags'    : ("Fire Temple", "Skulltulas",),
+        'tooltip' : '''\
+                    The floor of the room that contains this Skulltula
+                    is only solid from above. From the maze below, the
+                    Longshot can be shot through the ceiling to obtain 
+                    the token with two fewer small keys than normal.
                     '''},
     'Zora\'s River Lower Freestanding PoH as Adult with Nothing': {
         'name'    : 'logic_zora_river_lower',
@@ -506,6 +571,15 @@ logic_tricks = {
         'tooltip' : '''\
                     Release the Bombchu with good timing so that
                     it explodes near the bottom of the pot.
+                    '''},
+    'Shadow Temple MQ Invisible Blades Silver Rupees without Song of Time': {
+        'name'    : 'logic_shadow_mq_invisible_blades',
+        'tags'    : ("Shadow Temple",),
+        'tooltip' : '''\
+                    The Like Like can be used to boost you into the
+                    silver rupee that normally requires Song of Time.
+                    This cannot be performed on OHKO since the Like
+                    Like does not boost you high enough if you die.
                     '''},
     'Shadow Temple MQ Lower Huge Pit without Fire Source': {
         'name'    : 'logic_shadow_mq_huge_pit',
@@ -587,6 +661,15 @@ logic_tricks = {
                     jump slash immediately. You will take fall
                     damage.
                     '''},
+    'Deku Tree MQ Compass Room GS Boulders with Just Hammer': {
+        'name'    : 'logic_deku_mq_compass_gs',
+        'tags'    : ("Deku Tree", "Skulltulas",),
+        'tooltip' : '''\
+                    Climb to the top of the vines, then let go
+                    and jump slash immediately to destroy the
+                    boulders using the Hammer, without needing
+                    to spawn a Song of Time block.
+                    '''},
     'Lake Hylia Lab Wall GS with Jump Slash': {
         'name'    : 'logic_lab_wall_gs',
         'tags'    : ("Lake Hylia", "Skulltulas",),
@@ -621,6 +704,18 @@ logic_tricks = {
                     on the torches is quite short so you must move
                     quickly in order to light all three.
                     '''},
+    'Spirit Temple MQ Sun Block Room as Child without Song of Time': {
+        'name'    : 'logic_spirit_mq_sun_block_sot',
+        'tags'    : ("Spirit Temple",),
+        'tooltip' : '''\
+                    While adult can easily jump directly to the switch that
+                    unbars the door to the sun block room, child Link cannot
+                    make the jump without spawning a Song of Time block to
+                    jump from. You can skip this by throwing the crate down
+                    onto the switch from above, which does unbar the door,
+                    however the crate immediately breaks, so you must move
+                    quickly to get through the door before it closes back up.
+                    '''},
     'Shadow Trial MQ Torch with Bow': {
         'name'    : 'logic_shadow_trial_mq',
         'tags'    : ("Ganon's Castle",),
@@ -652,6 +747,18 @@ logic_tricks = {
                     damage from the spikes. The Gold Skulltula Token
                     in the following room can also be obtained with
                     just the Hover Boots.
+                    '''},
+    'Water Temple MQ North Basement GS without Small Key': {
+        'name'    : 'logic_water_mq_locked_gs',
+        'tags'    : ("Water Temple", "Skulltulas",),
+        'tooltip' : '''\
+                    There is an invisible Hookshot target that can be used
+                    to get over the gate that blocks you from going to this
+                    Skulltula early. This avoids going through some rooms
+                    that normally require a Small Key to access. If "Water
+                    Temple North Basement Ledge with Precise Jump" is not
+                    enabled, this also skips needing Hover Boots or
+                    Scarecrow's Song to reach the locked door.
                     '''},
     'Water Temple Falling Platform Room GS with Hookshot': {
         'name'    : 'logic_water_falling_platform_gs_hookshot',
@@ -710,6 +817,16 @@ logic_tricks = {
                     out of the rock without needing to destroy it, by
                     using the Hookshot in the correct way.
                     '''},
+    'Death Mountain Trail Lower Red Rock GS with Hover Boots': {
+        'name'    : 'logic_trail_gs_lower_hovers',
+        'tags'    : ("Death Mountain Trail", "Skulltulas",),
+        'tooltip' : '''\
+                    After killing the Skulltula, the token can be
+                    collected without needing to destroy the rock by
+                    backflipping down onto it with the Hover Boots.
+                    First use the Hover Boots to stand on a nearby
+                    fence, and go for the Skulltula Token from there.
+                    '''},
     'Death Mountain Trail Lower Red Rock GS with Magic Bean': {
         'name'    : 'logic_trail_gs_lower_bean',
         'tags'    : ("Death Mountain Trail", "Skulltulas",),
@@ -723,7 +840,7 @@ logic_tricks = {
         'name'    : 'logic_crater_upper_to_lower',
         'tags'    : ("Death Mountain Crater",),
         'tooltip' : '''\
-                    With the Hammer, you can jumpslash the rock twice
+                    With the Hammer, you can jump slash the rock twice
                     in the same jump in order to destroy it before you
                     fall into the lava.
                     '''},
@@ -737,7 +854,7 @@ logic_tricks = {
         'name'    : 'logic_domain_gs',
         'tags'    : ("Zora's Domain", "Skulltulas",),
         'tooltip' : '''\
-                    A precise jumpslash can kill the Skulltula and
+                    A precise jump slash can kill the Skulltula and
                     recoil back onto the top of the frozen waterfall.
                     To kill it, the logic normally guarantees one of
                     Hookshot, Bow, or Magic.
@@ -771,14 +888,25 @@ logic_tricks = {
                     pushing the block.
                     '''},
     'Fire Temple MQ Big Lava Room Blocked Door without Hookshot': {
-        'name'    : 'logic_fire_mq_bombable_chest',
+        'name'    : 'logic_fire_mq_blocked_chest',
         'tags'    : ("Fire Temple",),
         'tooltip' : '''\
-                    A precisely-angled jump can get over the wall
-                    of fire in this room. It's expected that you
-                    will take damage as you do this. As it may
-                    take multiple attempts, you won't be expected
-                    to use a fairy to survive.
+                    There is a gap between the hitboxes of the flame
+                    wall in the big lava room. If you know where this
+                    gap is located, you can jump through it and skip
+                    needing to use the Hookshot. To do this without
+                    taking damage is more precise.
+                    '''},
+    'Fire Temple MQ Lower to Upper Lizalfos Maze with Precise Jump': {
+        'name'    : 'logic_fire_mq_maze_jump',
+        'tags'    : ("Fire Temple",),
+        'tooltip' : '''\
+                    A precise jump off of a crate can be used to
+                    climb to the upper maze without needing to spawn
+                    and use the Hookshot targets. This trick
+                    supersedes both "Fire Temple MQ Lower to Upper
+                    Lizalfos Maze with Hover Boots" and "Fire Temple
+                    MQ Lizalfos Maze Side Room without Box".
                     '''},
     'Light Trial MQ without Hookshot': {
         'name'    : 'logic_light_trial_mq',
@@ -786,8 +914,8 @@ logic_tricks = {
         'tooltip' : '''\
                     If you move quickly you can sneak past the edge of
                     a flame wall before it can rise up to block you.
-                    In this case it doesn't seem possible to do it
-                    without taking damage.
+                    In this case to do it without taking damage is
+                    especially precise.
                     '''},
     'Ice Cavern MQ Scarecrow GS with No Additional Items': {
         'name'    : 'logic_ice_mq_scarecrow',
@@ -795,12 +923,20 @@ logic_tricks = {
         'tooltip' : '''\
                     A precise jump can be used to reach this alcove.
                     '''},
+    'Ice Cavern MQ Red Ice GS without Song of Time': {
+        'name'    : 'logic_ice_mq_red_ice_gs',
+        'tags'    : ("Ice Cavern", "Skulltulas",),
+        'tooltip' : '''\
+                    If you side-hop into the perfect position, you
+                    can briefly stand on the platform with the red
+                    ice just long enough to dump some blue fire.
+                    '''},
     'Ice Cavern Block Room GS with Hover Boots': {
         'name'    : 'logic_ice_block_gs',
         'tags'    : ("Ice Cavern", "Skulltulas",),
         'tooltip' : '''\
                     The Hover Boots can be used to get in front of the
-                    Skulltula to kill it with a jumpslash. Then, the
+                    Skulltula to kill it with a jump slash. Then, the
                     Hover Boots can again be used to obtain the Token,
                     all without Hookshot or Boomerang.
                     '''},
@@ -811,12 +947,12 @@ logic_tricks = {
                     By memorizing the path, you can travel through the
                     Wasteland in reverse.
                     Note that jumping to the carpet merchant as child
-                    requires a fairly precise jumpslash.
+                    typically requires a fairly precise jump slash.
                     The equivalent trick for going forward through the
                     Wasteland is "Lensless Wasteland".
                     To cross the river of sand with no additional items,
                     be sure to also enable "Wasteland Crossing without
-                    Hover Boots or Longshot."
+                    Hover Boots or Longshot".
                     Unless all overworld entrances are randomized, child
                     Link will not be expected to do anything at Gerudo's
                     Fortress.
@@ -832,7 +968,7 @@ logic_tricks = {
         'name'    : 'logic_shadow_mq_gap',
         'tags'    : ("Shadow Temple",),
         'tooltip' : '''\
-                    You can Longshot a torch and jumpslash-recoil onto
+                    You can Longshot a torch and jump-slash recoil onto
                     the tongue. It works best if you Longshot the right
                     torch from the left side of the room.
                     '''},
@@ -856,6 +992,18 @@ logic_tricks = {
                     switch pressed. One way is to quickly roll
                     from the switch and open the door before it
                     closes.
+                    '''},
+    'Kakariko Rooftop GS with Hover Boots': {
+        'name'    : 'logic_kakariko_rooftop_gs',
+        'tags'    : ("Kakariko Village", "Skulltulas",),
+        'tooltip' : '''\
+                    Take the Hover Boots from the entrance to Impa's
+                    House over to the rooftop of Skulltula House. From
+                    there, a precise Hover Boots backwalk with backflip
+                    can be used to get onto a hill above the side of
+                    the village. And then from there you can Hover onto
+                    Impa's rooftop to kill the Skulltula and backflip
+                    into the token.
                     '''},
     'Graveyard Freestanding PoH with Boomerang': {
         'name'    : 'logic_graveyard_poh',
@@ -907,7 +1055,7 @@ logic_tricks = {
                     after the Wallmaster has begun its attempt to grab you.
                     Also included with this trick is that fact that the switch
                     that unbars the door to the final chest of GTG can be hit
-                    without a projectile, using a precise jumpslash.
+                    without a projectile, using a precise jump slash.
                     This trick supersedes "Gerudo Training Grounds MQ Left Side
                     Silver Rupees with Hookshot".
                     '''},
@@ -926,7 +1074,7 @@ logic_tricks = {
         'name'    : 'logic_water_cracked_wall_nothing',
         'tags'    : ("Water Temple",),
         'tooltip' : '''\
-                    A precise jumpslash (among other methods) will
+                    A precise jump slash (among other methods) will
                     get you to the cracked wall without needing the
                     Hover Boots or to raise the water to the middle
                     level. This trick supersedes "Water Temple
@@ -954,6 +1102,15 @@ logic_tricks = {
                     The majority of the tricks that allow you to skip Iron Boots
                     in the Water Temple are not going to be relevant unless this
                     trick is first enabled.
+                    '''},
+    'Water Temple Central Pillar GS with Farore\'s Wind': {
+        'name'    : 'logic_water_central_gs_fw',
+        'tags'    : ("Water Temple", "Skulltulas",),
+        'tooltip' : '''\
+                    If you set Farore's Wind inside the central pillar
+                    and then return to that warp point after raising
+                    the water to the highest level, you can obtain this
+                    Skulltula Token with Hookshot or Boomerang.
                     '''},
     'Water Temple Central Pillar GS with Iron Boots': {
         'name'    : 'logic_water_central_gs_irons',
@@ -985,9 +1142,10 @@ logic_tricks = {
                     If you come into the dragon statue room from the
                     serpent river, you can jump down from above and get
                     into the tunnel without needing either Iron Boots
-                    or a Scale. You must shoot the switch from above
-                    with the Bow, and then quickly get through the
-                    tunnel before the gate closes.
+                    or a Scale. This trick applies to both Vanilla and
+                    Master Quest. In Vanilla, you must shoot the switch
+                    from above with the Bow, and then quickly get
+                    through the tunnel before the gate closes.
                     '''},
     'Water Temple Dragon Statue Switch from Above the Water as Adult': {
         'name'    : 'logic_water_dragon_adult',
@@ -1001,8 +1159,7 @@ logic_tricks = {
                     just using the Iron Boots, a well-timed dive with at least
                     the Silver Scale could be used swim through the tunnel. If
                     coming from the serpent river, a jump dive can also be used
-                    to get into the tunnel, so this trick supersedes "Water
-                    Temple Dragon Statue Jump Dive".
+                    to get into the tunnel.
                     '''},
     'Water Temple Dragon Statue Switch from Above the Water as Child': {
         'name'    : 'logic_water_dragon_child',
@@ -1057,30 +1214,33 @@ logic_tricks = {
                     but it must be thrown from a particular distance
                     away and with precise timing.
                     '''},
-    'Forest Temple Outside Backdoor without Hover Boots': {
+    'Forest Temple Outside Backdoor with Jump Slash': {
         'name'    : 'logic_forest_outside_backdoor',
         'tags'    : ("Forest Temple",),
         'tooltip' : '''\
-                    With a precise jumpslash from above, you
-                    can reach the backdoor to the west
-                    courtyard without Hover Boots.
+                    With a precise jump slash from above,
+                    you can reach the backdoor to the west
+                    courtyard without Hover Boots. Applies
+                    to both Vanilla and Master Quest.
                     '''},
-    'Forest Temple Scarecrow Route': {
-        'name'    : 'logic_forest_scarecrow',
+    'Forest Temple East Courtyard Door Frame with Hover Boots': {
+        'name'    : 'logic_forest_door_frame',
         'tags'    : ("Forest Temple",),
         'tooltip' : '''\
-                    From on top of the door frame in the NE
-                    courtyard, you can summon Pierre. You
-                    can get there with a precise Hover Boots
-                    movement. You will take fall damage.
-                    This allows you to reach the falling
-                    ceiling room early.
+                    A precise Hover Boots movement from the upper
+                    balconies in this courtyard can be used to get on
+                    top of the door frame. Applies to both Vanilla and
+                    Master Quest. In Vanilla, from on top the door
+                    frame you can summon Pierre, allowing you to access
+                    the falling ceiling room early. In Master Quest,
+                    this allows you to obtain the GS on the door frame
+                    as adult without Hookshot or Song of Time.
                     '''},
     'Dodongo\'s Cavern MQ Early Bomb Bag Area as Child': {
         'name'    : 'logic_dc_mq_child_bombs',
         'tags'    : ("Dodongo's Cavern",),
         'tooltip' : '''\
-                    With a precise jumpslash from above, you
+                    With a precise jump slash from above, you
                     can reach the Bomb Bag area as only child
                     without needing a Slingshot. You will
                     take fall damage.
@@ -1102,7 +1262,33 @@ logic_tricks = {
                     platforms while the flame circles are there.
                     When enabling this trick, it's recommended that
                     you also enable the Adult variant: "Dodongo's
-                    Cavern Spike Trap Room Jump without Hover Boots."
+                    Cavern Spike Trap Room Jump without Hover Boots".
+                    '''},
+    'Dodongo\'s Cavern MQ Light the Eyes with Strength': {
+        'name'    : 'logic_dc_mq_eyes',
+        'tags'    : ("Dodongo's Cavern",),
+        'tooltip' : '''\
+                    If you move very quickly, it is possible to use
+                    the bomb flower at the top of the room to light
+                    the eyes. To perform this trick as child is
+                    significantly more difficult, but child will never
+                    be expected to do so unless "Dodongo's Cavern MQ
+                    Back Areas as Child without Explosives" is enabled.
+                    Also, the bombable floor before King Dodongo can be
+                    destroyed with Hammer if hit in the very center.
+                    '''},
+    'Dodongo\'s Cavern MQ Back Areas as Child without Explosives': {
+        'name'    : 'logic_dc_mq_child_back',
+        'tags'    : ("Dodongo's Cavern",),
+        'tooltip' : '''\
+                    Child can progress through the back areas without
+                    explosives by throwing a pot at a switch to lower a
+                    fire wall, and by defeating Armos to detonate bomb
+                    flowers (among other methods). While these techniques
+                    themselves are relatively simple, they're not
+                    relevant unless "Dodongo's Cavern MQ Light the Eyes
+                    with Strength" is enabled, which is a trick that
+                    is particularly difficult for child to perform.
                     '''},
     'Rolling Goron (Hot Rodder Goron) as Child with Strength': {
         'name'    : 'logic_child_rolling_with_strength',
@@ -1124,7 +1310,7 @@ logic_tricks = {
         'tags'    : ("Gerudo Valley",),
         'tooltip' : '''\
                     From the far side of Gerudo Valley, a precise
-                    Hover Boots movement and jumpslash recoil can
+                    Hover Boots movement and jump-slash recoil can
                     allow adult to reach the ledge with the crate
                     PoH without needing Longshot. You will take 
                     fall damage.
@@ -1182,10 +1368,20 @@ logic_tricks = {
         'name'    : 'logic_fire_scarecrow',
         'tags'    : ("Fire Temple",),
         'tooltip' : '''\
-                    Also known as "Pixelshot."
+                    Also known as "Pixelshot".
                     The Longshot can reach the target on the elevator
                     itself, allowing you to skip needing to spawn the
                     scarecrow.
+                    '''},
+    'Fire Trial MQ with Hookshot': {
+        'name'    : 'logic_fire_trial_mq',
+        'tags'    : ("Ganon's Castle",),
+        'tooltip' : '''\
+                    It's possible to hook the target at the end of
+                    fire trial with just Hookshot, but it requires
+                    precise aim and perfect positioning. The main
+                    difficulty comes from getting on the very corner
+                    of the obelisk without falling into the lava.
                     '''},
     'Shadow Temple Entry with Fire Arrows': {
         'name'    : 'logic_shadow_fire_arrow_entry',
@@ -1657,7 +1853,15 @@ setting_infos = [
         name           = 'randomize_settings',
         gui_text       = 'Randomize Main Rule Settings',
         gui_tooltip    = '''\
-                         Randomizes most Main Rules.
+                         Randomizes all settings on the 'Main Rules' tab, except:
+
+                         - Logic Rules
+                         - (Random) Number of MQ Dungeons
+                         - Rainbow Bridge Requirement: Gold Skulltula Tokens
+                         - Ganon's Boss Key On LACS: Gold Skulltula Tokens
+                         - Variable numbers of Spiritual Stones, Medallions, or Dungeons
+                         for Rainbow Bridge and Ganon's Boss Key on LACS 
+                         (you will always be required to obtain all the relevant rewards)
                          ''',
         default        = False,
         disable        = {
@@ -1689,10 +1893,16 @@ setting_infos = [
             Deku Tree, requiring Kokiri Sword and Deku Shield to access
             the Deku Tree.
 
-            'Closed Forest': The Kokiri Sword and Slingshot are always
-            available somewhere in the forest. This is incompatible with
-            Start as Adult and shuffling "All Indoors" and/or "Overworld"
-            entrances will force this to Closed Deku if selected.
+            'Closed Forest': Beating Deku Tree is logically required
+            to leave the forest area (Kokiri Forest/Lost Woods/Sacred Forest
+            Meadow/Deku Tree), while the Kokiri Sword and a Deku Shield are
+            required to access the Deku Tree. Items needed for this will be
+            guaranteed inside the forest area. This setting is incompatible
+            with starting as adult, and so Starting Age will be locked to Child.
+            With "Shuffle Interior Entrances" set to "All" and/or
+            "Shuffle Overworld Entrances" on, Closed Forest will instead be treated
+            as Closed Deku with starting age Child and WILL NOT guarantee that these
+            items are available in the forest area.
         ''',
         shared         = True,
         disable        = {
@@ -1857,7 +2067,9 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
+            "randomize_key": "randomize_settings",
             "hide_when_disabled": True,
+            'distribution': [(6, 1)],
         },
     ),
     Scale(
@@ -1872,7 +2084,9 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
+            "randomize_key": "randomize_settings",
             "hide_when_disabled": True,
+            'distribution': [(3, 1)],
         },
     ),
     Scale(
@@ -1888,7 +2102,9 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
+            "randomize_key": "randomize_settings",
             "hide_when_disabled": True,
+            'distribution': [(9, 1)],
         },
     ),
     Scale(
@@ -2083,11 +2299,13 @@ setting_infos = [
         gui_tooltip    = '''\
             Start having already met Zelda and obtained
             Zelda's Letter along with the song from Impa.
-            This is incompatible with Shuffle Weird Egg.
+            Supersedes "Skip Child Stealth" since the whole
+            sequence is skipped. Similarly, this is
+            incompatible with Shuffle Weird Egg.
         ''',
         shared         = True,
         disable = {
-            True: {'settings': ['shuffle_weird_egg', 'no_guard_stealth']},
+            True: {'settings': ['shuffle_weird_egg']},
         },
     ),
     Checkbutton(
@@ -2368,7 +2586,6 @@ setting_infos = [
             - Gerudo Training Ground's Ice Arrow Location
 
             'Anywhere': Songs can appear in any location.
-            This is incompatible with "Free Zelda".
         ''',
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -2384,9 +2601,9 @@ setting_infos = [
         name           = 'shuffle_cows',
         gui_text       = 'Shuffle Cows',
         gui_tooltip    = '''\
-            Enabling this causes playing Epona's song infront
-            of cows to give an item. There are 9 cows, and an
-            extra in MQ Jabu.
+            Enabling this will let cows give you items
+            upon performing Epona's song in front of them.
+            There are 9 cows, and an extra in MQ Jabu.
         ''',
         default        = False,
         shared         = True,
@@ -2721,7 +2938,7 @@ setting_infos = [
             'remove':      'Remove',
             'startwith':   'Start With',
             'vanilla':     'Vanilla Locations',
-            'dungeon':     'Dungeon Only',
+            'dungeon':     'Own Dungeon',
             'overworld':   'Overworld Only',
             'any_dungeon': 'Any Dungeon',
             'keysanity':   'Anywhere',
@@ -2738,7 +2955,7 @@ setting_infos = [
             'Vanilla': Maps and Compasses will appear in
             their vanilla locations.
 
-            'Dungeon': Maps and Compasses can only appear
+            'Own Dungeon': Maps and Compasses can only appear
             in their respective dungeon.
             
             'Overworld Only': Maps and Compasses can only appear
@@ -2767,7 +2984,7 @@ setting_infos = [
         choices        = {
             'remove':      'Remove (Keysy)',
             'vanilla':     'Vanilla Locations',
-            'dungeon':     'Dungeon Only',
+            'dungeon':     'Own Dungeon',
             'overworld':   'Overworld Only',
             'any_dungeon': 'Any Dungeon',
             'keysanity':   'Anywhere (Keysanity)',
@@ -2782,7 +2999,7 @@ setting_infos = [
             Spirit Temple MQ because the vanilla key 
             layout is not beatable in logic.
 
-            'Dungeon': Small Keys can only appear in their
+            'Own Dungeon': Small Keys can only appear in their
             respective dungeon. If Fire Temple is not a
             Master Quest dungeon, the door to the Boss Key
             chest will be unlocked.
@@ -2852,7 +3069,7 @@ setting_infos = [
         choices        = {
             'remove':      'Remove (Keysy)',
             'vanilla':     'Vanilla Locations',
-            'dungeon':     'Dungeon Only',
+            'dungeon':     'Own Dungeon',
             'overworld':   'Overworld Only',
             'any_dungeon': 'Any Dungeon',
             'keysanity':   'Anywhere (Keysanity)',
@@ -2865,7 +3082,7 @@ setting_infos = [
             'Vanilla': Boss Keys will appear in their 
             vanilla locations.
 
-            'Dungeon': Boss Keys can only appear in their
+            'Own Dungeon': Boss Keys can only appear in their
             respective dungeon.
             
             'Overworld Only': Boss Keys can only appear outside
@@ -2901,7 +3118,7 @@ setting_infos = [
         choices        = {
             'remove':          "Remove (Keysy)",
             'vanilla':         "Vanilla Location",
-            'dungeon':         "Dungeon Only",
+            'dungeon':         "Own Dungeon",
             'overworld':       "Overworld Only",
             'any_dungeon':     "Any Dungeon",
             'keysanity':       "Anywhere (Keysanity)",
@@ -2915,7 +3132,7 @@ setting_infos = [
             'Remove': Ganon's Castle Boss Key is removed
             and the boss door in Ganon's Tower starts unlocked.
 
-            'Dungeon': Ganon's Castle Boss Key can only appear
+            'Own Dungeon': Ganon's Castle Boss Key can only appear
             inside Ganon's Castle.
 
             'Vanilla': Ganon's Castle Boss Key will appear in 
@@ -2980,7 +3197,9 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
+            "randomize_key": "randomize_settings",
             "hide_when_disabled": True,
+            'distribution': [(6, 1)],
         },
     ),
     Scale(
@@ -2995,7 +3214,9 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
+            "randomize_key": "randomize_settings",
             "hide_when_disabled": True,
+            'distribution': [(3, 1)],
         },
     ),
     Scale(
@@ -3011,7 +3232,9 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
+            "randomize_key": "randomize_settings",
             "hide_when_disabled": True,
+            'distribution': [(9, 1)],
         },
     ),
     Scale(
@@ -3255,6 +3478,18 @@ setting_infos = [
         ''',
         shared         = True,
         default        = True,
+    ),
+    Checkbutton(
+        name           = 'no_collectible_hearts',
+        gui_text       = 'Hero Mode',
+        gui_tooltip    = '''\
+            No recovery hearts will drop from 
+            enemies or objects.
+            (You might still find some freestanding
+            or in chests depending on other settings.)
+        ''',
+        default        = False,
+        shared         = True,
     ),
     Combobox(
         name           = 'hints',
@@ -3598,7 +3833,7 @@ setting_infos = [
         shared         = False,
         cosmetic       = True,
         gui_tooltip    = '''\
-            Ingame models for items such as Heart Containers have 
+            In-game models for items such as Heart Containers have
             colors matching the colors chosen for cosmetic settings.
             Heart and magic drop icons also have matching colors.
 

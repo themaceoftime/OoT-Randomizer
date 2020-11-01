@@ -132,6 +132,7 @@ do that.
 * New options for Key and Map/Compass Shuffle settings
   * "Overworld Only" will place keys (or maps/compasses) outside of dungeons.
   * "Any Dungeon" will allow keys (or maps/compasses) to placed in any dungeon, not just the dungeon they belong to!
+  * "Dungeon Only" is renamed "Own Dungeon" for clarity.
   * Gerudo Fortress Small Keys are configured in a separate setting.
 * New setting `Shuffle Medigoron & Carpet Salesman`
   * Adds the Giant's Knife and a pack of Bombchus to the pool while Medigoron and Carpet Salesman each sell a randomly placed item once for 200 rupees.
@@ -152,6 +153,8 @@ do that.
   * All these shuffles and randomizations are fixed when the seed is generated; within a seed it will always be the same each time.
 * New setting `Fast Bunny Hood`
   * Allows manual toggling on/off of the 1.5x speed boost from MM.
+* New setting `Hero Mode`
+  * Allows playing without heart drops from enemies or objects. Good luck!!
 * New Cosmetic Plandomizer
   * Use a JSON file to set your cosmetics and sound settings.
   * We've added lots of new color options to pick from as well!
@@ -175,17 +178,39 @@ do that.
   * `Zora's Domain GS with No Additional Items` - use only a jumpslash.
   * `Ice Cavern Block Room GS with Hover Boots` - reach the GS with the Hover Boots to jumpslash it.
   * `Hyrule Castle Storms Grotto GS with Just Boomerang` - make a precise throw with the Boomerang to send it behind the wall.
+  * `Water Temple Central Pillar GS with Farore's Wind` - cast inside the pillar before raising the water level. *Previously assumed in logic!*
   * `Water Temple Central Pillar GS with Iron Boots` - unlock the door on the middle level before raising the water.
   * `Water Temple Dragon Statue Switch from Above the Water as Adult` - trigger the switch from dry land, then use Iron Boots, any Scale, or a jump dive coming from the river.
   * `Water Temple Dragon Statue Switch from Above the Water as Child` - same but for child. The Scale dive is very precise.
   * `Goron City Grotto with Hookshot While Taking Damage` - brave the heat, but be quick.
   * `Dodongo's Cavern Two Scrub Room with Strength` - position a block correctly and adult can bring a bomb flower to the wall.
   * `Shadow Temple Falling Spikes GS with Hover Boots` - make a precise move to get on the falling spikes, then another precise move to grab the token.
+  * `Deku Tree MQ Roll Under the Spiked Log` - roll at the right time to shrink your hintbox. *Previously assumed in logic!*
+  * `Bottom of the Well MQ Jump Over the Pits` - Use a sidehop or backflip to jump over the pits. *Previously assuming in logic!*
+  * `Water Temple MQ Central Pillar with Fire Arrows` - Angled torches have hard-to-hit hitboxes. *Previously assumed in logic!*
+  * `Forest Temple MQ Twisted Hallway Switch with Jump Slash` - Hit the switch from above with a jump slash, after getting in place with Hover Boots or some glass blocks. *Previously assumed in logic!*
+  * `Fire Temple MQ Lower to Upper Lizalfos Maze with Hover Boots` - Hover Boots can get you up from a crate.
+  * `Fire Temple MQ Lower to Upper Lizalfos Maze with Precise Jump` - You can even jump up from a crate without the Hover Boots!
+  * `Fire Temple MQ Above Flame Wall Maze GS from Below with Longshot` - Point the Longshot at the right pointin the ceiling to obtain the token.
+  * `Shadow Temple MQ Invisible Blades Silver Rupees without Song of Time` - Get a boost from a Like Like into a silver rupee, but don't die in the process.
+  * `Deku Tree MQ Compass Room GS Boulders with Just Hammer` - Jump slash from the top of the vines.
+  * `Spirit Temple MQ Sun Block Room as Child without Song of Time` - Throw a crate onto the switch to unbar the door briefly.
+  * `Water Temple MQ North Basement GS without Small Key` - There's an invisible Hookshot target you can use.
+  * `Death Mountain Trail Lower Red Rock GS with Hover Boots` - Kill the Skulltula, get on the fence, and then backflip onto the the rock.
+  * `Ice Cavern MQ Red Ice GS without Song of Time` - Side-hop into the right place and you have a brief amount of time to use Blue Fire.
+  * `Kakariko Rooftop GS with Hover Boots` - Some tricky movements with the Hover Boots can get you up onto Impa's House.
+  * `Dodongo's Cavern MQ Light the Eyes with Strength` - You have to move very quickly to light the eyes with a Bomb Flower.
+  * `Dodongo's Cavern MQ Back Areas as Child without Explosives` - Use pots, Armos, etc to progress through the room. Not relevant without "Light the Eyes with Strength" above, which is much harder for child.
+  * `Fire Trial MQ with Hookshot` - Hit the target from a precise position with precise aim.
 * Removed tricks
   * `Water Temple Boss Key Chest with Iron Boots`
   * `Water Temple Dragon Statue with Bombchu` - superseded by the new Dragon Statue tricks.
 * Changed Tricks
   * Burning the two vertical webs in the Deku Tree basement with bow is now default logic. The relevant trick has been renamed to `Deku Tree Basement Web to Gohma with Bow` to reflect that it now only applies to the web immediately before Gohma.
+  * `Reach Forest Temple MQ Twisted Hallway Switch with Hookshot` - renamed `Forest Temple MQ Twisted Hallway Switch with Hookshot`.
+  * `Fire Temple MQ Boulder Maze Side Room without Box` - renamed `Fire Temple MQ Lizalfos Maze Side Room without Box`.
+  * `Fire Temple MQ Big Lava Room Blocked Door without Hookshot` - can be done without damage, so it's now allowed in OHKO.
+  * `Forest Temple Scarecrow Route` - renamed `Forest Temple East Courtyard Door Frame with Hover Boots` and can be done in Vanilla or MQ.
 * Updated altar text in the Temple of Time
   * Now provides rainbow bridge requirements and the shuffle mode of Ganon's Castle Boss Key (info otherwise available in the seed settings). These are always available at the altar regardless of Maps/Compass settings.
   * Removed misleading vanilla text from the child altar.
@@ -198,6 +223,8 @@ do that.
 * Tournament hint distribution changes <!-- keep updated if there are changes later -->
   * Temple of Time stones all provide the same hint.
   * Grotto stones are disabled and only provide junk hints.
+  * Zelda's Lullaby is never considered for Way of the Hero hints.
+  * Deku Theater Skull Mask is an "always" hint.
   * Only "always" and "WotH" hints have duplicates now.
   * Number of unique hints of each type are now (not counting seed-dependent hint types like 'always' and 'trial'): 4 WotH, 0 barren, 4(remainder) sometimes.
 * Added options to `Background Music` and `Fanfares` for randomly selecting only from [custom music](https://wiki.ootrandomizer.com/index.php?title=Readme#Custom_Music_and_Fanfares).
@@ -226,10 +253,12 @@ do that.
 * Drop Ruto before entering Big Octo room if the miniboss has been defeated.
 * Prevent an errant `@` from showing up in Triforce Hunt.
 * Move the Stone of Agony indicator above any small keys if both are present.
+* Ensure Ganondorf always hints one of the first reachable Light Arrows.
 * Allow playthrough to collect a second 'Bottle with Letter' as its first empty bottle.
 * Fix some issues with `Randomize Main Rules`:
   * Closed Forest implies starting as child.
   * Triforce Hunt won't accidentally place the Boss Key for Ganon's Castle.
+  * Other conflicts are now prevented.
 * Fix a rare issue in ER with using time-passing regions to gain new access.
 * Fix a rare issue where settings strings weren't allocated enough bits.
 * The seed generator can now retry a few times in case of failure.
@@ -245,6 +274,7 @@ do that.
 * File 3 has been removed from generated ROMs to free up some space.
 * The Zora Sapphire in Jabu Jabu's Big Octo room is now the actual dungeon reward.
 * The number of Triforces available in Triforce Hunt now rounds to the nearest whole number instead of the nearest whole **even** number.
+* Cosmetic logs contain the display names of SFX instead of their internal key names.
 * Performance improvements to seed generation.
 * Updated development n64 compilation process to use latest available toolchain.
 * Changed some C code to support GCC 10 in development n64 compilation.
