@@ -969,6 +969,10 @@ export class GUIGlobal {
         return;
       }
 
+      //Hack: fromPatchFile forces generation count to 1 to avoid wrong percentage calculation
+      if (fromPatchFile)
+        settingsMap["count"] = 1;
+
       post.send(window, 'generateSeed', { settingsFile: settingsMap, staticSeed: useStaticSeed }).then(event => {
 
         var listenerProgress = post.on('generateSeedProgress', function (event) {
@@ -1158,6 +1162,14 @@ export class GUIGlobal {
     }
     else {
       delete settingsFile["seed"];
+    }
+
+    //If spoiler log creation was intentionally disabled, warn user one time about the consequences
+    let spoilerLogWarningSeen = localStorage.getItem("spoilerLogWarningSeen");
+
+    if ((!spoilerLogWarningSeen || spoilerLogWarningSeen == "false") && settingsFile["create_spoiler"] == false) {
+      localStorage.setItem("spoilerLogWarningSeen", JSON.stringify(true));
+      throw { error_spoiler_log_disabled: "Generating a seed without a spoiler log means you won't be able to receive any help in case you get stuck! Would you rather generate a seed WITH a spoiler log?" };
     }
 
     console.log(settingsFile);

@@ -41,6 +41,7 @@ export class GeneratorComponent implements OnInit {
   //Local (non persistent) Variables
   seedString: string = "";
   generateSeedButtonEnabled: boolean = true;
+  inputOldValue: any = null; //Used to manage input field backup/restore
 
   constructor(private overlayContainer: OverlayContainer, private cd: ChangeDetectorRef, public global: GUIGlobal, private dialogService: NbDialogService) {
   }
@@ -167,8 +168,24 @@ export class GeneratorComponent implements OnInit {
       if (!this.global.generator_settingsMap["count"] || this.global.generator_settingsMap["count"] < 1)
         this.global.generator_settingsMap["count"] = 1;
 
+      //Error if no patch file was entered in fromPatchFile mode
+      if (fromPatchFile && !this.global.generator_settingsMap['patch_file']) {
+        this.dialogService.open(DialogWindow, {
+          autoFocus: true, closeOnBackdropClick: true, closeOnEsc: true, hasBackdrop: true, hasScroll: false, context: { dialogHeader: "Error", dialogMessage: "You didn't enter a patch file!" }
+        });
+
+        this.generateSeedButtonEnabled = true;
+        this.cd.markForCheck();
+        this.cd.detectChanges();
+
+        return;
+      }
+
+      //Hack: fromPatchFile forces generation count to 1 to avoid wrong count on progress window
+      let generationCount = fromPatchFile ? 1 : this.global.generator_settingsMap["count"];
+
       let dialogRef = this.dialogService.open(ProgressWindow, {
-        autoFocus: true, closeOnBackdropClick: false, closeOnEsc: false, hasBackdrop: true, hasScroll: false, context: { dashboardRef: this, totalGenerationCount: this.global.generator_settingsMap["count"] }
+        autoFocus: true, closeOnBackdropClick: false, closeOnEsc: false, hasBackdrop: true, hasScroll: false, context: { dashboardRef: this, totalGenerationCount: generationCount }
       });
 
       this.global.generateSeedElectron(dialogRef && dialogRef.componentRef && dialogRef.componentRef.instance ? dialogRef.componentRef.instance : null, fromPatchFile, fromPatchFile == false && this.seedString.length > 0 ? this.seedString : "").then(res => {
@@ -261,6 +278,21 @@ export class GeneratorComponent implements OnInit {
               this.global.generator_settingsMap["distribution_file"] = "";
               this.generateSeed(fromPatchFile, webRaceSeed);
             }
+          });
+        }
+        else if (err.hasOwnProperty('error_spoiler_log_disabled')) {
+
+          this.dialogService.open(ConfirmationWindow, {
+            autoFocus: true, closeOnBackdropClick: false, closeOnEsc: false, hasBackdrop: true, hasScroll: false, context: { dialogHeader: "Spoiler Log Warning", dialogMessage: err.error_spoiler_log_disabled }
+          }).onClose.subscribe(confirmed => {
+
+            //Enable spoiler log if user accepts and save changed setting
+            if (confirmed) {
+              this.global.generator_settingsMap["create_spoiler"] = true;
+              this.afterSettingChange();
+            }
+
+            this.generateSeed(fromPatchFile, webRaceSeed);
           });
         }
         else {
@@ -1033,29 +1065,56 @@ export class GeneratorComponent implements OnInit {
     })));
   }
 
-  revertToPriorValue(settingName: string, forceChangeDetection: boolean) {
+  revertToPriorValue(settingName: string, forceChangeDetection: boolean, forcePriorValue: any = null) {
 
-    let oldValue = this.global.generator_settingsMap[settingName];
+    let priorValue = forcePriorValue != null ? forcePriorValue : this.global.generator_settingsMap[settingName];
 
     setTimeout(() => {
-      this.global.generator_settingsMap[settingName] = oldValue;
+      this.global.generator_settingsMap[settingName] = priorValue;
 
       if (forceChangeDetection)
         this.cd.markForCheck();
     }, 0);
   }
 
-  numberInputChange(newValue: any, setting: object) {
+  inputFocusIn(settingName: string) {
+    //Save current value on entering any input field
+    this.inputOldValue = this.global.generator_settingsMap[settingName];
+  }
+
+  inputFocusOut(settingName: string, saveOnly: boolean, forceNewValue: any = null) {
+
+    let newValue = forceNewValue != null ? forceNewValue : this.global.generator_settingsMap[settingName];
+
+    //Only update if the value actually changed
+    if (newValue != this.inputOldValue) {
+      setTimeout(() => {
+        this.global.generator_settingsMap[settingName] = newValue;
+        this.afterSettingChange(saveOnly);
+      }, 0);
+    }
+  }
+
+  numberInputFocusOut(setting: object, forceAdjust: boolean) {
+   
+    let newValue = this.global.generator_settingsMap[setting["name"]];
+    let settingName = setting["name"];
 
     //Existence check
     if (!newValue || newValue.length == 0) {
-      this.revertToPriorValue(setting["name"], false);
+
+      if (forceAdjust)
+        this.revertToPriorValue(settingName, true, this.inputOldValue);
+
       return;
-    }     
+    }
 
     //Number check
     if (Number(parseInt(newValue)) != newValue) {
-      this.revertToPriorValue(setting["name"], true);
+
+      if (forceAdjust)
+        this.revertToPriorValue(settingName, true, this.inputOldValue);
+
       return;
     }
 
@@ -1064,24 +1123,25 @@ export class GeneratorComponent implements OnInit {
     let settingMax: number = setting["max"];
 
     if (("min" in setting) && newValue < settingMin) {
-      setTimeout(() => {
-        this.global.generator_settingsMap[setting["name"]] = settingMin;
-        this.cd.markForCheck();
-        this.afterSettingChange();
-      }, 0);
+      if (forceAdjust) {
+        setTimeout(() => {
+          this.global.generator_settingsMap[setting["name"]] = settingMin;
+          this.cd.markForCheck();
+          this.afterSettingChange();
+        }, 0);
+      }
     }
     else if (("max" in setting) && newValue > settingMax) {
-      setTimeout(() => {
-        this.global.generator_settingsMap[setting["name"]] = settingMax;
-        this.cd.markForCheck();
-        this.afterSettingChange();
-      }, 0);
+      if (forceAdjust) {
+        setTimeout(() => {
+          this.global.generator_settingsMap[setting["name"]] = settingMax;
+          this.cd.markForCheck();
+          this.afterSettingChange();
+        }, 0);
+      }
     }
-    else {
-      setTimeout(() => {
-        this.global.generator_settingsMap[setting["name"]] = parseInt(newValue);
-        this.afterSettingChange();
-      }, 0);
+    else { //Update setting with new number value
+      this.inputFocusOut(settingName, false, parseInt(newValue));
     }
   }
 
