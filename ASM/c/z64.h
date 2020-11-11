@@ -1146,6 +1146,35 @@ typedef struct
   uint16_t          selected_file;            /* 0x1CA38 */
   char              unk_04_[0x0008];          /* 0x1CA3A */
   uint16_t          transition_frame;         /* 0x1CA42 */
+  struct {
+    int16_t         file[3];                  /* 0x1CA44 */
+    int16_t         yes;                      /* 0x1CA4A */
+    int16_t         quit;                     /* 0x1CA4C */
+    int16_t         options;                  /* 0x1CA4E */
+  }                 button_offsets;
+  int16_t           unk_05_;                  /* 0x1CA50 */
+  int16_t           disable_copy_erase;       /* 0x1CA52 */
+  int16_t           unk_06_;                  /* 0x1CA54 */
+  int16_t           message_id[2];            /* 0x1CA56 */
+  colorRGB16_t      panel_color;              /* 0x1CA5A */
+  struct {
+    uint16_t        message[2];               /* 0x1CA60 */
+    uint16_t        panel;                    /* 0x1CA64 */
+    uint16_t        file[3];                  /* 0x1CA66 */
+    uint16_t        tag[3];                   /* 0x1CA6C */
+    uint16_t        name_text[3];             /* 0x1CA72 */
+    uint16_t        link[3];                  /* 0x1CA78 */
+    uint16_t        file_details[3];          /* 0x1CA7E */
+    uint16_t        copy_button;              /* 0x1CA84 */
+    uint16_t        erase_button;             /* 0x1CA86 */
+    uint16_t        yes_button;               /* 0x1CA88 */
+    uint16_t        quit_button;              /* 0x1CA8A */
+    uint16_t        options_button;           /* 0x1CA8C */
+    uint16_t        unk_00_;                  /* 0x1CA8E */
+    uint16_t        input_button_text;        /* 0x1CA90 */
+    uint16_t        unk_01_;                  /* 0x1CA92 */
+  } alpha_levels;
+  colorRGB16_t      cursor_color;             /* 0x1CA94 */
 } z64_menudata_t;
 
 typedef struct
@@ -1299,6 +1328,8 @@ typedef struct
 #define z64_file_select_static_vsize            0x000395C0
 #define z64_parameter_static_vaddr              0x01A3C000
 #define z64_parameter_static_vsize              0x00003B00
+#define z64_icon_item_dungeon_static_vaddr      0x0085E000
+#define z64_icon_item_dungeon_static_vsize      0x00001D80
 
 
 /* context info */

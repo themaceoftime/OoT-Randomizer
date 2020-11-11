@@ -55,7 +55,7 @@ hash_symbol_t hash_symbols[32] = {
 
 uint32_t cfg_file_select_hash = 0;
 
-void draw_file_select_hash(uint32_t fade_out_alpha, const z64_menudata_t* menu_data) {
+void draw_file_select_hash(uint32_t fade_out_alpha, z64_menudata_t* menu_data) {
     z64_disp_buf_t *db = &(z64_ctxt.gfx->poly_opa);
 
     // Call setup display list

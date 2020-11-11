@@ -78,6 +78,16 @@ sprite_t item_digit_sprite = {
     G_IM_FMT_IA, G_IM_SIZ_8b, 1
 };
 
+sprite_t linkhead_skull_sprite = {
+    NULL, 16, 16, 2,
+    G_IM_FMT_RGBA, G_IM_SIZ_16b, 2
+};
+
+sprite_t heart_sprite = {
+    NULL, 16, 16, 10,
+    G_IM_FMT_IA, G_IM_SIZ_8b, 1
+};
+
 int sprite_bytes_per_tile(sprite_t *sprite) {
     return sprite->tile_w * sprite->tile_h * sprite->bytes_per_texel;
 }
@@ -136,6 +146,11 @@ void gfx_init() {
     };
     file_init(&parameter_static);
 
+    file_t icon_item_dungeon_static = {
+        NULL, z64_icon_item_dungeon_static_vaddr, z64_icon_item_dungeon_static_vsize
+    };
+    file_init(&icon_item_dungeon_static);
+
     stones_sprite.buf = title_static.buf + 0x2A300;
     medals_sprite.buf = title_static.buf + 0x2980;
     items_sprite.buf = icon_item_static.buf;
@@ -145,6 +160,8 @@ void gfx_init() {
     song_note_sprite.buf = icon_item_static.buf + 0x00088040;
     key_rupee_clock_sprite.buf = parameter_static.buf + 0x00001E00;
     item_digit_sprite.buf = parameter_static.buf + 0x000035C0;
+    linkhead_skull_sprite.buf = icon_item_dungeon_static.buf + 0x00001980;
+    heart_sprite.buf = parameter_static.buf;
 
     int font_bytes = sprite_bytes(&font_sprite);
     font_sprite.buf = heap_alloc(font_bytes);

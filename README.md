@@ -11,7 +11,6 @@ Differences between this branch and the main Dev branch (on [Testrunner's Fork](
 * 2 new advanced ER settings: "Mixed Entrance Pools" and "Decouple Entrances"
 * Picking up Gold Skulltula Tokens in non-Tokensanity displays a self-closing textbox which no longer freezes the player.
 * "Bombchus In Logic" is improved to include bombchu drops (from grass, pots, etc) that start dropping once you have found Bombchus.
-* New Inventory/Equipment/Status Icons Display in File Select from [rlbond86's Menu Icons Branch](https://github.com/rlbond86/OoT-Randomizer/tree/menu_icons)
 
 ## Index
 
@@ -106,6 +105,10 @@ do that.
 ### Dev
 
 #### New Features
+* New save file screen
+  * Relevant items are shown before hitting 'Yes' to load, instead of just the hearts, magic, dungeon rewards, and deaths, solid if the save has the item or faded if not.
+  * Triforce pieces aren't shown unless the save has at least 1.
+  * The death counter is now placed at the bottom next to a skull.
 * New setting `Skip Some Minigame Phases`
   * Allows getting both rewards for Horseback Archery and Dampé Race in a single go!
   * Replaces the `Skip First Dampé Race` setting.
