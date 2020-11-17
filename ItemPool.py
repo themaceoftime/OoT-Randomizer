@@ -119,13 +119,6 @@ item_difficulty_max = {
     },
 }
 
-TriforceCounts = {
-    'plentiful': Decimal(2.00),
-    'balanced':  Decimal(1.50),
-    'scarce':    Decimal(1.25),
-    'minimal':   Decimal(1.00),
-}
-
 DT_vanilla = (
     ['Recovery Heart'] * 2)
 
@@ -1305,9 +1298,8 @@ def get_pool_core(world):
     if not world.keysanity and not world.dungeon_mq['Fire Temple']:
         world.state.collect(ItemFactory('Small Key (Fire Temple)'))
 
-    if world.settings.triforce_hunt:
-        triforce_count = int((TriforceCounts[world.settings.item_pool_value] * world.settings.triforce_goal_per_world).to_integral_value(rounding=ROUND_HALF_UP))
-        pending_junk_pool.extend(['Triforce Piece'] * triforce_count)
+    if world.triforce_hunt:
+        pending_junk_pool.extend(['Triforce Piece'] * world.settings.triforce_count_per_world)
 
     if world.settings.shuffle_ganon_bosskey == 'on_lacs':
         placed_items['ToT Light Arrows Cutscene'] = 'Boss Key (Ganons Castle)'
