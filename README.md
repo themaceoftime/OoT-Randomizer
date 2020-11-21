@@ -266,6 +266,8 @@ do that.
   * Other conflicts are now prevented.
 * Fix a rare issue in ER with using time-passing regions to gain new access.
 * Fix a rare issue where settings strings weren't allocated enough bits.
+* Fix the version number in the ROM header being potentially wrong after patching.
+* Fix the CRC for uncompressed ROMs.
 * The seed generator can now retry a few times in case of failure.
 * Exclude a line from text shuffle so the Malon race is completable.
 * Minor plandomizer fixes and improvements.
@@ -279,6 +281,7 @@ do that.
 * File 3 has been removed from generated ROMs to free up some space.
 * The Zora Sapphire in Jabu Jabu's Big Octo room is now the actual dungeon reward.
 * The number of Triforces available in Triforce Hunt now rounds to the nearest whole number instead of the nearest whole **even** number.
+* "No Logic" seeds can now disable locations.
 * Cosmetic logs contain the display names of SFX instead of their internal key names.
 * Performance improvements to seed generation.
 * Updated development n64 compilation process to use latest available toolchain.
