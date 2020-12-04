@@ -253,8 +253,10 @@ do that.
   * `Fire Temple MQ Big Lava Room Blocked Door without Hookshot` - can be done without damage, so it's now allowed in OHKO.
   * `Forest Temple Scarecrow Route` - renamed `Forest Temple East Courtyard Door Frame with Hover Boots` and can be done in Vanilla or MQ.
 * Tricks can be filtered in the GUI using a new dropdown.
+* Easy and Hell Mode presets have been updated to add in the new features and/or tricks as relevant!
 
 #### Bug Fixes
+* Stealing Epona no longer crashes with the Fast Epona Race setting when you have Epona's Song but no ocarina.
 * Bunny Hood speed bonus now applies correctly in cases other than child running at full speed.
 * Avoid crashing on some systems when using child items as adult.
 * Ensure Ice Traps have valid models if they can be seen.
