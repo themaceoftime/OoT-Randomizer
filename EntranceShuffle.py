@@ -9,7 +9,7 @@ from Rules import set_entrances_based_rules
 from Entrance import Entrance
 from State import State
 from Item import ItemFactory
-from Hints import get_hint_area
+from Hints import get_hint_area, HintAreaNotFound
 
 
 def set_all_entrances_data(world):
@@ -654,7 +654,7 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
         if world.shuffle_cows:
             impas_front_entrance = get_entrance_replacing(world.get_region('Kak Impas House'), 'Kakariko Village -> Kak Impas House')
             impas_back_entrance = get_entrance_replacing(world.get_region('Kak Impas House Back'), 'Kak Impas Ledge -> Kak Impas House Back')
-            if impas_front_entrance is not None and impas_back_entrance is not None and same_hint_area(impas_front_entrance, impas_back_entrance):
+            if impas_front_entrance is not None and impas_back_entrance is not None and not same_hint_area(impas_front_entrance, impas_back_entrance):
                 raise EntranceShuffleError('Kak Impas House entrances are not in the same hint area')
 
     if (world.shuffle_special_interior_entrances or world.shuffle_overworld_entrances or world.spawn_positions) and \
@@ -725,7 +725,7 @@ def entrance_unreachable_as(entrance, age, already_checked=None):
 def same_hint_area(first, second):
     try:
         return get_hint_area(first) == get_hint_area(second)
-    except RuntimError:
+    except HintAreaNotFound:
         return False
 
 
