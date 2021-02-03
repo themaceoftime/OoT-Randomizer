@@ -190,6 +190,7 @@ def make_spoiler(settings, worlds, window=dummy_window()):
         window.update_status('Calculating Hint Data')
         logger.info('Calculating hint data.')
         update_required_items(spoiler)
+        update_goal_items(spoiler)
         buildGossipHints(spoiler, worlds)
         window.update_progress(55)
     elif settings.misc_hints:
@@ -599,6 +600,39 @@ def update_required_items(spoiler):
     for world in worlds:
         required_locations_dict[world.id] = list(filter(lambda location: location.world.id == world.id, required_locations))
     spoiler.required_locations = required_locations_dict
+
+
+def update_goal_items(spoiler):
+    worlds = spoiler.worlds
+
+    # get list of all of the progressive items that can appear in hints
+    # all_locations: all progressive items. have to collect from these
+    # item_locations: only the ones that should appear as "required"/WotH
+    all_locations = [location for world in worlds for location in world.get_filled_locations()]
+    # Set to test inclusion against
+    item_locations = {location for location in all_locations if location.item.majoritem and not location.locked and location.item.name != 'Triforce Piece'}
+
+    required_locations = []
+
+    search = Search([world.state for world in worlds])
+
+    for location in search.iter_reachable_locations(all_locations):
+        # Try to remove items one at a time and see if the game is still beatable
+        if location in item_locations:
+            old_item = location.item
+            location.item = None
+            # copies state! This is very important as we're in the middle of a search
+            # already, but beneficially, has search it can start from
+            if not search.can_beat_goal():
+                required_locations.append(location)
+            location.item = old_item
+        search.state_list[location.item.world.id].collect(location.item)
+
+    # Filter the required location to only include location in the world
+    required_locations_dict = {}
+    for world in worlds:
+        required_locations_dict[world.id] = list(filter(lambda location: location.world.id == world.id, required_locations))
+    spoiler.goal_locations = required_locations_dict
 
 
 def create_playthrough(spoiler):

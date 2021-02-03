@@ -48,6 +48,10 @@ class State(object):
         return self.has('Triforce')
 
 
+    def won_forest(self):
+        return self.has('Forest Medallion')
+
+
     def has(self, item, count=1):
         return self.prog_items[item] >= count
 

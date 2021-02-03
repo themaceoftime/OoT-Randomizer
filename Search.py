@@ -236,6 +236,22 @@ class Search(object):
         else:
             return False
 
+    def can_beat_goal(self, scan_for_items=True):
+        
+        # Check if already beaten
+        if all(map(State.won_forest, self.state_list)):
+            return True
+
+        if scan_for_items:
+            # collect all available items
+            # make a new search since we might be iterating over one already
+            search = self.copy()
+            search.collect_locations()
+            # if every state got the Triforce, then return True
+            return all(map(State.won_forest, search.state_list))
+        else:
+            return False
+
     # Use the cache in the search to determine region reachability.
     # Implicitly requires is_starting_age or Time_Travel.
     def can_reach(self, region, age=None, tod=TimeOfDay.NONE):

@@ -365,6 +365,29 @@ def get_checked_areas(world, checked):
         return get_hint_area(location)
 
     return set(get_area_from_name(check) for check in checked)
+def get_goal_hint(spoiler, world, checked):
+    locations = spoiler.goal_locations[world.id]
+    locations = list(filter(lambda location:
+        location.name not in checked
+        and not (world.woth_dungeon >= world.hint_dist_user['dungeons_woth_limit'] and location.parent_region.dungeon)
+        and location.name not in world.hint_exclusions
+        and location.name not in world.hint_type_overrides['woth']
+        and location.item.name not in world.item_hint_type_overrides['woth'],
+        locations))
+
+    if not locations:
+        return None
+
+    location = random.choice(locations)
+    checked.add(location.name)
+
+    if location.parent_region.dungeon:
+        world.woth_dungeon += 1
+        location_text = getHint(location.parent_region.dungeon.name, world.clearer_hints).text
+    else:
+        location_text = get_hint_area(location)
+    
+    return (GossipText('#%s# is on the path of the #Forest#.' % location_text, ['Light Blue','Green']), location)
 
 
 def get_barren_hint(spoiler, world, checked):
@@ -612,6 +635,7 @@ hint_func = {
     'trial':      lambda spoiler, world, checked: None,
     'always':     lambda spoiler, world, checked: None,
     'woth':             get_woth_hint,
+    'goal':             get_goal_hint,
     'barren':           get_barren_hint,
     'item':             get_good_item_hint,
     'sometimes':        get_sometimes_hint,
@@ -628,6 +652,7 @@ hint_dist_keys = {
     'trial',
     'always',
     'woth',
+    'goal',
     'barren',
     'item',
     'song',
