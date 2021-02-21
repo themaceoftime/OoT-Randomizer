@@ -350,10 +350,7 @@ def get_woth_hint(spoiler, world, checked):
     else:
         location_text = get_hint_area(location)
 
-    if world.settings.triforce_hunt:
-        return (GossipText('#%s# is on the path of gold.' % location_text, ['Light Blue']), location)
-    else:
-        return (GossipText('#%s# is on the way of the hero.' % location_text, ['Light Blue']), location)
+    return (GossipText('#%s# is on the way of the hero.' % location_text, ['Light Blue']), location)
 
 
 def get_checked_areas(world, checked):
@@ -366,28 +363,40 @@ def get_checked_areas(world, checked):
 
     return set(get_area_from_name(check) for check in checked)
 def get_goal_hint(spoiler, world, checked):
-    locations = spoiler.goal_locations[world.id]
-    locations = list(filter(lambda location:
-        location.name not in checked
-        and not (world.woth_dungeon >= world.hint_dist_user['dungeons_woth_limit'] and location.parent_region.dungeon)
-        and location.name not in world.hint_exclusions
-        and location.name not in world.hint_type_overrides['woth']
-        and location.item.name not in world.item_hint_type_overrides['woth'],
-        locations))
+    goals = spoiler.goal_locations[world.id]
 
-    if not locations:
-        return None
+    # Choose random goal and check if any locations are already hinted.
+    # If all locations for a goal are hinted, remove the goal from the list and try again.
+    # If all locations for all goals are hinted, return no hint.
+    while True:
+        if not goals:
+            return None
+
+        goalName, goalLocations = random.choice(list(goals.items()))
+        locations = list(filter(lambda location:
+            location.name not in checked
+            and location.name not in world.hint_exclusions
+            and location.name not in world.hint_type_overrides['goal']
+            and location.item.name not in world.item_hint_type_overrides['goal'],
+            goalLocations))
+
+        if (len(locations) > 0):
+            for g in world.goals:
+                if g.name == goalName:
+                    goal = g
+            break
+        else:
+            del goals[goalName]
 
     location = random.choice(locations)
     checked.add(location.name)
 
     if location.parent_region.dungeon:
-        world.woth_dungeon += 1
         location_text = getHint(location.parent_region.dungeon.name, world.clearer_hints).text
     else:
         location_text = get_hint_area(location)
     
-    return (GossipText('#%s# is on the path of the #Forest#.' % location_text, ['Light Blue','Green']), location)
+    return (GossipText('#%s# is on the path of #%s#.' % (location_text, goal.name), ['Light Blue', goal.color]), location)
 
 
 def get_barren_hint(spoiler, world, checked):

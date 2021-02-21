@@ -18,6 +18,7 @@ from RuleParser import Rule_AST_Transformer
 from SettingsList import get_setting_info, get_settings_from_section
 from State import State
 from Utils import read_json, data_path
+from Goals import Goal
 
 class World(object):
 
@@ -188,6 +189,32 @@ class World(object):
         # Additional Ruto's Letter become Bottle, so we may have to collect two.
         self.max_progressions['Rutos Letter'] = 2
 
+        # Initialize default goals for win condition
+        self.goals = []
+        if self.hint_dist_user['use_default_goals']:
+            if self.triforce_hunt and self.triforce_goal_per_world > 0:
+                pieces = self.triforce_goal_per_world
+                self.goals.append(Goal('gold','Yellow',[{'name': 'Triforce Piece','quantity': pieces}]))
+            
+            if ((self.bridge_stones > 0 and self.bridge == 'stones') or (self.lacs_stones > 0 and self.shuffle_ganon_bosskey == 'lacs_stones') or (self.bridge_rewards > 0 and self.bridge == 'dungeons') or (self.lacs_rewards > 0 and self.shuffle_ganon_bosskey == 'lacs_rewards')):
+                self.goals.append(Goal('the Emerald','Green',[{'name': 'Kokiri Emerald','quantity': 1}]))
+                self.goals.append(Goal('the Ruby','Red',[{'name': 'Goron Ruby','quantity': 1}]))
+                self.goals.append(Goal('the Sapphire','Blue',[{'name': 'Zora Sapphire','quantity': 1}]))
+            
+            if ((self.bridge_medallions > 0 and self.bridge == 'medallions') or (self.lacs_medallions > 0 and self.shuffle_ganon_bosskey == 'lacs_medallions') or (self.bridge_rewards > 0 and self.bridge == 'dungeons') or (self.lacs_rewards > 0 and self.shuffle_ganon_bosskey == 'lacs_rewards')):
+                self.goals.append(Goal('the Forest','Green',[{'name': 'Forest Medallion','quantity': 1}]))
+                self.goals.append(Goal('Fire','Red',[{'name': 'Fire Medallion','quantity': 1}]))
+                self.goals.append(Goal('Water','Blue',[{'name': 'Water Medallion','quantity': 1}]))
+                self.goals.append(Goal('Shadow','Pink',[{'name': 'Shadow Medallion','quantity': 1}]))
+                self.goals.append(Goal('Spirit','Yellow',[{'name': 'Spirit Medallion','quantity': 1}]))
+                self.goals.append(Goal('Light','Light Blue',[{'name': 'Light Medallion','quantity': 1}]))
+            
+            if (self.bridge_tokens > 0 and self.bridge == 'tokens') or (self.lacs_tokens > 0 and self.shuffle_ganon_bosskey == 'lacs_tokens'):
+                self.goals.append(Goal('Skulls','Light Blue',[{'name': 'Gold Skulltula Token','quantity': max_tokens}]))
+
+        if 'goals' in self.hint_dist_user:
+            for goal in self.hint_dist_user['goals']:
+                self.goals.append(Goal(goal['name'], goal['color'], list({'name': i['name'], 'quantity': i['quantity']} for i in goal['items'])))
 
     def copy(self):
         new_world = World(self.id, self.settings, False)
