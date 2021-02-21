@@ -236,19 +236,34 @@ class Search(object):
         else:
             return False
 
-    def can_beat_goal(self, scan_for_items=True):
+    def can_beat_goal(self, goal, scan_for_items=True):
+        beaten = True
         
         # Check if already beaten
-        if all(map(State.won_forest, self.state_list)):
+        if (goal.items is not None):
+            for i in goal.items:
+                beaten = (beaten and all(map(State.has, self.state_list, itertools.repeat(i['name']), itertools.repeat(i['quantity']))))
+        if (goal.locations is not None):
+            for l in goal.locations:
+                beaten = (beaten and all(map(self.can_reach_spot, self.state_list, itertools.repeat(l['name']), itertools.repeat(l['age']))))
+
+        if beaten:
             return True
 
         if scan_for_items:
+            beaten = True
             # collect all available items
             # make a new search since we might be iterating over one already
             search = self.copy()
             search.collect_locations()
-            # if every state got the Triforce, then return True
-            return all(map(State.won_forest, search.state_list))
+            # if every state beat the goal, then return True
+            if (goal.items is not None):
+                for i in goal.items:
+                    beaten = (beaten and all(map(State.has, search.state_list, itertools.repeat(i['name']), itertools.repeat(i['quantity']))))
+            if (goal.locations is not None):
+                for l in goal.locations:
+                    beaten = (beaten and all(map(search.can_reach_spot, search.state_list, itertools.repeat(l['name']), itertools.repeat(l['age']))))
+            return beaten
         else:
             return False
 
@@ -271,6 +286,9 @@ class Search(object):
             # treat None as either
             return self.can_reach(region, age='adult', tod=tod) or self.can_reach(region, age='child', tod=tod)
 
+    def can_reach_spot(self, state, locationName, age=None, tod=TimeOfDay.NONE):
+        location = state.world.get_location(locationName)
+        return self.spot_access(location, age, tod)
 
     # Use the cache in the search to determine location reachability.
     # Only works for locations that had progression items...
