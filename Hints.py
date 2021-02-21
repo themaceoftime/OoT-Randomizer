@@ -396,7 +396,7 @@ def get_goal_hint(spoiler, world, checked):
     else:
         location_text = get_hint_area(location)
     
-    return (GossipText('#%s# is on the path of #%s#.' % (location_text, goal.name), ['Light Blue', goal.color]), location)
+    return (GossipText('#%s# is on the path of #%s#.' % (location_text, goal.name), [goal.color, 'Light Blue']), location)
 
 
 def get_barren_hint(spoiler, world, checked):
