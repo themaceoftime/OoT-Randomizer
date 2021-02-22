@@ -363,7 +363,7 @@ def get_checked_areas(world, checked):
 
     return set(get_area_from_name(check) for check in checked)
 def get_goal_hint(spoiler, world, checked):
-    goals = spoiler.goal_locations[world.id]
+    goals = dict(spoiler.goal_locations[world.id])
 
     # Choose random goal and check if any locations are already hinted.
     # If all locations for a goal are hinted, remove the goal from the list and try again.
