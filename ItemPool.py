@@ -680,6 +680,17 @@ remove_junk_items = [
 ]
 remove_junk_set = set(remove_junk_items)
 
+exclude_from_major = [ 
+    'Deliver Letter',
+    'Sell Big Poe',
+    'Magic Bean',
+    'Zeldas Letter',
+    'Bombchus (5)',
+    'Bombchus (10)',
+    'Bombchus (20)',
+    'Odd Potion',
+    'Triforce Piece'
+]
 
 item_groups = {
     'Junk': remove_junk_items,
@@ -693,6 +704,7 @@ item_groups = {
     'WarpSong': songlist[6:],
     'HealthUpgrade': ('Heart Container', 'Piece of Heart'),
     'ProgressItem': [name for (name, data) in item_table.items() if data[0] == 'Item' and data[1]],
+    'MajorItem': [name for (name, data) in item_table.items() if (data[0] == 'Item' or data[0] == 'Song') and data[1] and name not in exclude_from_major],
     'DungeonReward': dungeon_rewards,
 
     'ForestFireWater': ('Forest Medallion', 'Fire Medallion', 'Water Medallion'),
@@ -1292,8 +1304,6 @@ def get_pool_core(world):
 
     if not world.keysanity and not world.dungeon_mq['Fire Temple']:
         world.state.collect(ItemFactory('Small Key (Fire Temple)'))
-    if not world.dungeon_mq['Water Temple']:
-        world.state.collect(ItemFactory('Small Key (Water Temple)'))
 
     if world.triforce_hunt:
         triforce_count = int((TriforceCounts[world.item_pool_value] * world.triforce_goal_per_world).to_integral_value(rounding=ROUND_HALF_UP))
@@ -1335,7 +1345,7 @@ def get_pool_core(world):
                     pending_junk_pool.remove(item)
                 # Remove pending junk already added to the pool by alter_pool from the pending_junk_pool
                 if item in pool:
-                    count = pool.count(item)
+                    count = min(pool.count(item), pending_junk_pool.count(item))
                     for _ in range(count):
                         pending_junk_pool.remove(item)
 

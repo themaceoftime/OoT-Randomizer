@@ -25,7 +25,7 @@ bingoBottlesForHints = (
 )
 
 defaultHintDists = [
-    'balanced.json', 'bingo.json', 'scrubs.json', 'strong.json', 'tournament.json', 'useless.json', 'very_strong.json'
+    'balanced.json', 'bingo.json', 'ddr.json', 'scrubs.json', 'strong.json', 'tournament.json', 'useless.json', 'very_strong.json'
 ]
 
 class RegionRestriction(Enum):
@@ -360,6 +360,7 @@ def get_barren_hint(spoiler, world, checked):
 
     areas = list(filter(lambda area:
         area not in checked
+        and area not in world.hint_type_overrides['barren']
         and not (world.barren_dungeon >= world.hint_dist_user['dungeons_barren_limit'] and world.empty_areas[area]['dungeon']),
         world.empty_areas.keys()))
 
@@ -986,7 +987,7 @@ def buildGanonBossKeyString(world):
         string += "And the door to the \x05\x41evil one\x05\x40's chamber will be left #unlocked#."
     else:
         if world.shuffle_ganon_bosskey == 'on_lacs':
-            item_req_string = getHint(world.shuffle_ganon_bosskey, world.clearer_hints).text
+            item_req_string = getHint('lacs_' + world.lacs_condition, world.clearer_hints).text
             if world.lacs_condition == 'medallions':
                 item_req_string = str(world.lacs_medallions) + ' ' + item_req_string
             elif world.lacs_condition == 'stones':

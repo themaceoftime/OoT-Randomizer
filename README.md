@@ -122,6 +122,11 @@ do that.
 * `Skip Child Zelda` in Multiworld (with Song Shuffle: Anywhere) now correctly provides items to the right player.
 * Smarter replacement of required warp songs when warp songs are shuffled. 
 * Fix Entrance Randomizer hint area validation to work with shuffled warp songs.
+* Fix Entrance Randomizer dungeon entrance hints.
+* Fix Plandomizer duplicating placed shop items.
+* Fix some potential failures for placing junk.
+* Fix disabled song locations getting a general junk item instead of a junk song.
+* Fix some spoiler entries for visible ice traps.
 * Fix error thrown on some operating systems for capitalized file extensions .N64/.Z64.
 
 #### Other Changes
@@ -130,6 +135,12 @@ do that.
 * Ruto now knows what kind of medallion or stone she gets in Jabu Jabu.
 * Added Nayru's Love back to the minimal item pool on high damage settings.
 * Hint distribution changes for named-item hints, including a new `vague_named_items` option for `hint_dist_user` that will name the location but not the item.
+* Hint distributions can now filter areas from being hinted as foolish, via putting the area names in `remove_locations`.
+* New `#MajorItem` item category for Plandomizer allows placing a random major item.
+* Entrance Randomizer: Allow Kakariko Potion Shop and Impa's House to have their entrances appear in different areas if all hints are off.
+* Updated presets.
+* Logic updates.
+* Use HTTPS for the version check to github.
 
 ### 6.0
 
