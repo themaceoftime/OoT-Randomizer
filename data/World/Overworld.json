@@ -6,7 +6,8 @@
             "Links Pocket": "True"
         },
         "exits": {
-            "Root Exits": "is_starting_age or Time_Travel"
+            "Root Exits": "is_starting_age or Time_Travel",
+            "HC Garden Locations": "skip_child_zelda"
         }
     },
     {
@@ -529,8 +530,7 @@
             "Gerudo Fortress": "True",
             "GV Upper Stream": "True",
             "GV Crate Ledge": "
-                logic_valley_crate_hovers and can_use(Hover_Boots) and
-                (damage_multiplier != 'ohko' or Fairy or can_use(Nayrus_Love))",
+                logic_valley_crate_hovers and can_use(Hover_Boots) and can_take_damage",
             "Gerudo Valley": "
                 is_child or can_ride_epona or can_use(Longshot) or
                 gerudo_fortress == 'open' or can_finish_GerudoFortress",
@@ -1143,7 +1143,7 @@
         },
         "exits": {
             "Castle Grounds": "True",
-            "HC Garden": "Weird_Egg or (not shuffle_weird_egg)",
+            "HC Garden": "Weird_Egg or skip_child_zelda or (not shuffle_weird_egg)",
             "HC Great Fairy Fountain": "has_explosives",
             "HC Storms Grotto": "can_open_storm_grotto"
         }
@@ -1152,12 +1152,19 @@
         "region_name": "HC Garden",
         "scene": "Castle Grounds",
         "hint": "Hyrule Castle",
+        "exits": {
+            "HC Garden Locations": "True",
+            "Hyrule Castle Grounds": "True"
+        }
+    },
+    {
+        # Directly reachable from Root in "Free Zelda"
+        "region_name": "HC Garden Locations",
+        "scene": "Castle Grounds",
+        "hint": "Hyrule Castle",
         "locations": {
             "HC Zeldas Letter": "True",
             "Song from Impa": "True"
-        },
-        "exits": {
-            "Hyrule Castle Grounds": "True"
         }
     },
     {
@@ -1344,8 +1351,7 @@
             "Kak GS Watchtower": "
                 is_child and (Slingshot or has_bombchus or 
                     (logic_kakariko_tower_gs and (Sticks or Kokiri_Sword) and
-                    (damage_multiplier != 'ohko' or Fairy or can_use(Nayrus_Love)))) and at_night",
-            "Kak GS Above Impas House": "can_use(Hookshot) and at_night",
+                    can_take_damage)) and at_night",
             "Bug Rock": "has_bottle"
         },
         "exits": {
@@ -1361,13 +1367,14 @@
             "Kak Potion Shop Front": "is_child or at_day",
             "Kak Redead Grotto": "can_open_bomb_grotto",
             "Kak Impas Ledge": "
-                (is_child and at_day) or (is_adult and logic_visible_collisions) or can_use(Hookshot)",
+                (is_child and at_day) or (is_adult and logic_visible_collisions)",
+            "Kak Impas Rooftop": "
+                can_use(Hookshot) or (logic_kakariko_rooftop_gs and can_use(Hover_Boots))",
             "Kak Odd Medicine Rooftop": "
                 can_use(Hookshot) or 
                 (logic_man_on_roof and 
                     (is_adult or at_day or Slingshot or has_bombchus or 
-                        (logic_kakariko_tower_gs and (Sticks or Kokiri_Sword) and
-                            (damage_multiplier != 'ohko' or Fairy or can_use(Nayrus_Love)))))",
+                        (logic_kakariko_tower_gs and (Sticks or Kokiri_Sword) and can_take_damage)))",
             "Kak Backyard": "is_adult or at_day",
             "Graveyard": "True",
             "Kak Behind Gate": "is_adult or 'Kakariko Village Gate Open'"
@@ -1379,6 +1386,18 @@
         "hint": "Kakariko Village",
         "exits": {
             "Kak Impas House Back": "True",
+            "Kakariko Village": "True"
+        }
+    },
+    {
+        "region_name": "Kak Impas Rooftop",
+        "scene": "Kakariko Village",
+        "hint": "Kakariko Village",
+        "locations": {
+            "Kak GS Above Impas House": "is_adult and at_night"
+        },
+        "exits": {
+            "Kak Impas Ledge": "True",
             "Kakariko Village": "True"
         }
     },
@@ -1652,7 +1671,7 @@
                 can_blast_or_smash or 
                 (logic_dmt_bombable and is_child and Progressive_Strength_Upgrade)",
             "DMT Freestanding PoH": "
-                (damage_multiplier != 'ohko') or can_use(Nayrus_Love) or Fairy or can_use(Hover_Boots) or
+                can_take_damage or can_use(Hover_Boots) or
                 (is_adult and here(can_plant_bean and (has_explosives or Progressive_Strength_Upgrade)))",
             "DMT GS Bean Patch": "
                 can_plant_bugs and can_child_attack and
@@ -1661,7 +1680,9 @@
             "DMT GS Near Kak": "can_blast_or_smash",
             "DMT GS Above Dodongos Cavern": "
                 is_adult and at_night and
-                (can_use(Megaton_Hammer) or (logic_trail_gs_lower_hookshot and can_use(Hookshot)) or
+                (can_use(Megaton_Hammer) or
+                    (logic_trail_gs_lower_hookshot and can_use(Hookshot)) or
+                    (logic_trail_gs_lower_hovers and can_use(Hover_Boots)) or
                     (logic_trail_gs_lower_bean and here(can_plant_bean and (has_explosives or Progressive_Strength_Upgrade))))",
             "Bean Plant Fairy": "
                 can_plant_bean and can_play(Song_of_Storms) and has_bottle and
@@ -1711,7 +1732,7 @@
         "region_name": "DMT Owl Flight",
         "scene": "Death Mountain",
         "exits": {
-            "Kak Impas Ledge": "True"
+            "Kak Impas Rooftop": "True"
         }
     },
     {
@@ -1861,7 +1882,7 @@
             "DMC Central Nearby": "
                 can_use(Goron_Tunic) and can_use(Longshot) and 
                 ((damage_multiplier != 'ohko' and damage_multiplier != 'quadruple') or 
-                    (Fairy and not shuffle_dungeon_entrances) or can_use(Nayrus_Love))"
+                    (Fairy and not entrance_shuffle) or can_use(Nayrus_Love))"
         }
     },
     {

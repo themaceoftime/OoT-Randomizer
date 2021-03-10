@@ -4,8 +4,9 @@
     "open_forest": "open",
     "bridge": "open",
     "triforce_hunt": false,
+    "shuffle_weird_egg": true,
     "logic_rules": "glitchless",
-    "all_reachable": false,
+    "reachable_locations": "beatable",
     "trials_random": false,
     "trials": 0
   },

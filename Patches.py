@@ -61,7 +61,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     add_to_extended_object_table(rom, 0x193, triforce_obj_file)
 
     # Build a Double Defense model from the Heart Container model
-    dd_obj_file = File({ 
+    dd_obj_file = File({
         'Name': 'object_gi_hearts',
         'Start': '014D9000',
         'End': '014DA590',
@@ -76,6 +76,10 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     update_dmadata(rom, dd_obj_file)
     # Add it to the extended object table
     add_to_extended_object_table(rom, 0x194, dd_obj_file)
+
+    # Create an option so that recovery hearts no longer drop by changing the code which checks Link's health when an item is spawned.
+    if world.no_collectible_hearts:
+        rom.write_byte(0xA895B7, 0x2E)
 
     # Force language to be English in the event a Japanese rom was submitted
     rom.write_byte(0x3E, 0x45)
@@ -359,7 +363,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     if songs_as_items:
         rom.write_int32(0x0252FD24, 0xFFFFFFFF) # Header: frame_count
     else:
-        rom.write_int32(0x0252FD24, 0x0000003C) # Header: frame_count
+        rom.write_int32(0x0252FD24, 0x0000004A) # Header: frame_count
 
     rom.write_int32s(0x02531320, [0x00000013, 0x0000000E]) # Textbox, Count
     rom.write_int16s(None, [0x0014, 0x0000, 0x0010, 0x0002, 0x088B, 0xFFFF]) # ID, start, end, type, alt1, alt2
@@ -766,7 +770,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
                 if command == 0x0F: # Lighting list, follows exit list
                     exit_list_end_off = rom.read_int32(current + 4) & 0x00FFFFFF
                 current += 8
-            
+
             if exit_list_start_off == 0 or exit_list_end_off == 0:
                 return
 
@@ -776,7 +780,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             if last_id == 0:
                 list_length -= 1
 
-            # update 
+            # update
             addr = scene_start + exit_list_start_off
             for _ in range(0, list_length):
                 index = rom.read_int16(addr)
@@ -789,7 +793,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         for scene in range(0x00, 0x65):
             scene_start = rom.read_int32(scene_table + (scene * 0x14));
             add_scene_exits(scene_start)
-            
+
         return exit_table
 
 
@@ -820,7 +824,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
                 copy_entrance_record(replaced_entrance["index"], new_entrance["blue_warp"], 2)
 
     exit_table = generate_exit_lookup_table()
-    
+
     if world.entrance_shuffle:
         # Disable the fog state entirely to avoid fog glitches
         rom.write_byte(rom.sym('NO_FOG_STATE'), 1)
@@ -891,10 +895,10 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
     # Fix text for Pocket Cucco.
     rom.write_byte(0xBEEF45, 0x0B)
-        
+
     # Fix stupid alcove cameras in Ice Cavern -- thanks to krim and mzx for the help
-    rom.write_byte(0x2BECA25,0x01);
-    rom.write_byte(0x2BECA2D,0x01); 
+    rom.write_byte(0x2BECA25,0x01)
+    rom.write_byte(0x2BECA2D,0x01)
 
     configure_dungeon_info(rom, world)
 
@@ -978,7 +982,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
     # Set the number of chickens to collect
     rom.write_byte(0x00E1E523, world.chicken_count)
-    
+
     # Change Anju to always say how many chickens are needed
     # Does not affect text for collecting item or afterwards
     rom.write_int16(0x00E1F3C2, 0x5036)
@@ -991,15 +995,30 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     # Make the Kakariko Gate not open with the MS
     if world.open_kakariko != 'open':
         rom.write_int32(0xDD3538, 0x34190000) # li t9, 0
-    if world.open_kakariko == 'closed':
-        rom.write_byte(rom.sym('OPEN_KAKARIKO'), 0)
-    else:
+    if world.open_kakariko != 'closed':
         rom.write_byte(rom.sym('OPEN_KAKARIKO'), 1)
 
     if world.complete_mask_quest:
         rom.write_byte(rom.sym('COMPLETE_MASK_QUEST'), 1)
-    else:
-        rom.write_byte(rom.sym('COMPLETE_MASK_QUEST'), 0)
+
+    if world.skip_child_zelda:
+        save_context.give_item('Zeldas Letter')
+        for w in spoiler.worlds:
+            item = w.get_location('Song from Impa').item
+            if world.id == item.world.id:
+                save_context.give_raw_item(item.name)
+        save_context.write_bits(0x0ED7, 0x04) # "Obtained Malon's Item"
+        save_context.write_bits(0x0ED7, 0x08) # "Woke Talon in castle"
+        save_context.write_bits(0x0ED7, 0x10) # "Talon has fled castle"
+        save_context.write_bits(0x0EDD, 0x01) # "Obtained Zelda's Letter"
+        save_context.write_bits(0x0EDE, 0x02) # "Learned Zelda's Lullaby"
+        save_context.write_bits(0x00D4 + 0x5F * 0x1C + 0x04 + 0x3, 0x10) # "Moved crates to access the courtyard"
+        if world.open_kakariko != 'closed':
+            save_context.write_bits(0x0F07, 0x40) # "Spoke to Gate Guard About Mask Shop"
+        if world.complete_mask_quest:
+            save_context.write_bits(0x0F07, 0x80) # "Soldier Wears Keaton Mask"
+            save_context.write_bits(0x0EF6, 0x8F) # "Sold Masks & Unlocked Masks" / "Obtained Mask of Truth"
+            save_context.write_bits(0x0EE4, 0xF0) # "Paid Back Mask Fees"
 
     if world.zora_fountain == 'open':
         save_context.write_bits(0x0EDB, 0x08) # "Moved King Zora"
@@ -1244,7 +1263,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     # update dialogue
     new_message = "\x08Hey, young man. What's happening \x01today? If you have a \x05\x41Poe\x05\x40, I will \x01buy it.\x04\x1AIf you earn \x05\x41%d points\x05\x40, you'll\x01be a happy man! Heh heh.\x04\x08Your card now has \x05\x45\x1E\x01 \x05\x40points.\x01Come back again!\x01Heh heh heh!\x02" % poe_points
     update_message_by_id(messages, 0x70F5, new_message)
-    if world.big_poe_count != 10:      
+    if world.big_poe_count != 10:
         new_message = "\x1AOh, you brought a Poe today!\x04\x1AHmmmm!\x04\x1AVery interesting!\x01This is a \x05\x41Big Poe\x05\x40!\x04\x1AI'll buy it for \x05\x4150 Rupees\x05\x40.\x04On top of that, I'll put \x05\x41100\x01points \x05\x40on your card.\x04\x1AIf you earn \x05\x41%d points\x05\x40, you'll\x01be a happy man! Heh heh." % poe_points
         update_message_by_id(messages, 0x70f7, new_message)
         new_message = "\x1AWait a minute! WOW!\x04\x1AYou have earned \x05\x41%d points\x05\x40!\x04\x1AYoung man, you are a genuine\x01\x05\x41Ghost Hunter\x05\x40!\x04\x1AIs that what you expected me to\x01say? Heh heh heh!\x04\x1ABecause of you, I have extra\x01inventory of \x05\x41Big Poes\x05\x40, so this will\x01be the last time I can buy a \x01ghost.\x04\x1AYou're thinking about what I \x01promised would happen when you\x01earned %d points. Heh heh.\x04\x1ADon't worry, I didn't forget.\x01Just take this." % (poe_points, poe_points)
@@ -1253,6 +1272,20 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     # Update Child Anju's dialogue
     new_message = "\x08What should I do!?\x01My \x05\x41Cuccos\x05\x40 have all flown away!\x04You, little boy, please!\x01Please gather at least \x05\x41%d Cuccos\x05\x40\x01for me.\x02" % world.chicken_count
     update_message_by_id(messages, 0x5036, new_message)
+
+    # Update "Princess Ruto got the Spiritual Stone!" text before the midboss in Jabu
+    reward_text = {'Kokiri Emerald':   "\x05\x42Kokiri Emerald\x05\x40",
+                   'Goron Ruby':       "\x05\x41Goron Ruby\x05\x40",
+                   'Zora Sapphire':    "\x05\x43Zora Sapphire\x05\x40",
+                   'Forest Medallion': "\x05\x42Forest Medallion\x05\x40",
+                   'Fire Medallion':   "\x05\x41Fire Medallion\x05\x40",
+                   'Water Medallion':  "\x05\x43Water Medallion\x05\x40",
+                   'Spirit Medallion': "\x05\x46Spirit Medallion\x05\x40",
+                   'Shadow Medallion': "\x05\x45Shadow Medallion\x05\x40",
+                   'Light Medallion':  "\x05\x44Light Medallion\x05\x40"
+    }
+    new_message = "\x1a\x08Princess Ruto got the \x01%s!\x09\x01\x14\x02But\x14\x00 why Princess Ruto?\x02" % reward_text[world.get_location('Barinade').item.name]
+    update_message_by_id(messages, 0x4050, new_message)
 
     # use faster jabu elevator
     if not world.dungeon_mq['Jabu Jabus Belly'] and world.shuffle_scrubs == 'off':
@@ -1283,7 +1316,8 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
 
     # build silly ganon lines
-    buildGanonText(world, messages)
+    if world.misc_hints:
+        buildGanonText(world, messages)
 
     # Write item overrides
     override_table = get_override_table(world)
@@ -1569,10 +1603,10 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             item = read_rom_item(rom, i)
             item['chest_type'] = 0
             write_rom_item(rom, i, item)
-    if world.bridge == 'tokens':
+    if world.bridge == 'tokens' or world.lacs_condition == 'tokens':
         item = read_rom_item(rom, 0x5B)
         item['chest_type'] = 0
-        write_rom_item(rom, 0x5B, item)       
+        write_rom_item(rom, 0x5B, item)
 
     # Update chest type sizes
     if world.correct_chest_sizes:
@@ -1582,7 +1616,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         if not world.dungeon_mq['Ganons Castle']:
             rom.write_int16(0x321B176, 0xFC40) # original 0xFC48
 
-        # Move Spirit Temple Compass Chest if it is a small chest so it is reachable with hookshot 
+        # Move Spirit Temple Compass Chest if it is a small chest so it is reachable with hookshot
         if not world.dungeon_mq['Spirit Temple']:
             chest_name = 'Spirit Temple Compass Chest'
             chest_address = 0x2B6B07C
@@ -1591,7 +1625,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             if item['chest_type'] in (1, 3):
                 rom.write_int16(chest_address + 2, 0x0190) # X pos
                 rom.write_int16(chest_address + 6, 0xFABC) # Z pos
-        
+
         # Move Silver Gauntlets chest if it is small so it is reachable from Spirit Hover Seam
         if world.logic_rules != 'glitchless':
             chest_name = 'Spirit Temple Silver Gauntlets Chest'
@@ -1657,7 +1691,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     # Set hints on the altar inside ToT
     rom.write_int16(0xE2ADB2, 0x707A)
     rom.write_int16(0xE2ADB6, 0x7057)
-    buildAltarHints(world, messages, include_rewards=not world.enhance_map_compass)
+    buildAltarHints(world, messages, include_rewards=world.misc_hints and not world.enhance_map_compass, include_wincons=world.misc_hints)
 
     # Set Dungeon Reward actors in Jabu Jabu to be accurate
     jabu_actor_type = world.get_location('Barinade').item.special['actor_type']
@@ -1689,7 +1723,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         permutation = shuffle_messages(messages, except_hints=True)
     elif world.text_shuffle == 'complete':
         permutation = shuffle_messages(messages, except_hints=False)
-        
+
     repack_messages(rom, messages, permutation)
 
     # output a text dump, for testing...
@@ -2009,7 +2043,7 @@ def create_fake_name(name):
     for i in random.sample(vowel_indexes, min(2, len(vowel_indexes))):
         c = list_name[i]
         list_name[i] = random.choice([v for v in vowels if v != c])
-    
+
     # keeping the game E...
     new_name = ''.join(list_name)
     censor = ['cum', 'cunt', 'dike', 'penis', 'puss', 'rape', 'shit']
@@ -2120,6 +2154,7 @@ def configure_dungeon_info(rom, world):
     rom.write_int32(rom.sym('cfg_dungeon_info_enable'), 1)
     rom.write_int32(rom.sym('cfg_dungeon_info_mq_enable'), int(mq_enable))
     rom.write_int32(rom.sym('cfg_dungeon_info_mq_need_map'), int(enhance_map_compass))
+    rom.write_int32(rom.sym('cfg_dungeon_info_reward_enable'), int(world.misc_hints))
     rom.write_int32(rom.sym('cfg_dungeon_info_reward_need_compass'), int(enhance_map_compass))
     rom.write_int32(rom.sym('cfg_dungeon_info_reward_need_altar'), int(not enhance_map_compass))
     rom.write_bytes(rom.sym('cfg_dungeon_rewards'), dungeon_rewards)

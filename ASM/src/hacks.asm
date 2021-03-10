@@ -284,6 +284,7 @@
 ; Replaces: code that draws the fade-out rectangle on file load
 .orga 0xBAF738 ; In memory: 0x803B3538
 .area 0x60, 0
+    or      a1, r0, s0   ; menu data
     jal     draw_file_select_hash
     andi    a0, t8, 0xFF ; a0 = alpha channel of fade-out rectangle
 
@@ -292,6 +293,68 @@
     jr      ra
     addiu   sp, sp, 0x88
 .endarea
+
+;==================================================================================================
+; Hide file details panel
+;==================================================================================================
+; keep death count alpha at 0 instead of using file_detail alpha
+.orga 0xBAC064 ; In memory: 0x803AFE64
+    move    t7, r0 ; was: lh t7, 0x4A7E (t4)
+
+; keep hearts alpha at 0 instead of using file_detail alpha
+.orga 0xBAC1BC ; In memory: 0x803AFFBC
+    move    t7, r0 ; was: lh t7, 0x4A7E (t4)
+
+; keep stones/medals alpha at 0 instead of using file_detail alpha
+.orga 0xBAC3EC ; In memory: 0x803B01EC
+    move    t9, r0 ; was: lh t9, 0x4A7E (t3)
+
+; keep detail panel alpha at 0 instead of using file_detail alpha
+.orga 0xBAC94C ; In memory: 0x803B074C
+    move    t9, r0 ; was: lh t9, 0x4A7E (t9)
+
+; keep file tag alpha at 0xC8 instead of subtracting 0x19 each transition frame
+.orga 0xBAE5A4 ; In memory: 0x803B23A4
+    sh      t3, 0x4A6C (v1) ; was: sh t5, 0x4A6C (v1)
+
+; prevent setting file tag alpha to 0x00 when transition is finished
+.orga 0xBAE5C8 ; In memory: 0x803B23C8
+    nop ; was: sh r0, 0x4A6C (v1)
+
+; prevent increasing alpha when transitioning away from file
+.orga 0xBAE864 ; In memory: 0x803B2664
+    nop ; was: sh t5, 0x4A6C (v1)
+
+; change file positions in copy menu
+.orga 0xBB05FC ; In memory: 0x803B43FC
+    .word 0x0000FFC0
+    .word 0xFFB0FFB0
+
+; keep file tag alpha at 0xC8 in copy menu
+.orga 0xBA18C4 ; In memory: 0x803A56C4
+    ori     t4, r0, 0x00C8 ; was: addiu t4, t9, 0xFFE7
+
+.orga 0xBA1980 ; In memory: 0x803A5780
+    ori     t0, r0, 0x00C8 ; was: addiu t0, t9, 0xFFE7
+    
+.orga 0xBA19DC ; In memory: 0x803A57DC
+    nop ; was: sh r0, 0x4A6C (t2)
+    
+.orga 0xBA1E20 ; In memory: 0x803A5C20
+    ori     t5, r0, 0x00C8 ; was: addiu t5, t4, 0x0019
+
+.orga 0xBA18C4 ; In memory: 0x803A56C4
+    ori     t4, r0, 0x00C8 ; was: ori t4, t4, 0x00C8
+
+; keep file tag alpha at 0xC8 in erase menu
+.orga 0xBA34DC ; In memory: 0x803A72DC
+    ori     t8, r0, 0x00C8 ; was: addiu t8, t7, 0xFFE7
+
+.orga 0xBA3654
+    nop ; was: sh r0, 0x4A6C (t6)
+
+.orga 0xBA39D0
+    ori     t5, r0, 0x00C8 ; was: addiu t5, t4, 0x0019
 
 ;==================================================================================================
 ; Special item sources
@@ -479,12 +542,6 @@ nop
 ;==================================================================================================
 ; Song Fixes
 ;==================================================================================================
-
-; Replaces:
-;   lw      t5, 0x8AA0(t5)
-.orga 0xAE5DF0 ; In memory: 8006FE90
-    jal     suns_song_fix
-
 ; Replaces:
 ;   addu    at, at, s3
 .orga 0xB54E5C ; In memory: 800DEEFC
@@ -895,6 +952,13 @@ skip_GS_BGS_text:
 ; Replaces: addiu   at, zero, 0x0002
 .orga 0xDC8828
     move    at, t5
+
+;==================================================================================================
+; Disable fishing anti-piracy checks
+;==================================================================================================
+; Replaces: sltiu   v0, v0, 1
+.orga 0xDBEC80
+    li      v0, 0
 
 ;==================================================================================================
 ; Bombchus In Logic Hooks
@@ -1665,6 +1729,11 @@ skip_GS_BGS_text:
     jal     move_file_3
     or      a0, s0, r0
 
+; Ignore File 3 when checking for available copy slot
+; Replaces: lbu     t6, 0x001C(v0)
+.orga 0xBAA3AC ; In memory: 0x803AE1AC
+    or      t6, a1, r0
+
 ;==================================================================================================
 ; Make Twinrova Wait For Link
 ;==================================================================================================
@@ -2019,9 +2088,9 @@ skip_GS_BGS_text:
 ; Use Sticks and Masks as Adult
 ;==================================================================================================
 ; Deku Stick
-; Replaces: lui     t2, 0x0600
-;           addiu   t2, t2, 0x6CC0
-.orga 0xAF180C
+; Replaces: addiu   t8, v1, 0x0008
+;           sw      t8, 0x02C0(t7)
+.orga 0xAF1814
     jal     stick_as_adult
     nop
 
@@ -2097,3 +2166,12 @@ skip_GS_BGS_text:
 ; Replaces: sw      t7, 0x00(a1)
 .orga 0xB575C8
     sw      t6, 0x00(a1)
+
+;==================================================================================================
+; Null Boomerang Pointer in Links Instance
+;==================================================================================================
+;Clear the boomerang pointer in Links instance when the boomerangs destroy function runs.
+;This fixes an issue where the boomerang trail color hack checks this pointer to write data.
+; Replaces: sw      a0, 0x18(sp)
+.orga 0xC5A9F0
+    jal     clear_boomerang_pointer

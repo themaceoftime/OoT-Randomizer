@@ -43,6 +43,12 @@ def patch_music(rom, settings, log, symbols):
 def patch_model_colors(rom, color, model_addresses):
     main_addresses, dark_addresses = model_addresses
 
+    if color is None:
+        for address in main_addresses + dark_addresses:
+            original = rom.original.read_bytes(address, 3)
+            rom.write_bytes(address, original)
+        return
+
     for address in main_addresses:
         rom.write_bytes(address, color)
 
@@ -59,7 +65,10 @@ def patch_tunic_icon(rom, tunic, color):
         'Zora Tunic': 0x00800000,
     }
 
-    tunic_icon = icon.generate_tunic_icon(color)
+    if color is not None:
+        tunic_icon = icon.generate_tunic_icon(color)
+    else:
+        tunic_icon = rom.original.read_bytes(icon_locations[tunic], 0x1000)
 
     rom.write_bytes(icon_locations[tunic], tunic_icon)
 
@@ -101,6 +110,8 @@ def patch_tunic_colors(rom, settings, log, symbols):
         # patch the tunic icon
         if [tunic, tunic_option] not in [['Kokiri Tunic', 'Kokiri Green'], ['Goron Tunic', 'Goron Red'], ['Zora Tunic', 'Zora Blue']]:
             patch_tunic_icon(rom, tunic, color)
+        else:
+            patch_tunic_icon(rom, tunic, None)
 
         log.equipment_colors[tunic] = CollapseDict({
             ':option': tunic_option,
@@ -451,6 +462,8 @@ def patch_gauntlet_colors(rom, settings, log, symbols):
         rom.write_bytes(address, color)
         if settings.correct_model_colors:
             patch_model_colors(rom, color, model_addresses)
+        else:
+            patch_model_colors(rom, None, model_addresses)
         log.equipment_colors[gauntlet] = CollapseDict({
             ':option': gauntlet_option,
             'color': color_to_hex(color),
@@ -489,6 +502,8 @@ def patch_shield_frame_colors(rom, settings, log, symbols):
             rom.write_bytes(address, color)
         if settings.correct_model_colors and shield_frame_option != 'Red':
             patch_model_colors(rom, color, model_addresses)
+        else:
+            patch_model_colors(rom, None, model_addresses)
 
         log.equipment_colors[shield_frame] = CollapseDict({
             ':option': shield_frame_option,
@@ -530,9 +545,15 @@ def patch_heart_colors(rom, settings, log, symbols):
         rom.write_int16s(file_select_address, color) # file select normal hearts
         if heart_option != 'Red':
             rom.write_int16s(file_select_address + 6, color) # file select DD hearts
-            if settings.correct_model_colors:
-                patch_model_colors(rom, color, model_addresses) # heart model colors
-                icon.patch_overworld_icon(rom, color, 0xF43D80) # Overworld Heart Icon
+        else:
+            original_dd_color = rom.original.read_bytes(file_select_address + 6, 6)
+            rom.write_bytes(file_select_address + 6, original_dd_color)
+        if settings.correct_model_colors and heart_option != 'Red':
+            patch_model_colors(rom, color, model_addresses) # heart model colors
+            icon.patch_overworld_icon(rom, color, 0xF43D80) # Overworld Heart Icon
+        else:
+            patch_model_colors(rom, None, model_addresses)
+            icon.patch_overworld_icon(rom, None, 0xF43D80)
         log.ui_colors[heart] = CollapseDict({
             ':option': heart_option,
             'color': color_to_hex(color),
@@ -568,6 +589,10 @@ def patch_magic_colors(rom, settings, log, symbols):
             patch_model_colors(rom, color, model_addresses)
             icon.patch_overworld_icon(rom, color, 0xF45650, data_path('icons/magicSmallExtras.raw')) # Overworld Small Pot
             icon.patch_overworld_icon(rom, color, 0xF47650, data_path('icons/magicLargeExtras.raw')) # Overworld Big Pot
+        else:
+            patch_model_colors(rom, None, model_addresses)
+            icon.patch_overworld_icon(rom, None, 0xF45650)
+            icon.patch_overworld_icon(rom, None, 0xF47650)
         log.ui_colors[magic_color] = CollapseDict({
             ':option': magic_option,
             'color': color_to_hex(color),
@@ -675,13 +700,19 @@ def patch_sfx(rom, settings, log, symbols):
           ('sfx_hover_boots',    sfx.SoundHooks.BOOTS_HOVER),
     ]
     sound_dict = sfx.get_patch_dict()
+    sounds_keyword_label = {sound.value.keyword: sound.value.label for sound in sfx.Sounds}
+    sounds_label_keyword = {sound.value.label: sound.value.keyword for sound in sfx.Sounds}
 
     for setting, hook in sfx_config:
         selection = settings.__dict__[setting]
 
         # Handle Plando
         if log.src_dict.get('sfx', {}).get(hook.value.name, ''):
-            selection = log.src_dict['sfx'][hook.value.name]
+            selection_label = log.src_dict['sfx'][hook.value.name]
+            if selection_label == 'Default':
+                selection = 'default'
+            elif selection_label in sounds_label_keyword:
+                selection = sounds_label_keyword[selection_label]
 
         if selection == 'default':
             for loc in hook.value.locations:
@@ -697,7 +728,10 @@ def patch_sfx(rom, settings, log, symbols):
             sound_id  = sound_dict[selection]
             for loc in hook.value.locations:
                 rom.write_int16(loc, sound_id)
-        log.sfx[hook.value.name] = selection
+        if selection == 'default':
+            log.sfx[hook.value.name] = 'Default'
+        else:
+            log.sfx[hook.value.name] = sounds_keyword_label[selection]
 
 
 def patch_instrument(rom, settings, log, symbols):
@@ -711,17 +745,19 @@ def patch_instrument(rom, settings, log, symbols):
             'grind-organ':     0x05,
             'flute':           0x06,
            #'another_ocarina': 0x07,
-            }
+    }
+    ocarina_options = [setting.choices for setting in setting_infos if setting.name == 'sfx_ocarina'][0]
+    ocarina_options_inv = {v: k for k, v in ocarina_options.items()}
 
     choice = settings.sfx_ocarina
-    if log.src_dict.get('sfx', {}).get('Ocarina', ''):
-        choice = log.src_dict['sfx']['Ocarina']
+    if log.src_dict.get('sfx', {}).get('Ocarina', '') and log.src_dict['sfx']['Ocarina'] in ocarina_options_inv:
+        choice = ocarina_options_inv[log.src_dict['sfx']['Ocarina']]
     if choice == 'random-choice':
         choice = random.choice(list(instruments.keys()))
 
     rom.write_byte(0x00B53C7B, instruments[choice])
     rom.write_byte(0x00B4BF6F, instruments[choice]) # For Lost Woods Skull Kids' minigame in Lost Woods
-    log.sfx['Ocarina'] = choice
+    log.sfx['Ocarina'] = ocarina_options[choice]
 
 
 legacy_cosmetic_data_headers = [
@@ -858,7 +894,7 @@ def patch_cosmetics(settings, rom):
     # try to detect the cosmetic patch data format
     versioned_patch_set = None
     cosmetic_context = rom.read_int32(rom.sym('RANDO_CONTEXT') + 4)
-    if cosmetic_context >= 0x80000000:
+    if cosmetic_context >= 0x80000000 and cosmetic_context <= 0x80F7FFFC:
         cosmetic_context = (cosmetic_context - 0x80400000) + 0x3480000 # convert from RAM to ROM address
         cosmetic_version = rom.read_int32(cosmetic_context)
         versioned_patch_set = patch_sets.get(cosmetic_version)

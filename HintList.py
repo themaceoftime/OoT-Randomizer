@@ -58,17 +58,10 @@ def getHintGroup(group, world):
             hint.type = 'always'
 
         # Hint inclusion override from distribution
-        if group in world.added_hint_types:
+        if group in world.added_hint_types or group in world.item_added_hint_types:
             if hint.name in world.added_hint_types[group]:
                 hint.type = group
-            location_check = False
-            if isinstance(hint.type, list):
-                for htype in hint.type:
-                    if htype in ['sometimes', 'song', 'overworld', 'dungeon', 'always'] and (name not in hintExclusions(world)):
-                        location_check = True
-            elif hint.type in ['sometimes', 'song', 'overworld', 'dungeon', 'always'] and (name not in hintExclusions(world)):
-                location_check = True
-            if location_check:
+            if nameIsLocation(name, hint.type, world):
                 location = world.get_location(name)
                 for i in world.item_added_hint_types[group]:
                     if i == location.item.name:
@@ -80,6 +73,11 @@ def getHintGroup(group, world):
         if group in world.hint_type_overrides:
             if name in world.hint_type_overrides[group]:
                 type_override = True
+        if group in world.item_hint_type_overrides:
+            if nameIsLocation(name, hint.type, world):
+                location = world.get_location(name)
+                if location.item.name in world.item_hint_type_overrides[group]:
+                    type_override = True
 
         if group in hint.type and (name not in hintExclusions(world)) and not type_override:
             ret.append(hint)
@@ -100,11 +98,11 @@ def stones_required_by_settings(world):
     stones = 0
     if world.bridge == 'stones':
         stones = max(stones, world.bridge_stones)
-    if world.shuffle_ganon_bosskey == 'lacs_stones':
+    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'lacs_stones':
         stones = max(stones, world.lacs_stones)
     if world.bridge == 'dungeons':
         stones = max(stones, world.bridge_rewards - 6)
-    if world.shuffle_ganon_bosskey == 'lacs_dungeons':
+    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'lacs_dungeons':
         stones = max(stones, world.lacs_rewards - 6)
 
     return stones
@@ -114,11 +112,11 @@ def medallions_required_by_settings(world):
     medallions = 0
     if world.bridge == 'medallions':
         medallions = max(medallions, world.bridge_medallions)
-    if world.shuffle_ganon_bosskey == 'lacs_medallions':
+    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'lacs_medallions':
         medallions = max(medallions, world.lacs_medallions)
     if world.bridge == 'dungeons':
         medallions = max(medallions, max(world.bridge_rewards - 3, 0))
-    if world.shuffle_ganon_bosskey == 'lacs_dungeons':
+    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'lacs_dungeons':
         medallions = max(medallions, max(world.lacs_rewards - 3, 0))
 
     return medallions
@@ -128,7 +126,7 @@ def tokens_required_by_settings(world):
     tokens = 0
     if world.bridge == 'tokens':
         tokens = max(tokens, world.bridge_tokens)
-    if world.shuffle_ganon_bosskey == 'lacs_tokens':
+    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'lacs_tokens':
         tokens = max(tokens, world.lacs_tokens)
 
     return tokens
@@ -137,7 +135,6 @@ def tokens_required_by_settings(world):
 # Hints required under certain settings
 conditional_always = {
     'Market 10 Big Poes':           lambda world: world.big_poe_count > 3,
-    'Deku Theater Skull Mask':      lambda world: world.hint_dist == 'tournament' and world.open_kakariko == 'closed' and not world.complete_mask_quest,
     'Deku Theater Mask of Truth':   lambda world: not world.complete_mask_quest,
     'Song from Ocarina of Time':    lambda world: stones_required_by_settings(world) < 2,
     'HF Ocarina of Time Item':      lambda world: stones_required_by_settings(world) < 2,
@@ -300,7 +297,7 @@ hintTable = {
     'HF Cow Grotto Cow':                                           ("the #cobwebbed cow# gifts", "a #cow behind webs# in a grotto gifts", ['overworld', 'sometimes']),
     'ZF GS Hidden Cave':                                           ("a spider high #above the icy waters# holds", None, ['overworld', 'sometimes']),
     'Wasteland Chest':                                             (["#deep in the wasteland# is", "beneath #the sands#, flames reveal"], None, ['overworld', 'sometimes']),
-    'Colossus GS Bean Patch':                                      ("a #spider buried in the wasteland# holds", None, ['overworld', 'sometimes']),
+    'Wasteland GS':                                                ("a #spider in the wasteland# holds", None, ['overworld', 'sometimes']),
     'Graveyard Composers Grave Chest':                             (["#flames in the Composers' Grave# reveal", "the #Composer Brothers hid#"], None, ['overworld', 'sometimes']),
     'ZF Bottom Freestanding PoH':                                  ("#under the icy waters# lies", None, ['overworld', 'sometimes']),
     'GC Pot Freestanding PoH':                                     ("spinning #Goron pottery# contains", None, ['overworld', 'sometimes']),
@@ -879,7 +876,7 @@ hintTable = {
     'GF GS Archery Range':                                         ("night reveals a #spider in a fortress# holding", None, 'exclude'),
     'GF GS Top Floor':                                             ("night reveals a #spider in a fortress# holding", None, 'exclude'),
 
-    'Wasteland GS':                                                ("a #spider in the Wasteland# holds", None, 'exclude'),
+    'Colossus GS Bean Patch':                                      ("a #spider buried in the desert# holds", None, 'exclude'),
     'Colossus GS Hill':                                            ("night reveals a #spider deep in the desert# holding", None, 'exclude'),
     'Colossus GS Tree':                                            ("night reveals a #spider deep in the desert# holding", None, 'exclude'),
 
@@ -1118,7 +1115,7 @@ hintTable = {
     'ZD Storms Grotto':                                         ("a small #Fairy Fountain#", None, 'region'),
     'GF Storms Grotto':                                         ("a small #Fairy Fountain#", None, 'region'),
 
-    '1001':                                                     ("Ganondorf 2020!", None, 'junk'),
+    '1001':                                                     ("Ganondorf 2022!", None, 'junk'),
     '1002':                                                     ("They say that monarchy is a terrible system of governance.", None, 'junk'),
     '1003':                                                     ("They say that Zelda is a poor leader.", None, 'junk'),
     '1004':                                                     ("These hints can be quite useful. This is an exception.", None, 'junk'),
@@ -1138,7 +1135,7 @@ hintTable = {
     '1023':                                                     ("I'll make you eat those words.", None, 'junk'),
     '1024':                                                     ("What happened to Sheik?", None, 'junk'),
     '1025':                                                     ("L2P @.", None, 'junk'),
-    '1026':                                                     ("I heard @ isn't very good at Zelda.", None, 'junk'),
+    '1026':                                                     ("I've heard Sploosh Kaboom is a tricky game.", None, 'junk'),
     '1027':                                                     ("I'm Lonk from Pennsylvania.", None, 'junk'),
     '1028':                                                     ("I bet you'd like to have more bombs.", None, 'junk'),
     '1029':                                                     ("When all else fails, use Fire.", None, 'junk'),
@@ -1183,6 +1180,7 @@ hintTable = {
     '1068':                                                     ("They say Ganon's tail is vulnerable to nuts, arrows, swords, explosives, hammers...^...sticks, seeds, boomerangs...^...rods, shovels, iron balls, angry bees...", None, 'junk'),
     '1069':                                                     ("They say that you're wasting time reading this hint, but I disagree. Talk to me again!", None, 'junk'),
     '1070':                                                     ("They say Ganondorf knows where to find the instrument of his doom.", None, 'junk'),
+    '1071':                                                     ("I heard @ is pretty good at Zelda.", None, 'junk'),
 
     'Deku Tree':                                                ("an ancient tree", "Deku Tree", 'dungeonName'),
     'Dodongos Cavern':                                          ("an immense cavern", "Dodongo's Cavern", 'dungeonName'),
@@ -1195,7 +1193,7 @@ hintTable = {
     'Ice Cavern':                                               ("a frozen maze", "Ice Cavern", 'dungeonName'),
     'Bottom of the Well':                                       ("a shadow\'s prison", "Bottom of the Well", 'dungeonName'),
     'Gerudo Training Grounds':                                  ("the test of thieves", "Gerudo Training Grounds", 'dungeonName'),
-    'Ganons Castle':                                            ("a conquered citadel", "Ganon's Castle", 'dungeonName'),
+    'Ganons Castle':                                            ("a conquered citadel", "Inside Ganon's Castle", 'dungeonName'),
     
     'Queen Gohma':                                              ("One inside an #ancient tree#...", "One in the #Deku Tree#...", 'boss'),
     'King Dodongo':                                             ("One within an #immense cavern#...", "One in #Dodongo's Cavern#...", 'boss'),
@@ -1229,6 +1227,7 @@ hintTable = {
     'Spiritual Stone Text Start':                               ("3 Spiritual Stones found in Hyrule...", None, 'altar'),
     'Child Altar Text End':                                     ("\x13\x07Ye who may become a Hero...&Stand with the Ocarina and&play the Song of Time.", None, 'altar'),
     'Adult Altar Text Start':                                   ("When evil rules all, an awakening&voice from the Sacred Realm will&call those destined to be Sages,&who dwell in the \x05\x41five temples\x05\x40.", None, 'altar'),
+    'Adult Altar Text End':                                     ("Together with the Hero of Time,&the awakened ones will bind the&evil and return the light of peace&to the world...", None, 'altar'),
 
     'Validation Line':                                          ("Hmph... Since you made it this far,&I'll let you know what glorious&prize of Ganon's you likely&missed out on in my tower.^Behold...^", None, 'validation line'),
     'Light Arrow Location':                                     ("Ha ha ha... You'll never beat me by&reflecting my lightning bolts&and unleashing the arrows from&", None, 'Light Arrow Location'),
@@ -1278,5 +1277,13 @@ def hintExclusions(world, clear_cache=False):
 
     return hintExclusions.exclusions
 
+def nameIsLocation(name, hint_type, world):
+    if isinstance(hint_type, (list, tuple)):
+        for htype in hint_type:
+            if htype in ['sometimes', 'song', 'overworld', 'dungeon', 'always'] and name not in hintExclusions(world):
+                return True
+    elif hint_type in ['sometimes', 'song', 'overworld', 'dungeon', 'always'] and name not in hintExclusions(world):
+        return True
+    return False
 
 hintExclusions.exclusions = None

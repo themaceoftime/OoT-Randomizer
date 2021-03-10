@@ -4,7 +4,7 @@ from State import State
 from Rules import set_shop_rules
 from Location import DisableType
 from LocationList import location_groups
-from ItemPool import songlist, get_junk_item, item_groups, remove_junk_items
+from ItemPool import songlist, get_junk_item, item_groups, remove_junk_items, remove_junk_set
 from ItemList import item_table
 from Item import ItemFactory
 from Search import Search
@@ -54,10 +54,11 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
 
     # If not passed in, then get a shuffled list of locations to fill in
     if not fill_locations:
-        fill_locations = [location for world in worlds for location in world.get_unfilled_locations() \
-            if location not in song_locations and \
-               location not in shop_locations and \
-               location.type != 'GossipStone']
+        fill_locations = [
+            location for world in worlds for location in world.get_unfilled_locations()
+            if location not in song_locations
+                and location not in shop_locations
+                and not location.type.startswith('Hint')]
     world_states = [world.state for world in worlds]
 
     window.locationcount = len(fill_locations) + len(song_locations) + len(shop_locations)
@@ -210,10 +211,6 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
                     world.maximum_wallets = 2
                 elif world.maximum_wallets < 1 and location.price > 99:
                     world.maximum_wallets = 1
-
-            # Get Light Arrow location for later usage.
-            if location.item and location.item.name == 'Light Arrows':
-                location.item.world.light_arrow_location = location
 
 
 # Places restricted dungeon items into the worlds. To ensure there is room for them.
@@ -368,6 +365,7 @@ def fill_restrictive(window, worlds, base_search, locations, itempool, count=-1)
     # don't run over this search, just keep it as an item collection
     items_search = base_search.copy()
     items_search.collect_all(itempool)
+    logging.getLogger('').debug(f'Placing {len(itempool)} items among {len(locations)} potential locations.')
 
     # loop until there are no items or locations
     while itempool and locations:
@@ -390,8 +388,15 @@ def fill_restrictive(window, worlds, base_search, locations, itempool, count=-1)
         max_search.collect_locations()
 
         # perform_access_check checks location reachability
-        perform_access_check = True
-        if worlds[0].check_beatable_only:
+        if worlds[0].reachable_locations == 'all':
+            perform_access_check = True
+            extra_location_checks = []
+        elif worlds[0].reachable_locations == 'goals':
+            # for All Goals Reachable, we have to track whether any goal items have been placed,
+            # since we then have to start checking their reachability.
+            perform_access_check = item_to_place.goalitem or not max_search.can_beat_game(scan_for_items=False)
+            extra_location_checks = [location for world in worlds for location in world.get_filled_locations() if location.item.goalitem]
+        else:
             # if any world can not longer be beatable with the remaining items
             # then we must check for reachability no matter what.
             # This way the reachability test is monotonic. If we were to later
@@ -399,12 +404,13 @@ def fill_restrictive(window, worlds, base_search, locations, itempool, count=-1)
             # in an unreachable place in another world.
             # scan_for_items would cause an unnecessary copy+collect
             perform_access_check = not max_search.can_beat_game(scan_for_items=False)
+            extra_location_checks = []
 
         # find a location that the item can be placed. It must be a valid location
         # in the world we are placing it (possibly checking for reachability)
         spot_to_fill = None
         for location in l2cations:
-            if location.can_fill(max_search.state_list[location.world.id], item_to_place, perform_access_check):
+            if location.can_fill(max_search.state_list[location.world.id], item_to_place, perform_access_check, extra_location_checks):
                 # for multiworld, make it so that the location is also reachable
                 # in the world the item is for. This is to prevent early restrictions
                 # in one world being placed late in another world. If this is not
@@ -412,7 +418,7 @@ def fill_restrictive(window, worlds, base_search, locations, itempool, count=-1)
                 if location.world.id != item_to_place.world.id:
                     try:
                         source_location = item_to_place.world.get_location(location.name)
-                        if not source_location.can_fill(max_search.state_list[item_to_place.world.id], item_to_place, perform_access_check):
+                        if not source_location.can_fill(max_search.state_list[item_to_place.world.id], item_to_place, perform_access_check, extra_location_checks):
                             # location wasn't reachable in item's world, so skip it
                             continue
                     except KeyError:
@@ -464,7 +470,7 @@ def fill_restrictive(window, worlds, base_search, locations, itempool, count=-1)
     if count > 0:
         raise FillError('Could not place the specified number of item. %d remaining to be placed.' % count)
     if count < 0 and len(itempool) > 0:
-        raise FillError('Could not place all the item. %d remaining to be placed.' % len(itempool))
+        raise FillError('Could not place all the items. %d remaining to be placed.' % len(itempool))
     # re-add unplaced items that were skipped
     itempool.extend(unplaced_items)
 
@@ -507,6 +513,10 @@ def fast_fill(window, locations, itempool):
     while itempool and locations:
         spot_to_fill = locations.pop()
         item_to_place = itempool.pop()
+        # Impa can't presently hand out refills at the start of the game.
+        # Only replace her item with a rupee if it's junk.
+        if spot_to_fill.world.skip_child_zelda and spot_to_fill.name == 'Song from Impa' and item_to_place.name in remove_junk_set:
+            item_to_place = ItemFactory('Rupee (1)', spot_to_fill.world)
         spot_to_fill.world.push_item(spot_to_fill, item_to_place)
         window.fillcount += 1
         window.update_progress(5 + ((window.fillcount / window.locationcount) * 30))
