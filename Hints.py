@@ -14,6 +14,7 @@ from HintList import getHint, getHintGroup, Hint, hintExclusions
 from Item import MakeEventItem
 from Messages import update_message_by_id
 from Search import Search
+from StartingItems import everything
 from TextBox import line_wrap
 from Utils import random_choices, data_path, read_json
 
@@ -662,6 +663,7 @@ def buildBingoHintList(boardURL):
     for key, value in hintsToAdd.items():
         for _ in range(value):
             hints.append(key)
+     
     return hints
 
 
@@ -750,8 +752,20 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
 
         if world.shopsanity != "off" and "Progressive Wallet" not in world.item_hints:
             world.item_hints.append("Progressive Wallet")
+                
         world.named_item_pool = list(world.item_hints)
 
+    for item in [*world.starting_items, *world.starting_equipment, *world.starting_songs]:
+        itemname=everything[item].itemname
+        if itemname in world.item_hints:
+            world.item_hints.remove(itemname)
+
+    if world.skip_child_zelda:
+        itemname=str(world.get_location('Song from Impa').item)
+        if itemname in world.item_hints:
+            world.item_hints.remove(itemname)
+
+    world.named_item_pool = list(world.item_hints)
 
     # Load hint distro from distribution file or pre-defined settings
     #
