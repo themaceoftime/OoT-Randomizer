@@ -753,13 +753,18 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
         if world.shopsanity != "off" and "Progressive Wallet" not in world.item_hints:
             world.item_hints.append("Progressive Wallet")
                 
-        world.named_item_pool = list(world.item_hints)
 
+    #Removes items from item_hints list if they are included in starting gear.
+    #This method ensures that the right number of copies are removed, e.g.
+    #if you start with one strength and hints call for two, you still get
+    #one hint for strength
     for item in [*world.starting_items, *world.starting_equipment, *world.starting_songs]:
         itemname=everything[item].itemname
         if itemname in world.item_hints:
             world.item_hints.remove(itemname)
 
+    #Skip_child_zelda can cause the same problem, but needs to be handled separatly since
+    #it doesn't update the starting gear lists
     if world.skip_child_zelda:
         itemname=str(world.get_location('Song from Impa').item)
         if itemname in world.item_hints:
