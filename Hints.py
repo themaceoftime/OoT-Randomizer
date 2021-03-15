@@ -665,7 +665,7 @@ def buildBingoHintList(boardURL):
             hints.append(key)
 
     #Since there's no way to verify if the Bingosync URL is actually for OoTR, this exception catches that case
-    if len(hints)==0:
+    if len(hints) == 0:
         raise Exception('No item hints found for goals on Bingosync card. Verify Bingosync URL is correct, or leave field blank for generic bingo hints.')
     return hints
 
@@ -762,14 +762,14 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
     #if you start with one strength and hints call for two, you still get
     #one hint for strength
     for item in [*world.starting_items, *world.starting_equipment, *world.starting_songs]:
-        itemname=everything[item].itemname
+        itemname = everything[item].itemname
         if itemname in world.item_hints:
             world.item_hints.remove(itemname)
 
     #Skip_child_zelda can cause the same problem, but needs to be handled separately since
     #it doesn't update the starting gear lists
     if world.skip_child_zelda:
-        itemname=str(world.get_location('Song from Impa').item)
+        itemname = str(world.get_location('Song from Impa').item)
         if itemname in world.item_hints:
             world.item_hints.remove(itemname)
 
@@ -778,9 +778,9 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
     #Make sure the total number of hints won't pass 40. If so, we limit the always and trial hints
     if world.hint_dist == "bingo":
         numTrialHints=[0,1,2,3,2,1,0]
-        if (2*len(world.item_hints)+2*len(getHintGroup('always', world))+2*numTrialHints[world.trials]>40) and (world.hint_dist_user['named_items_required']):
-            world.hint_dist_user['distribution']['always']['copies']=1
-            world.hint_dist_user['distribution']['trial']['copies']=1
+        if (2*len(world.item_hints) + 2*len(getHintGroup('always', world)) + 2*numTrialHints[world.trials] > 40) and (world.hint_dist_user['named_items_required']):
+            world.hint_dist_user['distribution']['always']['copies'] = 1
+            world.hint_dist_user['distribution']['trial']['copies'] = 1
 
             
     # Load hint distro from distribution file or pre-defined settings
