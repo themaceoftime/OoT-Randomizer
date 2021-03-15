@@ -663,7 +663,10 @@ def buildBingoHintList(boardURL):
     for key, value in hintsToAdd.items():
         for _ in range(value):
             hints.append(key)
-     
+
+    #Since there's no way to verify if the Bingosync URL is actually for OoTR, this exception catches that case
+    if len(hints)==0:
+        raise Exception('No item hints found for goals on Bingosync card. Verify Bingosync URL is correct, or leave field blank for generic bingo hints.')
     return hints
 
 
