@@ -766,7 +766,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
         if itemname in world.item_hints:
             world.item_hints.remove(itemname)
 
-    #Skip_child_zelda can cause the same problem, but needs to be handled separatly since
+    #Skip_child_zelda can cause the same problem, but needs to be handled separately since
     #it doesn't update the starting gear lists
     if world.skip_child_zelda:
         itemname=str(world.get_location('Song from Impa').item)
@@ -775,6 +775,14 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
 
     world.named_item_pool = list(world.item_hints)
 
+    #Make sure the total number of hints won't pass 40. If so, we limit the always and trial hints
+    if world.hint_dist == "bingo":
+        numTrialHints=[0,1,2,3,2,1,0]
+        if (2*len(world.item_hints)+2*len(getHintGroup('always', world))+2*numTrialHints[world.trials]>40) and (world.hint_dist_user['named_items_required']):
+            world.hint_dist_user['distribution']['always']['copies']=1
+            world.hint_dist_user['distribution']['trial']['copies']=1
+
+            
     # Load hint distro from distribution file or pre-defined settings
     #
     # 'fixed' key is used to mimic the tournament distribution, creating a list of fixed hint types to fill
