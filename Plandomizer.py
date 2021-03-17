@@ -358,9 +358,9 @@ class WorldDistribution(object):
 
 
     def configure_starting_items_settings(self, world):
-        if world.start_with_rupees:
+        if world.settings.start_with_rupees:
             self.give_item('Rupees', 999)
-        if world.start_with_consumables:
+        if world.settings.start_with_consumables:
             self.give_item('Deku Sticks', 99)
             self.give_item('Deku Nuts', 99)
 
@@ -748,7 +748,7 @@ class WorldDistribution(object):
                     raise RuntimeError('Unknown location in world %d: %s' % (world.id + 1, location_name))
                 if location.type == 'Boss':
                     continue
-                elif location.name in world.disabled_locations:
+                elif location.name in world.settings.disabled_locations:
                     continue
                 else:
                     raise RuntimeError('Location already filled in world %d: %s' % (self.id + 1, location_name))
@@ -756,14 +756,14 @@ class WorldDistribution(object):
             if record.item in item_groups['DungeonReward']:
                 raise RuntimeError('Cannot place dungeon reward %s in world %d in location %s.' % (record.item, self.id + 1, location_name))
 
-            if record.item == '#Junk' and location.type == 'Song' and world.shuffle_song_items == 'song':
+            if record.item == '#Junk' and location.type == 'Song' and world.settings.shuffle_song_items == 'song':
                 record.item = '#JunkSong'
 
             ignore_pools = None
             is_invert = self.pattern_matcher(record.item)('!')
-            if is_invert and location.type != 'Song' and world.shuffle_song_items == 'song':
+            if is_invert and location.type != 'Song' and world.settings.shuffle_song_items == 'song':
                 ignore_pools = [2]
-            if is_invert and location.type == 'Song' and world.shuffle_song_items == 'song':
+            if is_invert and location.type == 'Song' and world.settings.shuffle_song_items == 'song':
                 ignore_pools = [i for i in range(len(item_pools)) if i != 2]
             # location.price will be None for Shop Buy items
             if location.type == 'Shop' and location.price is None:

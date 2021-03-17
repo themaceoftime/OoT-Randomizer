@@ -784,7 +784,7 @@ def make_player_message(text):
 def update_item_messages(messages, world):
     new_item_messages = {**ITEM_MESSAGES, **KEYSANITY_MESSAGES}
     for id, text in new_item_messages.items():
-        if world.world_count > 1:
+        if world.settings.world_count > 1:
             update_message_by_id(messages, id, make_player_message(text), 0x23)
         else:
             update_message_by_id(messages, id, text, 0x23)

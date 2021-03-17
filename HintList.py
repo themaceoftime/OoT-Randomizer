@@ -95,50 +95,50 @@ def getRequiredHints(world):
 # Helpers for conditional always hints
 def stones_required_by_settings(world):
     stones = 0
-    if world.bridge == 'stones':
-        stones = max(stones, world.bridge_stones)
-    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'lacs_stones':
-        stones = max(stones, world.lacs_stones)
-    if world.bridge == 'dungeons':
-        stones = max(stones, world.bridge_rewards - 6)
-    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'lacs_dungeons':
-        stones = max(stones, world.lacs_rewards - 6)
+    if world.settings.bridge == 'stones':
+        stones = max(stones, world.settings.bridge_stones)
+    if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'lacs_stones':
+        stones = max(stones, world.settings.lacs_stones)
+    if world.settings.bridge == 'dungeons':
+        stones = max(stones, world.settings.bridge_rewards - 6)
+    if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'lacs_dungeons':
+        stones = max(stones, world.settings.lacs_rewards - 6)
 
     return stones
 
 
 def medallions_required_by_settings(world):
     medallions = 0
-    if world.bridge == 'medallions':
-        medallions = max(medallions, world.bridge_medallions)
-    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'lacs_medallions':
-        medallions = max(medallions, world.lacs_medallions)
-    if world.bridge == 'dungeons':
-        medallions = max(medallions, max(world.bridge_rewards - 3, 0))
-    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'lacs_dungeons':
-        medallions = max(medallions, max(world.lacs_rewards - 3, 0))
+    if world.settings.bridge == 'medallions':
+        medallions = max(medallions, world.settings.bridge_medallions)
+    if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'lacs_medallions':
+        medallions = max(medallions, world.settings.lacs_medallions)
+    if world.settings.bridge == 'dungeons':
+        medallions = max(medallions, max(world.settings.bridge_rewards - 3, 0))
+    if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'lacs_dungeons':
+        medallions = max(medallions, max(world.settings.lacs_rewards - 3, 0))
 
     return medallions
 
 
 def tokens_required_by_settings(world):
     tokens = 0
-    if world.bridge == 'tokens':
-        tokens = max(tokens, world.bridge_tokens)
-    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'lacs_tokens':
-        tokens = max(tokens, world.lacs_tokens)
+    if world.settings.bridge == 'tokens':
+        tokens = max(tokens, world.settings.bridge_tokens)
+    if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'lacs_tokens':
+        tokens = max(tokens, world.settings.lacs_tokens)
 
     return tokens
 
 
 # Hints required under certain settings
 conditional_always = {
-    'Market 10 Big Poes':           lambda world: world.big_poe_count > 3,
-    'Deku Theater Mask of Truth':   lambda world: not world.complete_mask_quest,
+    'Market 10 Big Poes':           lambda world: world.settings.big_poe_count > 3,
+    'Deku Theater Mask of Truth':   lambda world: not world.settings.complete_mask_quest,
     'Song from Ocarina of Time':    lambda world: stones_required_by_settings(world) < 2,
     'HF Ocarina of Time Item':      lambda world: stones_required_by_settings(world) < 2,
     'Sheik in Kakariko':            lambda world: medallions_required_by_settings(world) < 5,
-    'DMT Biggoron':                 lambda world: world.logic_earliest_adult_trade != 'claim_check' or world.logic_latest_adult_trade != 'claim_check',
+    'DMT Biggoron':                 lambda world: world.settings.logic_earliest_adult_trade != 'claim_check' or world.settings.logic_latest_adult_trade != 'claim_check',
     'Kak 30 Gold Skulltula Reward': lambda world: tokens_required_by_settings(world) < 30,
     'Kak 40 Gold Skulltula Reward': lambda world: tokens_required_by_settings(world) < 40,
     'Kak 50 Gold Skulltula Reward': lambda world: tokens_required_by_settings(world) < 50,
@@ -1250,7 +1250,7 @@ def hintExclusions(world, clear_cache=False):
         return hintExclusions.exclusions
 
     hintExclusions.exclusions = []
-    hintExclusions.exclusions.extend(world.disabled_locations)
+    hintExclusions.exclusions.extend(world.settings.disabled_locations)
 
     for location in world.get_locations():
         if location.locked:
@@ -1261,7 +1261,7 @@ def hintExclusions(world, clear_cache=False):
 
     location_hints = []
     for name in hintTable:
-        hint = getHint(name, world.clearer_hints)
+        hint = getHint(name, world.settings.clearer_hints)
         if any(item in hint.type for item in 
                 ['always',
                  'sometimes',

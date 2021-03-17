@@ -515,7 +515,7 @@ def fast_fill(window, locations, itempool):
         item_to_place = itempool.pop()
         # Impa can't presently hand out refills at the start of the game.
         # Only replace her item with a rupee if it's junk.
-        if spot_to_fill.world.skip_child_zelda and spot_to_fill.name == 'Song from Impa' and item_to_place.name in remove_junk_set:
+        if spot_to_fill.world.settings.skip_child_zelda and spot_to_fill.name == 'Song from Impa' and item_to_place.name in remove_junk_set:
             item_to_place = ItemFactory('Rupee (1)', spot_to_fill.world)
         spot_to_fill.world.push_item(spot_to_fill, item_to_place)
         window.fillcount += 1
