@@ -211,7 +211,7 @@ class World(object):
         # copy any randomized settings to match the original copy
         new_world.randomized_list = list(self.randomized_list)
         for randomized_item in new_world.randomized_list:
-            setattr(new_world, randomized_item, getattr(self, randomized_item))
+            setattr(new_world, randomized_item, getattr(self.settings, randomized_item))
 
         new_world.always_hints = list(self.always_hints)
         new_world.max_progressions = copy.copy(self.max_progressions)
@@ -378,10 +378,10 @@ class World(object):
         shop_item_indexes = ['7', '5', '8', '6']
         self.shop_prices = {}
         for region in self.regions:
-            if self.shopsanity == 'random':
+            if self.settings.shopsanity == 'random':
                 shop_item_count = random.randint(0,4)
             else:
-                shop_item_count = int(self.shopsanity)
+                shop_item_count = int(self.settings.shopsanity)
 
             for location in region.locations:
                 if location.type == 'Shop':

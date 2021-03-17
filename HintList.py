@@ -51,7 +51,7 @@ def getHintGroup(group, world):
     ret = []
     for name in hintTable:
 
-        hint = getHint(name, world.clearer_hints)
+        hint = getHint(name, world.settings.clearer_hints)
 
         if hint.name in world.always_hints and group == 'always':
             hint.type = 'always'

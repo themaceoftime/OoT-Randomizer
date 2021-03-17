@@ -1098,7 +1098,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         save_context.write_bits(0x0EEA, 0x20) # "Completed Shadow Trial"
     if world.skipped_trials['Light']:
         save_context.write_bits(0x0EEA, 0x80) # "Completed Light Trial"
-    if world.trials == 0:
+    if world.settings.trials == 0:
         save_context.write_bits(0x0EED, 0x08) # "Dispelled Ganon's Tower Barrier"
 
     # open gerudo fortress
@@ -1120,7 +1120,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     # Add a gate-opening guard on the Wasteland side of the Gerudo gate when the card is shuffled or certain levels of ER.
     # Overrides the generic guard at the bottom of the ladder in Gerudo Fortress
     if world.settings.shuffle_gerudo_card or world.settings.shuffle_overworld_entrances or \
-       world.settings.shuffle_special_interior_entrances or world.settings.spawn_positions:
+       world.shuffle_special_interior_entrances or world.settings.spawn_positions:
         # Add a gate opening guard on the Wasteland side of the Gerudo Fortress' gate
         new_gate_opening_guard = [0x0138, 0xFAC8, 0x005D, 0xF448, 0x0000, 0x95B0, 0x0000, 0x0301]
         rom.write_int16s(0x21BD3EC, new_gate_opening_guard)  # Adult Day
@@ -1152,7 +1152,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
              'witching-hour': 0x2000,
 
         }
-        save_context.addresses['time_of_day'].value = tod[world.starting_tod]
+        save_context.addresses['time_of_day'].value = tod[world.settings.starting_tod]
 
     if world.settings.starting_age == 'adult':
         save_context.addresses['link_age'].value = False                    # Set link's age to adult

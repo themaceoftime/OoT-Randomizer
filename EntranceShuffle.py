@@ -381,39 +381,39 @@ def shuffle_random_entrances(worlds):
         entrance_pools = OrderedDict()
         one_way_priorities = {}
 
-        if worlds[0].owl_drops:
+        if worlds[0].settings.owl_drops:
             one_way_entrance_pools['OwlDrop'] = world.get_shufflable_entrances(type='OwlDrop')
 
-        if worlds[0].spawn_positions:
+        if worlds[0].settings.spawn_positions:
             one_way_entrance_pools['Spawn'] = world.get_shufflable_entrances(type='Spawn')
 
-        if worlds[0].warp_songs:
+        if worlds[0].settings.warp_songs:
             one_way_entrance_pools['WarpSong'] = world.get_shufflable_entrances(type='WarpSong')
-            if worlds[0].reachable_locations != 'beatable' and worlds[0].logic_rules == 'glitchless':
+            if worlds[0].settings.reachable_locations != 'beatable' and worlds[0].settings.logic_rules == 'glitchless':
                 # In glitchless, there aren't any other ways to access these areas
                 one_way_priorities['Bolero'] = priority_entrance_table['Bolero']
                 one_way_priorities['Nocturne'] = priority_entrance_table['Nocturne']
-                if not worlds[0].shuffle_dungeon_entrances and not worlds[0].shuffle_overworld_entrances:
+                if not worlds[0].settings.shuffle_dungeon_entrances and not worlds[0].settings.shuffle_overworld_entrances:
                     one_way_priorities['Requiem'] = priority_entrance_table['Requiem']
 
-        if worlds[0].shuffle_dungeon_entrances:
+        if worlds[0].settings.shuffle_dungeon_entrances:
             entrance_pools['Dungeon'] = world.get_shufflable_entrances(type='Dungeon', only_primary=True)
             # The fill algorithm will already make sure gohma is reachable, however it can end up putting
             # a forest escape via the hands of spirit on Deku leading to Deku on spirit in logic. This is
             # not really a closed forest anymore, so specifically remove Deku Tree from closed forest.
-            if worlds[0].open_forest == 'closed':
+            if worlds[0].settings.open_forest == 'closed':
                 entrance_pools['Dungeon'].remove(world.get_entrance('KF Outside Deku Tree -> Deku Tree Lobby'))
 
-        if worlds[0].shuffle_interior_entrances:
+        if worlds[0].settings.shuffle_interior_entrances:
             entrance_pools['Interior'] = world.get_shufflable_entrances(type='Interior', only_primary=True)
             if worlds[0].shuffle_special_interior_entrances:
                 entrance_pools['Interior'] += world.get_shufflable_entrances(type='SpecialInterior', only_primary=True)
 
-        if worlds[0].shuffle_grotto_entrances:
+        if worlds[0].settings.shuffle_grotto_entrances:
             entrance_pools['GrottoGrave'] = world.get_shufflable_entrances(type='Grotto', only_primary=True)
             entrance_pools['GrottoGrave'] += world.get_shufflable_entrances(type='Grave', only_primary=True)
 
-        if worlds[0].shuffle_overworld_entrances:
+        if worlds[0].settings.shuffle_overworld_entrances:
             entrance_pools['Overworld'] = world.get_shufflable_entrances(type='Overworld')
 
         # Set shuffled entrances as such

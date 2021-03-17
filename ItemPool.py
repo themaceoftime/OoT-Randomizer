@@ -837,7 +837,7 @@ def get_pool_core(world):
 
     if world.settings.shuffle_ocarinas:
         pool.extend(['Ocarina'] * 2)
-        if world.item_pool_value == 'plentiful':
+        if world.settings.item_pool_value == 'plentiful':
             pending_junk_pool.append('Ocarina')
     else:
         placed_items['LW Gift from Saria'] = 'Ocarina'
@@ -861,7 +861,7 @@ def get_pool_core(world):
     if world.settings.shuffle_beans:
         if world.distribution.get_starting_item('Magic Bean') < 10:
             pool.append('Magic Bean Pack')
-            if world.item_pool_value == 'plentiful':
+            if world.settings.item_pool_value == 'plentiful':
                 pending_junk_pool.append('Magic Bean Pack')
         else:
             pool.extend(get_junk_item())
@@ -1072,7 +1072,7 @@ def get_pool_core(world):
             placed_items['GF South F2 Carpenter'] = 'Recovery Heart'
         else:
             pool.extend(['Small Key (Gerudo Fortress)'] * 4)
-        if world.item_pool_value == 'plentiful':
+        if world.settings.item_pool_value == 'plentiful':
             pending_junk_pool.append('Small Key (Gerudo Fortress)')
     else:
         if world.settings.gerudo_fortress == 'fast':
@@ -1306,7 +1306,7 @@ def get_pool_core(world):
         world.state.collect(ItemFactory('Small Key (Fire Temple)'))
 
     if world.settings.triforce_hunt:
-        triforce_count = int((TriforceCounts[world.item_pool_value] * world.settings.triforce_goal_per_world).to_integral_value(rounding=ROUND_HALF_UP))
+        triforce_count = int((TriforceCounts[world.settings.item_pool_value] * world.settings.triforce_goal_per_world).to_integral_value(rounding=ROUND_HALF_UP))
         pending_junk_pool.extend(['Triforce Piece'] * triforce_count)
 
     if world.settings.shuffle_ganon_bosskey == 'on_lacs':

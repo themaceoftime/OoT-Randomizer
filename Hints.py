@@ -361,7 +361,7 @@ def get_barren_hint(spoiler, world, checked):
     areas = list(filter(lambda area:
         area not in checked
         and area not in world.hint_type_overrides['barren']
-        and not (world.barren_dungeon >= world.hint_dist_user['dungeons_barren_limit'] and world.empty_areas[area]['dungeon']),
+        and not (world.barren_dungeon >= world.settings.hint_dist_user['dungeons_barren_limit'] and world.empty_areas[area]['dungeon']),
         world.empty_areas.keys()))
 
     if not areas:
@@ -706,8 +706,8 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
 
     world.distribution.configure_gossip(spoiler, stoneIDs)
 
-    if 'disabled' in world.hint_dist_user:
-        for stone_name in world.hint_dist_user['disabled']:
+    if 'disabled' in world.settings.hint_dist_user:
+        for stone_name in world.settings.hint_dist_user['disabled']:
             try:
                 stone_id = gossipLocations_reversemap[stone_name]
             except KeyError:

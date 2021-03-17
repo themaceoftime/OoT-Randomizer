@@ -99,7 +99,7 @@ class State(object):
 
 
     def had_night_start(self):
-        stod = self.world.starting_tod
+        stod = self.world.settings.starting_tod
         # These are all not between 6:30 and 18:00
         if (stod == 'sunset' or         # 18
             stod == 'evening' or        # 21
