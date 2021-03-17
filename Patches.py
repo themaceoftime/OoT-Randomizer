@@ -1639,7 +1639,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
     # give dungeon items the correct messages
     add_item_messages(messages, shop_items, world)
-    if world.enhance_map_compass:
+    if world.settings.enhance_map_compass:
         reward_list = {'Kokiri Emerald':   "\x05\x42Kokiri Emerald\x05\x40",
                        'Goron Ruby':       "\x05\x41Goron Ruby\x05\x40",
                        'Zora Sapphire':    "\x05\x43Zora Sapphire\x05\x40",
