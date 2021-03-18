@@ -404,7 +404,7 @@ def shuffle_random_entrances(worlds):
             if worlds[0].settings.open_forest == 'closed':
                 entrance_pools['Dungeon'].remove(world.get_entrance('KF Outside Deku Tree -> Deku Tree Lobby'))
 
-        if worlds[0].settings.shuffle_interior_entrances:
+        if worlds[0].shuffle_interior_entrances:
             entrance_pools['Interior'] = world.get_shufflable_entrances(type='Interior', only_primary=True)
             if worlds[0].shuffle_special_interior_entrances:
                 entrance_pools['Interior'] += world.get_shufflable_entrances(type='SpecialInterior', only_primary=True)
@@ -731,7 +731,7 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
                 if not max_search.visited(location):
                     raise EntranceShuffleError('%s is unreachable' % location.name)
 
-    if world.settings.shuffle_interior_entrances and (world.settings.misc_hints or world.settings.hints != 'none') and \
+    if world.shuffle_interior_entrances and (world.settings.misc_hints or world.settings.hints != 'none') and \
        (entrance_placed == None or entrance_placed.type in ['Interior', 'SpecialInterior']):
         # Ensure Kak Potion Shop entrances are in the same hint area so there is no ambiguity as to which entrance is used for hints
         potion_front_entrance = get_entrance_replacing(world.get_region('Kak Potion Shop Front'), 'Kakariko Village -> Kak Potion Shop Front')
@@ -770,7 +770,7 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
         elif world.settings.starting_age == 'adult' and not time_travel_search.can_reach(world.get_region('Temple of Time'), age='child'):
             raise EntranceShuffleError('Path to Temple of Time as child is not guaranteed')
 
-    if (world.settings.shuffle_interior_entrances or world.settings.shuffle_overworld_entrances) and \
+    if (world.shuffle_interior_entrances or world.settings.shuffle_overworld_entrances) and \
        (entrance_placed == None or entrance_placed.type in ['Interior', 'SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
         # The Big Poe Shop should always be accessible as adult without the need to use any bottles
         # This is important to ensure that players can never lock their only bottles by filling them with Big Poes they can't sell
