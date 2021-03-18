@@ -54,11 +54,11 @@ class World(object):
         self.shuffle_special_interior_entrances = settings.shuffle_interior_entrances == 'all'
         self.shuffle_interior_entrances = settings.shuffle_interior_entrances in ['simple', 'all']
 
-        self.entrance_shuffle = settings.shuffle_interior_entrances or settings.shuffle_grotto_entrances or settings.shuffle_dungeon_entrances or \
+        self.entrance_shuffle = self.shuffle_interior_entrances or settings.shuffle_grotto_entrances or settings.shuffle_dungeon_entrances or \
                                 settings.shuffle_overworld_entrances or settings.owl_drops or settings.warp_songs or settings.spawn_positions
 
-        self.ensure_tod_access = settings.shuffle_interior_entrances or settings.shuffle_overworld_entrances or settings.spawn_positions
-        self.disable_trade_revert = settings.shuffle_interior_entrances or settings.shuffle_overworld_entrances
+        self.ensure_tod_access = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances or settings.spawn_positions
+        self.disable_trade_revert = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances
 
         if settings.open_forest == 'closed' and (self.shuffle_special_interior_entrances or settings.shuffle_overworld_entrances or 
                                              settings.warp_songs or settings.spawn_positions):
