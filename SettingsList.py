@@ -203,20 +203,6 @@ logic_tricks = {
                     from below, by shooting it through the vines,
                     bypassing the need to lower the staircase.
                     '''},
-    'Gerudo\'s Fortress Ledge Jump': {
-        'name'    : 'logic_gf_jump',
-        'tags'    : ("Gerudo's Fortress",),
-        'tooltip' : '''\
-                    From the southern roof with the guard, a jump
-                    can reach the second floor of the fortress.
-                    '''},
-    'Gerudo\'s Fortress Roof Ledge Jump': {
-        'name'    : 'logic_gf_jump_roof',
-        'tags'    : ("Gerudo's Fortress",),
-        'tooltip' : '''\
-                    Adult can use an autojump to climb onto the roof
-                    without going through the upper "Kitchen".
-                    '''},
     'Thieves\' Hideout "Kitchen" with No Additional Items': {
         'name'    : 'logic_gerudo_kitchen',
         'tags'    : ("Thieves' Hideout", "Gerudo's Fortress",),
