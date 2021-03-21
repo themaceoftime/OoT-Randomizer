@@ -1880,8 +1880,7 @@ setting_infos = [
             True : {
                 'sections' : ['open_section', 'shuffle_section', 'shuffle_dungeon_section'],
                 'settings': ['starting_age', 'shuffle_interior_entrances', 'shuffle_grotto_entrances', 'shuffle_dungeon_entrances',
-                             'shuffle_overworld_entrances', 'shuffle_hideout_entrances',
-                             'owl_drops','warp_songs', 'spawn_positions',
+                             'shuffle_overworld_entrances', 'owl_drops', 'warp_songs', 'spawn_positions',
                              'triforce_hunt', 'triforce_goal_per_world', 'bombchus_in_logic', 'one_item_per_dungeon'],
             }
         },
@@ -2208,8 +2207,7 @@ setting_infos = [
         ''',
         disable        = {
             'glitched'  : {'settings' : ['allowed_tricks', 'shuffle_interior_entrances', 'shuffle_grotto_entrances',
-                                         'shuffle_dungeon_entrances', 'shuffle_overworld_entrances',
-                                         'shuffle_hideout_entrances', 'owl_drops',
+                                         'shuffle_dungeon_entrances', 'shuffle_overworld_entrances', 'owl_drops',
                                          'warp_songs', 'spawn_positions', 'mq_dungeons_random', 'mq_dungeons', ]},
             'none'      : {'settings' : ['allowed_tricks', 'logic_no_night_tokens_without_suns_song', 'reachable_locations']},
         },
@@ -2706,9 +2704,6 @@ setting_infos = [
             and items never revert, even when dying or loading a save.
         ''',
         shared         = True,
-        disable        = {
-            'off' : {'settings' : ['shuffle_hideout_entrances']}
-        },
         gui_params     = {
             'randomize_key': 'randomize_settings',
             'distribution':  [
@@ -2763,25 +2758,6 @@ setting_infos = [
             Just like when shuffling interior entrances, shuffling overworld 
             entrances disables trade timers and trade items never revert, 
             even when dying or loading a save.
-        ''',
-        default        = False,
-        shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
-    ),
-    Checkbutton(
-        name           = 'shuffle_hideout_entrances',
-        gui_text       = 'Shuffle Thieves\' Hideout Entrances',
-        gui_tooltip    = '''\
-            Shuffle the pool of entrances to Thieves' Hideout
-            into the pool of interior entrances.
-            
-            Note that savewarping in any room of Thieves' Hideout
-            always takes you to the first room (with the red flag).
-            
-            There is an extra heart piece on the balcony above the jail in
-            Gerudo's Fortress if accessed as child. This is not shuffled.
         ''',
         default        = False,
         shared         = True,

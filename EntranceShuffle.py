@@ -71,7 +71,6 @@ def build_one_way_targets(world, types_to_include, exclude=(), target_region_nam
 #       LW      Lost Woods
 #       OGC     Outside Ganon's Castle
 #       SFM     Sacred Forest Meadow
-#       TH      Thieves' Hideout
 #       ToT     Temple of Time
 #       ZD      Zora's Domain
 #       ZF      Zora's Fountain
@@ -100,33 +99,6 @@ entrance_shuffle_table = [
                         ('Ice Cavern Beginning -> ZF Ice Ledge',                            { 'index': 0x03D4 })),
     ('Dungeon',         ('Gerudo Fortress -> Gerudo Training Grounds Lobby',                { 'index': 0x0008 }),
                         ('Gerudo Training Grounds Lobby -> Gerudo Fortress',                { 'index': 0x03A8 })),
-
-    ('Hideout',         ('Gerudo Fortress -> Thieves Hideout Red Jail',                     { 'index': 0x0486 }),
-                        ('Thieves Hideout Red Jail -> Gerudo Fortress',                     { 'index': 0x0231 })),
-    ('Hideout',         ('GF Entrances Behind Crates -> Thieves Hideout Red Jail',          { 'index': 0x048A }),
-                        ('Thieves Hideout Red Jail -> GF Entrances Behind Crates',          { 'index': 0x0235 })),
-    ('Hideout',         ('GF Entrances Behind Crates -> Thieves Hideout Kitchen Hallway',   { 'index': 0x048E }),
-                        ('Thieves Hideout Kitchen Hallway -> GF Entrances Behind Crates',   { 'index': 0x0239 })),
-    ('Hideout',         ('GF Guarded Roof -> Thieves Hideout Kitchen Hallway',              { 'index': 0x0492 }),
-                        ('Thieves Hideout Kitchen Hallway -> GF Guarded Roof',              { 'index': 0x02AA })),
-    ('Hideout',         ('Gerudo Fortress -> Thieves Hideout Olive Jail',                   { 'index': 0x0496 }),
-                        ('Thieves Hideout Olive Jail -> Gerudo Fortress',                   { 'index': 0x02BA })),
-    ('Hideout',         ('GF Roof Entrance Cluster -> Thieves Hideout Olive Jail',          { 'index': 0x049A }),
-                        ('Thieves Hideout Olive Jail -> GF Roof Entrance Cluster',          { 'index': 0x02BE })),
-    ('Hideout',         ('GF Guarded Roof -> Thieves Hideout Blue Jail',                    { 'index': 0x049E }),
-                        ('Thieves Hideout Blue Jail -> GF Guarded Roof',                    { 'index': 0x02C2 })),
-    ('Hideout',         ('GF Roof Entrance Cluster -> Thieves Hideout Blue Jail',           { 'index': 0x04A2 }),
-                        ('Thieves Hideout Blue Jail -> GF Roof Entrance Cluster',           { 'index': 0x02C6 })),
-    ('Hideout',         ('GF Roof Entrance Cluster -> Thieves Hideout Kitchen Front',       { 'index': 0x04A6 }),
-                        ('Thieves Hideout Kitchen Front -> GF Roof Entrance Cluster',       { 'index': 0x02D2 })),
-    ('Hideout',         ('GF Kitchen Roof Access -> Thieves Hideout Kitchen Rear',          { 'index': 0x04AA }),
-                        ('Thieves Hideout Kitchen Rear -> GF Kitchen Roof Access',          { 'index': 0x02D6 })),
-    ('Hideout',         ('GF Hall to Balcony Entrance -> TH Hall to Balcony Lower',         { 'index': 0x04AE }),
-                        ('TH Hall to Balcony Lower -> GF Hall to Balcony Entrance',         { 'index': 0x02DA })),
-    ('Hideout',         ('GF Balcony -> TH Hall to Balcony Upper',                          { 'index': 0x04B2 }),
-                        ('TH Hall to Balcony Upper -> GF Balcony',                          { 'index': 0x02DE })),
-    ('Hideout',         ('GF Green Jail Exterior -> Thieves Hideout Green Jail',            { 'index': 0x0570 }),
-                        ('Thieves Hideout Green Jail -> GF Green Jail Exterior',            { 'index': 0x03A4 })),
 
     ('Interior',        ('Kokiri Forest -> KF Midos House',                                 { 'index': 0x0433 }),
                         ('KF Midos House -> Kokiri Forest',                                 { 'index': 0x0443 })),
@@ -270,8 +242,8 @@ entrance_shuffle_table = [
                         ('KF Storms Grotto -> Kokiri Forest',                               { 'grotto_id': 0x1B })),
     ('Grotto',          ('Zoras Domain -> ZD Storms Grotto',                                { 'grotto_id': 0x1C, 'entrance': 0x036D, 'content': 0xFF, 'scene': 0x58 }),
                         ('ZD Storms Grotto -> Zoras Domain',                                { 'grotto_id': 0x1C })),
-    ('Grotto',          ('GF Entrances Behind Crates -> GF Storms Grotto',                  { 'grotto_id': 0x1D, 'entrance': 0x036D, 'content': 0xFF, 'scene': 0x5D }),
-                        ('GF Storms Grotto -> GF Entrances Behind Crates',                  { 'grotto_id': 0x1D })),
+    ('Grotto',          ('Gerudo Fortress -> GF Storms Grotto',                             { 'grotto_id': 0x1D, 'entrance': 0x036D, 'content': 0xFF, 'scene': 0x5D }),
+                        ('GF Storms Grotto -> Gerudo Fortress',                             { 'grotto_id': 0x1D })),
     ('Grotto',          ('GV Fortress Side -> GV Storms Grotto',                            { 'grotto_id': 0x1E, 'entrance': 0x05BC, 'content': 0xF0, 'scene': 0x5A }),
                         ('GV Storms Grotto -> GV Fortress Side',                            { 'grotto_id': 0x1E })),
     ('Grotto',          ('GV Grotto Ledge -> GV Octorok Grotto',                            { 'grotto_id': 0x1F, 'entrance': 0x05AC, 'content': 0xF2, 'scene': 0x5A }),
@@ -436,8 +408,6 @@ def shuffle_random_entrances(worlds):
             entrance_pools['Interior'] = world.get_shufflable_entrances(type='Interior', only_primary=True)
             if worlds[0].shuffle_special_interior_entrances:
                 entrance_pools['Interior'] += world.get_shufflable_entrances(type='SpecialInterior', only_primary=True)
-            if worlds[0].shuffle_hideout_entrances:
-                entrance_pools['Interior'] += world.get_shufflable_entrances(type='Hideout', only_primary=True)
 
         if worlds[0].shuffle_grotto_entrances:
             entrance_pools['GrottoGrave'] = world.get_shufflable_entrances(type='Grotto', only_primary=True)

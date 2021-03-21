@@ -62,7 +62,7 @@ class World(object):
         self.disable_trade_revert = self.shuffle_interior_entrances or self.shuffle_overworld_entrances
 
         if self.open_forest == 'closed' and (self.shuffle_special_interior_entrances or self.shuffle_overworld_entrances or 
-                                             self.shuffle_hideout_entrances or self.warp_songs or self.spawn_positions):
+                                             self.warp_songs or self.spawn_positions):
             self.open_forest = 'closed_deku'
 
         self.triforce_goal = self.triforce_goal_per_world * settings.world_count
@@ -342,10 +342,6 @@ class World(object):
                         logging.getLogger('').debug('Dropping unreachable exit: %s', new_exit.name)
                     else:
                         new_region.exits.append(new_exit)
-            if 'savewarp' in region:
-                new_exit = Entrance('%s -> %s' % (new_region.name, region['savewarp']), new_region)
-                new_exit.connected_region = region['savewarp']
-                new_region.exits.append(new_exit)
             self.regions.append(new_region)
 
 
