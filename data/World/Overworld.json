@@ -547,8 +547,7 @@
     },
     {
         "region_name": "Gerudo Fortress",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "events": {
             "GF Gate Open": "is_adult and Gerudo_Membership_Card"
@@ -567,8 +566,7 @@
     },
     {
         "region_name": "GF Jail",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "exits": {
             "Gerudo Fortress": "can_use(Hookshot)", #or can_climb(219)
@@ -579,8 +577,7 @@
     },
     {
         "region_name": "GF Balcony",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "locations": {
             #"GF Glitch Freestanding PoH": "is_child"
@@ -594,8 +591,7 @@
     },
     {
         "region_name": "GF Hall to Balcony Entrance",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "exits": {
             "Gerudo Fortress": "True",
@@ -607,8 +603,7 @@
     },
     {
         "region_name": "GF Entrances Behind Crates",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "exits": {
             "Gerudo Fortress": "True",
@@ -621,8 +616,7 @@
     },
     {
         "region_name": "GF Guarded Roof",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "exits": {
             "Thieves Hideout Kitchen Hallway": "True",
@@ -636,8 +630,7 @@
     },
     {
         "region_name": "GF Roof Entrance Cluster",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "exits": {
             "Thieves Hideout Olive Jail": "True",
@@ -654,8 +647,7 @@
     },
     {
         "region_name": "GF Green Jail Exterior",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "exits": {
             "Thieves Hideout Green Jail": "True",
@@ -669,8 +661,7 @@
     },
     {
         "region_name": "GF Kitchen Roof Access",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "exits": {
             "Thieves Hideout Kitchen Rear": "True",
@@ -686,8 +677,7 @@
     },
     {
         "region_name": "GF Empty Roof",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "exits": {
             "GF Hall to Balcony Entrance": "True",
@@ -703,8 +693,7 @@
     },
     {
         "region_name": "GF Kitchen Roof Access Ledge",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "exits": {
             "GF Southeast Roof": "True", #can_autojump or can_climb(132)
@@ -714,8 +703,7 @@
     },
     {
         "region_name": "GF Southeast Roof",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "exits": {
             "GF Chest Roof": "
@@ -730,8 +718,7 @@
     },
     {
         "region_name": "GF Chest Roof",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "locations": {
             "GF Chest": "True"
@@ -748,8 +735,7 @@
     },
     {
         "region_name": "GF Roof Gold Skulltula",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "locations": {
             "GF GS Top Floor": "True"
@@ -757,8 +743,7 @@
     },
     {
         "region_name": "GF Outside Gate",
-        "scene": "Gerudo Fortress",
-        #"room": 00,
+        "scene": "Gerudo Fortress", #"room": 00,
         "hint": "Gerudo's Fortress",
         "exits": {
             "Gerudo Fortress": "is_adult or (shuffle_overworld_entrances and 'GF Gate Open')",
@@ -767,8 +752,7 @@
     },
     {
         "region_name": "GF Archery Range",
-        "scene": "Gerudo Fortress",
-        #"room": 01,
+        "scene": "Gerudo Fortress", #"room": 01,
         "locations": {
             "GF HBA 1000 Points": "
                 Gerudo_Membership_Card and can_ride_epona and Bow and at_day",
@@ -798,8 +782,7 @@
     },
     {
         "region_name": "Thieves Hideout Red Jail",
-        "scene": "Thieves Hideout",
-        #"room": 02,
+        "scene": "Thieves Hideout", #"room": 02,
         "hint": "Thieves' Hideout",
         "savewarp": "Thieves Hideout Savewarp",
         "events": {
@@ -824,8 +807,7 @@
     },
     {
         "region_name": "Thieves Hideout Kitchen Hallway",
-        "scene": "Thieves Hideout",
-        #"room": 03,
+        "scene": "Thieves Hideout", #"room": 03,
         "hint": "Thieves' Hideout",
         "savewarp": "Thieves Hideout Savewarp",
         "exits": {
@@ -837,8 +819,7 @@
     },
     {
         "region_name": "Thieves Hideout Kitchen Front",
-        "scene": "Thieves Hideout",
-        #"room": 03,
+        "scene": "Thieves Hideout", #"room": 03,
         "hint": "Thieves' Hideout",
         "savewarp": "Thieves Hideout Savewarp",
         "exits": {
@@ -851,8 +832,7 @@
     },
     {
         "region_name": "Thieves Hideout Kitchen Rear",
-        "scene": "Thieves Hideout",
-        #"room": 03,
+        "scene": "Thieves Hideout", #"room": 03,
         "hint": "Thieves' Hideout",
         "savewarp": "Thieves Hideout Savewarp",
         "exits": {
@@ -865,8 +845,7 @@
     },
     {
         "region_name": "Thieves Hideout Olive Jail",
-        "scene": "Thieves Hideout",
-        #"room": 04,
+        "scene": "Thieves Hideout", #"room": 04,
         "hint": "Thieves' Hideout",
         "savewarp": "Thieves Hideout Savewarp",
         "events": {
@@ -889,8 +868,7 @@
     },
     {
         "region_name": "Thieves Hideout Blue Jail",
-        "scene": "Thieves Hideout",
-        #"room": 05,
+        "scene": "Thieves Hideout", #"room": 05,
         "hint": "Thieves' Hideout",
         "savewarp": "Thieves Hideout Savewarp",
         "events": {
@@ -913,8 +891,7 @@
     },
     {
         "region_name": "TH Hall to Balcony Lower",
-        "scene": "Thieves Hideout",
-        #"room": 00,
+        "scene": "Thieves Hideout", #"room": 00,
         "hint": "Thieves' Hideout",
         "savewarp": "Thieves Hideout Savewarp",
         "exits": {
@@ -924,8 +901,7 @@
     },
     {
         "region_name": "TH Hall to Balcony Upper",
-        "scene": "Thieves Hideout",
-        #"room": 00,
+        "scene": "Thieves Hideout", #"room": 00,
         "hint": "Thieves' Hideout",
         "savewarp": "Thieves Hideout Savewarp",
         "exits": {
@@ -935,8 +911,7 @@
     },
     {
         "region_name": "Thieves Hideout Green Jail",
-        "scene": "Thieves Hideout",
-        #"room": 01,
+        "scene": "Thieves Hideout", #"room": 01,
         "hint": "Thieves' Hideout",
         "savewarp": "Thieves Hideout Savewarp",
         "events": {
