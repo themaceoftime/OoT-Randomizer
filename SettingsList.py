@@ -3067,10 +3067,10 @@ setting_infos = [
             that attack when trying to free the jailed carpenters.
             
             'Overworld Only': Thieves' Hideout Keys can only appear
-             outside of dungeons.
+            outside of dungeons.
             
             'Dungeons Only': Thieves' Hideout Keys can only appear
-             inside of dungeons.
+            inside of dungeons.
 
             'Anywhere': Thieves' Hideout Keys can appear anywhere
             in the world.
