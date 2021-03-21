@@ -1998,8 +1998,8 @@ setting_infos = [
             'open':   'Open Gerudo\'s Fortress',
         },
         gui_tooltip    = '''\
-            'Rescue One Carpenter': Only the bottom left carpenter
-            carpenter, in the cell with the red banner, must be rescued.
+            'Rescue One Carpenter': Only the bottom left carpenter,
+            in the cell with the red banner, must be rescued.
             This cell can be savewarped to from any room in the hideout.
             All but one of the Thieves' Hideout Keys are removed.
 
