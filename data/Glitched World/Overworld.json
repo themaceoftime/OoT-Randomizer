@@ -313,23 +313,7 @@
         "region_name": "Gerudo Fortress",
         "hint": "Gerudo's Fortress",
         "events": {
-            "TH North 1F Red Jail Gerudo": "is_adult or (is_child and can_child_damage)",
-            "TH North 2F Green Jail Gerudo": "is_adult or (is_child and can_child_damage)",
-            "TH South 1F Olive Jail Gerudo": "is_adult or (is_child and can_child_damage)",
-            "TH South 2F Blue Jail Gerudo": "is_adult or (is_child and can_child_damage)",
-            "TH North 1F Red Jail Carpenter": "
-                'TH North 1F Red Jail Gerudo' and
-                ((gerudo_fortress == 'normal' and (Small_Key_Thieves_Hideout, 4))
-                    or (gerudo_fortress == 'fast' and Small_Key_Thieves_Hideout))",
-            "TH North 2F Green Jail Carpenter": "
-                'TH North 2F Green Jail Gerudo' and
-                (gerudo_fortress == 'normal' and (Small_Key_Thieves_Hideout, 4))",
-            "TH South 1F Olive Jail Carpenter": "
-                'TH South 1F Olive Jail Gerudo' and
-                (gerudo_fortress == 'normal' and (Small_Key_Thieves_Hideout, 4))",
-            "TH South 2F Blue Jail Carpenter": "
-                'TH South 2F Blue Jail Gerudo' and
-                (gerudo_fortress == 'normal' and (Small_Key_Thieves_Hideout, 4))",
+            "Carpenter Rescue": "can_finish_GerudoFortress",
             "GF Gate Open": "is_adult and Gerudo_Membership_Card"
         },
         "locations": {
@@ -340,10 +324,10 @@
                 Gerudo_Membership_Card and can_ride_epona and Bow and is_adult",
             "GF HBA 1500 Points": "
                 Gerudo_Membership_Card and can_ride_epona and Bow and is_adult",
-            "TH North 1F Red Jail Gerudo Key": "'TH North 1F Red Jail Gerudo'",
-            "TH North 2F Green Jail Gerudo Key": "'TH North 2F Green Jail Gerudo'",
-            "TH South 1F Olive Jail Gerudo Key": "'TH South 1F Olive Jail Gerudo'",
-            "TH South 2F Blue Jail Gerudo Key": "'TH South 2F Blue Jail Gerudo'",
+            "TH North 1F Red Jail Gerudo Key": "is_adult or (is_child and can_child_damage)",
+            "TH North 2F Green Jail Gerudo Key": "is_adult or (is_child and can_child_damage)",
+            "TH South 1F Olive Jail Gerudo Key": "is_adult or (is_child and can_child_damage)",
+            "TH South 2F Blue Jail Gerudo Key": "is_adult or (is_child and can_child_damage)",
             "TH Gerudo Membership Card": "can_finish_GerudoFortress",
             "GF GS Archery Range": "can_use(Hookshot) and at_night",
             "GF GS Top Floor": "at_night and is_adult"
