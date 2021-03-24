@@ -53,7 +53,7 @@ location_table = OrderedDict([
     ("Song from Impa",                                  ("Song",        0xFF,  0x26, (0x2E8E925, 0x2E8E925),   ("Hyrule Castle", "Market", "Songs"))),
     ("Song from Malon",                                 ("Song",        0xFF,  0x27, (0x0D7EB53, 0x0D7EBCF),   ("Lon Lon Ranch", "Songs",))),
     ("Song from Saria",                                 ("Song",        0xFF,  0x28, (0x20B1DB1, 0x20B1DB1),   ("Sacred Forest Meadow", "Forest", "Songs"))),
-    ("Song from Composers Grave",                       ("Song",        0xFF,  0x29, (0x332A871, 0x332A871),   ("the Graveyard", "Kakariko", "Songs"))),
+    ("Song from Royal Familys Tomb",                    ("Song",        0xFF,  0x29, (0x332A871, 0x332A871),   ("the Graveyard", "Kakariko", "Songs"))),
     ("Song from Ocarina of Time",                       ("Song",        0xFF,  0x2A, (0x252FC89, 0x252FC89),   ("Hyrule Field", "Songs", "Need Spiritual Stones"))),
     ("Song from Windmill",                              ("Song",        0xFF,  0x2B, (0x0E42C07, 0x0E42B8B),   ("Kakariko Village", "Kakariko", "Songs"))),
     ("Sheik in Forest",                                 ("Song",        0xFF,  0x20, (0x20B0809, 0x20B0809),   ("Sacred Forest Meadow", "Forest", "Songs"))),
@@ -220,7 +220,7 @@ location_table = OrderedDict([
     # Graveyard
     ("Graveyard Shield Grave Chest",                    ("Chest",       0x40,  0x00, None,                     ("the Graveyard", "Kakariko",))),
     ("Graveyard Heart Piece Grave Chest",               ("Chest",       0x3F,  0x00, None,                     ("the Graveyard", "Kakariko",))),
-    ("Graveyard Composers Grave Chest",                 ("Chest",       0x41,  0x00, None,                     ("the Graveyard", "Kakariko",))),
+    ("Royal Familys Tomb Chest",                        ("Chest",       0x41,  0x00, None,                     ("the Graveyard", "Kakariko",))),
     ("Graveyard Freestanding PoH",                      ("Collectable", 0x53,  0x04, None,                     ("the Graveyard", "Kakariko",))),
     ("Graveyard Dampe Gravedigging Tour",               ("Collectable", 0x53,  0x08, None,                     ("the Graveyard", "Kakariko",))),
     ("Graveyard Hookshot Chest",                        ("Chest",       0x48,  0x00, None,                     ("the Graveyard", "Kakariko",))),

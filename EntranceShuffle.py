@@ -255,8 +255,8 @@ entrance_shuffle_table = [
                         ('Graveyard Shield Grave -> Graveyard',                             { 'index': 0x035D })),
     ('Grave',           ('Graveyard -> Graveyard Heart Piece Grave',                        { 'index': 0x031C }),
                         ('Graveyard Heart Piece Grave -> Graveyard',                        { 'index': 0x0361 })),
-    ('Grave',           ('Graveyard -> Graveyard Composers Grave',                          { 'index': 0x002D }),
-                        ('Graveyard Composers Grave -> Graveyard',                          { 'index': 0x050B })),
+    ('Grave',           ('Graveyard -> Royal Familys Tomb',                                 { 'index': 0x002D }),
+                        ('Royal Familys Tomb -> Graveyard',                                 { 'index': 0x050B })),
     ('Grave',           ('Graveyard -> Graveyard Dampes Grave',                             { 'index': 0x044F }),
                         ('Graveyard Dampes Grave -> Graveyard',                             { 'index': 0x0359 })),
 
