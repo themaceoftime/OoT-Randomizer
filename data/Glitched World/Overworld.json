@@ -324,11 +324,11 @@
                 Gerudo_Membership_Card and can_ride_epona and Bow and is_adult",
             "GF HBA 1500 Points": "
                 Gerudo_Membership_Card and can_ride_epona and Bow and is_adult",
-            "TH North 1F Red Jail Gerudo Key": "is_adult or (is_child and can_child_damage)",
-            "TH North 2F Green Jail Gerudo Key": "is_adult or (is_child and can_child_damage)",
-            "TH South 1F Olive Jail Gerudo Key": "is_adult or (is_child and can_child_damage)",
-            "TH South 2F Blue Jail Gerudo Key": "is_adult or (is_child and can_child_damage)",
-            "TH Gerudo Membership Card": "can_finish_GerudoFortress",
+            "Hideout Red Jail Guard": "is_adult or (is_child and can_child_damage)",
+            "Hideout Green Jail Guard": "is_adult or (is_child and can_child_damage)",
+            "Hideout Olive Jail Guard": "is_adult or (is_child and can_child_damage)",
+            "Hideout Blue Jail Guard": "is_adult or (is_child and can_child_damage)",
+            "Hideout Gerudo Membership Card": "can_finish_GerudoFortress",
             "GF GS Archery Range": "can_use(Hookshot) and at_night",
             "GF GS Top Floor": "at_night and is_adult"
         },

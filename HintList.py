@@ -396,7 +396,7 @@ hintTable = {
     'LLR Talons Chickens':                                         ("#finding Super Cuccos# is rewarded with", None, 'exclude'),
     'GC Rolling Goron as Child':                                   ("the prize offered by a #large rolling Goron# is", None, 'exclude'),
     'LH Underwater Item':                                          ("the #sunken treasure in a lake# is", None, 'exclude'),
-    'TH Gerudo Membership Card':                                   ("#rescuing captured carpenters# is rewarded with", None, 'exclude'),
+    'Hideout Gerudo Membership Card':                              ("#rescuing captured carpenters# is rewarded with", None, 'exclude'),
     'Wasteland Bombchu Salesman':                                  ("a #carpet guru# sells", None, 'exclude'),
 
     'Kak Impas House Freestanding PoH':                            ("#imprisoned in a house# lies", None, 'exclude'),
@@ -416,10 +416,10 @@ hintTable = {
     'DMT Freestanding PoH':                                        ("above a #mountain cavern entrance# is", None, 'exclude'),
     'DMC Wall Freestanding PoH':                                   ("nestled in a #volcanic wall# is", None, 'exclude'),
     'DMC Volcano Freestanding PoH':                                ("obscured by #volcanic ash# is", None, 'exclude'),
-    'TH North 1F Red Jail Gerudo Key':                             ("#defeating Gerudo guards# reveals", None, 'exclude'),
-    'TH North 2F Green Jail Gerudo Key':                           ("#defeating Gerudo guards# reveals", None, 'exclude'),
-    'TH South 1F Olive Jail Gerudo Key':                           ("#defeating Gerudo guards# reveals", None, 'exclude'),
-    'TH South 2F Blue Jail Gerudo Key':                            ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Red Jail Guard':                                      ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Green Jail Guard':                                    ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Olive Jail Guard':                                    ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Blue Jail Guard':                                     ("#defeating Gerudo guards# reveals", None, 'exclude'),
 
     'Deku Tree Map Chest':                                         ("in the #center of the Deku Tree# lies", None, 'exclude'),
     'Deku Tree Slingshot Chest':                                   ("the #treasure guarded by a scrub# in the Deku Tree is", None, 'exclude'),

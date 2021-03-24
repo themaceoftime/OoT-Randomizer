@@ -347,11 +347,11 @@ location_table = OrderedDict([
     ("GF GS Archery Range",                             ("GS Token",    0x14,  0x01, None,                     ("Gerudo's Fortress", "Skulltulas",))),
 
     # Thieves' Hideout
-    ("TH North 1F Red Jail Gerudo Key",                 ("Collectable", 0x0C,  0x0C, None,                     ("Thieves' Hideout", "Gerudo",))),
-    ("TH North 2F Green Jail Gerudo Key",               ("Collectable", 0x0C,  0x0A, None,                     ("Thieves' Hideout", "Gerudo",))),
-    ("TH South 1F Olive Jail Gerudo Key",               ("Collectable", 0x0C,  0x0E, None,                     ("Thieves' Hideout", "Gerudo",))),
-    ("TH South 2F Blue Jail Gerudo Key",                ("Collectable", 0x0C,  0x0F, None,                     ("Thieves' Hideout", "Gerudo",))),
-    ("TH Gerudo Membership Card",                       ("NPC",         0x0C,  0x3A, None,                     ("Thieves' Hideout", "Gerudo",))),
+    ("Hideout Red Jail Guard",                          ("Collectable", 0x0C,  0x0C, None,                     ("Thieves' Hideout", "Gerudo",))),
+    ("Hideout Green Jail Guard",                        ("Collectable", 0x0C,  0x0A, None,                     ("Thieves' Hideout", "Gerudo",))),
+    ("Hideout Olive Jail Guard",                        ("Collectable", 0x0C,  0x0E, None,                     ("Thieves' Hideout", "Gerudo",))),
+    ("Hideout Blue Jail Guard",                         ("Collectable", 0x0C,  0x0F, None,                     ("Thieves' Hideout", "Gerudo",))),
+    ("Hideout Gerudo Membership Card",                  ("NPC",         0x0C,  0x3A, None,                     ("Thieves' Hideout", "Gerudo",))),
 
     # Wasteland
     ("Wasteland Bombchu Salesman",                      ("NPC",         0x5E,  0x03, None,                     ("Haunted Wasteland",))),

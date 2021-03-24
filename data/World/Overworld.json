@@ -559,14 +559,14 @@
                 Gerudo_Membership_Card and can_ride_epona and Bow and at_day",
             "GF HBA 1500 Points": "
                 Gerudo_Membership_Card and can_ride_epona and Bow and at_day",
-            "TH North 1F Red Jail Gerudo Key": "is_adult or Kokiri_Sword",
-            "TH North 2F Green Jail Gerudo Key": "
+            "Hideout Red Jail Guard": "is_adult or Kokiri_Sword",
+            "Hideout Green Jail Guard": "
                 (is_adult or Kokiri_Sword) and 
                 (Gerudo_Membership_Card or can_use(Bow) or can_use(Hookshot)
                     or can_use(Hover_Boots) or logic_gerudo_kitchen)",
-            "TH South 1F Olive Jail Gerudo Key": "is_adult or Kokiri_Sword",
-            "TH South 2F Blue Jail Gerudo Key": "is_adult or Kokiri_Sword",
-            "TH Gerudo Membership Card": "can_finish_GerudoFortress",
+            "Hideout Olive Jail Guard": "is_adult or Kokiri_Sword",
+            "Hideout Blue Jail Guard": "is_adult or Kokiri_Sword",
+            "Hideout Gerudo Membership Card": "can_finish_GerudoFortress",
             "GF GS Archery Range": "
                 can_use(Hookshot) and Gerudo_Membership_Card and at_night",
             "GF GS Top Floor": "
