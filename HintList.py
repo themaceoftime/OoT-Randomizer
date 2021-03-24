@@ -265,7 +265,7 @@ hintTable = {
     'KF Links House Cow':                                          ("the #bovine bounty of a horseback hustle# gifts", "#Malon's obstacle course# leads to", 'always'),
 
     'Song from Ocarina of Time':                                   ("the #Ocarina of Time# teaches", None, ['song', 'sometimes']),
-    'Song from Royal Familys Tomb':                                (["#ReDead in the Royal Family's Tomb# guard", "the #Composer Brothers wrote#"], None, ['song', 'sometimes']),
+    'Song from Royal Familys Tomb':                                (["#ReDead in the royal tomb# guard", "the #Composer Brothers wrote#"], None, ['song', 'sometimes']),
     'Sheik in Forest':                                             ("#in a meadow# Sheik teaches", None, ['song', 'sometimes']),
     'Sheik at Temple':                                             ("Sheik waits at a #monument to time# to teach", None, ['song', 'sometimes']),
     'Sheik in Crater':                                             ("the #crater's melody# is", None, ['song', 'sometimes']),
@@ -298,7 +298,7 @@ hintTable = {
     'ZF GS Hidden Cave':                                           ("a spider high #above the icy waters# holds", None, ['overworld', 'sometimes']),
     'Wasteland Chest':                                             (["#deep in the wasteland# is", "beneath #the sands#, flames reveal"], None, ['overworld', 'sometimes']),
     'Wasteland GS':                                                ("a #spider in the wasteland# holds", None, ['overworld', 'sometimes']),
-    'Royal Familys Tomb Chest':                                    (["#flames in the Royal Family's Tomb# reveal", "the #Composer Brothers hid#"], None, ['overworld', 'sometimes']),
+    'Royal Familys Tomb Chest':                                    (["#flames in the royal tomb# reveal", "the #Composer Brothers hid#"], None, ['overworld', 'sometimes']),
     'ZF Bottom Freestanding PoH':                                  ("#under the icy waters# lies", None, ['overworld', 'sometimes']),
     'GC Pot Freestanding PoH':                                     ("spinning #Goron pottery# contains", None, ['overworld', 'sometimes']),
     'ZD King Zora Thawed':                                         ("a #defrosted dignitary# gifts", "unfreezing #King Zora# grants", ['overworld', 'sometimes']),
