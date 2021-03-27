@@ -1999,7 +1999,7 @@ setting_infos = [
         },
         gui_tooltip    = '''\
             'Rescue One Carpenter': Only the bottom left carpenter,
-            in the cell with the red banner, must be rescued.
+            in the cell with a single torch, must be rescued.
             This cell can be savewarped to from any room in the hideout.
             All but one of the Thieves' Hideout Keys are removed.
 

@@ -559,13 +559,13 @@
                 Gerudo_Membership_Card and can_ride_epona and Bow and at_day",
             "GF HBA 1500 Points": "
                 Gerudo_Membership_Card and can_ride_epona and Bow and at_day",
-            "Hideout Red Jail Guard": "is_adult or Kokiri_Sword",
-            "Hideout Green Jail Guard": "
+            "Hideout 1 Torch Jail Guard": "is_adult or Kokiri_Sword",
+            "Hideout 2 Torches Jail Guard": "is_adult or Kokiri_Sword",
+            "Hideout 3 Torches Jail Guard": "
                 (is_adult or Kokiri_Sword) and 
                 (Gerudo_Membership_Card or can_use(Bow) or can_use(Hookshot)
                     or can_use(Hover_Boots) or logic_gerudo_kitchen)",
-            "Hideout Olive Jail Guard": "is_adult or Kokiri_Sword",
-            "Hideout Blue Jail Guard": "is_adult or Kokiri_Sword",
+            "Hideout 4 Torches Jail Guard": "is_adult or Kokiri_Sword",
             "Hideout Gerudo Membership Card": "can_finish_GerudoFortress",
             "GF GS Archery Range": "
                 can_use(Hookshot) and Gerudo_Membership_Card and at_night",
