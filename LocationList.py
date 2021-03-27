@@ -347,10 +347,10 @@ location_table = OrderedDict([
     ("GF GS Archery Range",                             ("GS Token",    0x14,  0x01, None,                     ("Gerudo's Fortress", "Skulltulas",))),
 
     # Thieves' Hideout
-    ("Hideout 1 Torch Jail Guard",                      ("Collectable", 0x0C,  0x0C, None,                     ("Thieves' Hideout", "Gerudo",))),
-    ("Hideout 2 Torches Jail Guard",                    ("Collectable", 0x0C,  0x0F, None,                     ("Thieves' Hideout", "Gerudo",))),
-    ("Hideout 3 Torches Jail Guard",                    ("Collectable", 0x0C,  0x0A, None,                     ("Thieves' Hideout", "Gerudo",))),
-    ("Hideout 4 Torches Jail Guard",                    ("Collectable", 0x0C,  0x0E, None,                     ("Thieves' Hideout", "Gerudo",))),
+    ("Hideout Jail Guard (1 Torch)",                    ("Collectable", 0x0C,  0x0C, None,                     ("Thieves' Hideout", "Gerudo",))),
+    ("Hideout Jail Guard (2 Torches)",                  ("Collectable", 0x0C,  0x0F, None,                     ("Thieves' Hideout", "Gerudo",))),
+    ("Hideout Jail Guard (3 Torches)",                  ("Collectable", 0x0C,  0x0A, None,                     ("Thieves' Hideout", "Gerudo",))),
+    ("Hideout Jail Guard (4 Torches)",                  ("Collectable", 0x0C,  0x0E, None,                     ("Thieves' Hideout", "Gerudo",))),
     ("Hideout Gerudo Membership Card",                  ("NPC",         0x0C,  0x3A, None,                     ("Thieves' Hideout", "Gerudo",))),
 
     # Wasteland

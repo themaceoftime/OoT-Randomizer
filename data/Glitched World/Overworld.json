@@ -324,10 +324,10 @@
                 Gerudo_Membership_Card and can_ride_epona and Bow and is_adult",
             "GF HBA 1500 Points": "
                 Gerudo_Membership_Card and can_ride_epona and Bow and is_adult",
-            "Hideout 1 Torch Jail Guard": "is_adult or (is_child and can_child_damage)",
-            "Hideout 2 Torches Jail Guard": "is_adult or (is_child and can_child_damage)",
-            "Hideout 3 Torches Jail Guard": "is_adult or (is_child and can_child_damage)",
-            "Hideout 4 Torches Jail Guard": "is_adult or (is_child and can_child_damage)",
+            "Hideout Jail Guard (1 Torch)": "is_adult or (is_child and can_child_damage)",
+            "Hideout Jail Guard (2 Torches)": "is_adult or (is_child and can_child_damage)",
+            "Hideout Jail Guard (3 Torches)": "is_adult or (is_child and can_child_damage)",
+            "Hideout Jail Guard (4 Torches)": "is_adult or (is_child and can_child_damage)",
             "Hideout Gerudo Membership Card": "can_finish_GerudoFortress",
             "GF GS Archery Range": "can_use(Hookshot) and at_night",
             "GF GS Top Floor": "at_night and is_adult"
