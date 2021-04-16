@@ -3031,7 +3031,7 @@ setting_infos = [
             'Overworld Only': Thieves' Hideout Keys can only appear
             outside of dungeons.
             
-            'Dungeons Only': Thieves' Hideout Keys can only appear
+            'Any Dungeon': Thieves' Hideout Keys can only appear
             inside of dungeons.
 
             'Anywhere': Thieves' Hideout Keys can appear anywhere
