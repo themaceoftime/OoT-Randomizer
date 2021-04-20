@@ -9,6 +9,7 @@ import urllib.request
 from urllib.error import URLError, HTTPError
 import json
 from enum import Enum
+import itertools
 
 from HintList import getHint, getHintGroup, Hint, hintExclusions
 from Item import MakeEventItem
@@ -761,7 +762,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
     #This method ensures that the right number of copies are removed, e.g.
     #if you start with one strength and hints call for two, you still get
     #one hint for strength
-    for item in [*world.starting_items, *world.starting_equipment, *world.starting_songs]:
+    for item in itertools.chain(world.starting_items, world.starting_equipment, world.starting_songs):
         itemname = everything[item].itemname
         if itemname in world.item_hints:
             world.item_hints.remove(itemname)
@@ -769,7 +770,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
     #Skip_child_zelda can cause the same problem, but needs to be handled separately since
     #it doesn't update the starting gear lists
     if world.skip_child_zelda:
-        itemname = str(world.get_location('Song from Impa').item)
+        itemname = world.get_location('Song from Impa').item.name 
         if itemname in world.item_hints:
             world.item_hints.remove(itemname)
 
@@ -777,7 +778,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
 
     #Make sure the total number of hints won't pass 40. If so, we limit the always and trial hints
     if world.hint_dist == "bingo":
-        numTrialHints=[0,1,2,3,2,1,0]
+        numTrialHints = [0,1,2,3,2,1,0]
         if (2*len(world.item_hints) + 2*len(getHintGroup('always', world)) + 2*numTrialHints[world.trials] > 40) and (world.hint_dist_user['named_items_required']):
             world.hint_dist_user['distribution']['always']['copies'] = 1
             world.hint_dist_user['distribution']['trial']['copies'] = 1
