@@ -120,6 +120,7 @@ do that.
 * Fixed a bug where importing from a settings string might not choose the correct hint distribution depending on platform or number of custom hint distributions in the Hints folder.
 * `Skip Child Zelda` in Multiworld (with Song Shuffle: Anywhere) now correctly provides items to the right player.
 * Smarter replacement of required warp songs when warp songs are shuffled. 
+* Disable Sandstorm transitions in certain cases in Entrance Randomizer. In particular, this prevents Sandstorm transitions from triggering strobe effects due to a bug.
 * Fix Entrance Randomizer hint area validation to work with shuffled warp songs.
 * Fix Entrance Randomizer dungeon entrance hints.
 * Plandomizer
@@ -135,6 +136,7 @@ do that.
 * Add ability to provide settings through stdin (useful for shell scripting).
 * Ruto now knows what kind of medallion or stone she gets in Jabu Jabu.
 * Added Nayru's Love back to the minimal item pool on high damage settings.
+* Allow special characters (such as the é in Dampé) to appear in in-game hints.
 * Hint distribution changes for named-item hints, including a new `vague_named_items` option for `hint_dist_user` that will name the location but not the item.
 * Hint distributions can now filter areas from being hinted as foolish, via putting the area names in `remove_locations`.
 * New `#MajorItem` item category for Plandomizer allows placing a random major item.
