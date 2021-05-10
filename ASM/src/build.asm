@@ -26,6 +26,7 @@
 .include "hacks.asm"
 .include "malon.asm"
 .include "mido.asm"
+.include "weather.asm"
 
 ;==================================================================================================
 ; New code region
