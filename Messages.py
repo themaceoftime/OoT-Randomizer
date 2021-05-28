@@ -96,39 +96,19 @@ SPECIAL_CHARACTERS = {
     0xAA: '[Control Stick]',
 }
 
-UTF8_TO_OOT_SPECIAL = {
-    (0xc3, 0x80): 0x80,
-    (0xc3, 0xae): 0x81,
-    (0xc3, 0x82): 0x82,
-    (0xc3, 0x84): 0x83,
-    (0xc3, 0x87): 0x84,
-    (0xc3, 0x88): 0x85,
-    (0xc3, 0x89): 0x86,
-    (0xc3, 0x8a): 0x87,
-    (0xc3, 0x8b): 0x88,
-    (0xc3, 0x8f): 0x89,
-    (0xc3, 0x94): 0x8A,
-    (0xc3, 0x96): 0x8B,
-    (0xc3, 0x99): 0x8C,
-    (0xc3, 0x9b): 0x8D,
-    (0xc3, 0x9c): 0x8E,
-    (0xc3, 0x9f): 0x8F,
-    (0xc3, 0xa0): 0x90,
-    (0xc3, 0xa1): 0x91,
-    (0xc3, 0xa2): 0x92,
-    (0xc3, 0xa4): 0x93,
-    (0xc3, 0xa7): 0x94,
-    (0xc3, 0xa8): 0x95,
-    (0xc3, 0xa9): 0x96,
-    (0xc3, 0xaa): 0x97,
-    (0xc3, 0xab): 0x98,
-    (0xc3, 0xaf): 0x99,
-    (0xc3, 0xb4): 0x9A,
-    (0xc3, 0xb6): 0x9B,
-    (0xc3, 0xb9): 0x9C,
-    (0xc3, 0xbb): 0x9D,
-    (0xc3, 0xbc): 0x9E,
-}
+CHARACTER_MAP = {}
+# Characters 0x20 thru 0x7D map perfectly.  range() excludes the last element.
+CHARACTER_MAP.update((chr(c), c) for c in range(0x20, 0x7e))
+
+# Other characters, source: https://wiki.cloudmodding.com/oot/Text_Format
+CHARACTER_MAP.update(enumerate(
+        (
+            '\u203e'             # 0x7f
+            'ÀîÂÄÇÈÉÊËÏÔÖÙÛÜß',  # 0x80 .. #0x8f
+            'àáâäçèéêëïôöùûü' ,  # 0x90 .. #0x9e
+        ),
+        start = 0x7f
+))
 
 GOSSIP_STONE_MESSAGES = list( range(0x0401, 0x04FF) ) # ids of the actual hints
 GOSSIP_STONE_MESSAGES += [0x2053, 0x2054] # shared initial stone messages
@@ -344,6 +324,22 @@ def display_code_list(codes):
         message += str(code)
     return message
 
+def encode_text_string(text):
+    result = []
+    it = iter(text)
+    for ch in it:
+        n = ord(ch)
+        mapped = CHARACTER_MAP.get(ch)
+        if mapped:
+            result.append(mapped)
+            continue
+        if n in CONTROL_CODES:
+            result.append(n)
+            for _ in range(CONTROL_CODES[n][1]):
+                result.append(ord(next(it)))
+            continue
+        raise ValueError(f"Unable to translate unicode character {ch!r}")
+    return result
 
 def parse_control_codes(text):
     if isinstance(text, list):
@@ -351,17 +347,8 @@ def parse_control_codes(text):
     elif isinstance(text, bytearray):
         bytes = list(text)
     else:
-        bytes = list(text.encode('utf-8'))
+        bytes = encode_text_string(text)
 
-    # Special characters encoded to utf-8 must be re-encoded to OoT's values for them.
-    # Tuple is used due to utf-8 encoding using two bytes.
-    i = 0
-    while i < len(bytes) - 1:
-        if (bytes[i], bytes[i+1]) in UTF8_TO_OOT_SPECIAL:
-            bytes[i] = UTF8_TO_OOT_SPECIAL[(bytes[i], bytes[i+1])]
-            del bytes[i+1]
-        i += 1
-    
     text_codes = []
     index = 0
     while index < len(bytes):
@@ -636,19 +623,7 @@ class Message():
 
     @classmethod
     def from_string(cls, text, id=0, opts=0x00):
-        bytes = list(text.encode('utf-8')) + [0x02]
-
-        # Clean up garbage values added when encoding special characters again.
-        bytes = list(filter(lambda a: a != 194, bytes)) # 0xC2 added before each accent char.
-        i = 0
-        while i < len(bytes) - 1:
-            if bytes[i] in SPECIAL_CHARACTERS and bytes[i] not in UTF8_TO_OOT_SPECIAL.values(): # This indicates it's one of the button chars (A button, etc).
-                # Have to delete 2 inserted garbage values.
-                del bytes[i-1]
-                del bytes[i-2]
-                i -= 2
-            i+= 1
-
+        bytes = encode_text_string(text) + [0x02]
         return cls(bytes, 0, id, opts, 0, len(bytes) + 1)
 
     @classmethod
