@@ -618,7 +618,8 @@ class Message:
 
     @classmethod
     def from_string(cls, text, id=0, opts=0x00):
-        return cls(text + "\x02", 0, id, opts, 0, len(bytes) + 1)
+        bytes = text + "\x02"
+        return cls(bytes, 0, id, opts, 0, len(bytes) + 1)
 
     @classmethod
     def from_bytearray(cls, bytearray, id=0, opts=0x00):
