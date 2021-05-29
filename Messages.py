@@ -62,8 +62,8 @@ CHARACTER_MAP = {
     '⯆': 0xA6,
     '⯇': 0xA7,
     '⯈': 0xA8,
-    chr(0xA9): 0xA9,  # Down arrow -- not sure what best supports this
-    chr(0xAA): 0xAA,  # C-stick    -- not sure what best supports this
+    chr(0xA9): 0xA9,  # Down arrow   -- not sure what best supports this
+    chr(0xAA): 0xAA,  # Analog stick -- not sure what best supports this
 }
 # Support other ways of directly specifying controller inputs in OOTR's character set.
 # (This is backwards-compatibility support for ShadowShine57's previous patch.)
