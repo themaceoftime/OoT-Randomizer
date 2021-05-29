@@ -1152,7 +1152,7 @@ class Distribution(object):
             raise InvalidFileException("Your Ocarina of Time ROM doesn't belong in the plandomizer setting. If you don't know what plandomizer is, or don't plan to use it, leave that setting blank and try again.")
 
         try:
-            with open(filename) as infile:
+            with open(filename, encoding='utf-8') as infile:
                 src_dict = json.load(infile)
         except json.decoder.JSONDecodeError as e:
             raise InvalidFileException(f"Invalid Plandomizer File. Make sure the file is a valid JSON file. Failure reason: {str(e)}") from None

@@ -18,21 +18,19 @@ CONTROL_CHARS = {
     'NAME':         ['@', '\x0F'],
     'COLOR':        ['#', '\x05\x00'],
 }
-TEXT_END   = '\x02'
+TEXT_END = '\x02'
 
 
 def line_wrap(text, strip_existing_lines=False, strip_existing_boxes=False, replace_control_chars=True):
     # Replace stand-in characters with their actual control code.
     if replace_control_chars:
         def replace_bytes(matchobj):
-            return bytes.fromhex(matchobj[1].decode('utf-8'))
+            return ''.join(chr(x) for x in bytes.fromhex(matchobj[1]))
 
         for char in CONTROL_CHARS.values():
             text = text.replace(char[0], char[1])
 
-        text = bytearray(
-            re.sub(br"\$\{((?:[0-9a-f][0-9a-f] ?)+)}", replace_bytes, text.encode('utf-8'), flags=re.IGNORECASE)
-        )
+        text = re.sub(r"\$\{((?:[0-9a-f][0-9a-f] ?)+)}", replace_bytes, text, flags=re.IGNORECASE)
 
     # Parse the text into a list of control codes.
     text_codes = Messages.parse_control_codes(text)
