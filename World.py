@@ -220,6 +220,18 @@ class World(object):
         return new_world
 
 
+    def setRandomSymbolCount(self):
+        if self.bridge == 'medallions':
+            self.bridge_medallions = random.randrange(1, 6)
+            self.randomized_list.append('bridge_medallions')
+        if self.bridge == 'dungeons':
+            self.bridge_rewards = random.randrange(1, 9)
+            self.randomized_list.append('bridge_rewards')
+        if self.bridge == 'stones':
+            self.bridge_stones = random.randrange(1, 3)
+            self.randomized_list.append('bridge_stones')
+
+
     def resolve_random_settings(self):
         # evaluate settings (important for logic, nice for spoiler)
         self.randomized_list = []
@@ -256,6 +268,13 @@ class World(object):
         if self.chicken_count_random:
             self.chicken_count = random.randint(0, 7)
             self.randomized_list.append('chicken_count')
+
+        # Handle random Rainbow Bridge condition
+        if self.bridge == 'random':
+            possible_bridge_requirements = ["open", "medallions", "dungeons", "stones", "vanilla"]
+            self.bridge = random.choice(possible_bridge_requirements)
+            self.setRandomSymbolCount()
+            self.randomized_list.append('bridge')
 
         # Determine Ganon Trials
         trial_pool = list(self.skipped_trials)
