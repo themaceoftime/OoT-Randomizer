@@ -1860,6 +1860,7 @@ setting_infos = [
                          - Variable numbers of Spiritual Stones, Medallions, or Dungeons
                          for Rainbow Bridge and Ganon's Boss Key on LACS 
                          (you will always be required to obtain all the relevant rewards)
+                         - Scrub Shuffle will either be "Off" or "On (Affordable)"
                          ''',
         default        = False,
         disable        = {
