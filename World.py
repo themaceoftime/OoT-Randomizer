@@ -222,13 +222,13 @@ class World(object):
 
     def set_random_bridge_values(self):
         if self.bridge == 'medallions':
-            self.bridge_medallions = random.randrange(1, 6)
+            self.bridge_medallions = 6
             self.randomized_list.append('bridge_medallions')
         if self.bridge == 'dungeons':
-            self.bridge_rewards = random.randrange(1, 9)
+            self.bridge_rewards = 9
             self.randomized_list.append('bridge_rewards')
         if self.bridge == 'stones':
-            self.bridge_stones = random.randrange(1, 3)
+            self.bridge_stones = 3
             self.randomized_list.append('bridge_stones')
 
 
