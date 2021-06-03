@@ -220,7 +220,7 @@ class World(object):
         return new_world
 
 
-    def setRandomSymbolCount(self):
+    def set_random_bridge_values(self):
         if self.bridge == 'medallions':
             self.bridge_medallions = random.randrange(1, 6)
             self.randomized_list.append('bridge_medallions')
@@ -273,7 +273,7 @@ class World(object):
         if self.bridge == 'random':
             possible_bridge_requirements = ["open", "medallions", "dungeons", "stones", "vanilla"]
             self.bridge = random.choice(possible_bridge_requirements)
-            self.setRandomSymbolCount()
+            self.set_random_bridge_values()
             self.randomized_list.append('bridge')
 
         # Determine Ganon Trials
