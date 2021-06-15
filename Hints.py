@@ -354,12 +354,24 @@ def get_woth_hint(spoiler, world, checked):
         return (GossipText('#%s# is on the way of the hero.' % location_text, ['Light Blue']), location)
 
 
+def get_checked_areas(world, checked):
+    def get_area_from_name(check):
+        try:
+            location = world.get_location(check)
+        except Exception as e:
+            return check
+        return get_hint_area(location)
+
+    return set(get_area_from_name(check) for check in checked)
+
+
 def get_barren_hint(spoiler, world, checked):
     if not hasattr(world, 'get_barren_hint_prev'):
         world.get_barren_hint_prev = RegionRestriction.NONE
 
+    checked_areas = get_checked_areas(world, checked)
     areas = list(filter(lambda area:
-        area not in checked
+        area not in checked_areas
         and area not in world.hint_type_overrides['barren']
         and not (world.barren_dungeon >= world.hint_dist_user['dungeons_barren_limit'] and world.empty_areas[area]['dungeon']),
         world.empty_areas.keys()))
