@@ -264,7 +264,10 @@ class Settings:
             if randomize_key is not None and info.gui_params['randomize_key'] != randomize_key:
                 continue
 
-            if self.__dict__[info.gui_params['randomize_key']]:
+            # Make sure setting is meant to be randomized and not specified in distribution
+            # We check it's not specified in the distribution so that plando can override "Randomize Main Rule Settings"
+            has_settings = '_settings' in self.distribution.src_dict 
+            if self.__dict__[info.gui_params['randomize_key']] and (not has_settings or info.name not in self.distribution.src_dict['_settings'].keys()):
                 randomize_keys_enabled.add(info.gui_params['randomize_key'])
                 choices, weights = zip(*info.gui_params['distribution'])
                 self.__dict__[info.name] = random_choices(choices, weights=weights)[0]
@@ -304,7 +307,9 @@ class Settings:
 
     def to_json(self):
         return {setting.name: self.__dict__[setting.name] for setting in setting_infos
-                if setting.shared and setting.name not in self._disabled}
+                if setting.shared and (setting.name not in self._disabled or
+                # We want to still include settings disabled by "Randomize Main Rule Settings" specified in distribution
+                ('_settings' in self.distribution.src_dict and setting.name in self.distribution.src_dict['_settings'].keys()))}
 
 
     def to_json_cosmetics(self):

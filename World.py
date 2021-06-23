@@ -228,6 +228,9 @@ class World(object):
             self.randomized_list.extend(setting_info.disable[True]['settings'])
             for section in setting_info.disable[True]['sections']:
                 self.randomized_list.extend(get_settings_from_section(section))
+            if '_settings' in self.distribution.distribution.src_dict:
+                # Remove settings specified in the distribution
+                self.randomized_list = [x for x in self.randomized_list if x not in self.distribution.distribution.src_dict['_settings'].keys()]
             for setting in list(self.randomized_list):
                 if (setting == 'bridge_medallions' and self.bridge != 'medallions') \
                         or (setting == 'bridge_stones' and self.bridge != 'stones') \
