@@ -225,7 +225,7 @@ class Settings:
     def get_dependency(self, setting_name, check_random=True):
         info = get_setting_info(setting_name)
         not_in_dist = not '_settings' in self.distribution.src_dict or info.name not in self.distribution.src_dict['_settings'].keys()
-        if check_random and 'randomize_key' in info.gui_params and self.__dict__[info.gui_params['randomize_key']] and plando_randomized_check:
+        if check_random and 'randomize_key' in info.gui_params and self.__dict__[info.gui_params['randomize_key']] and not_in_dist:
             return info.disabled_default
         elif info.dependency != None:
             return info.disabled_default if info.dependency(self) and not_in_dist else None
