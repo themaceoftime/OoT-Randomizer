@@ -345,8 +345,8 @@ class WorldDistribution(object):
         return dist_chosen
 
 
+    # Add randomized_settings defined in distribution to world's randomized settings list
     def configure_randomized_settings(self, world):
-        # Add randomized_settings defined in distribution to world's randomized settings list
         for name, record in self.randomized_settings.items():
             setattr(world, name, record)
             if name not in world.randomized_list:
