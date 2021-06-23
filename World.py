@@ -223,14 +223,16 @@ class World(object):
     def resolve_random_settings(self):
         # evaluate settings (important for logic, nice for spoiler)
         self.randomized_list = []
+        dist_keys = []
+        if '_settings' in self.distribution.distribution.src_dict:
+            dist_keys = self.distribution.distribution.src_dict['_settings'].keys()
         if self.randomize_settings:
             setting_info = get_setting_info('randomize_settings')
             self.randomized_list.extend(setting_info.disable[True]['settings'])
             for section in setting_info.disable[True]['sections']:
                 self.randomized_list.extend(get_settings_from_section(section))
-            if '_settings' in self.distribution.distribution.src_dict:
                 # Remove settings specified in the distribution
-                self.randomized_list = [x for x in self.randomized_list if x not in self.distribution.distribution.src_dict['_settings'].keys()]
+                self.randomized_list = [x for x in self.randomized_list if x not in dist_keys]
             for setting in list(self.randomized_list):
                 if (setting == 'bridge_medallions' and self.bridge != 'medallions') \
                         or (setting == 'bridge_stones' and self.bridge != 'stones') \
