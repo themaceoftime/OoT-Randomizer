@@ -51,6 +51,10 @@ def set_rules(world):
 
         if world.skip_child_zelda and location.name == 'Song from Impa':
             limit_to_itemset(location, SaveContext.giveable_items)
+            if world.triforce_hunt and world.total_starting_triforce_count >= world.triforce_goal - world.world_count:
+                # We have enough starting Triforce pieces that putting a piece on every world's Song from Impa would hit the goal count
+                # and render the game unbeatable, so for simplicity's sake we forbid putting pieces on any world's Song from Impa.
+                forbid_item(location, 'Triforce Piece')
 
         if location.name == 'Forest Temple MQ First Room Chest' and world.shuffle_bosskeys == 'dungeon' and world.shuffle_smallkeys == 'dungeon' and world.tokensanity == 'off':
             # This location needs to be a small key. Make sure the boss key isn't placed here.
