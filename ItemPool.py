@@ -1370,7 +1370,6 @@ def get_pool_core(world):
             pool.remove(junk_item)
             pool.append(pending_item)
 
-    world.distribution.configure_starting_items_settings(world)
     world.distribution.collect_starters(world.state)
 
     return (pool, placed_items)

@@ -250,15 +250,13 @@ class SaveContext():
         self.addresses['quest']['heart_pieces'].value = int((health % 1) * 4)
 
 
-    def give_raw_item(self, item):
-        if item.endswith(')'):
-            item_base, count = item[:-1].split(' (', 1)
-            if count.isdigit():
-                return self.give_item(item_base, count=int(count))
-        return self.give_item(item)
-
-
     def give_item(self, item, count=1):
+        if item.endswith(')'):
+            item_base, implicit_count = item[:-1].split(' (', 1)
+            if implicit_count.isdigit():
+                item = item_base
+                count *= int(implicit_count)
+
         if item in SaveContext.bottle_types:
             self.give_bottle(item, count)
         elif item in ["Piece of Heart", "Piece of Heart (Treasure Chest Game)"]:

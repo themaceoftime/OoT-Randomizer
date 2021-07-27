@@ -50,6 +50,7 @@ class World(object):
         # this gives the world an attribute for every setting listed in Settings.py
         self.settings = settings
         self.distribution = settings.distribution.world_dists[id]
+        self.distribution.world = self
 
         # rename a few attributes...
         self.keysanity = settings.shuffle_smallkeys in ['keysanity', 'remove', 'any_dungeon', 'overworld']
