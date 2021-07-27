@@ -88,7 +88,7 @@ class World(object):
             'Jabu Jabus Belly': False,
             'Bottom of the Well': False,
             'Ice Cavern': False,
-            'Gerudo Training Grounds': False,
+            'Gerudo Training Ground': False,
             'Forest Temple': False,
             'Fire Temple': False,
             'Water Temple': False,
@@ -654,7 +654,6 @@ class World(object):
         exclude_item_list = [
             'Double Defense',
             'Ice Arrows',
-            'Biggoron Sword',
         ]
         if (self.settings.damage_multiplier != 'ohko' and self.settings.damage_multiplier != 'quadruple' and 
             self.settings.shuffle_scrubs == 'off' and not self.settings.shuffle_grotto_entrances):
@@ -667,6 +666,10 @@ class World(object):
             # Serenade and Prelude are never required unless one of those settings is enabled
             exclude_item_list.append('Serenade of Water')
             exclude_item_list.append('Prelude of Light')
+        if self.logic_rules == 'glitchless':
+            # Both two-handed swords can be required in glitch logic, so only consider them foolish in glitchless
+            exclude_item_list.append('Biggoron Sword')
+            exclude_item_list.append('Giants Knife')
 
         for i in self.item_hint_type_overrides['barren']:
             if i in exclude_item_list:
