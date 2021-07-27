@@ -666,7 +666,7 @@ class World(object):
             # Serenade and Prelude are never required unless one of those settings is enabled
             exclude_item_list.append('Serenade of Water')
             exclude_item_list.append('Prelude of Light')
-        if self.logic_rules == 'glitchless':
+        if self.settings.logic_rules == 'glitchless':
             # Both two-handed swords can be required in glitch logic, so only consider them foolish in glitchless
             exclude_item_list.append('Biggoron Sword')
             exclude_item_list.append('Giants Knife')
