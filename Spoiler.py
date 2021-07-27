@@ -47,7 +47,6 @@ class Spoiler(object):
 
     def __init__(self, worlds):
         self.worlds = worlds
-        worlds[0].settings.settings_string = worlds[0].settings.get_settings_string() # Update settings string in case settings changed during generation.
         self.settings = worlds[0].settings
         self.playthrough = {}
         self.entrance_playthrough = {}
