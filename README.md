@@ -41,9 +41,9 @@ the user wishes a pre-decompressed ROM may be supplied as input. Please be sure 
 playing via any means other than on real N64 hardware, the use of the "Compress patched ROM" flag is strongly encouraged as uncompressed ROMs are
 impossible to inject for the Virtual Console and have random crashing problems on all emulators.
 
-For general use, there are three recommended emulators: [Project 64 (v2.4+)](https://wiki.ootrandomizer.com/index.php?title=Project64), [Bizhawk](https://wiki.ootrandomizer.com/index.php?title=Bizhawk), and [RetroArch](https://wiki.ootrandomizer.com/index.php?title=Retroarch).
+For general use, there are three recommended emulators: [Project 64 (v3.0+)](https://wiki.ootrandomizer.com/index.php?title=Project64), [Bizhawk](https://wiki.ootrandomizer.com/index.php?title=Bizhawk), and [RetroArch](https://wiki.ootrandomizer.com/index.php?title=Retroarch).
 In a nutshell the differences are:
-* Project64 is the lightest emulator and the easiest to setup, however, you will need a stable version from 2.4 or later to run OoTR well (and earlier versions are not permitted for use in OoTR races).
+* Project64 is the lightest emulator and the easiest to setup, however, you will need the 3.0.0 version or later to run OoTR well (and earlier versions are not permitted for use in OoTR races).
 * Bizhawk is the most resource-intensive, but easier to set up than RetroArch and the only race-legal emulator to support [Multiworld](https://wiki.ootrandomizer.com/index.php?title=Multiworld).
 * RetroArch is less resource-intensive than Bizhawk and the only of these three to work on platforms other than Windows, but it can be frustrating to set up.
 
@@ -97,8 +97,8 @@ Unfortunately, a few known issues exist. These will hopefully be addressed in fu
 
 * The fishing minigame sometimes refuses to allow you to catch fish when playing specifically on Bizhawk. Save and Hard Reset (NOT savestate) and return to fix the
 issue. You should always Hard Reset to avoid this issue entirely.
-* Versions older than 2.4 of Project64 have known compatablity issues with OoTR. To avoid this either 
-[update to v2.4 and follow the rest of our PJ64 guide](https://wiki.ootrandomizer.com/index.php?title=Project64) or change to one of our other two supported emulators.
+* Versions older than 3.0 of Project64 have known compatablity issues with OoTR. To avoid this either 
+[update to v3.0 and follow the rest of our PJ64 guide](https://wiki.ootrandomizer.com/index.php?title=Project64) or change to one of our other two supported emulators.
 * Executing the collection delay glitch on various NPCs may have unpredictable and undesirable consequences.
 * Saving and quitting on the very first frame after becoming an adult when you would trigger the Light Arrow cutscene can have undesired consequences. Just don't
 do that.
@@ -137,13 +137,18 @@ do that.
 * Ruto now knows what kind of medallion or stone she gets in Jabu Jabu.
 * Added Nayru's Love back to the minimal item pool on high damage settings.
 * Allow special characters (such as the é in Dampé) to appear in in-game hints.
+* Randomized songs' note patterns are included in the spoiler log.
 * Hint distribution changes for named-item hints, including a new `vague_named_items` option for `hint_dist_user` that will name the location but not the item.
 * Hint distributions can now filter areas from being hinted as foolish, via putting the area names in `remove_locations`.
+* Renamed Gerudo Training **Grounds** -> Gerudo Training **Ground** throughout logic to match vanilla name. This will make Plandomizer files incompatible between versions.
 * New `#MajorItem` item category for Plandomizer allows placing a random major item.
 * New `#Vanilla` item category for Plandomizer allows placing the item normally at the location.
 * New Plandomizer support for defining custom item groups.
+* New Plandomizer support for defining custom song note patterns (rhythm is still random).
+* Giant's Knife and Biggoron's Sword are considered useless in glitchless logic but not in glitched.
 * Entrance Randomizer: Allow Kakariko Potion Shop and Impa's House to have their entrances appear in different areas if all hints are off.
 * Text Shuffle: Expanded the "Shuffled except Hints and Keys" to include some shop and scrub text, and renamed "Shuffled except Important Text".
+* Custom Music: Added a file `custom_music_exclusion` to specify which music files shouldn't be shuffled in with random custom music.
 * Updated presets.
 * Added a commandline flag to use a preset by name. This still allows supplying additional settings, e.g. to control cosmetics and ROM output.
 * Added internal tracking of what items were where in vanilla OoT.
@@ -519,7 +524,7 @@ do that.
     * In the affected modes, a Gerudo is added behind the Wasteland gate who can open the gate
   * Removed RNG from Fishing Minigame
     * Note: The optimal strategy is to have the line stationary for the fish to bite
-  * Can now cast Farore's Wind and play Warp Songs from within Gerudo Training Grounds and all of Ganon's Castle
+  * Can now cast Farore's Wind and play Warp Songs from within Gerudo Training Ground and all of Ganon's Castle
 * Hint Changes
   * Every generic grotto gossip stone has their own hint.
   * The "Very Strong" hint setting can now give multiple Foolish dungeon hints.
