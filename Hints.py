@@ -352,6 +352,29 @@ def get_woth_hint(spoiler, world, checked):
 
     return (GossipText('#%s# is on the way of the hero.' % location_text, ['Light Blue']), location)
 
+def get_goal_category(spoiler, world, goal_categories):
+    # goal_categories = OrderedDict(world.goal_categories)
+
+    cat_sizes = []
+    cat_names = []
+    goal_category = None
+    for cat_name, category in goal_categories.items():
+        # Only add weights if the category has goals with hintable items
+        if cat_name in spoiler.goal_locations[world.id]:
+            # Build lists for weighted choice 
+            cat_sizes.append(category.goal_count)
+            cat_names.append(category.name)
+            # Depends on category order to choose next in the priority list
+            # Each category is guaranteed a hint first round, then weighted based on goal count
+            if (not goal_category) and (not category.name in world.hinted_goals):
+                goal_category = category
+                world.hinted_goals.append(category.name)
+
+    # random choice if each category has at least one hint
+    if not goal_category and len(cat_names) > 0:
+        goal_category = goal_categories[random.choices(cat_names, weights=cat_sizes)[0]]
+    
+    return goal_category
 
 def get_checked_areas(world, checked):
     def get_area_from_name(check):
@@ -363,32 +386,42 @@ def get_checked_areas(world, checked):
 
     return set(get_area_from_name(check) for check in checked)
 def get_goal_hint(spoiler, world, checked):
-    goals = dict(spoiler.goal_locations[world.id])
+    goal_category = get_goal_category(spoiler, world, world.goal_categories)
+
+    # check if no goals were generated (and thus no categories available)
+    if not goal_category:
+        return None
+
+    goals = goal_category.goals
 
     # Choose random goal and check if any locations are already hinted.
     # If all locations for a goal are hinted, remove the goal from the list and try again.
-    # If all locations for all goals are hinted, return no hint.
+    # If all locations for all goals are hinted, try remaining goal categories
+    # If all locations for all goal categories are hinted, return no hint.
     while True:
         if not goals:
-            return None
+            del world.goal_categories[goal_category.name]
+            goal_category = get_goal_category(spoiler, world, world.goal_categories)
+            if not goal_category:
+                return None
+            else:
+                goals = goal_category.goals
 
-        goalName, goalLocations = random.choice(list(goals.items()))
-        locations = list(filter(lambda location:
-            location.name not in checked
-            and location.name not in world.hint_exclusions
-            and location.name not in world.hint_type_overrides['goal']
-            and location.item.name not in world.item_hint_type_overrides['goal'],
-            goalLocations))
+        goal = random.choice(goals)
+        goal_locations = list(filter(lambda location:
+            location[0].name not in checked
+            and location[0].name not in world.hint_exclusions
+            and location[0].name not in world.hint_type_overrides['goal']
+            and location[0].item.name not in world.item_hint_type_overrides['goal'],
+            goal.required_locations))
 
-        if (len(locations) > 0):
-            for g in world.goals:
-                if g.name == goalName:
-                    goal = g
+        if (len(goal_locations) > 0):
+            locations, weights = zip(*goal_locations)
             break
         else:
-            del goals[goalName]
+            goals.remove(goal)
 
-    location = random.choice(locations)
+    location = random.choices(locations, weights=weights)[0]
     checked.add(location.name)
 
     if location.parent_region.dungeon:

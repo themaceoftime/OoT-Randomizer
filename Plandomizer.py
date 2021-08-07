@@ -1167,8 +1167,9 @@ class Distribution(object):
             world_dist.woth_locations = {loc.name: LocationRecord.from_item(loc.item) for loc in spoiler.required_locations[world.id]}
             world_dist.goal_locations = {}
             if spoiler.goal_locations[world.id] != {}:
-                for goal, locations in spoiler.goal_locations[world.id].items():
-                    world_dist.goal_locations['Path of ' + goal] = {loc.name: LocationRecord.from_item(loc.item).to_json() for loc in locations}
+                for cat_name, goals in spoiler.goal_locations[world.id].items():
+                    for goal, locations in goals.items():
+                        world_dist.goal_locations['Path of ' + goal + ' (' + cat_name + ')'] = {loc[0].name: LocationRecord.from_item(loc[0].item).to_json() for loc in locations}
             world_dist.barren_regions = [*world.empty_areas]
             world_dist.gossip_stones = {gossipLocations[loc].name: GossipRecord(spoiler.hints[world.id][loc].to_json()) for loc in spoiler.hints[world.id]}
 

@@ -236,36 +236,42 @@ class Search(object):
         else:
             return False
 
-    def can_beat_goal(self, goal, scan_for_items=True):
-        beaten = True
-        
-        # Check if already beaten
-        if (goal.items is not None):
-            for i in goal.items:
-                beaten = (beaten and all(map(State.has, self.state_list, itertools.repeat(i['name']), itertools.repeat(i['quantity']))))
-        if (goal.locations is not None):
-            for l in goal.locations:
-                beaten = (beaten and all(map(self.can_reach_spot, self.state_list, itertools.repeat(l['name']), itertools.repeat(l['age']))))
+    def can_beat_goals(self, goals, scan_for_items=True):
+        valid_goals = []
+        test_goals = list(goals)
+        for goal in test_goals:
+            beaten = True
+            
+            # Check if already beaten
+            if (goal.items is not None):
+                for i in goal.items:
+                    beaten = (beaten and all(map(State.has, self.state_list, itertools.repeat(i['name']), itertools.repeat(i['quantity']))))
+            if (goal.locations is not None):
+                for l in goal.locations:
+                    beaten = (beaten and all(map(self.can_reach_spot, self.state_list, itertools.repeat(l['name']), itertools.repeat(l['age']))))
 
-        if beaten:
-            return True
+            if beaten:
+                valid_goals.append(goal.name)
 
         if scan_for_items:
-            beaten = True
             # collect all available items
             # make a new search since we might be iterating over one already
             search = self.copy()
             search.collect_locations()
-            # if every state beat the goal, then return True
-            if (goal.items is not None):
-                for i in goal.items:
-                    beaten = (beaten and all(map(State.has, search.state_list, itertools.repeat(i['name']), itertools.repeat(i['quantity']))))
-            if (goal.locations is not None):
-                for l in goal.locations:
-                    beaten = (beaten and all(map(search.can_reach_spot, search.state_list, itertools.repeat(l['name']), itertools.repeat(l['age']))))
-            return beaten
-        else:
-            return False
+            for goal in test_goals:
+                beaten = True
+                # if every state beat the goal, then return True
+                if (goal.items is not None):
+                    for i in goal.items:
+                        beaten = (beaten and all(map(State.has, search.state_list, itertools.repeat(i['name']), itertools.repeat(i['quantity']))))
+                if (goal.locations is not None):
+                    for l in goal.locations:
+                        beaten = (beaten and all(map(search.can_reach_spot, search.state_list, itertools.repeat(l['name']), itertools.repeat(l['age']))))
+                if beaten and not goal.name in valid_goals:
+                    valid_goals.append(goal.name)
+        
+        return valid_goals
+
 
     # Use the cache in the search to determine region reachability.
     # Implicitly requires is_starting_age or Time_Travel.

@@ -1,3 +1,4 @@
+from Region import Region
 from collections import OrderedDict
 import copy
 import hashlib
@@ -612,33 +613,65 @@ def update_goal_items(spoiler):
     # Set to test inclusion against
     item_locations = {location for location in all_locations if location.item.majoritem and not location.locked and location.item.name != 'Triforce Piece'}
 
-    goals = worlds[0].goals
-
     required_locations = {}
+    priority_locations = {}
 
-    for goal in goals:
-        required_locations[goal.name] = []
+    for cat_name, category in worlds[0].goal_categories.items():
+        required_locations[category.name] = {}
+        
+        # Disable access rules for specified entrances
+        category_locks = {}
+        if category.lock_entrances is not None:
+            for world in worlds:
+                category_locks[world.id] = {}
+                for lock in category.lock_entrances:
+                    exit = world.get_entrance(lock)
+                    category_locks[world.id][exit.name] = exit.access_rule
+                    exit.access_rule = lambda state, **kwargs: False
+
         search = Search([world.state for world in worlds])
-        for location in search.iter_reachable_locations(all_locations):
-            # Try to remove items one at a time and see if the game is still beatable
-            if location in item_locations:
-                old_item = location.item
-                location.item = None
-                # copies state! This is very important as we're in the middle of a search
-                # already, but beneficially, has search it can start from
-                if not search.can_beat_goal(goal):
-                    required_locations[goal.name].append(location)
-                location.item = old_item
-            search.state_list[location.item.world.id].collect(location.item)
+        reachable_goals = search.can_beat_goals(category.goals)
+        # Exit early if no goals are beatable with category locks
+        if len(reachable_goals) > 0:
+            for location in search.iter_reachable_locations(all_locations):
+                # Try to remove items one at a time and see if the game is still beatable
+                if location in item_locations:
+                    old_item = location.item
+                    location.item = None
+                    # copies state! This is very important as we're in the middle of a search
+                    # already, but beneficially, has search it can start from
+                    valid_goals = search.can_beat_goals(category.goals)
+                    for goal in category.goals:
+                        if (not goal.name in valid_goals) and (goal.name in reachable_goals) and ((not location.name in priority_locations) or priority_locations[location.name] == category.name):
+                            if not goal.name in required_locations[category.name]:
+                                required_locations[category.name][goal.name] = []
+                            required_locations[category.name][goal.name].append((location, 1 - (len(category.goals) - len(valid_goals)) / len(category.goals)))
+                            # Locations added to goal exclusion for future categories
+                            # Main use is to split goals between before/after rainbow bridge
+                            # Requires goal categories to be sorted by priority!
+                            priority_locations[location.name] = category.name
+                    location.item = old_item
+                search.state_list[location.item.world.id].collect(location.item)
+
+        # Restore access rules
+        for world_id, exits in category_locks.items():
+            for exit_name, access_rule in exits.items():
+                exit = worlds[world_id].get_entrance(exit_name)
+                exit.access_rule = access_rule
 
     # Filter the required location to only include locations in the world
     required_locations_dict = {}
     for world in worlds:
         required_locations_dict[world.id] = {}
-        for goal in goals:
-            locations = list(filter(lambda location: location.world.id == world.id, required_locations[goal.name]))
-            if (locations != []):
-                required_locations_dict[world.id][goal.name] = locations
+        for cat_name, category in world.goal_categories.items():
+            for goal in category.goals:
+                if goal.name in required_locations[category.name]:
+                    locations = list(filter(lambda location: location[0].world.id == world.id, required_locations[category.name][goal.name]))
+                    goal.required_locations = locations
+                    if (locations != []):
+                        if not category.name in required_locations_dict[world.id]:
+                            required_locations_dict[world.id][category.name] = {}
+                        required_locations_dict[world.id][category.name][goal.name] = locations
     spoiler.goal_locations = required_locations_dict
 
 
