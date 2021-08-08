@@ -225,10 +225,10 @@ class WorldDistribution(object):
     def __init__(self, distribution, id, src_dict={}):
         self.distribution = distribution
         self.id = id
-        self.world = None # populated in World.__init__
         self.base_pool = []
         self.major_group = []
         self.song_as_items = False
+        self.effective_starting_items = {}
         self.update(src_dict, update_all=True)
 
 
@@ -929,7 +929,7 @@ class WorldDistribution(object):
 
 
     def get_starting_item(self, item):
-        items = self.effective_starting_items
+        items = self.starting_items
         if item in items:
             return items[item].count
         else:
@@ -939,33 +939,26 @@ class WorldDistribution(object):
     def starting_items(self):
         return self.distribution.starting_items_from_settings()
 
-    @property
-    def effective_starting_items(self):
+    def configure_effective_starting_items(self, worlds, world):
         items = {item_name: record.copy() for item_name, record in self.starting_items.items()}
 
-        def add_item(item, count=1):
-            if item in items:
-                items[item].count += count
-            else:
-                items[item] = StarterRecord(count)
-
-        if self.world is not None:
-            if self.world.start_with_rupees:
-                add_item('Rupees', 999)
-            if self.world.start_with_consumables:
-                add_item('Deku Sticks', 99)
-                add_item('Deku Nuts', 99)
+        if world is not None:
+            if world.start_with_rupees:
+                add_starting_item_with_ammo(items, 'Rupees', 999)
+            if world.start_with_consumables:
+                add_starting_item_with_ammo(items, 'Deku Sticks', 99)
+                add_starting_item_with_ammo(items, 'Deku Nuts', 99)
             skipped_locations = ['Links Pocket']
-            if self.world.skip_child_zelda:
-                add_item('Zeldas Letter')
+            if world.skip_child_zelda:
+                add_starting_item_with_ammo(items, 'Zeldas Letter')
                 skipped_locations.append('Song from Impa')
-            for w in self.distribution.worlds():
+            for iter_world in worlds:
                 for location in skipped_locations:
-                    item = w.get_location(location).item
-                    if item is not None and self.world.id == item.world.id:
-                        add_item(item.name)
+                    item = iter_world.get_location(location).item
+                    if item is not None and world.id == item.world.id:
+                        add_starting_item_with_ammo(items, item.name)
 
-        return items
+        self.effective_starting_items = items
 
 
 
@@ -1093,7 +1086,7 @@ class Distribution(object):
                 if itemsetting in StartingItems.everything:
                     item = StartingItems.everything[itemsetting]
                     if not item.special:
-                        data[item.itemname].count += 1
+                        add_starting_item_with_ammo(data, item.itemname)
                     else:
                         if item.itemname == 'Rutos Letter' and self.settings.zora_fountain != 'open':
                             data['Rutos Letter'].count += 1
@@ -1103,13 +1096,6 @@ class Distribution(object):
                             raise KeyError("invalid special item: {}".format(item.itemname))
                 else:
                     raise KeyError("invalid starting item: {}".format(itemsetting))
-
-            # add ammo
-            for item in list(data.keys()):
-                match = [x for x in StartingItems.inventory.values() if x.itemname == item]
-                if match and match[0].ammo:
-                    for ammo,qty in match[0].ammo.items():
-                        data[ammo].count += qty[data[item].count - 1]
 
         # add hearts
         if self.settings.starting_hearts > 3:
@@ -1243,11 +1229,6 @@ class Distribution(object):
                     ent_rec_sphere[entrance_key] = EntranceRecord.from_entrance(entrance)
 
 
-    def worlds(self):
-        for world_dist in self.world_dists:
-            yield world_dist.world
-
-
     @staticmethod
     def from_file(settings, filename):
         if any(map(filename.endswith, ['.z64', '.n64', '.v64'])):
@@ -1265,6 +1246,19 @@ class Distribution(object):
         json = self.to_str(spoiler=output_spoiler)
         with open(filename, 'w', encoding='utf-8') as outfile:
             outfile.write(json)
+
+
+def add_starting_item_with_ammo(starting_items, item_name, count=1):
+    if item_name not in starting_items:
+        starting_items[item_name] = StarterRecord(0)
+    starting_items[item_name].count += count
+    for item in StartingItems.inventory.values():
+        if item.itemname == item_name and item.ammo:
+            for ammo, qty in item.ammo.items():
+                if ammo not in starting_items:
+                    starting_items[ammo] = StarterRecord(0)
+                starting_items[ammo].count = qty[starting_items[item_name].count - 1]
+            break
 
 
 def strip_output_only(obj):
