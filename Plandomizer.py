@@ -942,21 +942,21 @@ class WorldDistribution(object):
     def configure_effective_starting_items(self, worlds, world):
         items = {item_name: record.copy() for item_name, record in self.starting_items.items()}
 
-        if world is not None:
-            if world.start_with_rupees:
-                add_starting_item_with_ammo(items, 'Rupees', 999)
-            if world.start_with_consumables:
-                add_starting_item_with_ammo(items, 'Deku Sticks', 99)
-                add_starting_item_with_ammo(items, 'Deku Nuts', 99)
-            skipped_locations = ['Links Pocket']
-            if world.skip_child_zelda:
-                add_starting_item_with_ammo(items, 'Zeldas Letter')
-                skipped_locations.append('Song from Impa')
-            for iter_world in worlds:
-                for location in skipped_locations:
-                    item = iter_world.get_location(location).item
-                    if item is not None and world.id == item.world.id:
-                        add_starting_item_with_ammo(items, item.name)
+        if world.start_with_rupees:
+            add_starting_item_with_ammo(items, 'Rupees', 999)
+        if world.start_with_consumables:
+            add_starting_item_with_ammo(items, 'Deku Sticks', 99)
+            add_starting_item_with_ammo(items, 'Deku Nuts', 99)
+
+        skipped_locations = ['Links Pocket']
+        if world.skip_child_zelda:
+            add_starting_item_with_ammo(items, 'Zeldas Letter')
+            skipped_locations.append('Song from Impa')
+        for iter_world in worlds:
+            for location in skipped_locations:
+                item = iter_world.get_location(location).item
+                if item is not None and world.id == item.world.id:
+                    add_starting_item_with_ammo(items, item.name)
 
         self.effective_starting_items = items
 
