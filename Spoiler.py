@@ -50,6 +50,8 @@ class Spoiler(object):
         self.settings = worlds[0].settings
         self.playthrough = {}
         self.entrance_playthrough = {}
+        self.full_playthrough = {}
+        self.max_sphere = 0
         self.locations = {}
         self.entrances = []
         self.metadata = {}

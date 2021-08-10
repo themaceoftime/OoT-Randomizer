@@ -353,8 +353,6 @@ def get_woth_hint(spoiler, world, checked):
     return (GossipText('#%s# is on the way of the hero.' % location_text, ['Light Blue']), location)
 
 def get_goal_category(spoiler, world, goal_categories):
-    # goal_categories = OrderedDict(world.goal_categories)
-
     cat_sizes = []
     cat_names = []
     goal_category = None
@@ -366,9 +364,9 @@ def get_goal_category(spoiler, world, goal_categories):
             cat_names.append(category.name)
             # Depends on category order to choose next in the priority list
             # Each category is guaranteed a hint first round, then weighted based on goal count
-            if (not goal_category) and (not category.name in world.hinted_goals):
+            if (not goal_category) and (not category.name in world.hinted_categories):
                 goal_category = category
-                world.hinted_goals.append(category.name)
+                world.hinted_categories.append(category.name)
 
     # random choice if each category has at least one hint
     if not goal_category and len(cat_names) > 0:
@@ -407,7 +405,12 @@ def get_goal_hint(spoiler, world, checked):
             else:
                 goals = goal_category.goals
 
-        goal = random.choice(goals)
+        weights = []
+        for goal in goals:
+            weights.append(world.hinted_goals[goal_category.name][goal.name])
+
+        goal = random.choices(goals, weights=weights)[0]
+
         goal_locations = list(filter(lambda location:
             location[0].name not in checked
             and location[0].name not in world.hint_exclusions
@@ -416,12 +419,18 @@ def get_goal_hint(spoiler, world, checked):
             goal.required_locations))
 
         if (len(goal_locations) > 0):
-            locations, weights = zip(*goal_locations)
+            locations, num_goals, spheres = zip(*goal_locations)
+            world.hinted_goals[goal_category.name][goal.name] *= 0.25
             break
         else:
             goals.remove(goal)
 
-    location = random.choices(locations, weights=weights)[0]
+    # num_goals and spheres are normalized weights for number of goals the location locks and unreduced sphere depth
+    # For num_goals, 0 is all goals locked and 1 is no locked goals. Since no locked goals means the item is not required by definition,
+    #   this value will approach but never equal 1.
+    # spheres is the unreduced sphere from the playthrough containing the location divided by total unreduced spheres.
+    #   This value can never be 0, but can be 1
+    location = random.choices(locations, weights=(a * b for a, b in zip(num_goals, spheres)))[0]
     checked.add(location.name)
 
     if location.parent_region.dungeon:

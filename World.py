@@ -299,7 +299,10 @@ class World(object):
         self.goal_categories = OrderedDict(sorted(self.goal_categories.items(), key=lambda kv: kv[1].priority))
 
         # initialize category check for first rounds of goal hints
-        self.hinted_goals = []
+        self.hinted_categories = []
+        self.hinted_goals = {}
+        for c_name, c in self.goal_categories.items():
+            self.hinted_goals[c_name] = {goal.name: 1 for goal in c.goals}
 
     def copy(self):
         new_world = World(self.id, self.settings, False)

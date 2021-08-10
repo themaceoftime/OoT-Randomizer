@@ -645,7 +645,9 @@ def update_goal_items(spoiler):
                         if (not goal.name in valid_goals) and (goal.name in reachable_goals) and ((not location.name in priority_locations) or priority_locations[location.name] == category.name):
                             if not goal.name in required_locations[category.name]:
                                 required_locations[category.name][goal.name] = []
-                            required_locations[category.name][goal.name].append((location, 1 - (len(category.goals) - len(valid_goals)) / len(category.goals)))
+                            # Goal locations weight themselves by both number of contributing goals and sphere depth
+                            # The algorithm is biased towards low contributing goals and high sphere depth, theoretically targeting late game bottlenecks
+                            required_locations[category.name][goal.name].append((location, 1 - (len(category.goals) - len(valid_goals)) / len(category.goals), spoiler.full_playthrough[location.name] / spoiler.max_sphere))
                             # Locations added to goal exclusion for future categories
                             # Main use is to split goals between before/after rainbow bridge
                             # Requires goal categories to be sorted by priority!
@@ -717,6 +719,8 @@ def create_playthrough(spoiler):
             search.state_list[location.item.world.id].collect(location.item)
             maybe_set_light_arrows(location)
     logger.info('Collected %d spheres', len(collection_spheres))
+    spoiler.full_playthrough = dict((location.name, i + 1) for i, sphere in enumerate(collection_spheres) for location in sphere)
+    spoiler.max_sphere = len(collection_spheres)
 
     # Reduce each sphere in reverse order, by checking if the game is beatable
     # when we remove the item. We do this to make sure that progressive items
