@@ -123,7 +123,7 @@ gossipLocations_reversemap = {
 }
 
 def getItemGenericName(item):
-    if item.dungeonitem:
+    if item.dungeonitem and not (item.type == 'SmallKey' or item.type == 'BossKey' or item.type == 'GanonBossKey'):
         return item.type
     else:
         return item.name
