@@ -4440,7 +4440,24 @@ setting_infos = [
                 ('Completely Random', 1),
             ]
         }
+    ),
+    Checkbutton(
+        name           = 'extra_equip_colors',
+        gui_text       = 'Randomize Extra Colors (Experimental)',
+        shared         = False,
+        cosmetic       = True,
+        gui_tooltip    = '''\
+            Randomize many other equipment and item colors.
 
+            More colors may be added to this setting in the future.
+        ''',
+        default        = False,
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                (True, 1),
+            ]
+        }
     ),
     Setting_Info(
         name           = 'heart_color',

@@ -11,6 +11,7 @@ Differences between this branch and the main Dev branch (on [Testrunner's Fork](
 * 2 new advanced ER settings: "Mixed Entrance Pools" and "Decouple Entrances"
 * Picking up Gold Skulltula Tokens in non-Tokensanity displays a self-closing textbox which no longer freezes the player.
 * "Bombchus In Logic" is improved to include bombchu drops (from grass, pots, etc) that start dropping once you have found Bombchus.
+* New cosmetic setting to randomize the color of some additional equipment and items.
 
 ## Index
 
