@@ -3117,7 +3117,11 @@ setting_infos = [
             'overworld':       "Overworld Only",
             'any_dungeon':     "Any Dungeon",
             'keysanity':       "Anywhere (Keysanity)",
-            'on_lacs':         "Light Arrow Cutscene"
+            'on_lacs':         "Light Arrow Cutscene",
+            'stones':          "Stones",
+            'medallions':      "Medallions",
+            'dungeons':        "Dungeons",
+            'tokens':          "Tokens",
         },
         gui_tooltip    = '''\
             'Remove': Ganon's Castle Boss Key is removed
@@ -3140,8 +3144,26 @@ setting_infos = [
 
             'Light Arrow Cutscene': Ganon's Castle Boss Key will
             appear on the Light Arrow Cutscene.
+            
+            'Stones': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Spiritual Stones.
+            
+            'Medallions': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Medallions.
+                        
+            'Dungeons': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Dungeon Rewards.
+            
+            'Tokens': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Gold Skulltula Tokens.
         ''',
         shared         = True,
+        disable        = {
+            '!stones':  {'settings': ['ganon_bosskey_stones']},
+            '!medallions':  {'settings': ['ganon_bosskey_medallions']},
+            '!dungeons':  {'settings': ['ganon_bosskey_rewards']},
+            '!tokens':  {'settings': ['ganon_bosskey_tokens']},
+        },
         gui_params     = {
             'randomize_key': 'randomize_settings',
             'distribution': [
@@ -3151,6 +3173,74 @@ setting_infos = [
                 ('keysanity',       4),
                 ('on_lacs',         1)
             ],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_medallions',
+        gui_text       = "Medallions Required for Ganon's BK",
+        default        = 6,
+        min            = 1,
+        max            = 6,
+        gui_tooltip    = '''\
+            Select the amount of Medallions required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(6, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_stones',
+        gui_text       = "Spiritual Stones Required for Ganon's BK",
+        default        = 3,
+        min            = 1,
+        max            = 3,
+        gui_tooltip    = '''\
+            Select the amount of Spiritual Stones required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(3, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_rewards',
+        gui_text       = "Dungeon Rewards Required for Ganon's BK",
+        default        = 9,
+        min            = 1,
+        max            = 9,
+        gui_tooltip    = '''\
+            Select the amount of Dungeon Rewards (Medallions and Spiritual Stones)
+            required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(9, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_tokens',
+        gui_text       = "Gold Skulltula Tokens Required for Ganon's BK",
+        default        = 100,
+        min            = 1,
+        max            = 100,
+        gui_tooltip    = '''\
+            Select the amount of Gold Skulltula Tokens
+            required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "hide_when_disabled": True,
         },
     ),
     Combobox(
@@ -3169,13 +3259,13 @@ setting_infos = [
             check to give you the item from Zelda.
             
             'Vanilla': Shadow and Spirit Medallions.
-            'Medallions': A configurable amount of Medallions.
             'Stones': A configurable amount of Spiritual Stones.
+            'Medallions': A configurable amount of Medallions.
             'Dungeons': A configurable amount of Dungeon Rewards.
             'Tokens': A configurable amount of Gold Skulltula Tokens.
         ''',
         shared         = True,
-        disable={
+        disable        = {
             '!stones':  {'settings': ['lacs_stones']},
             '!medallions':  {'settings': ['lacs_medallions']},
             '!dungeons':  {'settings': ['lacs_rewards']},
