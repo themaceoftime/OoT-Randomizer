@@ -706,6 +706,10 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
 
     world.distribution.configure_gossip(spoiler, stoneIDs)
 
+    # If all gossip stones already have plando'd hints, do not roll any more
+    if len(stoneIDs) == 0:
+        return
+
     if 'disabled' in world.hint_dist_user:
         for stone_name in world.hint_dist_user['disabled']:
             try:
