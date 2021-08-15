@@ -355,12 +355,15 @@ def get_woth_hint(spoiler, world, checked):
 def get_goal_category(spoiler, world, goal_categories):
     cat_sizes = []
     cat_names = []
+    zero_weights = True
     goal_category = None
     for cat_name, category in goal_categories.items():
         # Only add weights if the category has goals with hintable items
         if cat_name in spoiler.goal_locations[world.id]:
-            # Build lists for weighted choice 
-            cat_sizes.append(category.goal_count)
+            # Build lists for weighted choice
+            if category.weight > 0:
+                zero_weights = False
+            cat_sizes.append(category.weight)
             cat_names.append(category.name)
             # Depends on category order to choose next in the priority list
             # Each category is guaranteed a hint first round, then weighted based on goal count
@@ -370,8 +373,11 @@ def get_goal_category(spoiler, world, goal_categories):
 
     # random choice if each category has at least one hint
     if not goal_category and len(cat_names) > 0:
-        goal_category = goal_categories[random.choices(cat_names, weights=cat_sizes)[0]]
-    
+        if zero_weights:
+            goal_category = goal_categories[random.choice(cat_names)]
+        else:
+            goal_category = goal_categories[random.choices(cat_names, weights=cat_sizes)[0]]
+
     return goal_category
 
 def get_checked_areas(world, checked):
@@ -406,10 +412,16 @@ def get_goal_hint(spoiler, world, checked):
                 goals = goal_category.goals
 
         weights = []
+        zero_weights = True
         for goal in goals:
-            weights.append(world.hinted_goals[goal_category.name][goal.name])
+            if goal.weight > 0:
+                zero_weights = False
+            weights.append(goal.weight)
 
-        goal = random.choices(goals, weights=weights)[0]
+        if zero_weights:
+            goal = random.choice(goals)
+        else:
+            goal = random.choices(goals, weights=weights)[0]
 
         goal_locations = list(filter(lambda location:
             location[0].name not in checked
@@ -420,7 +432,7 @@ def get_goal_hint(spoiler, world, checked):
 
         if (len(goal_locations) > 0):
             locations, num_goals, spheres = zip(*goal_locations)
-            world.hinted_goals[goal_category.name][goal.name] *= 0.25
+            goal.weight *= 0.25
             break
         else:
             goals.remove(goal)
@@ -430,7 +442,7 @@ def get_goal_hint(spoiler, world, checked):
     #   this value will approach but never equal 1.
     # spheres is the unreduced sphere from the playthrough containing the location divided by total unreduced spheres.
     #   This value can never be 0, but can be 1
-    location = random.choices(locations, weights=(a * b for a, b in zip(num_goals, spheres)))[0]
+    location = random.choices(locations, weights=(max(((2*a-1) + 2*b) / 3, 0) for a, b in zip(num_goals, spheres)))[0]
     checked.add(location.name)
 
     if location.parent_region.dungeon:

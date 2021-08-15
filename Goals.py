@@ -28,6 +28,7 @@ class Goal(object):
             self.required_locations = []
         else:
             self.required_locations = required_locations
+        self.weight = 0
 
 class GoalCategory(object):
 
@@ -38,3 +39,4 @@ class GoalCategory(object):
         self.lock_entrances = lock_entrances
         self.goals = []
         self.goal_count = goal_count
+        self.weight = 0

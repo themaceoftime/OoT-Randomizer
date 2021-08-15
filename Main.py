@@ -25,6 +25,7 @@ from Fill import distribute_items_restrictive, ShuffleError
 from Item import Item
 from ItemPool import generate_itempool
 from Hints import buildGossipHints
+from HintList import getHintGroup
 from Utils import default_output_path, is_bundled, subprocess_args, data_path
 from version import __version__
 from N64Patch import create_patch_file, apply_patch_file
@@ -615,6 +616,7 @@ def update_goal_items(spoiler):
 
     required_locations = {}
     priority_locations = {}
+    always_locations = [location.name for world in worlds for location in getHintGroup('always', world)]
 
     for cat_name, category in worlds[0].goal_categories.items():
         required_locations[category.name] = {}
@@ -647,7 +649,17 @@ def update_goal_items(spoiler):
                                 required_locations[category.name][goal.name] = []
                             # Goal locations weight themselves by both number of contributing goals and sphere depth
                             # The algorithm is biased towards low contributing goals and high sphere depth, theoretically targeting late game bottlenecks
-                            required_locations[category.name][goal.name].append((location, 1 - (len(category.goals) - len(valid_goals)) / len(category.goals), spoiler.full_playthrough[location.name] / spoiler.max_sphere))
+                            if location.name in always_locations or location.name in location.world.hint_exclusions:
+                                location_weights = (location, 0, 0)
+                            elif len(reachable_goals) > 1:
+                                location_weights = (location, 1 - (len(reachable_goals) - len(valid_goals)) / len(category.goals), (spoiler.full_playthrough[location.name] / spoiler.max_sphere))
+                            else:
+                                location_weights = (location, 1, spoiler.full_playthrough[location.name] / spoiler.max_sphere)
+                            required_locations[category.name][goal.name].append(location_weights)
+                            weight = max(((2*location_weights[1]-1) + 2*location_weights[2]) / 3, 0)
+                            if weight > 0.45:
+                                goal.weight += weight
+                                category.weight += weight
                             # Locations added to goal exclusion for future categories
                             # Main use is to split goals between before/after rainbow bridge
                             # Requires goal categories to be sorted by priority!

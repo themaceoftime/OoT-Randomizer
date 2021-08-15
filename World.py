@@ -194,10 +194,10 @@ class World(object):
         self.goal_categories = OrderedDict()
         if self.hint_dist_user['use_default_goals']:
             b = GoalCategory('rainbow_bridge', 10, lock_entrances=['Ganons Castle Grounds -> Ganons Castle Lobby'])
-            trials = GoalCategory('trials', 20)
-            gbk = GoalCategory('lacs', 30)
+            gbk = GoalCategory('lacs', 20)
+            trials = GoalCategory('trials', 30)
             th = GoalCategory('triforce_hunt', 30, goal_count=round(self.triforce_goal_per_world / 10))
-            trial_goal = Goal('ordeal', 'White', items=[])
+            trial_goal = Goal('the Tower', 'White', items=[])
 
             if self.triforce_hunt and self.triforce_goal_per_world > 0:
                 th.goals.append(Goal('gold','Yellow',items=[{'name': 'Triforce Piece','quantity': self.triforce_goal_per_world}]))
