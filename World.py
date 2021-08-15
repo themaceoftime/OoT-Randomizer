@@ -228,9 +228,9 @@ class World(object):
 
                 if self.shuffle_ganon_bosskey == 'on_lacs':
                     if ((self.lacs_stones > 0 and self.lacs_condition == 'stones') or (self.lacs_rewards > 0 and self.lacs_condition == 'rewards')):
-                        gbk.goals.append(Goal('lacs_Emerald', 'Yellow', items=[{'name': 'Kokiri Emerald','quantity': 1}]))
-                        gbk.goals.append(Goal('lacs_Ruby', 'Yellow', items=[{'name': 'Goron Ruby','quantity': 1}]))
-                        gbk.goals.append(Goal('lacs_Sapphire', 'Yellow', items=[{'name': 'Zora Sapphire','quantity': 1}]))
+                        gbk.goals.append(Goal('the Emerald', 'Yellow', items=[{'name': 'Kokiri Emerald','quantity': 1}]))
+                        gbk.goals.append(Goal('the Ruby', 'Yellow', items=[{'name': 'Goron Ruby','quantity': 1}]))
+                        gbk.goals.append(Goal('the Sapphire', 'Yellow', items=[{'name': 'Zora Sapphire','quantity': 1}]))
                     if ((self.lacs_medallions > 0 and self.lacs_condition == 'medallions') or (self.lacs_rewards > 0 and self.lacs_condition == 'rewards')):
                         gbk.goals.append(Goal('the Forest', 'Green', items=[{'name': 'Forest Medallion','quantity': 1}]))
                         gbk.goals.append(Goal('Fire', 'Red', items=[{'name': 'Fire Medallion','quantity': 1}]))

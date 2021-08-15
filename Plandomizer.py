@@ -1167,21 +1167,9 @@ class Distribution(object):
             world_dist.woth_locations = {loc.name: LocationRecord.from_item(loc.item) for loc in spoiler.required_locations[world.id]}
             world_dist.goal_locations = {}
             if spoiler.goal_locations[world.id] != {}:
-                goal_weight = {}
-                cat_weight = {}
-                for cat_name, goals in spoiler.goal_locations[world.id].items():
-                    cat_weight[cat_name] = 0
-                    for goal, locations in goals.items():
-                        goal_weight[goal] = 0
-                        for l in locations:
-                            weight = round(max(((2*l[1]-1) + 2*l[2]) / 3, 0), 2)
-                            if weight > 0.45:
-                                goal_weight[goal] += weight
-                                cat_weight[cat_name] += weight
-            if spoiler.goal_locations[world.id] != {}:
                 for cat_name, goals in spoiler.goal_locations[world.id].items():
                     for goal, locations in goals.items():
-                        world_dist.goal_locations['Path of ' + goal + ' [' + str(round(goal_weight[goal],2)) + '] (' + cat_name + ' [' + str(round(world.goal_categories[cat_name].weight,2)) + '])'] = {(loc[0].name + ' [' + str(round(loc[1],2)) + ', ' + str(round(loc[2],2)) + ', ' + str(round(max(((2*loc[1]-1) + 2*loc[2]) / 3, 0) , 2)) + ']'): LocationRecord.from_item(loc[0].item).to_json() for loc in locations}
+                        world_dist.goal_locations['Path of ' + goal + ' (' + cat_name + ')'] = {loc[0].name: LocationRecord.from_item(loc[0].item).to_json() for loc in locations}
             world_dist.barren_regions = [*world.empty_areas]
             world_dist.gossip_stones = {gossipLocations[loc].name: GossipRecord(spoiler.hints[world.id][loc].to_json()) for loc in spoiler.hints[world.id]}
 
