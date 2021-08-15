@@ -221,17 +221,17 @@ class World(object):
                         if not 'Light Arrows' in self.item_added_hint_types['always']:
                             b.goals.append(Goal('evil\'s bane', 'Light Blue', items=[{'name': 'Light Arrows','quantity': 1}]))
                     b.goal_count = len(b.goals)
-                    if (self.bridge_tokens > 0 and self.bridge == 'tokens' and (self.shuffle_ganon_bosskey != 'lacs_tokens' or self.bridge_tokens > self.lacs_tokens)):
-                        b.goals.append(Goal('Skulls', 'Light Blue', items=[{'name': 'Gold Skulltula Token','quantity': max_tokens}]))
+                    if (self.bridge_tokens > 0 and self.bridge == 'tokens'):
+                        b.goals.append(Goal('Skulls', 'Light Blue', items=[{'name': 'Gold Skulltula Token','quantity': self.bridge_tokens}]))
                         b.goal_count = round(self.bridge_tokens / 10)
                     self.goal_categories[b.name] = b
 
                 if self.shuffle_ganon_bosskey == 'on_lacs':
-                    if ((self.lacs_stones > 0 and self.lacs_condition == 'stones') or (self.lacs_rewards > 0 and self.lacs_condition == 'rewards')):
+                    if ((self.lacs_stones > 0 and self.lacs_condition == 'stones') or (self.lacs_rewards > 0 and self.lacs_condition == 'dungeons')):
                         gbk.goals.append(Goal('the Emerald', 'Yellow', items=[{'name': 'Kokiri Emerald','quantity': 1}]))
                         gbk.goals.append(Goal('the Ruby', 'Yellow', items=[{'name': 'Goron Ruby','quantity': 1}]))
                         gbk.goals.append(Goal('the Sapphire', 'Yellow', items=[{'name': 'Zora Sapphire','quantity': 1}]))
-                    if ((self.lacs_medallions > 0 and self.lacs_condition == 'medallions') or (self.lacs_rewards > 0 and self.lacs_condition == 'rewards')):
+                    if ((self.lacs_medallions > 0 and self.lacs_condition == 'medallions') or (self.lacs_rewards > 0 and self.lacs_condition == 'dungeons')):
                         gbk.goals.append(Goal('the Forest', 'Green', items=[{'name': 'Forest Medallion','quantity': 1}]))
                         gbk.goals.append(Goal('Fire', 'Red', items=[{'name': 'Fire Medallion','quantity': 1}]))
                         gbk.goals.append(Goal('Water', 'Blue', items=[{'name': 'Water Medallion','quantity': 1}]))
@@ -243,7 +243,7 @@ class World(object):
                         gbk.goals.append(Goal('Spirit', 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1}]))
                     gbk.goal_count = len(gbk.goals)
                     if (self.lacs_tokens > 0 and self.lacs_condition == 'tokens'):
-                        gbk.goals.append(Goal('Skulls','Light Blue',items=[{'name': 'Gold Skulltula Token','quantity': max_tokens}]))
+                        gbk.goals.append(Goal('Skulls','Light Blue',items=[{'name': 'Gold Skulltula Token','quantity': self.lacs_tokens}]))
                         gbk.goal_count = round(self.lacs_tokens / 10)
                     self.goal_categories[gbk.name] = gbk
                 elif self.shuffle_ganon_bosskey != 'remove' and self.shuffle_ganon_bosskey != 'vanilla':
