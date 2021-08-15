@@ -221,7 +221,7 @@ class World(object):
                         if not 'Light Arrows' in self.item_added_hint_types['always']:
                             b.goals.append(Goal('evil\'s bane', 'Light Blue', items=[{'name': 'Light Arrows','quantity': 1}]))
                     b.goal_count = len(b.goals)
-                    if (self.bridge_tokens > 0 and self.bridge == 'tokens'):
+                    if (self.bridge_tokens > 0 and self.bridge == 'tokens' and (self.shuffle_ganon_bosskey != 'on_lacs' or self.lacs_condition != 'tokens' or self.bridge_tokens >= self.lacs_tokens)):
                         b.goals.append(Goal('Skulls', 'Light Blue', items=[{'name': 'Gold Skulltula Token','quantity': self.bridge_tokens}]))
                         b.goal_count = round(self.bridge_tokens / 10)
                     self.goal_categories[b.name] = b
@@ -242,7 +242,7 @@ class World(object):
                         gbk.goals.append(Goal('Shadow', 'Pink', items=[{'name': 'Shadow Medallion','quantity': 1}]))
                         gbk.goals.append(Goal('Spirit', 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1}]))
                     gbk.goal_count = len(gbk.goals)
-                    if (self.lacs_tokens > 0 and self.lacs_condition == 'tokens'):
+                    if (self.lacs_tokens > 0 and self.lacs_condition == 'tokens' and (self.bridge != 'tokens' or self.bridge_tokens < self.lacs_tokens)):
                         gbk.goals.append(Goal('Skulls','Light Blue',items=[{'name': 'Gold Skulltula Token','quantity': self.lacs_tokens}]))
                         gbk.goal_count = round(self.lacs_tokens / 10)
                     self.goal_categories[gbk.name] = gbk
