@@ -432,7 +432,9 @@ def get_goal_hint(spoiler, world, checked):
 
         if (len(goal_locations) > 0):
             locations, num_goals, spheres = zip(*goal_locations)
-            goal.weight *= 0.25
+            # Goal weight to zero mitigates double hinting this goal
+            # Once all goals in a category are 0, selection is true random
+            goal.weight = 0
             break
         else:
             goals.remove(goal)
