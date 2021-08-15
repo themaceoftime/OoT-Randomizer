@@ -218,7 +218,8 @@ class World(object):
                     if self.bridge == 'vanilla':
                         b.goals.append(Goal('Shadow', 'Pink', items=[{'name': 'Shadow Medallion','quantity': 1}]))
                         b.goals.append(Goal('Spirit', 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1}]))
-                        b.goals.append(Goal('evil\'s bane', 'Light Blue', items=[{'name': 'Light Arrows','quantity': 1}]))
+                        if not 'Light Arrows' in self.item_added_hint_types['always']:
+                            b.goals.append(Goal('evil\'s bane', 'Light Blue', items=[{'name': 'Light Arrows','quantity': 1}]))
                     b.goal_count = len(b.goals)
                     if (self.bridge_tokens > 0 and self.bridge == 'tokens' and (self.shuffle_ganon_bosskey != 'lacs_tokens' or self.bridge_tokens > self.lacs_tokens)):
                         b.goals.append(Goal('Skulls', 'Light Blue', items=[{'name': 'Gold Skulltula Token','quantity': max_tokens}]))
@@ -275,7 +276,7 @@ class World(object):
 
                 if self.bridge == 'open' and (self.shuffle_ganon_bosskey == 'remove' or self.shuffle_ganon_bosskey == 'vanilla') and int(self.trials) == 0:
                     g = GoalCategory('ganon', 30, goal_count=1)
-                    # Equivalent to WOTH, but added in case WOTH hints are disabled
+                    # Equivalent to WOTH, but added in case WOTH hints are disabled in favor of goal hints
                     g.goals.append(Goal('the hero','White',items=[{'name': 'Triforce','quantity': 1}]))
                     self.goal_categories[g.name] = g
 
