@@ -1,5 +1,6 @@
 # text details: https://wiki.cloudmodding.com/oot/Text_Format
 
+import logging
 import random
 from TextBox import line_wrap
 
@@ -1110,7 +1111,7 @@ def update_warp_song_text(messages, world):
 
         # Check if region name isn't found
         if destination is None:
-            print("MISSING REGION NAME: " + destination_raw)
+            logging.error("MISSING REGION NAME: " + destination_raw)
             destination = destination_raw
             color = "\40"
 
