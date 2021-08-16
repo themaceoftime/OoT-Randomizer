@@ -107,6 +107,9 @@ do that.
 * New separate setting `LACS Condition` to select what goal items are required for the Light Arrows Cutscene.
 * New option `Misc. Hints` controls whether the Temple of Time altar and Ganondorf give hints, defaulting on to preserve behavior. Hell Mode disables this setting.
 * New `Rainbow Bridge` option `Random` that will choose one of the other options at random (besides Skulltula Tokens), and require the maximum of that goal (if applicable).
+* New `goal` hint type for use in custom hint distributions. 
+  * Default goals are included for the rainbow bridge, Ganon's Castle Boss Key, and trials settings.
+  * Hints read as "They say that Kokiri Forest is on the path of Spirit.", where Spirit refers to the Spirit Medallion dungeon reward, not the Spirit Temple.
 
 #### Bug Fixes
 

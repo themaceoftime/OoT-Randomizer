@@ -60,6 +60,8 @@
     "dungeons_woth_limit": 3,
     "dungeons_barren_limit": 1,
     "named_items_required": true,
+    "use_default_goals":     true,
+    "vague_named_items":     false,
     "distribution": {
         "trial": {
             "order": 1,
