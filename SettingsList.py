@@ -3273,6 +3273,7 @@ setting_infos = [
         },
         gui_params     = {
             'randomize_key': 'randomize_settings',
+            'optional': True,
             'distribution': [
                 ('vanilla',    1),
                 ('medallions', 1),
@@ -3294,6 +3295,7 @@ setting_infos = [
         disabled_default = 0,
         gui_params     = {
             "randomize_key": "randomize_settings",
+            'optional': True,
             "hide_when_disabled": True,
             'distribution': [(6, 1)],
         },
@@ -3311,6 +3313,7 @@ setting_infos = [
         disabled_default = 0,
         gui_params     = {
             "randomize_key": "randomize_settings",
+            'optional': True,
             "hide_when_disabled": True,
             'distribution': [(3, 1)],
         },
@@ -3329,6 +3332,7 @@ setting_infos = [
         disabled_default = 0,
         gui_params     = {
             "randomize_key": "randomize_settings",
+            'optional': True,
             "hide_when_disabled": True,
             'distribution': [(9, 1)],
         },
@@ -3346,6 +3350,7 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
+            'optional': True,
             "hide_when_disabled": True,
         },
     ),
@@ -4842,7 +4847,7 @@ with open(data_path('settings_mapping.json')) as f:
     setting_map = json.load(f)
 
 for info in setting_infos:
-    if info.gui_text is not None and not is_mapped(info.name):
+    if info.gui_text is not None and not info.gui_params.get('optional') and not is_mapped(info.name):
         raise UnmappedSettingError(f'{info.name} is defined but is not in the settings map. Add it to the settings_mapping or set the gui_text to None to suppress.')
 
     if info.disable != None:

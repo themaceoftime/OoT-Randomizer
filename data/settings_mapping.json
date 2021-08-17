@@ -214,11 +214,6 @@
             "ganon_bosskey_stones",
             "ganon_bosskey_rewards",
             "ganon_bosskey_tokens",
-            "lacs_condition",
-            "lacs_medallions",
-            "lacs_stones",
-            "lacs_rewards",
-            "lacs_tokens",
             "enhance_map_compass"
           ]
         }
