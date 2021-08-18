@@ -114,6 +114,7 @@ do that.
 * Smarter replacement of required warp songs when warp songs are shuffled. 
 * Disable Sandstorm transitions in certain cases in Entrance Randomizer. In particular, this prevents Sandstorm transitions from triggering strobe effects due to a bug.
 * Adjust the weather system to fix the fog glitch.
+* Remove the Door of Time collision while the door is opening.
 * Fix Entrance Randomizer hint area validation to work with shuffled warp songs.
 * Fix Entrance Randomizer dungeon entrance hints.
 * Plandomizer
