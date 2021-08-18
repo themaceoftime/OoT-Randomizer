@@ -161,6 +161,8 @@ do that.
 
 * New Tricks
   * `King Zora Skip` - Adult Link can make a precise jump to climb atop the fence next to King Zora from the audience chamber.
+* Removed Tricks
+  * `Forest Temple MQ Twisted Hallway Switch with Hookshot` - Removed as this was determined to be a clip and therefore not allowed in glitchless rulesets.
 
 ### 6.0
 

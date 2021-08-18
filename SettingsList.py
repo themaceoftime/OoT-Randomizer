@@ -369,14 +369,14 @@ logic_tricks = {
                     or hit the shortcut switch at the top of the
                     room and jump from the glass blocks that spawn.
                     '''},
-    'Forest Temple MQ Twisted Hallway Switch with Hookshot': {
-        'name'    : 'logic_forest_mq_hallway_switch_hookshot',
-        'tags'    : ("Forest Temple",),
-        'tooltip' : '''\
-                    There's a very small gap between the glass block
-                    and the wall. Through that gap you can hookshot
-                    the target on the ceiling.
-                    '''},
+    #'Forest Temple MQ Twisted Hallway Switch with Hookshot': {
+    #    'name'    : 'logic_forest_mq_hallway_switch_hookshot',
+    #    'tags'    : ("Forest Temple",),
+    #    'tooltip' : '''\
+    #                There's a very small gap between the glass block
+    #                and the wall. Through that gap you can hookshot
+    #                the target on the ceiling.
+    #                '''},
     'Death Mountain Trail Chest with Strength': {
         'name'    : 'logic_dmt_bombable',
         'tags'    : ("Death Mountain Trail",),
