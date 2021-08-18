@@ -145,6 +145,7 @@ do that.
 * New Plandomizer support for defining custom item groups.
 * New Plandomizer support for defining custom song note patterns (rhythm is still random).
 * Allow Plandomizer to override otherwise randomized settings.
+* Allow Giant's Knife as a starting item.
 * Giant's Knife and Biggoron's Sword are considered useless in glitchless logic but not in glitched.
 * Entrance Randomizer: Allow Kakariko Potion Shop and Impa's House to have their entrances appear in different areas if all hints are off.
 * Entrance Randomizer: When warp songs are shuffled, the confirmation text now shows the actual destination.
