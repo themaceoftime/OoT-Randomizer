@@ -278,7 +278,7 @@ KEYSANITY_MESSAGES = {
     0x0094: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for the \x05\x41Fire Temple\x05\x40!\x09",
     0x0095: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for the \x05\x43Water Temple\x05\x40!\x09",
     0x009B: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for the \x05\x45Bottom of the Well\x05\x40!\x09",
-    0x009F: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for the \x05\x46Gerudo Training\x01Grounds\x05\x40!\x09",
+    0x009F: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for the \x05\x46Gerudo Training\x01Ground\x05\x40!\x09",
     0x00A0: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for the \x05\x46Thieves' Hideout\x05\x40!\x09",
     0x00A1: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for \x05\x41Ganon's Castle\x05\x40!\x09",
     0x00A2: "\x13\x75\x08You found the \x05\x41Compass\x05\x40\x01for the \x05\x45Bottom of the Well\x05\x40!\x09",
@@ -301,7 +301,7 @@ REGION_NAMES = {
     "the Shadow Temple":              [['Shadow Temple Entryway'], '\45'],
     "the Bottom of the Well":         [['Bottom of the Well'], '\45'],
     "the Ice Cavern":                 [['Ice Cavern Beginning'], '\44'],
-    "Gerudo Training Grounds":        [['Gerudo Training Grounds Lobby'], '\46'],
+    "Gerudo Training Ground":         [['Gerudo Training Ground Lobby'], '\46'],
 
     # Indoors
     "Mido's House":                   [['KF Midos House'], '\44'],
