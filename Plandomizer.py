@@ -301,8 +301,8 @@ class WorldDistribution(object):
                     if self.distribution.settings.shuffle_smallkeys == 'keysanity':
                         keys = [name for (name, data) in item_table.items() if data[0] == 'SmallKey' and name != 'Small Key']
                         self.major_group.extend(keys)
-                    if self.distribution.settings.shuffle_fortresskeys == 'keysanity':
-                        keys = [name for (name, data) in item_table.items() if data[0] == 'FortressSmallKey']
+                    if self.distribution.settings.shuffle_hideoutkeys == 'keysanity':
+                        keys = [name for (name, data) in item_table.items() if data[0] == 'HideoutSmallKey']
                         self.major_group.extend(keys)
                     if self.distribution.settings.shuffle_bosskeys == 'keysanity':
                         keys = [name for (name, data) in item_table.items() if data[0] == 'BossKey' and name != 'Boss Key']

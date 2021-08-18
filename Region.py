@@ -71,9 +71,9 @@ class Region(object):
             is_self_dungeon_restricted = self.world.shuffle_smallkeys in ['dungeon', 'vanilla']
             is_dungeon_restricted = self.world.shuffle_smallkeys == 'any_dungeon'
             is_overworld_restricted = self.world.shuffle_smallkeys == 'overworld'
-        elif item.type == 'FortressSmallKey':
-            is_dungeon_restricted = self.world.shuffle_fortresskeys == 'any_dungeon'
-            is_overworld_restricted = self.world.shuffle_fortresskeys == 'overworld'
+        elif item.type == 'HideoutSmallKey':
+            is_dungeon_restricted = self.world.shuffle_hideoutkeys == 'any_dungeon'
+            is_overworld_restricted = self.world.shuffle_hideoutkeys == 'overworld'
         elif item.type == 'BossKey':
             is_self_dungeon_restricted = self.world.shuffle_bosskeys in ['dungeon', 'vanilla']
             is_dungeon_restricted = self.world.shuffle_bosskeys == 'any_dungeon'

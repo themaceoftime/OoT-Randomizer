@@ -4,7 +4,7 @@ import random
 #       DMC     Death Mountain Crater
 #       DMT     Death Mountain Trail
 #       GC      Goron City
-#       GF      Gerudo Fortress
+#       GF      Gerudo's Fortress
 #       GS      Gold Skulltula
 #       GV      Gerudo Valley
 #       HC      Hyrule Castle
@@ -15,6 +15,7 @@ import random
 #       LW      Lost Woods
 #       OGC     Outside Ganon's Castle
 #       SFM     Sacred Forest Meadow
+#       TH      Thieves' Hideout
 #       ZD      Zora's Domain
 #       ZF      Zora's Fountain
 #       ZR      Zora's River
@@ -240,7 +241,7 @@ hintTable = {
     'BossKey':                                                  (["a master of unlocking", "a dungeon's master pass"], "a Boss Key", 'item'),
     'GanonBossKey':                                             (["a master of unlocking", "a dungeon's master pass"], "a Boss Key", 'item'),
     'SmallKey':                                                 (["a tool for unlocking", "a dungeon pass", "a lock remover", "a lockpick"], "a Small Key", 'item'),
-    'FortressSmallKey':                                         (["a get out of jail free card"], "a Jail Key", 'item'),
+    'HideoutSmallKey':                                          (["a get out of jail free card"], "a Jail Key", 'item'),
     'KeyError':                                                 (["something mysterious", "an unknown treasure"], "An Error (Please Report This)", 'item'),
     'Arrows (5)':                                               (["a few danger darts", "a few sharp shafts"], "Arrows (5 pieces)", 'item'),
     'Arrows (10)':                                              (["some danger darts", "some sharp shafts"], "Arrows (10 pieces)", 'item'),
@@ -264,7 +265,7 @@ hintTable = {
     'KF Links House Cow':                                          ("the #bovine bounty of a horseback hustle# gifts", "#Malon's obstacle course# leads to", 'always'),
 
     'Song from Ocarina of Time':                                   ("the #Ocarina of Time# teaches", None, ['song', 'sometimes']),
-    'Song from Composers Grave':                                   (["#ReDead in the Composers' Grave# guard", "the #Composer Brothers wrote#"], None, ['song', 'sometimes']),
+    'Song from Royal Familys Tomb':                                (["#ReDead in the royal tomb# guard", "the #Composer Brothers wrote#"], None, ['song', 'sometimes']),
     'Sheik in Forest':                                             ("#in a meadow# Sheik teaches", None, ['song', 'sometimes']),
     'Sheik at Temple':                                             ("Sheik waits at a #monument to time# to teach", None, ['song', 'sometimes']),
     'Sheik in Crater':                                             ("the #crater's melody# is", None, ['song', 'sometimes']),
@@ -297,7 +298,7 @@ hintTable = {
     'ZF GS Hidden Cave':                                           ("a spider high #above the icy waters# holds", None, ['overworld', 'sometimes']),
     'Wasteland Chest':                                             (["#deep in the wasteland# is", "beneath #the sands#, flames reveal"], None, ['overworld', 'sometimes']),
     'Wasteland GS':                                                ("a #spider in the wasteland# holds", None, ['overworld', 'sometimes']),
-    'Graveyard Composers Grave Chest':                             (["#flames in the Composers' Grave# reveal", "the #Composer Brothers hid#"], None, ['overworld', 'sometimes']),
+    'Royal Familys Tomb Chest':                                    (["#flames in the royal tomb# reveal", "the #Composer Brothers hid#"], None, ['overworld', 'sometimes']),
     'ZF Bottom Freestanding PoH':                                  ("#under the icy waters# lies", None, ['overworld', 'sometimes']),
     'GC Pot Freestanding PoH':                                     ("spinning #Goron pottery# contains", None, ['overworld', 'sometimes']),
     'ZD King Zora Thawed':                                         ("a #defrosted dignitary# gifts", "unfreezing #King Zora# grants", ['overworld', 'sometimes']),
@@ -395,7 +396,7 @@ hintTable = {
     'LLR Talons Chickens':                                         ("#finding Super Cuccos# is rewarded with", None, 'exclude'),
     'GC Rolling Goron as Child':                                   ("the prize offered by a #large rolling Goron# is", None, 'exclude'),
     'LH Underwater Item':                                          ("the #sunken treasure in a lake# is", None, 'exclude'),
-    'GF Gerudo Membership Card':                                   ("#rescuing captured carpenters# is rewarded with", None, 'exclude'),
+    'Hideout Gerudo Membership Card':                              ("#rescuing captured carpenters# is rewarded with", None, 'exclude'),
     'Wasteland Bombchu Salesman':                                  ("a #carpet guru# sells", None, 'exclude'),
 
     'Kak Impas House Freestanding PoH':                            ("#imprisoned in a house# lies", None, 'exclude'),
@@ -415,10 +416,10 @@ hintTable = {
     'DMT Freestanding PoH':                                        ("above a #mountain cavern entrance# is", None, 'exclude'),
     'DMC Wall Freestanding PoH':                                   ("nestled in a #volcanic wall# is", None, 'exclude'),
     'DMC Volcano Freestanding PoH':                                ("obscured by #volcanic ash# is", None, 'exclude'),
-    'GF North F1 Carpenter':                                       ("#defeating Gerudo guards# reveals", None, 'exclude'),
-    'GF North F2 Carpenter':                                       ("#defeating Gerudo guards# reveals", None, 'exclude'),
-    'GF South F1 Carpenter':                                       ("#defeating Gerudo guards# reveals", None, 'exclude'),
-    'GF South F2 Carpenter':                                       ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Jail Guard (1 Torch)':                                ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Jail Guard (2 Torches)':                              ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Jail Guard (3 Torches)':                              ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Jail Guard (4 Torches)':                              ("#defeating Gerudo guards# reveals", None, 'exclude'),
 
     'Deku Tree Map Chest':                                         ("in the #center of the Deku Tree# lies", None, 'exclude'),
     'Deku Tree Slingshot Chest':                                   ("the #treasure guarded by a scrub# in the Deku Tree is", None, 'exclude'),
@@ -1078,7 +1079,7 @@ hintTable = {
     'ZF Great Fairy Fountain':                                  ("a #Great Fairy Fountain#", None, 'region'),
     'Graveyard Shield Grave':                                   ("a #grave with a free chest#", None, 'region'),
     'Graveyard Heart Piece Grave':                              ("a chest spawned by #Sun's Song#", None, 'region'),
-    'Graveyard Composers Grave':                                ("the #Composers' Grave#", None, 'region'),
+    'Royal Familys Tomb':                                       ("the #Royal Family's Tomb#", None, 'region'),
     'Graveyard Dampes Grave':                                   ("Dampé's Grave", None, 'region'),
     'DMT Cow Grotto':                                           ("a solitary #Cow#", None, 'region'),
     'HC Storms Grotto':                                         ("a sandy grotto with #fragile walls#", None, 'region'),

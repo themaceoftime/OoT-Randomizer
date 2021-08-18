@@ -93,7 +93,7 @@ class Item(object):
 
     @property
     def smallkey(self):
-        return self.type == 'SmallKey' or self.type == 'FortressSmallKey'
+        return self.type == 'SmallKey' or self.type == 'HideoutSmallKey'
 
 
     @property
@@ -131,7 +131,7 @@ class Item(object):
             return False
         if self.type == 'SmallKey' and self.world.shuffle_smallkeys in ['dungeon', 'vanilla']:
             return False
-        if self.type == 'FortressSmallKey' and self.world.shuffle_fortresskeys == 'vanilla':
+        if self.type == 'HideoutSmallKey' and self.world.shuffle_hideoutkeys == 'vanilla':
             return False
         if self.type == 'BossKey' and self.world.shuffle_bosskeys in ['dungeon', 'vanilla']:
             return False

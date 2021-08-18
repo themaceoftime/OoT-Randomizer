@@ -279,7 +279,7 @@ KEYSANITY_MESSAGES = {
     0x0095: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for the \x05\x43Water Temple\x05\x40!\x09",
     0x009B: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for the \x05\x45Bottom of the Well\x05\x40!\x09",
     0x009F: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for the \x05\x46Gerudo Training\x01Grounds\x05\x40!\x09",
-    0x00A0: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for the \x05\x46Gerudo's Fortress\x05\x40!\x09",
+    0x00A0: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for the \x05\x46Thieves' Hideout\x05\x40!\x09",
     0x00A1: "\x13\x77\x08You found a \x05\x41Small Key\x05\x40\x01for \x05\x41Ganon's Castle\x05\x40!\x09",
     0x00A2: "\x13\x75\x08You found the \x05\x41Compass\x05\x40\x01for the \x05\x45Bottom of the Well\x05\x40!\x09",
     0x00A3: "\x13\x76\x08You found the \x05\x41Dungeon Map\x05\x40\x01for the \x05\x45Shadow Temple\x05\x40!\x09",
@@ -362,7 +362,7 @@ REGION_NAMES = {
     "Zora's Fountain":               [['Zoras Fountain'], '\43'],
 
     # Grottos
-    "the Royal Family's Tomb":       [['Graveyard Composers Grave'], '\44'],
+    "the Royal Family's Tomb":       [['Royal Familys Tomb'], '\44'],
     "Damp\x96's Grave":              [['Graveyard Dampes Grave'], '\44'],
     "the Wolfos Grotto":             [['SFM Wolfos Grotto'], '\44'],
     "the ReDead Grotto":             [['Kak Redead Grotto'], '\44'],

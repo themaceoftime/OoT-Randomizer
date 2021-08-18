@@ -1364,7 +1364,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
                 rom.write_byte(0x2E8E931, special['text_id']) #Fix text box
             elif location.name == 'Song from Malon':
                 rom.write_byte(rom.sym('MALON_TEXT_ID'), special['text_id'])
-            elif location.name == 'Song from Composers Grave':
+            elif location.name == 'Song from Royal Familys Tomb':
                 rom.write_int16(0xE09F66, bit_mask_pointer)
                 rom.write_byte(0x332A87D, special['text_id']) #Fix text box
             elif location.name == 'Song from Saria':

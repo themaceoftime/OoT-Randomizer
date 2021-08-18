@@ -25,7 +25,7 @@ class FillError(ShuffleError):
 def distribute_items_restrictive(window, worlds, fill_locations=None):
     if worlds[0].shuffle_song_items == 'song':
         song_location_names = [
-            'Song from Composers Grave', 'Song from Impa', 'Song from Malon', 'Song from Saria',
+            'Song from Royal Familys Tomb', 'Song from Impa', 'Song from Malon', 'Song from Saria',
             'Song from Ocarina of Time', 'Song from Windmill', 'Sheik in Forest', 'Sheik at Temple',
             'Sheik in Crater', 'Sheik in Ice Cavern', 'Sheik in Kakariko', 'Sheik at Colossus']
     elif worlds[0].shuffle_song_items == 'dungeon':

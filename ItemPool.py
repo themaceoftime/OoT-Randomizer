@@ -1060,39 +1060,39 @@ def get_pool_core(world):
         pool.extend(['Ice Trap'] * 4)
 
     if world.gerudo_fortress == 'open':
-        placed_items['GF North F1 Carpenter'] = 'Recovery Heart'
-        placed_items['GF North F2 Carpenter'] = 'Recovery Heart'
-        placed_items['GF South F1 Carpenter'] = 'Recovery Heart'
-        placed_items['GF South F2 Carpenter'] = 'Recovery Heart'
-    elif world.shuffle_fortresskeys in ['any_dungeon', 'overworld', 'keysanity']:
+        placed_items['Hideout Jail Guard (1 Torch)'] = 'Recovery Heart'
+        placed_items['Hideout Jail Guard (2 Torches)'] = 'Recovery Heart'
+        placed_items['Hideout Jail Guard (3 Torches)'] = 'Recovery Heart'
+        placed_items['Hideout Jail Guard (4 Torches)'] = 'Recovery Heart'
+    elif world.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']:
         if world.gerudo_fortress == 'fast':
-            pool.append('Small Key (Gerudo Fortress)')
-            placed_items['GF North F2 Carpenter'] = 'Recovery Heart'
-            placed_items['GF South F1 Carpenter'] = 'Recovery Heart'
-            placed_items['GF South F2 Carpenter'] = 'Recovery Heart'
+            pool.append('Small Key (Thieves Hideout)')
+            placed_items['Hideout Jail Guard (2 Torches)'] = 'Recovery Heart'
+            placed_items['Hideout Jail Guard (3 Torches)'] = 'Recovery Heart'
+            placed_items['Hideout Jail Guard (4 Torches)'] = 'Recovery Heart'
         else:
-            pool.extend(['Small Key (Gerudo Fortress)'] * 4)
+            pool.extend(['Small Key (Thieves Hideout)'] * 4)
         if world.item_pool_value == 'plentiful':
-            pending_junk_pool.append('Small Key (Gerudo Fortress)')
+            pending_junk_pool.append('Small Key (Thieves Hideout)')
     else:
         if world.gerudo_fortress == 'fast':
-            placed_items['GF North F1 Carpenter'] = 'Small Key (Gerudo Fortress)'
-            placed_items['GF North F2 Carpenter'] = 'Recovery Heart'
-            placed_items['GF South F1 Carpenter'] = 'Recovery Heart'
-            placed_items['GF South F2 Carpenter'] = 'Recovery Heart'
+            placed_items['Hideout Jail Guard (1 Torch)'] = 'Small Key (Thieves Hideout)'
+            placed_items['Hideout Jail Guard (2 Torches)'] = 'Recovery Heart'
+            placed_items['Hideout Jail Guard (3 Torches)'] = 'Recovery Heart'
+            placed_items['Hideout Jail Guard (4 Torches)'] = 'Recovery Heart'
         else:
-            placed_items['GF North F1 Carpenter'] = 'Small Key (Gerudo Fortress)'
-            placed_items['GF North F2 Carpenter'] = 'Small Key (Gerudo Fortress)'
-            placed_items['GF South F1 Carpenter'] = 'Small Key (Gerudo Fortress)'
-            placed_items['GF South F2 Carpenter'] = 'Small Key (Gerudo Fortress)'
+            placed_items['Hideout Jail Guard (1 Torch)'] = 'Small Key (Thieves Hideout)'
+            placed_items['Hideout Jail Guard (2 Torches)'] = 'Small Key (Thieves Hideout)'
+            placed_items['Hideout Jail Guard (3 Torches)'] = 'Small Key (Thieves Hideout)'
+            placed_items['Hideout Jail Guard (4 Torches)'] = 'Small Key (Thieves Hideout)'
 
     if world.shuffle_gerudo_card and world.gerudo_fortress != 'open':
         pool.append('Gerudo Membership Card')
     elif world.shuffle_gerudo_card:
         pending_junk_pool.append('Gerudo Membership Card')
-        placed_items['GF Gerudo Membership Card'] = 'Ice Trap'
+        placed_items['Hideout Gerudo Membership Card'] = 'Ice Trap'
     else:
-        placed_items['GF Gerudo Membership Card'] = 'Gerudo Membership Card'
+        placed_items['Hideout Gerudo Membership Card'] = 'Gerudo Membership Card'
     if world.shuffle_gerudo_card and world.item_pool_value == 'plentiful':
         pending_junk_pool.append('Gerudo Membership Card')
 
