@@ -123,6 +123,7 @@ do that.
   * Fix duplicating placed shop items.
 * Fix some potential failures for placing junk.
 * Fix disabled song locations getting a general junk item instead of a junk song.
+* Prevent areas hinted as barren from having a location hint.
 * Fix some spoiler entries for visible ice traps.
 * Fix error thrown on some operating systems for capitalized file extensions .N64/.Z64.
 
