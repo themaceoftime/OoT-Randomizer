@@ -724,15 +724,20 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
 
     world.distribution.configure_gossip(spoiler, stoneIDs)
 
+    # If all gossip stones already have plando'd hints, do not roll any more
+    if len(stoneIDs) == 0:
+        return
+
     if 'disabled' in world.hint_dist_user:
         for stone_name in world.hint_dist_user['disabled']:
             try:
                 stone_id = gossipLocations_reversemap[stone_name]
             except KeyError:
                 raise ValueError(f'Gossip stone location "{stone_name}" is not valid')
-            stoneIDs.remove(stone_id)
-            (gossip_text, _) = get_junk_hint(spoiler, world, checkedLocations)
-            spoiler.hints[world.id][stone_id] = gossip_text
+            if stone_id in stoneIDs:
+                stoneIDs.remove(stone_id)
+                (gossip_text, _) = get_junk_hint(spoiler, world, checkedLocations)
+                spoiler.hints[world.id][stone_id] = gossip_text
 
     stoneGroups = []
     if 'groups' in world.hint_dist_user:
@@ -744,9 +749,11 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
                 except KeyError:
                     raise ValueError(f'Gossip stone location "{stone_name}" is not valid')
 
-                stoneIDs.remove(stone_id)
-                group.append(stone_id)
-            stoneGroups.append(group)
+                if stone_id in stoneIDs:
+                    stoneIDs.remove(stone_id)
+                    group.append(stone_id)
+            if len(group) != 0:
+                stoneGroups.append(group)
     # put the remaining locations into singleton groups
     stoneGroups.extend([[id] for id in stoneIDs])
 
