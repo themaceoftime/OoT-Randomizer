@@ -148,6 +148,7 @@ do that.
 * Entrance Randomizer: When warp songs are shuffled, the confirmation text now shows the actual destination.
 * Text Shuffle: Expanded the "Shuffled except Hints and Keys" to include some shop and scrub text, and renamed "Shuffled except Important Text".
 * Custom Music: Added a file `custom_music_exclusion` to specify which music files shouldn't be shuffled in with random custom music.
+* Changed internal names for the broken swords.
 * Updated presets.
 * Added a commandline flag to use a preset by name. This still allows supplying additional settings, e.g. to control cosmetics and ROM output.
 * Added internal tracking of what items were where in vanilla OoT.
