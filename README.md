@@ -149,6 +149,11 @@ do that.
 * Logic updates.
 * Use HTTPS for the version check to github.
 
+#### Trick Changes
+
+* New Tricks
+  * `King Zora Skip` - Adult Link can make a precise jump to climb atop the fence next to King Zora from the audience chamber.
+
 ### 6.0
 
 #### New Features
