@@ -235,11 +235,16 @@ class World(object):
     def resolve_random_settings(self):
         # evaluate settings (important for logic, nice for spoiler)
         self.randomized_list = []
+        dist_keys = []
+        if '_settings' in self.distribution.distribution.src_dict:
+            dist_keys = self.distribution.distribution.src_dict['_settings'].keys()
         if self.randomize_settings:
             setting_info = get_setting_info('randomize_settings')
             self.randomized_list.extend(setting_info.disable[True]['settings'])
             for section in setting_info.disable[True]['sections']:
                 self.randomized_list.extend(get_settings_from_section(section))
+                # Remove settings specified in the distribution
+                self.randomized_list = [x for x in self.randomized_list if x not in dist_keys]
             for setting in list(self.randomized_list):
                 if (setting == 'bridge_medallions' and self.bridge != 'medallions') \
                         or (setting == 'bridge_stones' and self.bridge != 'stones') \
@@ -250,22 +255,22 @@ class World(object):
                         or (setting == 'lacs_rewards' and self.lacs_condition != 'dungeons') \
                         or (setting == 'lacs_tokens' and self.lacs_condition != 'tokens'):
                     self.randomized_list.remove(setting)
-        if self.big_poe_count_random:
+        if self.big_poe_count_random and 'big_poe_count' not in dist_keys:
             self.big_poe_count = random.randint(1, 10)
             self.randomized_list.append('big_poe_count')
-        if self.starting_tod == 'random':
+        if self.starting_tod == 'random' and 'starting_tod' not in dist_keys:
             setting_info = get_setting_info('starting_tod')
             choices = [ch for ch in setting_info.choices if ch not in ['default', 'random']]
             self.starting_tod = random.choice(choices)
             self.randomized_list.append('starting_tod')
-        if self.starting_age == 'random':
+        if self.starting_age == 'random' and 'starting_age' not in dist_keys:
             if self.settings.open_forest == 'closed':
                 # adult is not compatible
                 self.starting_age = 'child'
             else:
                 self.starting_age = random.choice(['child', 'adult'])
             self.randomized_list.append('starting_age')
-        if self.chicken_count_random:
+        if self.chicken_count_random and 'chicken_count' not in dist_keys:
             self.chicken_count = random.randint(0, 7)
             self.randomized_list.append('chicken_count')
 
@@ -281,7 +286,7 @@ class World(object):
         dist_chosen = self.distribution.configure_trials(trial_pool)
         dist_num_chosen = len(dist_chosen)
 
-        if self.trials_random:
+        if self.trials_random and 'trials' not in dist_keys:
             self.trials = dist_num_chosen + random.randint(0, len(trial_pool))
             self.randomized_list.append('trials')
         num_trials = int(self.trials)
@@ -294,7 +299,7 @@ class World(object):
         dungeon_pool = list(self.dungeon_mq)
         dist_num_mq = self.distribution.configure_dungeons(self, dungeon_pool)
 
-        if self.mq_dungeons_random:
+        if self.mq_dungeons_random and 'mq_dungeons' not in dist_keys:
             for dungeon in dungeon_pool:
                 self.dungeon_mq[dungeon] = random.choice([True, False])
             self.mq_dungeons = list(self.dungeon_mq.values()).count(True)
