@@ -362,7 +362,7 @@ REGION_NAMES = {
     "Zora's Fountain":               [['Zoras Fountain'], '\43'],
 
     # Grottos
-    "the Royal Family's Tomb":       [['Royal Familys Tomb'], '\44'],
+    "the Royal Family's Tomb":       [['Graveyard Royal Familys Tomb'], '\44'],
     "Damp\x96's Grave":              [['Graveyard Dampes Grave'], '\44'],
     "the Wolfos Grotto":             [['SFM Wolfos Grotto'], '\44'],
     "the ReDead Grotto":             [['Kak Redead Grotto'], '\44'],
