@@ -126,6 +126,7 @@ do that.
 * Fix disabled song locations getting a general junk item instead of a junk song.
 * Prevent areas hinted as barren from having a location hint.
 * Fix trying to place hints when we've run out of stones.
+* Show the actual result settings in the spoiler instead of originally chosen settings (in case some settings like Closed Forest were modified). The settings string remains the original so the seed can be easily reproduced.
 * Fix some spoiler entries for visible ice traps.
 * Fix error thrown on some operating systems for capitalized file extensions .N64/.Z64.
 

@@ -376,9 +376,9 @@ class WorldDistribution(object):
 
 
     def configure_starting_items_settings(self, world):
-        if world.start_with_rupees:
+        if world.settings.start_with_rupees:
             self.give_item('Rupees', 999)
-        if world.start_with_consumables:
+        if world.settings.start_with_consumables:
             self.give_item('Deku Sticks', 99)
             self.give_item('Deku Nuts', 99)
 
@@ -769,7 +769,7 @@ class WorldDistribution(object):
                     raise RuntimeError('Unknown location in world %d: %s' % (world.id + 1, location_name))
                 if location.type == 'Boss':
                     continue
-                elif location.name in world.disabled_locations:
+                elif location.name in world.settings.disabled_locations:
                     continue
                 else:
                     raise RuntimeError('Location already filled in world %d: %s' % (self.id + 1, location_name))
@@ -777,14 +777,14 @@ class WorldDistribution(object):
             if record.item in item_groups['DungeonReward']:
                 raise RuntimeError('Cannot place dungeon reward %s in world %d in location %s.' % (record.item, self.id + 1, location_name))
 
-            if record.item == '#Junk' and location.type == 'Song' and world.shuffle_song_items == 'song':
+            if record.item == '#Junk' and location.type == 'Song' and world.settings.shuffle_song_items == 'song':
                 record.item = '#JunkSong'
 
             ignore_pools = None
             is_invert = self.pattern_matcher(record.item)('!')
-            if is_invert and location.type != 'Song' and world.shuffle_song_items == 'song':
+            if is_invert and location.type != 'Song' and world.settings.shuffle_song_items == 'song':
                 ignore_pools = [2]
-            if is_invert and location.type == 'Song' and world.shuffle_song_items == 'song':
+            if is_invert and location.type == 'Song' and world.settings.shuffle_song_items == 'song':
                 ignore_pools = [i for i in range(len(item_pools)) if i != 2]
             # location.price will be None for Shop Buy items
             if location.type == 'Shop' and location.price is None:
@@ -953,6 +953,13 @@ class Distribution(object):
             '_settings': self.src_dict.get('settings', {}),
         }
 
+        # If starting items specified in plando, remove starting items from settings.
+        # These aren't considered in logic either way, but this prevents them showing up in the spoiler.
+        if 'starting_items' in self.src_dict:
+            self.settings.starting_items = []
+            self.settings.starting_equipment = []
+            self.settings.starting_songs = []
+
         self.settings.__dict__.update(update_dict['_settings'])
         if 'settings' in self.src_dict:
             self.src_dict['_settings'] = self.src_dict['settings']
@@ -995,7 +1002,7 @@ class Distribution(object):
             if 'Triforce Piece' in world.distribution.starting_items:
                 world.triforce_count += world.distribution.starting_items['Triforce Piece'].count
                 total_starting_count += world.distribution.starting_items['Triforce Piece'].count
-            if world.skip_child_zelda and 'Song from Impa' in world.distribution.locations and world.distribution.locations['Song from Impa'].item == 'Triforce Piece':
+            if world.settings.skip_child_zelda and 'Song from Impa' in world.distribution.locations and world.distribution.locations['Song from Impa'].item == 'Triforce Piece':
                 total_starting_count += 1
             total_count += world.triforce_count
 
@@ -1139,7 +1146,7 @@ class Distribution(object):
 
         for world in spoiler.worlds:
             world_dist = self.world_dists[world.id]
-            world_dist.randomized_settings = {randomized_item: getattr(world, randomized_item) for randomized_item in world.randomized_list}
+            world_dist.randomized_settings = {randomized_item: getattr(world.settings, randomized_item) for randomized_item in world.randomized_list}
             world_dist.dungeons = {dung: DungeonRecord({ 'mq': world.dungeon_mq[dung] }) for dung in world.dungeon_mq}
             world_dist.trials = {trial: TrialRecord({ 'active': not world.skipped_trials[trial] }) for trial in world.skipped_trials}
             if hasattr(world, 'song_notes'):
