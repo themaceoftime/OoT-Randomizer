@@ -2032,7 +2032,8 @@ setting_infos = [
             'stones':	  'Spiritual Stones',
             'medallions': 'Medallions',
             'dungeons':   'Dungeons',
-            'tokens':     'Gold Skulltula Tokens'
+            'tokens':     'Gold Skulltula Tokens',
+            'random':     'Random'
         },
         gui_tooltip    = '''\
             'Always Open': Rainbow Bridge is always present.
@@ -2041,6 +2042,7 @@ setting_infos = [
             'Medallions': A configurable amount of Medallions.
             'Dungeons': A configurable amount of Dungeon Rewards.
             'Gold Skulltula Tokens': A configurable amount of Gold Skulltula Tokens.
+            'Random': A random Rainbow Bridge requirement excluding Gold Skulltula Tokens.
         ''',
         shared         = True,
         disable={
@@ -2050,6 +2052,7 @@ setting_infos = [
             'medallions': {'settings': ['bridge_stones', 'bridge_rewards', 'bridge_tokens']},
             'dungeons':   {'settings': ['bridge_medallions', 'bridge_stones', 'bridge_tokens']},
             'tokens':     {'settings': ['bridge_medallions', 'bridge_stones', 'bridge_rewards']},
+            'random':     {'settings': ['bridge_medallions', 'bridge_stones', 'bridge_rewards', 'bridge_tokens']}
         },
         gui_params     = {
             'randomize_key': 'randomize_settings',

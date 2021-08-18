@@ -106,6 +106,7 @@ do that.
   * For example, if the Rainbow Bridge requires 4 medallions, all 6 medallions will be guaranteed reachable.
 * New separate setting `LACS Condition` to select what goal items are required for the Light Arrows Cutscene.
 * New option `Misc. Hints` controls whether the Temple of Time altar and Ganondorf give hints, defaulting on to preserve behavior. Hell Mode disables this setting.
+* New `Rainbow Bridge` option `Random` that will choose one of the other options at random (besides Skulltula Tokens), and require the maximum of that goal (if applicable).
 
 #### Bug Fixes
 
