@@ -1,6 +1,3 @@
-CC = gcc
-CFLAGS = -s -O3
-
 # Windows gets Decompress.exe and Decompress32.exe
 # MacOS gets Decompress.out (it doesn't support 32 bit programs)
 # Linux gets Decompress
@@ -22,16 +19,16 @@ all: $(EXECUTABLES)
 
 .SUFFIXES: .c
 Decompress.exe: decompressor.c
-	$(CC) $(CFLAGS) -o $@ $^
+	gcc -s -O3 -o $@ $^
 
 .SUFFIXES: .c
 Decompress32.exe: decompressor.c
-	$(CC) $(CFLAGS) -m32 -o $@ $^
+	gcc -s -O3 -m32 -o $@ $^
 
 .SUFFIXES: .c
 Decompress.out: decompressor.c
-	$(CC) $(CFLAGS) -o $@ $^
+	gcc -O3 -o $@ $^
 
 .SUFFIXES: .c
 Decompress: decompressor.c
-	$(CC) $(CFLAGS) -o $@ $^
+	gcc -s -O3 -o $@ $^
