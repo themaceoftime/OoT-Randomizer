@@ -112,6 +112,7 @@ do that.
 
 * Fixed a bug where importing from a settings string might not choose the correct hint distribution depending on platform or number of custom hint distributions in the Hints folder.
 * `Skip Child Zelda` in Multiworld (with Song Shuffle: Anywhere) now correctly provides items to the right player.
+* `Skip Child Zelda` in Multiworld (with Song Shuffle: Anywhere and Triforce Hunt) now avoids starting having already won (by preventing Impa from giving out Triforce Pieces at all if there are fewer players than Triforce Pieces needed to win).
 * Smarter replacement of required warp songs when warp songs are shuffled. 
 * Disable Sandstorm transitions in certain cases in Entrance Randomizer. In particular, this prevents Sandstorm transitions from triggering strobe effects due to a bug.
 * Adjust the weather system to fix the fog glitch.

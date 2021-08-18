@@ -37,6 +37,7 @@ class World(object):
         self.maximum_wallets = 0
         self.light_arrow_location = None
         self.triforce_count = 0
+        self.total_starting_triforce_count = 0
         self.bingosync_url = None
 
         self.parser = Rule_AST_Transformer(self)
@@ -197,6 +198,7 @@ class World(object):
         new_world.shop_prices = copy.copy(self.shop_prices)
         new_world.triforce_goal = self.triforce_goal
         new_world.triforce_count = self.triforce_count
+        new_world.total_starting_triforce_count = self.total_starting_triforce_count
         new_world.maximum_wallets = self.maximum_wallets
         new_world.distribution = self.distribution
 

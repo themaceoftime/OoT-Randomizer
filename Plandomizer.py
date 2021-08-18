@@ -995,6 +995,8 @@ class Distribution(object):
             if 'Triforce Piece' in world.distribution.starting_items:
                 world.triforce_count += world.distribution.starting_items['Triforce Piece'].count
                 total_starting_count += world.distribution.starting_items['Triforce Piece'].count
+            if world.skip_child_zelda and 'Song from Impa' in world.distribution.locations and world.distribution.locations['Song from Impa'].item == 'Triforce Piece':
+                total_starting_count += 1
             total_count += world.triforce_count
 
         if total_count < worlds[0].triforce_goal:
@@ -1002,6 +1004,9 @@ class Distribution(object):
 
         if total_starting_count >= worlds[0].triforce_goal:
             raise RuntimeError('Too many Triforce Pieces in starting items. There should be at most %d and there are %d.' % (worlds[0].triforce_goal - 1, total_starting_count))
+
+        for world in worlds:
+            world.total_starting_triforce_count = total_starting_count # used later in Rules.py
 
 
     def reset(self):
