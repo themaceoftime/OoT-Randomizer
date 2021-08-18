@@ -9,11 +9,13 @@ import urllib.request
 from urllib.error import URLError, HTTPError
 import json
 from enum import Enum
+import itertools
 
 from HintList import getHint, getHintGroup, Hint, hintExclusions
 from Item import MakeEventItem
 from Messages import update_message_by_id
 from Search import Search
+from StartingItems import everything
 from TextBox import line_wrap
 from Utils import random_choices, data_path, read_json
 
@@ -662,6 +664,10 @@ def buildBingoHintList(boardURL):
     for key, value in hintsToAdd.items():
         for _ in range(value):
             hints.append(key)
+
+    #Since there's no way to verify if the Bingosync URL is actually for OoTR, this exception catches that case
+    if len(hints) == 0:
+        raise Exception('No item hints found for goals on Bingosync card. Verify Bingosync URL is correct, or leave field blank for generic bingo hints.')
     return hints
 
 
@@ -750,9 +756,34 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
 
         if world.shopsanity != "off" and "Progressive Wallet" not in world.item_hints:
             world.item_hints.append("Progressive Wallet")
-        world.named_item_pool = list(world.item_hints)
+                
 
+    #Removes items from item_hints list if they are included in starting gear.
+    #This method ensures that the right number of copies are removed, e.g.
+    #if you start with one strength and hints call for two, you still get
+    #one hint for strength
+    for item in itertools.chain(world.starting_items, world.starting_equipment, world.starting_songs):
+        itemname = everything[item].itemname
+        if itemname in world.item_hints:
+            world.item_hints.remove(itemname)
 
+    #Skip_child_zelda can cause the same problem, but needs to be handled separately since
+    #it doesn't update the starting gear lists
+    if world.skip_child_zelda:
+        itemname = world.get_location('Song from Impa').item.name 
+        if itemname in world.item_hints:
+            world.item_hints.remove(itemname)
+
+    world.named_item_pool = list(world.item_hints)
+
+    #Make sure the total number of hints won't pass 40. If so, we limit the always and trial hints
+    if world.hint_dist == "bingo":
+        numTrialHints = [0,1,2,3,2,1,0]
+        if (2*len(world.item_hints) + 2*len(getHintGroup('always', world)) + 2*numTrialHints[world.trials] > 40) and (world.hint_dist_user['named_items_required']):
+            world.hint_dist_user['distribution']['always']['copies'] = 1
+            world.hint_dist_user['distribution']['trial']['copies'] = 1
+
+            
     # Load hint distro from distribution file or pre-defined settings
     #
     # 'fixed' key is used to mimic the tournament distribution, creating a list of fixed hint types to fill
