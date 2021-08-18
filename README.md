@@ -142,6 +142,7 @@ do that.
 * New Plandomizer support for defining custom song note patterns (rhythm is still random).
 * Giant's Knife and Biggoron's Sword are considered useless in glitchless logic but not in glitched.
 * Entrance Randomizer: Allow Kakariko Potion Shop and Impa's House to have their entrances appear in different areas if all hints are off.
+* Entrance Randomizer: When warp songs are shuffled, the confirmation text now shows the actual destination.
 * Text Shuffle: Expanded the "Shuffled except Hints and Keys" to include some shop and scrub text, and renamed "Shuffled except Important Text".
 * Custom Music: Added a file `custom_music_exclusion` to specify which music files shouldn't be shuffled in with random custom music.
 * Updated presets.
