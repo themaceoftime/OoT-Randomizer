@@ -333,7 +333,7 @@ def get_settings_from_command_line_args():
                 for fn in os.listdir(data_path('Presets'))
                 if fn.endswith('.json'))
         for fn in presetsFiles:
-            with open(fn) as f:
+            with open(fn, encoding='utf-8') as f:
                 presets = json.load(f)
                 if args.settings_preset in presets:
                     settings_base.update(presets[args.settings_preset])
@@ -348,7 +348,7 @@ def get_settings_from_command_line_args():
         settingsFile = local_path(args.settings or 'settings.sav')
 
         try:
-            with open(settingsFile) as f:
+            with open(settingsFile, encoding='utf-8') as f:
                 settings_base.update(json.load(f))
         except Exception as ex:
             if args.settings is not None:
