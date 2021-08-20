@@ -766,15 +766,15 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
         if world.bingosync_url is not None and world.bingosync_url.startswith("https://bingosync.com/"): # Verify that user actually entered a bingosync URL
             logger = logging.getLogger('')
             logger.info("Got Bingosync URL. Building board-specific goals.")
-            world.settings.item_hints = buildBingoHintList(world.bingosync_url)
+            world.item_hints = buildBingoHintList(world.bingosync_url)
         else:
-            world.settings.item_hints = bingoDefaults['settings']['item_hints']
+            world.item_hints = bingoDefaults['settings']['item_hints']
 
-        if world.settings.tokensanity in ("overworld", "all") and "Suns Song" not in world.settings.item_hints:
-            world.settings.item_hints.append("Suns Song")
+        if world.settings.tokensanity in ("overworld", "all") and "Suns Song" not in world.item_hints:
+            world.item_hints.append("Suns Song")
 
-        if world.settings.shopsanity != "off" and "Progressive Wallet" not in world.settings.item_hints:
-            world.settings.item_hints.append("Progressive Wallet")
+        if world.settings.shopsanity != "off" and "Progressive Wallet" not in world.item_hints:
+            world.item_hints.append("Progressive Wallet")
                 
 
     #Removes items from item_hints list if they are included in starting gear.
@@ -783,22 +783,22 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
     #one hint for strength
     for item in itertools.chain(world.settings.starting_items, world.settings.starting_equipment, world.settings.starting_songs):
         itemname = everything[item].itemname
-        if itemname in world.settings.item_hints:
-            world.settings.item_hints.remove(itemname)
+        if itemname in world.item_hints:
+            world.item_hints.remove(itemname)
 
     #Skip_child_zelda can cause the same problem, but needs to be handled separately since
     #it doesn't update the starting gear lists
     if world.settings.skip_child_zelda:
         itemname = world.get_location('Song from Impa').item.name 
-        if itemname in world.settings.item_hints:
-            world.settings.item_hints.remove(itemname)
+        if itemname in world.item_hints:
+            world.item_hints.remove(itemname)
 
-    world.named_item_pool = list(world.settings.item_hints)
+    world.named_item_pool = list(world.item_hints)
 
     #Make sure the total number of hints won't pass 40. If so, we limit the always and trial hints
     if world.settings.hint_dist == "bingo":
         numTrialHints = [0,1,2,3,2,1,0]
-        if (2*len(world.settings.item_hints) + 2*len(getHintGroup('always', world)) + 2*numTrialHints[world.settings.trials] > 40) and (world.settings.hint_dist_user['named_items_required']):
+        if (2*len(world.item_hints) + 2*len(getHintGroup('always', world)) + 2*numTrialHints[world.settings.trials] > 40) and (world.settings.hint_dist_user['named_items_required']):
             world.settings.hint_dist_user['distribution']['always']['copies'] = 1
             world.settings.hint_dist_user['distribution']['trial']['copies'] = 1
 
