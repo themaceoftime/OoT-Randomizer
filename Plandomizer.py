@@ -301,8 +301,8 @@ class WorldDistribution(object):
                     if self.distribution.settings.shuffle_smallkeys == 'keysanity':
                         keys = [name for (name, data) in item_table.items() if data[0] == 'SmallKey' and name != 'Small Key']
                         self.major_group.extend(keys)
-                    if self.distribution.settings.shuffle_fortresskeys == 'keysanity':
-                        keys = [name for (name, data) in item_table.items() if data[0] == 'FortressSmallKey']
+                    if self.distribution.settings.shuffle_hideoutkeys == 'keysanity':
+                        keys = [name for (name, data) in item_table.items() if data[0] == 'HideoutSmallKey']
                         self.major_group.extend(keys)
                     if self.distribution.settings.shuffle_bosskeys == 'keysanity':
                         keys = [name for (name, data) in item_table.items() if data[0] == 'BossKey' and name != 'Boss Key']
@@ -367,6 +367,7 @@ class WorldDistribution(object):
         return dist_notes
 
 
+    # Add randomized_settings defined in distribution to world's randomized settings list
     def configure_randomized_settings(self, world):
         for name, record in self.randomized_settings.items():
             setattr(world, name, record)
@@ -375,9 +376,9 @@ class WorldDistribution(object):
 
 
     def configure_starting_items_settings(self, world):
-        if world.start_with_rupees:
+        if world.settings.start_with_rupees:
             self.give_item('Rupees', 999)
-        if world.start_with_consumables:
+        if world.settings.start_with_consumables:
             self.give_item('Deku Sticks', 99)
             self.give_item('Deku Nuts', 99)
 
@@ -553,7 +554,7 @@ class WorldDistribution(object):
             entrance_found = False
             for pool_type, entrance_pool in entrance_pools.items():
                 try:
-                    matched_entrance = next(filter(lambda entrance: (entrance.name == name or (entrance.reverse and entrance.reverse.name == name and not worlds[self.id].decouple_entrances)), entrance_pool))
+                    matched_entrance = next(filter(lambda entrance: (entrance.name == name or (entrance.reverse and entrance.reverse.name == name and not worlds[self.id].settings.decouple_entrances)), entrance_pool))
                 except StopIteration:
                     continue
 
@@ -572,7 +573,7 @@ class WorldDistribution(object):
                 target_region = record.region
                 
                 matched_targets_to_region = list(filter(lambda target: (target.connected_region and target.connected_region.name == target_region)
-                                                        or (target.reverse and target.reverse.connected_region and target.reverse.connected_region.name == target_region and not worlds[self.id].decouple_entrances), 
+                                                        or (target.reverse and target.reverse.connected_region and target.reverse.connected_region.name == target_region and not worlds[self.id].settings.decouple_entrances), 
                                                         target_entrance_pools[pool_type]))
                 if not matched_targets_to_region:
                     raise RuntimeError('No entrance found to replace with %s that leads to %s in world %d' % 
@@ -781,7 +782,7 @@ class WorldDistribution(object):
                     raise RuntimeError('Unknown location in world %d: %s' % (world.id + 1, location_name))
                 if location.type == 'Boss':
                     continue
-                elif location.name in world.disabled_locations:
+                elif location.name in world.settings.disabled_locations:
                     continue
                 else:
                     raise RuntimeError('Location already filled in world %d: %s' % (self.id + 1, location_name))
@@ -789,14 +790,14 @@ class WorldDistribution(object):
             if record.item in item_groups['DungeonReward']:
                 raise RuntimeError('Cannot place dungeon reward %s in world %d in location %s.' % (record.item, self.id + 1, location_name))
 
-            if record.item == '#Junk' and location.type == 'Song' and world.shuffle_song_items == 'song':
+            if record.item == '#Junk' and location.type == 'Song' and world.settings.shuffle_song_items == 'song':
                 record.item = '#JunkSong'
 
             ignore_pools = None
             is_invert = self.pattern_matcher(record.item)('!')
-            if is_invert and location.type != 'Song' and world.shuffle_song_items == 'song':
+            if is_invert and location.type != 'Song' and world.settings.shuffle_song_items == 'song':
                 ignore_pools = [2]
-            if is_invert and location.type == 'Song' and world.shuffle_song_items == 'song':
+            if is_invert and location.type == 'Song' and world.settings.shuffle_song_items == 'song':
                 ignore_pools = [i for i in range(len(item_pools)) if i != 2]
             # location.price will be None for Shop Buy items
             if location.type == 'Shop' and location.price is None:
@@ -965,6 +966,13 @@ class Distribution(object):
             '_settings': self.src_dict.get('settings', {}),
         }
 
+        # If starting items specified in plando, remove starting items from settings.
+        # These aren't considered in logic either way, but this prevents them showing up in the spoiler.
+        if 'starting_items' in self.src_dict:
+            self.settings.starting_items = []
+            self.settings.starting_equipment = []
+            self.settings.starting_songs = []
+
         self.settings.__dict__.update(update_dict['_settings'])
         if 'settings' in self.src_dict:
             self.src_dict['_settings'] = self.src_dict['settings']
@@ -1007,6 +1015,8 @@ class Distribution(object):
             if 'Triforce Piece' in world.distribution.starting_items:
                 world.triforce_count += world.distribution.starting_items['Triforce Piece'].count
                 total_starting_count += world.distribution.starting_items['Triforce Piece'].count
+            if world.settings.skip_child_zelda and 'Song from Impa' in world.distribution.locations and world.distribution.locations['Song from Impa'].item == 'Triforce Piece':
+                total_starting_count += 1
             total_count += world.triforce_count
 
         if total_count < worlds[0].triforce_goal:
@@ -1014,6 +1024,9 @@ class Distribution(object):
 
         if total_starting_count >= worlds[0].triforce_goal:
             raise RuntimeError('Too many Triforce Pieces in starting items. There should be at most %d and there are %d.' % (worlds[0].triforce_goal - 1, total_starting_count))
+
+        for world in worlds:
+            world.total_starting_triforce_count = total_starting_count # used later in Rules.py
 
 
     def reset(self):
@@ -1146,7 +1159,7 @@ class Distribution(object):
 
         for world in spoiler.worlds:
             world_dist = self.world_dists[world.id]
-            world_dist.randomized_settings = {randomized_item: getattr(world, randomized_item) for randomized_item in world.randomized_list}
+            world_dist.randomized_settings = {randomized_item: getattr(world.settings, randomized_item) for randomized_item in world.randomized_list}
             world_dist.dungeons = {dung: DungeonRecord({ 'mq': world.dungeon_mq[dung] }) for dung in world.dungeon_mq}
             world_dist.trials = {trial: TrialRecord({ 'active': not world.skipped_trials[trial] }) for trial in world.skipped_trials}
             if hasattr(world, 'song_notes'):
@@ -1189,7 +1202,7 @@ class Distribution(object):
             raise InvalidFileException("Your Ocarina of Time ROM doesn't belong in the plandomizer setting. If you don't know what plandomizer is, or don't plan to use it, leave that setting blank and try again.")
 
         try:
-            with open(filename) as infile:
+            with open(filename, encoding='utf-8') as infile:
                 src_dict = json.load(infile)
         except json.decoder.JSONDecodeError as e:
             raise InvalidFileException(f"Invalid Plandomizer File. Make sure the file is a valid JSON file. Failure reason: {str(e)}") from None

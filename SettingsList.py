@@ -203,9 +203,9 @@ logic_tricks = {
                     from below, by shooting it through the vines,
                     bypassing the need to lower the staircase.
                     '''},
-    'Gerudo Fortress "Kitchen" with No Additional Items': {
+    'Thieves\' Hideout "Kitchen" with No Additional Items': {
         'name'    : 'logic_gerudo_kitchen',
-        'tags'    : ("Gerudo's Fortress",),
+        'tags'    : ("Thieves' Hideout", "Gerudo's Fortress",),
         'tooltip' : '''\
                     The logic normally guarantees one of Bow, Hookshot,
                     or Hover Boots.
@@ -369,14 +369,14 @@ logic_tricks = {
                     or hit the shortcut switch at the top of the
                     room and jump from the glass blocks that spawn.
                     '''},
-    'Forest Temple MQ Twisted Hallway Switch with Hookshot': {
-        'name'    : 'logic_forest_mq_hallway_switch_hookshot',
-        'tags'    : ("Forest Temple",),
-        'tooltip' : '''\
-                    There's a very small gap between the glass block
-                    and the wall. Through that gap you can hookshot
-                    the target on the ceiling.
-                    '''},
+    #'Forest Temple MQ Twisted Hallway Switch with Hookshot': {
+    #    'name'    : 'logic_forest_mq_hallway_switch_hookshot',
+    #    'tags'    : ("Forest Temple",),
+    #    'tooltip' : '''\
+    #                There's a very small gap between the glass block
+    #                and the wall. Through that gap you can hookshot
+    #                the target on the ceiling.
+    #                '''},
     'Death Mountain Trail Chest with Strength': {
         'name'    : 'logic_dmt_bombable',
         'tags'    : ("Death Mountain Trail",),
@@ -856,6 +856,14 @@ logic_tricks = {
                     recoil back onto the top of the frozen waterfall.
                     To kill it, the logic normally guarantees one of
                     Hookshot, Bow, or Magic.
+                    '''},
+    'Skip King Zora as Adult with Nothing': {
+        'name'    : 'logic_king_zora_skip',
+        'tags'    : ("Zora's Domain",),
+        'tooltip' : '''\
+                    With a precise jump as adult, it is possible to
+                    get on the fence next to King Zora from the front
+                    to access Zora's Fountain.
                     '''},
     'Shadow Temple River Statue with Bombchu': {
         'name'    : 'logic_shadow_statue',
@@ -1860,6 +1868,7 @@ setting_infos = [
                          - Variable numbers of Spiritual Stones, Medallions, or Dungeons
                          for Rainbow Bridge and Ganon's Boss Key on LACS 
                          (you will always be required to obtain all the relevant rewards)
+                         - Scrub Shuffle will either be "Off" or "On (Affordable)"
                          ''',
         default        = False,
         disable        = {
@@ -1990,25 +1999,27 @@ setting_infos = [
     ),
     Combobox(
         name           = 'gerudo_fortress',
-        gui_text       = 'Gerudo Fortress',
+        gui_text       = 'Gerudo\'s Fortress',
         default        = 'normal',
         choices        = {
             'normal': 'Default Behavior',
             'fast':   'Rescue One Carpenter',
-            'open':   'Open Gerudo Fortress',
+            'open':   'Open Gerudo\'s Fortress',
         },
         gui_tooltip    = '''\
-            'Rescue One Carpenter': Only the bottom left
-            carpenter must be rescued.
+            'Rescue One Carpenter': Only the bottom left carpenter,
+            in the cell with a single torch, must be rescued.
+            This cell can be savewarped to from any room in the hideout.
+            All but one of the Thieves' Hideout Keys are removed.
 
-            'Open Gerudo Fortress': The carpenters are rescued from
+            'Open Gerudo's Fortress': The carpenters are rescued from
             the start of the game, and if 'Shuffle Gerudo Card' is disabled,
             the player starts with the Gerudo Card in the inventory 
             allowing access to Gerudo Training Ground.
         ''',
         shared         = True,
         disable        = {
-            'open' : {'settings' : ['shuffle_fortresskeys']}
+            'open' : {'settings' : ['shuffle_hideoutkeys']}
         },
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -2024,7 +2035,8 @@ setting_infos = [
             'stones':	  'Spiritual Stones',
             'medallions': 'Medallions',
             'dungeons':   'Dungeons',
-            'tokens':     'Gold Skulltula Tokens'
+            'tokens':     'Gold Skulltula Tokens',
+            'random':     'Random'
         },
         gui_tooltip    = '''\
             'Always Open': Rainbow Bridge is always present.
@@ -2033,6 +2045,7 @@ setting_infos = [
             'Medallions': A configurable amount of Medallions.
             'Dungeons': A configurable amount of Dungeon Rewards.
             'Gold Skulltula Tokens': A configurable amount of Gold Skulltula Tokens.
+            'Random': A random Rainbow Bridge requirement excluding Gold Skulltula Tokens.
         ''',
         shared         = True,
         disable={
@@ -2042,6 +2055,7 @@ setting_infos = [
             'medallions': {'settings': ['bridge_stones', 'bridge_rewards', 'bridge_tokens']},
             'dungeons':   {'settings': ['bridge_medallions', 'bridge_stones', 'bridge_tokens']},
             'tokens':     {'settings': ['bridge_medallions', 'bridge_stones', 'bridge_rewards']},
+            'random':     {'settings': ['bridge_medallions', 'bridge_stones', 'bridge_rewards', 'bridge_tokens']}
         },
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -2719,7 +2733,7 @@ setting_infos = [
         gui_tooltip    = '''\
             Shuffle the pool of dungeon entrances, including Bottom 
             of the Well, Ice Cavern, and Gerudo Training Ground.
-            However, Ganon's Castle is not shuffled.
+            However, Ganon's Castle and Thieves' Hideout are not shuffled.
 
             Additionally, the entrances of Deku Tree, Fire Temple and 
             Bottom of the Well are opened for both adult and child.
@@ -3064,8 +3078,8 @@ setting_infos = [
         },
     ),
     Combobox(
-        name           = 'shuffle_fortresskeys',
-        gui_text       = 'Gerudo Fortress Keys',
+        name           = 'shuffle_hideoutkeys',
+        gui_text       = 'Thieves\' Hideout Keys',
         default        = 'vanilla',
         disabled_default = 'remove',
         choices        = {
@@ -3075,17 +3089,17 @@ setting_infos = [
             'keysanity':   'Anywhere (Keysanity)',
         },
         gui_tooltip    = '''\
-            'Vanilla': Gerudo Fortress Keys will appear in their
+            'Vanilla': Thieves' Hideout Keys will appear in their
             vanilla location, dropping from fighting Gerudo guards
             that attack when trying to free the jailed carpenters.
             
-            'Overworld Only': Gerudo Fortress Keys can only appear
-             outside of dungeons.
+            'Overworld Only': Thieves' Hideout Keys can only appear
+            outside of dungeons.
             
-            'Dungeons Only': Gerudo Fortress Keys can only appear
-             inside of dungeons.
+            'Any Dungeon': Thieves' Hideout Keys can only appear
+            inside of dungeons.
 
-            'Anywhere': Gerudo Fortress Keys can appear anywhere
+            'Anywhere': Thieves' Hideout Keys can appear anywhere
             in the world.
         ''',
         shared         = True,
@@ -3478,7 +3492,7 @@ setting_infos = [
             Selecting multiple progressive items will give
             the appropriate number of upgrades.
             
-            If playing with Open Zora Fountain, the Ruto's Letter
+            If playing with Open Zora's Fountain, the Ruto's Letter
             is converted to a regular Bottle.
         ''',
     ),

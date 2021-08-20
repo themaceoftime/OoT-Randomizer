@@ -4,7 +4,7 @@ import random
 #       DMC     Death Mountain Crater
 #       DMT     Death Mountain Trail
 #       GC      Goron City
-#       GF      Gerudo Fortress
+#       GF      Gerudo's Fortress
 #       GS      Gold Skulltula
 #       GV      Gerudo Valley
 #       HC      Hyrule Castle
@@ -15,6 +15,7 @@ import random
 #       LW      Lost Woods
 #       OGC     Outside Ganon's Castle
 #       SFM     Sacred Forest Meadow
+#       TH      Thieves' Hideout
 #       ZD      Zora's Domain
 #       ZF      Zora's Fountain
 #       ZR      Zora's River
@@ -51,7 +52,7 @@ def getHintGroup(group, world):
     ret = []
     for name in hintTable:
 
-        hint = getHint(name, world.clearer_hints)
+        hint = getHint(name, world.settings.clearer_hints)
 
         if hint.name in world.always_hints and group == 'always':
             hint.type = 'always'
@@ -95,50 +96,50 @@ def getRequiredHints(world):
 # Helpers for conditional always hints
 def stones_required_by_settings(world):
     stones = 0
-    if world.bridge == 'stones':
-        stones = max(stones, world.bridge_stones)
-    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'stones':
-        stones = max(stones, world.lacs_stones)
-    if world.bridge == 'dungeons':
-        stones = max(stones, world.bridge_rewards - 6)
-    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'dungeons':
-        stones = max(stones, world.lacs_rewards - 6)
+    if world.settings.bridge == 'stones':
+        stones = max(stones, world.settings.bridge_stones)
+    if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'stones':
+        stones = max(stones, world.settings.lacs_stones)
+    if world.settings.bridge == 'dungeons':
+        stones = max(stones, world.settings.bridge_rewards - 6)
+    if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'dungeons':
+        stones = max(stones, world.settings.lacs_rewards - 6)
 
     return stones
 
 
 def medallions_required_by_settings(world):
     medallions = 0
-    if world.bridge == 'medallions':
-        medallions = max(medallions, world.bridge_medallions)
-    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'medallions':
-        medallions = max(medallions, world.lacs_medallions)
-    if world.bridge == 'dungeons':
-        medallions = max(medallions, max(world.bridge_rewards - 3, 0))
-    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'dungeons':
-        medallions = max(medallions, max(world.lacs_rewards - 3, 0))
+    if world.settings.bridge == 'medallions':
+        medallions = max(medallions, world.settings.bridge_medallions)
+    if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'medallions':
+        medallions = max(medallions, world.settings.lacs_medallions)
+    if world.settings.bridge == 'dungeons':
+        medallions = max(medallions, max(world.settings.bridge_rewards - 3, 0))
+    if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'dungeons':
+        medallions = max(medallions, max(world.settings.lacs_rewards - 3, 0))
 
     return medallions
 
 
 def tokens_required_by_settings(world):
     tokens = 0
-    if world.bridge == 'tokens':
-        tokens = max(tokens, world.bridge_tokens)
-    if world.shuffle_ganon_bosskey == 'on_lacs' and world.lacs_condition == 'tokens':
-        tokens = max(tokens, world.lacs_tokens)
+    if world.settings.bridge == 'tokens':
+        tokens = max(tokens, world.settings.bridge_tokens)
+    if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'tokens':
+        tokens = max(tokens, world.settings.lacs_tokens)
 
     return tokens
 
 
 # Hints required under certain settings
 conditional_always = {
-    'Market 10 Big Poes':           lambda world: world.big_poe_count > 3,
-    'Deku Theater Mask of Truth':   lambda world: not world.complete_mask_quest,
+    'Market 10 Big Poes':           lambda world: world.settings.big_poe_count > 3,
+    'Deku Theater Mask of Truth':   lambda world: not world.settings.complete_mask_quest,
     'Song from Ocarina of Time':    lambda world: stones_required_by_settings(world) < 2,
     'HF Ocarina of Time Item':      lambda world: stones_required_by_settings(world) < 2,
     'Sheik in Kakariko':            lambda world: medallions_required_by_settings(world) < 5,
-    'DMT Biggoron':                 lambda world: world.logic_earliest_adult_trade != 'claim_check' or world.logic_latest_adult_trade != 'claim_check',
+    'DMT Biggoron':                 lambda world: world.settings.logic_earliest_adult_trade != 'claim_check' or world.settings.logic_latest_adult_trade != 'claim_check',
     'Kak 30 Gold Skulltula Reward': lambda world: tokens_required_by_settings(world) < 30,
     'Kak 40 Gold Skulltula Reward': lambda world: tokens_required_by_settings(world) < 40,
     'Kak 50 Gold Skulltula Reward': lambda world: tokens_required_by_settings(world) < 50,
@@ -240,7 +241,7 @@ hintTable = {
     'BossKey':                                                  (["a master of unlocking", "a dungeon's master pass"], "a Boss Key", 'item'),
     'GanonBossKey':                                             (["a master of unlocking", "a dungeon's master pass"], "a Boss Key", 'item'),
     'SmallKey':                                                 (["a tool for unlocking", "a dungeon pass", "a lock remover", "a lockpick"], "a Small Key", 'item'),
-    'FortressSmallKey':                                         (["a get out of jail free card"], "a Jail Key", 'item'),
+    'HideoutSmallKey':                                          (["a get out of jail free card"], "a Jail Key", 'item'),
     'KeyError':                                                 (["something mysterious", "an unknown treasure"], "An Error (Please Report This)", 'item'),
     'Arrows (5)':                                               (["a few danger darts", "a few sharp shafts"], "Arrows (5 pieces)", 'item'),
     'Arrows (10)':                                              (["some danger darts", "some sharp shafts"], "Arrows (10 pieces)", 'item'),
@@ -264,7 +265,7 @@ hintTable = {
     'KF Links House Cow':                                          ("the #bovine bounty of a horseback hustle# gifts", "#Malon's obstacle course# leads to", 'always'),
 
     'Song from Ocarina of Time':                                   ("the #Ocarina of Time# teaches", None, ['song', 'sometimes']),
-    'Song from Composers Grave':                                   (["#ReDead in the Composers' Grave# guard", "the #Composer Brothers wrote#"], None, ['song', 'sometimes']),
+    'Song from Royal Familys Tomb':                                (["#ReDead in the royal tomb# guard", "the #Composer Brothers wrote#"], None, ['song', 'sometimes']),
     'Sheik in Forest':                                             ("#in a meadow# Sheik teaches", None, ['song', 'sometimes']),
     'Sheik at Temple':                                             ("Sheik waits at a #monument to time# to teach", None, ['song', 'sometimes']),
     'Sheik in Crater':                                             ("the #crater's melody# is", None, ['song', 'sometimes']),
@@ -297,7 +298,7 @@ hintTable = {
     'ZF GS Hidden Cave':                                           ("a spider high #above the icy waters# holds", None, ['overworld', 'sometimes']),
     'Wasteland Chest':                                             (["#deep in the wasteland# is", "beneath #the sands#, flames reveal"], None, ['overworld', 'sometimes']),
     'Wasteland GS':                                                ("a #spider in the wasteland# holds", None, ['overworld', 'sometimes']),
-    'Graveyard Composers Grave Chest':                             (["#flames in the Composers' Grave# reveal", "the #Composer Brothers hid#"], None, ['overworld', 'sometimes']),
+    'Graveyard Royal Familys Tomb Chest':                          (["#flames in the royal tomb# reveal", "the #Composer Brothers hid#"], None, ['overworld', 'sometimes']),
     'ZF Bottom Freestanding PoH':                                  ("#under the icy waters# lies", None, ['overworld', 'sometimes']),
     'GC Pot Freestanding PoH':                                     ("spinning #Goron pottery# contains", None, ['overworld', 'sometimes']),
     'ZD King Zora Thawed':                                         ("a #defrosted dignitary# gifts", "unfreezing #King Zora# grants", ['overworld', 'sometimes']),
@@ -395,7 +396,7 @@ hintTable = {
     'LLR Talons Chickens':                                         ("#finding Super Cuccos# is rewarded with", None, 'exclude'),
     'GC Rolling Goron as Child':                                   ("the prize offered by a #large rolling Goron# is", None, 'exclude'),
     'LH Underwater Item':                                          ("the #sunken treasure in a lake# is", None, 'exclude'),
-    'GF Gerudo Membership Card':                                   ("#rescuing captured carpenters# is rewarded with", None, 'exclude'),
+    'Hideout Gerudo Membership Card':                              ("#rescuing captured carpenters# is rewarded with", None, 'exclude'),
     'Wasteland Bombchu Salesman':                                  ("a #carpet guru# sells", None, 'exclude'),
 
     'Kak Impas House Freestanding PoH':                            ("#imprisoned in a house# lies", None, 'exclude'),
@@ -415,10 +416,10 @@ hintTable = {
     'DMT Freestanding PoH':                                        ("above a #mountain cavern entrance# is", None, 'exclude'),
     'DMC Wall Freestanding PoH':                                   ("nestled in a #volcanic wall# is", None, 'exclude'),
     'DMC Volcano Freestanding PoH':                                ("obscured by #volcanic ash# is", None, 'exclude'),
-    'GF North F1 Carpenter':                                       ("#defeating Gerudo guards# reveals", None, 'exclude'),
-    'GF North F2 Carpenter':                                       ("#defeating Gerudo guards# reveals", None, 'exclude'),
-    'GF South F1 Carpenter':                                       ("#defeating Gerudo guards# reveals", None, 'exclude'),
-    'GF South F2 Carpenter':                                       ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Jail Guard (1 Torch)':                                ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Jail Guard (2 Torches)':                              ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Jail Guard (3 Torches)':                              ("#defeating Gerudo guards# reveals", None, 'exclude'),
+    'Hideout Jail Guard (4 Torches)':                              ("#defeating Gerudo guards# reveals", None, 'exclude'),
 
     'Deku Tree Map Chest':                                         ("in the #center of the Deku Tree# lies", None, 'exclude'),
     'Deku Tree Slingshot Chest':                                   ("the #treasure guarded by a scrub# in the Deku Tree is", None, 'exclude'),
@@ -1078,7 +1079,7 @@ hintTable = {
     'ZF Great Fairy Fountain':                                  ("a #Great Fairy Fountain#", None, 'region'),
     'Graveyard Shield Grave':                                   ("a #grave with a free chest#", None, 'region'),
     'Graveyard Heart Piece Grave':                              ("a chest spawned by #Sun's Song#", None, 'region'),
-    'Graveyard Composers Grave':                                ("the #Composers' Grave#", None, 'region'),
+    'Graveyard Royal Familys Tomb':                             ("the #Royal Family's Tomb#", None, 'region'),
     'Graveyard Dampes Grave':                                   ("Dampé's Grave", None, 'region'),
     'DMT Cow Grotto':                                           ("a solitary #Cow#", None, 'region'),
     'HC Storms Grotto':                                         ("a sandy grotto with #fragile walls#", None, 'region'),
@@ -1250,7 +1251,7 @@ def hintExclusions(world, clear_cache=False):
         return hintExclusions.exclusions
 
     hintExclusions.exclusions = []
-    hintExclusions.exclusions.extend(world.disabled_locations)
+    hintExclusions.exclusions.extend(world.settings.disabled_locations)
 
     for location in world.get_locations():
         if location.locked:
@@ -1261,7 +1262,7 @@ def hintExclusions(world, clear_cache=False):
 
     location_hints = []
     for name in hintTable:
-        hint = getHint(name, world.clearer_hints)
+        hint = getHint(name, world.settings.clearer_hints)
         if any(item in hint.type for item in 
                 ['always',
                  'sometimes',
