@@ -332,7 +332,7 @@ def get_woth_hint(spoiler, world, checked):
     locations = spoiler.required_locations[world.id]
     locations = list(filter(lambda location:
         location.name not in checked
-        and not (world.woth_dungeon >= world.settings.hint_dist_user['dungeons_woth_limit'] and location.parent_region.dungeon)
+        and not (world.woth_dungeon >= world.hint_dist_user['dungeons_woth_limit'] and location.parent_region.dungeon)
         and location.name not in world.hint_exclusions
         and location.name not in world.hint_type_overrides['woth']
         and location.item.name not in world.item_hint_type_overrides['woth'],
@@ -375,7 +375,7 @@ def get_barren_hint(spoiler, world, checked):
     areas = list(filter(lambda area:
         area not in checked_areas
         and area not in world.hint_type_overrides['barren']
-        and not (world.barren_dungeon >= world.settings.hint_dist_user['dungeons_barren_limit'] and world.empty_areas[area]['dungeon']),
+        and not (world.barren_dungeon >= world.hint_dist_user['dungeons_barren_limit'] and world.empty_areas[area]['dungeon']),
         world.empty_areas.keys()))
 
     if not areas:
@@ -485,13 +485,13 @@ def get_specific_item_hint(spoiler, world, checked):
     
     if location.parent_region.dungeon:
         location_text = getHint(location.parent_region.dungeon.name, world.settings.clearer_hints).text
-        if world.settings.hint_dist_user.get('vague_named_items', False):
+        if world.hint_dist_user.get('vague_named_items', False):
             return (GossipText('#%s# may be on the hero\'s path.' % (location_text), ['Green']), location)
         else:
             return (GossipText('#%s# hoards #%s#.' % (location_text, item_text), ['Green', 'Red']), location)
     else:
         location_text = get_hint_area(location)
-        if world.settings.hint_dist_user.get('vague_named_items', False):
+        if world.hint_dist_user.get('vague_named_items', False):
             return (GossipText('#%s# may be on the hero\'s path.' % (location_text), ['Green']), location)
         else:
             return (GossipText('#%s# can be found at #%s#.' % (item_text, location_text), ['Red', 'Green']), location)
@@ -728,8 +728,8 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
     if len(stoneIDs) == 0:
         return
 
-    if 'disabled' in world.settings.hint_dist_user:
-        for stone_name in world.settings.hint_dist_user['disabled']:
+    if 'disabled' in world.hint_dist_user:
+        for stone_name in world.hint_dist_user['disabled']:
             try:
                 stone_id = gossipLocations_reversemap[stone_name]
             except KeyError:
@@ -740,8 +740,8 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
                 spoiler.hints[world.id][stone_id] = gossip_text
 
     stoneGroups = []
-    if 'groups' in world.settings.hint_dist_user:
-        for group_names in world.settings.hint_dist_user['groups']:
+    if 'groups' in world.hint_dist_user:
+        for group_names in world.hint_dist_user['groups']:
             group = []
             for stone_name in group_names:
                 try:
@@ -798,9 +798,9 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
     #Make sure the total number of hints won't pass 40. If so, we limit the always and trial hints
     if world.settings.hint_dist == "bingo":
         numTrialHints = [0,1,2,3,2,1,0]
-        if (2*len(world.item_hints) + 2*len(getHintGroup('always', world)) + 2*numTrialHints[world.settings.trials] > 40) and (world.settings.hint_dist_user['named_items_required']):
-            world.settings.hint_dist_user['distribution']['always']['copies'] = 1
-            world.settings.hint_dist_user['distribution']['trial']['copies'] = 1
+        if (2*len(world.item_hints) + 2*len(getHintGroup('always', world)) + 2*numTrialHints[world.settings.trials] > 40) and (world.hint_dist_user['named_items_required']):
+            world.hint_dist_user['distribution']['always']['copies'] = 1
+            world.hint_dist_user['distribution']['trial']['copies'] = 1
 
             
     # Load hint distro from distribution file or pre-defined settings
@@ -813,9 +813,9 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
     hint_dist = OrderedDict({})
     fixed_hint_types = []
     max_order = 0
-    for hint_type in world.settings.hint_dist_user['distribution']:
-        if world.settings.hint_dist_user['distribution'][hint_type]['order'] > 0:
-            hint_order = int(world.settings.hint_dist_user['distribution'][hint_type]['order'])
+    for hint_type in world.hint_dist_user['distribution']:
+        if world.hint_dist_user['distribution'][hint_type]['order'] > 0:
+            hint_order = int(world.hint_dist_user['distribution'][hint_type]['order'])
             sorted_dist[hint_order] = hint_type
             if max_order < hint_order:
                 max_order = hint_order
@@ -824,14 +824,14 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
         raise Exception("There are gaps in the custom hint orders. Please revise your plando file to remove them.")
     for i in range(1, type_count):
         hint_type = sorted_dist[i]
-        if world.settings.hint_dist_user['distribution'][hint_type]['copies'] > 0:
-            fixed_num = world.settings.hint_dist_user['distribution'][hint_type]['fixed']
-            hint_weight = world.settings.hint_dist_user['distribution'][hint_type]['weight']
+        if world.hint_dist_user['distribution'][hint_type]['copies'] > 0:
+            fixed_num = world.hint_dist_user['distribution'][hint_type]['fixed']
+            hint_weight = world.hint_dist_user['distribution'][hint_type]['weight']
         else:
             logging.getLogger('').warning("Hint copies is zero for type %s. Assuming this hint type should be disabled.", hint_type)
             fixed_num = 0
             hint_weight = 0
-        hint_dist[hint_type] = (hint_weight, world.settings.hint_dist_user['distribution'][hint_type]['copies'])
+        hint_dist[hint_type] = (hint_weight, world.hint_dist_user['distribution'][hint_type]['copies'])
         hint_dist.move_to_end(hint_type)
         fixed_hint_types.extend([hint_type] * int(fixed_num))
 
@@ -878,7 +878,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
 
     # Add user-specified hinted item locations if using a built-in hint distribution
     # Raise error if hint copies is zero
-    if len(world.named_item_pool) > 0 and world.settings.hint_dist_user['named_items_required']:
+    if len(world.named_item_pool) > 0 and world.hint_dist_user['named_items_required']:
         if hint_dist['named-item'][1] == 0:
             raise Exception('User-provided item hints were requested, but copies per named-item hint is zero')
         else:
