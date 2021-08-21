@@ -448,7 +448,7 @@ def get_goal_hint(spoiler, world, checked):
     checked.add(location.name)
 
     if location.parent_region.dungeon:
-        location_text = getHint(location.parent_region.dungeon.name, world.clearer_hints).text
+        location_text = getHint(location.parent_region.dungeon.name, world.settings.clearer_hints).text
     else:
         location_text = get_hint_area(location)
     
