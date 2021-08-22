@@ -10,6 +10,8 @@ from HintList import getRequiredHints
 from Hints import get_hint_area, hint_dist_keys, HintDistFiles
 from Item import Item, ItemFactory, MakeEventItem
 from ItemList import item_table
+from ItemPool import TriforceCounts
+from decimal import Decimal, ROUND_HALF_UP
 from Location import Location, LocationFactory
 from LocationList import business_scrubs
 from Plandomizer import InvalidFileException
@@ -197,77 +199,86 @@ class World(object):
             gbk = GoalCategory('lacs', 20)
             trials = GoalCategory('trials', 30)
             th = GoalCategory('triforce_hunt', 30, goal_count=round(self.settings.triforce_goal_per_world / 10))
-            trial_goal = Goal('the Tower', 'White', items=[])
+            trial_goal = Goal(self, 'the Tower', 'White', items=[])
 
             if self.settings.triforce_hunt and self.settings.triforce_goal_per_world > 0:
-                th.goals.append(Goal('gold','Yellow',items=[{'name': 'Triforce Piece','quantity': self.settings.triforce_goal_per_world}]))
+                triforce_count = int((TriforceCounts[self.settings.item_pool_value] * self.settings.triforce_goal_per_world).to_integral_value(rounding=ROUND_HALF_UP))
+                th.goals.append(Goal(self, 'gold','Yellow',items=[{'name': 'Triforce Piece','quantity': triforce_count,'minimum': self.settings.triforce_goal_per_world,'hintable': False}]))
                 self.goal_categories[th.name] = th
             if not self.settings.triforce_hunt:
                 if self.settings.bridge != 'open':
                     if ((self.settings.bridge_stones > 0 and self.settings.bridge == 'stones') or (self.settings.bridge_rewards > 0 and self.settings.bridge == 'dungeons')):
-                        b.goals.append(Goal('the Emerald', 'Light Blue', items=[{'name': 'Kokiri Emerald','quantity': 1}]))
-                        b.goals.append(Goal('the Ruby', 'Light Blue', items=[{'name': 'Goron Ruby','quantity': 1}]))
-                        b.goals.append(Goal('the Sapphire', 'Light Blue', items=[{'name': 'Zora Sapphire','quantity': 1}]))
+                        b.goals.append(Goal(self, { 'replace': 'Kokiri Emerald' }, 'Light Blue', items=[{'name': 'Kokiri Emerald','quantity': 1,'minimum': 1,'hintable': True}]))
+                        b.goals.append(Goal(self, { 'replace': 'Goron Ruby' }, 'Light Blue', items=[{'name': 'Goron Ruby','quantity': 1,'minimum': 1,'hintable': True}]))
+                        b.goals.append(Goal(self, { 'replace': 'Zora Sapphire' }, 'Light Blue', items=[{'name': 'Zora Sapphire','quantity': 1,'minimum': 1,'hintable': True}]))
                     if ((self.settings.bridge_medallions > 0 and self.settings.bridge == 'medallions') or (self.settings.bridge_rewards > 0 and self.settings.bridge == 'dungeons')):
-                        b.goals.append(Goal('the Forest', 'Green', items=[{'name': 'Forest Medallion','quantity': 1}]))
-                        b.goals.append(Goal('Fire', 'Red', items=[{'name': 'Fire Medallion','quantity': 1}]))
-                        b.goals.append(Goal('Water', 'Blue', items=[{'name': 'Water Medallion','quantity': 1}]))
-                        b.goals.append(Goal('Shadow', 'Pink', items=[{'name': 'Shadow Medallion','quantity': 1}]))
-                        b.goals.append(Goal('Spirit', 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1}]))
-                        b.goals.append(Goal('Light', 'Light Blue', items=[{'name': 'Light Medallion','quantity': 1}]))
+                        b.goals.append(Goal(self, { 'replace': 'Forest Medallion' }, 'Green', items=[{'name': 'Forest Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        b.goals.append(Goal(self, { 'replace': 'Fire Medallion' }, 'Red', items=[{'name': 'Fire Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        b.goals.append(Goal(self, { 'replace': 'Water Medallion' }, 'Blue', items=[{'name': 'Water Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        b.goals.append(Goal(self, { 'replace': 'Shadow Medallion' }, 'Pink', items=[{'name': 'Shadow Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        b.goals.append(Goal(self, { 'replace': 'Spirit Medallion' }, 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        b.goals.append(Goal(self, { 'replace': 'Light Medallion' }, 'Light Blue', items=[{'name': 'Light Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
                     if self.settings.bridge == 'vanilla':
-                        b.goals.append(Goal('Shadow', 'Pink', items=[{'name': 'Shadow Medallion','quantity': 1}]))
-                        b.goals.append(Goal('Spirit', 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1}]))
+                        b.goals.append(Goal(self, { 'replace': 'Shadow Medallion' }, 'Pink', items=[{'name': 'Shadow Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        b.goals.append(Goal(self, { 'replace': 'Spirit Medallion' }, 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
                         if not 'Light Arrows' in self.item_added_hint_types['always']:
-                            b.goals.append(Goal('evil\'s bane', 'Light Blue', items=[{'name': 'Light Arrows','quantity': 1}]))
+                            if self.settings.item_pool_value == 'plentiful':
+                                arrows = 2
+                            else:
+                                arrows = 1
+                            b.goals.append(Goal(self, 'Evil\'s Bane', 'Light Blue', items=[{'name': 'Light Arrows','quantity': arrows,'minimum': 1,'hintable': True}]))
                     b.goal_count = len(b.goals)
                     if (self.settings.bridge_tokens > 0 and self.settings.bridge == 'tokens' and (self.settings.shuffle_ganon_bosskey != 'on_lacs' or self.settings.lacs_condition != 'tokens' or self.settings.bridge_tokens >= self.settings.lacs_tokens)):
-                        b.goals.append(Goal('Skulls', 'Light Blue', items=[{'name': 'Gold Skulltula Token','quantity': self.settings.bridge_tokens}]))
+                        b.goals.append(Goal(self, 'Skulls', 'Light Blue', items=[{'name': 'Gold Skulltula Token','quantity': 100,'minimum': self.settings.bridge_tokens,'hintable': False}]))
                         b.goal_count = round(self.settings.bridge_tokens / 10)
                     self.goal_categories[b.name] = b
 
                 if self.settings.shuffle_ganon_bosskey == 'on_lacs':
                     if ((self.settings.lacs_stones > 0 and self.settings.lacs_condition == 'stones') or (self.settings.lacs_rewards > 0 and self.settings.lacs_condition == 'dungeons')):
-                        gbk.goals.append(Goal('the Emerald', 'Yellow', items=[{'name': 'Kokiri Emerald','quantity': 1}]))
-                        gbk.goals.append(Goal('the Ruby', 'Yellow', items=[{'name': 'Goron Ruby','quantity': 1}]))
-                        gbk.goals.append(Goal('the Sapphire', 'Yellow', items=[{'name': 'Zora Sapphire','quantity': 1}]))
+                        gbk.goals.append(Goal(self, { 'replace': 'Kokiri Emerald' }, 'Yellow', items=[{'name': 'Kokiri Emerald','quantity': 1,'minimum': 1,'hintable': True}]))
+                        gbk.goals.append(Goal(self, { 'replace': 'Goron Ruby' }, 'Yellow', items=[{'name': 'Goron Ruby','quantity': 1,'minimum': 1,'hintable': True}]))
+                        gbk.goals.append(Goal(self, { 'replace': 'Zora Sapphire' }, 'Yellow', items=[{'name': 'Zora Sapphire','quantity': 1,'minimum': 1,'hintable': True}]))
                     if ((self.settings.lacs_medallions > 0 and self.settings.lacs_condition == 'medallions') or (self.settings.lacs_rewards > 0 and self.settings.lacs_condition == 'dungeons')):
-                        gbk.goals.append(Goal('the Forest', 'Green', items=[{'name': 'Forest Medallion','quantity': 1}]))
-                        gbk.goals.append(Goal('Fire', 'Red', items=[{'name': 'Fire Medallion','quantity': 1}]))
-                        gbk.goals.append(Goal('Water', 'Blue', items=[{'name': 'Water Medallion','quantity': 1}]))
-                        gbk.goals.append(Goal('Shadow', 'Pink', items=[{'name': 'Shadow Medallion','quantity': 1}]))
-                        gbk.goals.append(Goal('Spirit', 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1}]))
-                        gbk.goals.append(Goal('Light', 'Light Blue', items=[{'name': 'Light Medallion','quantity': 1}]))
+                        gbk.goals.append(Goal(self, { 'replace': 'Forest Medallion' }, 'Green', items=[{'name': 'Forest Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        gbk.goals.append(Goal(self, { 'replace': 'Fire Medallion' }, 'Red', items=[{'name': 'Fire Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        gbk.goals.append(Goal(self, { 'replace': 'Water Medallion' }, 'Blue', items=[{'name': 'Water Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        gbk.goals.append(Goal(self, { 'replace': 'Shadow Medallion' }, 'Pink', items=[{'name': 'Shadow Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        gbk.goals.append(Goal(self, { 'replace': 'Spirit Medallion' }, 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        gbk.goals.append(Goal(self, { 'replace': 'Light Medallion' }, 'Light Blue', items=[{'name': 'Light Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
                     if self.settings.lacs_condition == 'vanilla':
-                        gbk.goals.append(Goal('Shadow', 'Pink', items=[{'name': 'Shadow Medallion','quantity': 1}]))
-                        gbk.goals.append(Goal('Spirit', 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1}]))
+                        gbk.goals.append(Goal(self, { 'replace': 'Shadow Medallion' }, 'Pink', items=[{'name': 'Shadow Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
+                        gbk.goals.append(Goal(self, { 'replace': 'Spirit Medallion' }, 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
                     gbk.goal_count = len(gbk.goals)
                     if (self.settings.lacs_tokens > 0 and self.settings.lacs_condition == 'tokens' and (self.settings.bridge != 'tokens' or self.settings.bridge_tokens < self.settings.lacs_tokens)):
-                        gbk.goals.append(Goal('Skulls','Light Blue',items=[{'name': 'Gold Skulltula Token','quantity': self.lacs_tokens}]))
+                        gbk.goals.append(Goal(self, 'Skulls','Light Blue',items=[{'name': 'Gold Skulltula Token','quantity': 100,'minimum': self.lacs_tokens,'hintable': False}]))
                         gbk.goal_count = round(self.settings.lacs_tokens / 10)
                     self.goal_categories[gbk.name] = gbk
                 elif self.settings.shuffle_ganon_bosskey != 'remove' and self.settings.shuffle_ganon_bosskey != 'vanilla':
                     gbk = GoalCategory('ganon_bosskey', 30, goal_count=1)
-                    gbk.goals.append(Goal('the Key','Light Blue',items=[{'name': 'Boss Key (Ganons Castle)','quantity': 1}]))
+                    if self.settings.item_pool_value == 'plentiful':
+                        keys = 2
+                    else:
+                        keys = 1
+                    gbk.goals.append(Goal(self, 'the Key','Light Blue',items=[{'name': 'Boss Key (Ganons Castle)','quantity': keys,'minimum': 1,'hintable': True}]))
                     self.goal_categories[gbk.name] = gbk
 
                 if self.skipped_trials['Forest'] == False:
-                    trial_goal.items.append({'name': 'Forest Trial Clear','quantity': 1})
+                    trial_goal.items.append({'name': 'Forest Trial Clear','quantity': 1,'minimum': 1,'hintable': True})
                     trials.goal_count += 1
                 if self.skipped_trials['Fire'] == False:
-                    trial_goal.items.append({'name': 'Fire Trial Clear','quantity': 1})
+                    trial_goal.items.append({'name': 'Fire Trial Clear','quantity': 1,'minimum': 1,'hintable': True})
                     trials.goal_count += 1
                 if self.skipped_trials['Water'] == False:
-                    trial_goal.items.append({'name': 'Water Trial Clear','quantity': 1})
+                    trial_goal.items.append({'name': 'Water Trial Clear','quantity': 1,'minimum': 1,'hintable': True})
                     trials.goal_count += 1
                 if self.skipped_trials['Shadow'] == False:
-                    trial_goal.items.append({'name': 'Shadow Trial Clear','quantity': 1})
+                    trial_goal.items.append({'name': 'Shadow Trial Clear','quantity': 1,'minimum': 1,'hintable': True})
                     trials.goal_count += 1
                 if self.skipped_trials['Spirit'] == False:
-                    trial_goal.items.append({'name': 'Spirit Trial Clear','quantity': 1})
+                    trial_goal.items.append({'name': 'Spirit Trial Clear','quantity': 1,'minimum': 1,'hintable': True})
                     trials.goal_count += 1
                 if self.skipped_trials['Light'] == False:
-                    trial_goal.items.append({'name': 'Light Trial Clear','quantity': 1})
+                    trial_goal.items.append({'name': 'Light Trial Clear','quantity': 1,'minimum': 1,'hintable': True})
                     trials.goal_count += 1
 
                 if int(self.settings.trials) > 0:
@@ -277,7 +288,7 @@ class World(object):
                 if self.settings.bridge == 'open' and (self.settings.shuffle_ganon_bosskey == 'remove' or self.settings.shuffle_ganon_bosskey == 'vanilla') and int(self.settings.trials) == 0:
                     g = GoalCategory('ganon', 30, goal_count=1)
                     # Equivalent to WOTH, but added in case WOTH hints are disabled in favor of goal hints
-                    g.goals.append(Goal('the hero','White',items=[{'name': 'Triforce','quantity': 1}]))
+                    g.goals.append(Goal(self, 'the hero','White',items=[{'name': 'Triforce','quantity': 1,'minimum': 1,'hintable': True}]))
                     self.goal_categories[g.name] = g
 
         # import goals from hint plando
@@ -288,7 +299,7 @@ class World(object):
                 else:
                     cat = GoalCategory(category['category'], category['priority'])
                 for goal in category['goals']:
-                    cat.goals.append(Goal(goal['name'], goal['color'], items=list({'name': i['name'], 'quantity': i['quantity']} for i in goal['items'])))
+                    cat.goals.append(Goal(self, goal['name'], goal['color'], items=list({'name': i['name'], 'quantity': i['quantity'], 'minimum': i['minimum'], 'hintable': i['hintable']} for i in goal['items'])))
                 if 'count_override' in category:
                     cat.goal_count = category['count_override']
                 else:
@@ -301,9 +312,13 @@ class World(object):
 
         # initialize category check for first rounds of goal hints
         self.hinted_categories = []
-        self.hinted_goals = {}
-        for c_name, c in self.goal_categories.items():
-            self.hinted_goals[c_name] = {goal.name: 1 for goal in c.goals}
+
+        # Quick item lookup for All Goals Reachable setting
+        self.goal_items = []
+        for cat_name, category in self.goal_categories.items():
+            for goal in category.goals:
+                for item in goal.items:
+                    self.goal_items.append(item['name'])
 
     def copy(self):
         new_world = World(self.id, self.settings, False)

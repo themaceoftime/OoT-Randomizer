@@ -1293,6 +1293,20 @@ hintTable = {
     '2011':                                                     ("Today, let's begin down&'The Hero is Defeated' timeline.", None, 'ganonLine'),
 }
 
+# Separate table for goal names to avoid duplicates in the hint table.
+# Link's Pocket will always be an empty goal, but it's included here to 
+# prevent key errors during the dungeon reward lookup.
+goalTable = {
+    'Queen Gohma':                                              ("the Spider", "the Spider", "Green"),
+    'King Dodongo':                                             ("the Lizard", "the Lizard", "Red"),
+    'Barinade':                                                 ("the Parasite", "the Parasite", "Blue"),
+    'Phantom Ganon':                                            ("the Puppet", "the Puppet", "Green"),
+    'Volvagia':                                                 ("the Dragon", "the Dragon", "Red"),
+    'Morpha':                                                   ("the Amoeba", "the Amoeba", "Blue"),
+    'Bongo Bongo':                                              ("the Demon", "the Demon", "Pink"),
+    'Twinrova':                                                 ("the Witch", "the Witch", "Yellow"),
+    'Links Pocket':                                             ("your Pocket", "your Pocket", "Light Blue"),
+}
 
 # This specifies which hints will never appear due to either having known or known useless contents or due to the locations not existing.
 def hintExclusions(world, clear_cache=False):

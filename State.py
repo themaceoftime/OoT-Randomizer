@@ -48,10 +48,6 @@ class State(object):
         return self.has('Triforce')
 
 
-    def won_forest(self):
-        return self.has('Forest Medallion')
-
-
     def has(self, item, count=1):
         return self.prog_items[item] >= count
 
@@ -100,6 +96,14 @@ class State(object):
 
     def has_dungeon_rewards(self, count):
         return (self.count_of(ItemInfo.medallions) + self.count_of(ItemInfo.stones)) >= count
+
+
+    def has_item_goal(self, item_goal):
+        return self.prog_items[item_goal['name']] >= item_goal['minimum']
+
+
+    def has_full_item_goal(self, item_goal):
+        return self.prog_items[item_goal['name']] >= item_goal['quantity']
 
 
     def had_night_start(self):

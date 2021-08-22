@@ -236,7 +236,7 @@ class Search(object):
         else:
             return False
 
-    def can_beat_goals(self, goals, scan_for_items=True):
+    def can_beat_goals(self, category_name, goals, scan_for_items=True):
         valid_goals = []
         test_goals = list(goals)
         for goal in test_goals:
@@ -245,7 +245,9 @@ class Search(object):
             # Check if already beaten
             if (goal.items is not None):
                 for i in goal.items:
-                    beaten = (beaten and all(map(State.has, self.state_list, itertools.repeat(i['name']), itertools.repeat(i['quantity']))))
+                    # Every world has the same set of goals, but reachable item quantity varies per-world in beatable only
+                    # Avert your eyes, here be spaghetti
+                    beaten = (beaten and all(map(State.has, self.state_list, itertools.repeat(i['name']), [state.world.goal_categories[category_name].get_goal(goal.name).get_item(i['name'])['quantity'] for state in self.state_list])))
             if (goal.locations is not None):
                 for l in goal.locations:
                     beaten = (beaten and all(map(self.can_reach_spot, self.state_list, itertools.repeat(l['name']), itertools.repeat(l['age']))))
@@ -263,7 +265,7 @@ class Search(object):
                 # if every state beat the goal, then return True
                 if (goal.items is not None):
                     for i in goal.items:
-                        beaten = (beaten and all(map(State.has, search.state_list, itertools.repeat(i['name']), itertools.repeat(i['quantity']))))
+                        beaten = (beaten and all(map(State.has, search.state_list, itertools.repeat(i['name']), [state.world.goal_categories[category_name].get_goal(goal.name).get_item(i['name'])['quantity'] for state in self.state_list])))
                 if (goal.locations is not None):
                     for l in goal.locations:
                         beaten = (beaten and all(map(search.can_reach_spot, search.state_list, itertools.repeat(l['name']), itertools.repeat(l['age']))))
@@ -271,6 +273,25 @@ class Search(object):
                     valid_goals.append(goal.name)
         
         return valid_goals
+
+
+    def update_reachable_goals(self, category_name):
+        # Only reduce goal item quantity if minimum goal requirements are reachable, 
+        # but not the full goal quantity. Primary use is to identify reachable
+        # skull tokens, triforce pieces, and plentiful item duplicates with
+        # All Locations Reachable off. Beatable check is required to prevent
+        # inadvertently setting goal requirements to 0 or some quantity less
+        # than the minimum
+        # Relies on consistent list order to reference between current state
+        # and the copied search
+        search = self.copy()
+        search.collect_locations()
+        for index, state in enumerate(self.state_list):
+            for goal in state.world.goal_categories[category_name].goals:
+                if (goal.items is not None):
+                    if all(map(State.has_item_goal, itertools.repeat(search.state_list[index]), goal.items)):
+                        for i in goal.items:
+                            i['quantity'] = min(search.state_list[index].item_count(i['name']), i['quantity'])
 
 
     # Use the cache in the search to determine region reachability.

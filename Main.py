@@ -25,7 +25,7 @@ from Fill import distribute_items_restrictive, ShuffleError
 from Item import Item
 from ItemPool import generate_itempool
 from Hints import buildGossipHints
-from HintList import getHintGroup
+from HintList import getHintGroup, goalTable
 from Utils import default_output_path, is_bundled, subprocess_args, data_path
 from version import __version__
 from N64Patch import create_patch_file, apply_patch_file
@@ -122,6 +122,7 @@ def resolve_settings(settings, window=dummy_window()):
 def generate(settings, window=dummy_window()):
     worlds = build_world_graphs(settings, window=window)
     place_items(settings, worlds, window=window)
+    replace_goal_names(worlds)
     return make_spoiler(settings, worlds, window=window)
 
 
@@ -603,6 +604,21 @@ def update_required_items(spoiler):
         required_locations_dict[world.id] = list(filter(lambda location: location.world.id == world.id, required_locations))
     spoiler.required_locations = required_locations_dict
 
+def replace_goal_names(worlds):
+    for world in worlds:
+        bosses = [location for location in world.get_filled_locations() if location.item.type == 'DungeonReward']
+        for cat_name, category in world.goal_categories.items():
+            for goal in category.goals:
+                if isinstance(goal.name, dict):
+                    for boss in bosses:
+                        if boss.item.name == goal.name['replace']:
+                            flavorText, clearText, color = goalTable[boss.name]
+                            if world.settings.clearer_hints:
+                                goal.name = clearText
+                            else:
+                                goal.name = flavorText
+                            goal.color = color
+                            break
 
 def update_goal_items(spoiler):
     worlds = spoiler.worlds
@@ -618,6 +634,8 @@ def update_goal_items(spoiler):
     priority_locations = {}
     always_locations = [location.name for world in worlds for location in getHintGroup('always', world)]
 
+    # References first world for goal categories only
+    # Goals are changed for beatable-only accessibility per-world
     for cat_name, category in worlds[0].goal_categories.items():
         required_locations[category.name] = {}
         
@@ -632,7 +650,8 @@ def update_goal_items(spoiler):
                     exit.access_rule = lambda state, **kwargs: False
 
         search = Search([world.state for world in worlds])
-        reachable_goals = search.can_beat_goals(category.goals)
+        search.update_reachable_goals(cat_name)
+        reachable_goals = search.can_beat_goals(cat_name, category.goals)
         # Exit early if no goals are beatable with category locks
         if len(reachable_goals) > 0:
             for location in search.iter_reachable_locations(all_locations):
@@ -642,9 +661,9 @@ def update_goal_items(spoiler):
                     location.item = None
                     # copies state! This is very important as we're in the middle of a search
                     # already, but beneficially, has search it can start from
-                    valid_goals = search.can_beat_goals(category.goals)
+                    valid_goals = search.can_beat_goals(cat_name, category.goals)
                     for goal in category.goals:
-                        if (not goal.name in valid_goals) and (goal.name in reachable_goals) and ((not location.name in priority_locations) or priority_locations[location.name] == category.name):
+                        if (not goal.name in valid_goals) and (goal.name in reachable_goals) and ((not location.name in priority_locations) or priority_locations[location.name] == category.name) and (not goal.requires(old_item.name)):
                             if not goal.name in required_locations[category.name]:
                                 required_locations[category.name][goal.name] = []
                             # Goal locations weight themselves by both number of contributing goals and sphere depth
@@ -687,7 +706,6 @@ def update_goal_items(spoiler):
                             required_locations_dict[world.id][category.name] = {}
                         required_locations_dict[world.id][category.name][goal.name] = locations
     spoiler.goal_locations = required_locations_dict
-
 
 def create_playthrough(spoiler):
     worlds = spoiler.worlds

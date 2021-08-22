@@ -352,6 +352,16 @@ def get_woth_hint(spoiler, world, checked):
 
     return (GossipText('#%s# is on the way of the hero.' % location_text, ['Light Blue']), location)
 
+def get_checked_areas(world, checked):
+    def get_area_from_name(check):
+        try:
+            location = world.get_location(check)
+        except Exception as e:
+            return check
+        return get_hint_area(location)
+
+    return set(get_area_from_name(check) for check in checked)
+
 def get_goal_category(spoiler, world, goal_categories):
     cat_sizes = []
     cat_names = []
@@ -380,15 +390,6 @@ def get_goal_category(spoiler, world, goal_categories):
 
     return goal_category
 
-def get_checked_areas(world, checked):
-    def get_area_from_name(check):
-        try:
-            location = world.get_location(check)
-        except Exception as e:
-            return check
-        return get_hint_area(location)
-
-    return set(get_area_from_name(check) for check in checked)
 def get_goal_hint(spoiler, world, checked):
     goal_category = get_goal_category(spoiler, world, world.goal_categories)
 
