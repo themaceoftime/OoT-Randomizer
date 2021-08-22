@@ -104,19 +104,20 @@ class World(object):
             for d in HintDistFiles():
                 dist = read_json(d)
                 if dist['name'] == self.settings.hint_dist:
-                    self.settings.hint_dist_user = dist
+                    self.hint_dist_user = dist
         else:
             self.settings.hint_dist = 'custom'
+            self.hint_dist_user = self.settings.hint_dist_user
             
         # Validate hint distribution format
         # Originally built when I was just adding the type distributions
         # Location/Item Additions and Overrides are not validated
         hint_dist_valid = False
-        if all(key in self.settings.hint_dist_user['distribution'] for key in hint_dist_keys):
+        if all(key in self.hint_dist_user['distribution'] for key in hint_dist_keys):
             hint_dist_valid = True
             sub_keys = {'order', 'weight', 'fixed', 'copies'}
-            for key in self.settings.hint_dist_user['distribution']:
-                if not all(sub_key in sub_keys for sub_key in self.settings.hint_dist_user['distribution'][key]):
+            for key in self.hint_dist_user['distribution']:
+                if not all(sub_key in sub_keys for sub_key in self.hint_dist_user['distribution'][key]):
                     hint_dist_valid = False
         if not hint_dist_valid:
             raise InvalidFileException("""Hint distributions require all hint types be present in the distro 
@@ -135,26 +136,26 @@ class World(object):
                 
         for dist in hint_dist_keys:
             self.added_hint_types[dist] = []
-            for loc in self.settings.hint_dist_user['add_locations']:
+            for loc in self.hint_dist_user['add_locations']:
                 if 'types' in loc:
                     if dist in loc['types']:
                         self.added_hint_types[dist].append(loc['location'])
             self.item_added_hint_types[dist] = []
-            for i in self.settings.hint_dist_user['add_items']:
+            for i in self.hint_dist_user['add_items']:
                 if dist in i['types']:
                     self.item_added_hint_types[dist].append(i['item'])
             self.hint_type_overrides[dist] = []
-            for loc in self.settings.hint_dist_user['remove_locations']:
+            for loc in self.hint_dist_user['remove_locations']:
                 if dist in loc['types']:
                     self.hint_type_overrides[dist].append(loc['location'])
             self.item_hint_type_overrides[dist] = []
-            for i in self.settings.hint_dist_user['remove_items']:
+            for i in self.hint_dist_user['remove_items']:
                 if dist in i['types']:
                     self.item_hint_type_overrides[dist].append(i['item'])
                     
 
         self.hint_text_overrides = {}
-        for loc in self.settings.hint_dist_user['add_locations']:
+        for loc in self.hint_dist_user['add_locations']:
             if 'text' in loc:
                 # Arbitrarily throw an error at 80 characters to prevent overfilling the text box.
                 if len(loc['text']) > 80:
