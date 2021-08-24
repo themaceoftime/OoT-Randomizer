@@ -3369,6 +3369,9 @@ setting_infos = [
         gui_text       = "Your current logic setting does not support the enabling of tricks.",
         gui_type       = "Textbox",
         shared         = True,
+        gui_params     = {
+            "hide_when_disabled": True
+        },
         choices        = {},
     ),
     Combobox(
