@@ -942,14 +942,14 @@ class WorldDistribution(object):
     def configure_effective_starting_items(self, worlds, world):
         items = {item_name: record.copy() for item_name, record in self.starting_items.items()}
 
-        if world.start_with_rupees:
+        if world.settings.start_with_rupees:
             add_starting_item_with_ammo(items, 'Rupees', 999)
-        if world.start_with_consumables:
+        if world.settings.start_with_consumables:
             add_starting_item_with_ammo(items, 'Deku Sticks', 99)
             add_starting_item_with_ammo(items, 'Deku Nuts', 99)
 
         skipped_locations = ['Links Pocket']
-        if world.skip_child_zelda:
+        if world.settings.skip_child_zelda:
             add_starting_item_with_ammo(items, 'Zeldas Letter')
             skipped_locations.append('Song from Impa')
         for iter_world in worlds:
