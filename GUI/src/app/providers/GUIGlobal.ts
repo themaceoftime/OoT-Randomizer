@@ -538,11 +538,11 @@ export class GUIGlobal {
   isVersionNewer(newVersion: string, oldVersion: string) {
 
     //Strip away dev strings
-    if (oldVersion.startsWith("dev_"))
-      oldVersion = oldVersion.replace('dev_', '');
+    if (oldVersion.startsWith("dev") && oldVersion.includes("_"))
+      oldVersion = oldVersion.split("_")[1];
 
-    if (newVersion.startsWith("dev_"))
-      newVersion = newVersion.replace('dev_', '');
+    if (newVersion.startsWith("dev") && newVersion.includes("_"))
+      newVersion = newVersion.split("_")[1];
 
     let oldSplit = oldVersion.replace('R-', '').replace('v', '').replace(' ', '.').split('.');
     let newSplit = newVersion.replace('R-', '').replace(' ', '.').split('.');
