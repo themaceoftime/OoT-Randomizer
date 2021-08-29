@@ -1612,17 +1612,6 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         symbol = rom.sym('CHEST_TEXTURE_MATCH_CONTENTS')
         rom.write_int32(symbol, 0x00000001)
 
-        # Move Silver Gauntlets chest if it is small so it is reachable from Spirit Hover Seam
-        if world.settings.logic_rules != 'glitchless':
-            chest_name = 'Spirit Temple Silver Gauntlets Chest'
-            chest_address_0 = 0x21A02D0  # Address in setup 0
-            chest_address_2 = 0x21A06E4  # Address in setup 2
-            location = world.get_location(chest_name)
-            item = read_rom_item(rom, location.item.index)
-            if item['chest_type'] in (1, 3):
-                rom.write_int16(chest_address_0 + 6, 0x0172)  # Z pos
-                rom.write_int16(chest_address_2 + 6, 0x0172)  # Z pos
-
     # give dungeon items the correct messages
     add_item_messages(messages, shop_items, world)
     if world.settings.enhance_map_compass:

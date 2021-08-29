@@ -69,7 +69,6 @@ RANDO_CONTEXT:
 .include "jabu_elevator.asm"
 .include "dampe.asm"
 .include "dpad.asm"
-.include "chests.asm"
 .include "bunny_hood.asm"
 .include "colors.asm"
 .include "debug.asm"
@@ -109,10 +108,14 @@ DPAD_TEXTURE:
 .incbin("../resources/dpad.bin")
 TRIFORCE_ICON_TEXTURE:
 .incbin("../resources/triforce_sprite.bin")
-CHEST_FRONT_TEXTURE:
+GILDED_CHEST_FRONT_TEXTURE:
 .incbin("../resources/chest_front.bin")
-CHEST_BASE_TEXTURE:
+GILDED_CHEST_BASE_TEXTURE:
 .incbin("../resources/chest_base.bin")
+DARK_CHEST_FRONT_TEXTURE:
+.incbin("../resources/dark_chest_front.bin")
+DARK_CHEST_BASE_TEXTURE:
+.incbin("../resources/dark_chest_base.bin")
 
 .align 0x10
 PAYLOAD_END:

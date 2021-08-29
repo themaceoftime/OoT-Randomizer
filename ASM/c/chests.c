@@ -10,14 +10,17 @@
 #define BROWN_CHEST 0
 #define GILDED_CHEST 1
 #define GOLD_CHEST 2
+#define DARK_CHEST 3
 
 #define CHEST_BASE 1
 #define CHEST_LID 3
 
 uint32_t CHEST_TEXTURE_MATCH_CONTENTS = 0;
 
-extern void* CHEST_FRONT_TEXTURE;
-extern void* CHEST_BASE_TEXTURE;
+extern void* GILDED_CHEST_FRONT_TEXTURE;
+extern void* GILDED_CHEST_BASE_TEXTURE;
+extern void* DARK_CHEST_FRONT_TEXTURE;
+extern void* DARK_CHEST_BASE_TEXTURE;
 
 extern Mtx_t* write_matrix_stack_top(z64_gfx_t* gfx);
 asm(".equ write_matrix_stack_top, 0x800AB900");
@@ -81,8 +84,13 @@ void draw_chest(z64_game_t* game, int part, void* unk, void* unk2,
 
         if (chest_type == GILDED_CHEST)
         {
-            frontTexture = &CHEST_FRONT_TEXTURE;
-            baseTexture = &CHEST_BASE_TEXTURE;
+            frontTexture = &GILDED_CHEST_FRONT_TEXTURE;
+            baseTexture = &GILDED_CHEST_BASE_TEXTURE;
+        }
+        else if (chest_type == DARK_CHEST)
+        {
+            frontTexture = &DARK_CHEST_FRONT_TEXTURE;
+            baseTexture = &DARK_CHEST_BASE_TEXTURE;
         }
         else
         {

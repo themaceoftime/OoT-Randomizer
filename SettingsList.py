@@ -3473,14 +3473,17 @@ setting_infos = [
     ),
     Checkbutton(
         name           = 'correct_chest_sizes',
-        gui_text       = 'Chest Size Matches Contents',
+        gui_text       = 'Chest Style Matches Contents',
         gui_tooltip    = '''\
-            Chests will be large if they contain a major
-            item and small if they don't. Boss keys will
-            be in gold chests. This allows skipping
-            chests if they are small. However, skipping
-            small chests will mean having low health,
-            ammo, and rupees, so doing so is a risk.
+            Chest style will reflect its contents regardless
+            of size.  Fancy chests will contain keys, Gilded
+            chests will contain major items, and Wooden chests
+            will contain the rest.
+            If 100 Gold Skulltula Token bridge is turned on,
+            chests with tokens in them will be Fancy.                          
+            This allows skipping chests if they are wooden. 
+            However, skipping wooden chests will mean having 
+            low health, ammo, and rupees, so doing so is a risk.
         ''',
         shared         = True,
     ),
