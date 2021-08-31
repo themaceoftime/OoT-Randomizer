@@ -1315,8 +1315,8 @@ def get_pool_core(world):
         placed_items['Ganons Tower Boss Key Chest'] = 'Boss Key (Ganons Castle)'
 
     if world.settings.shuffle_ganon_bosskey in ['stones', 'medallions', 'dungeons', 'tokens']:
-         placed_items['Gift from Sages'] = 'Boss Key (Ganons Castle)'
-         pool.extend(get_junk_item())
+        placed_items['Gift from Sages'] = 'Boss Key (Ganons Castle)'
+        pool.extend(get_junk_item())
     else:
         placed_items['Gift from Sages'] = 'Ice Trap'
 
