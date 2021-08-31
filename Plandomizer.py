@@ -970,6 +970,8 @@ class Distribution(object):
                 if type(choice) != info.type:
                     raise TypeError('Supplied choice %s for setting %s is of type %s, expecting %s' % (repr(choice), repr(setting), repr(type(choice).__name__), repr(info.type.__name__)))
                 if not isinstance(choice, list) and choice not in info.choice_list:
+                    if setting == 'compress_rom' and choice == 'Temp':
+                        continue
                     raise ValueError('%s is not a valid choice for setting %s' % (repr(choice), repr(setting)))
                 # If setting is a list, must check each element
                 elif isinstance(choice, list):
