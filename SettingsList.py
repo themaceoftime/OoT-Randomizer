@@ -3368,7 +3368,7 @@ setting_infos = [
         type           = str,
         gui_text       = "Your current logic setting does not support the enabling of tricks.",
         gui_type       = "Textbox",
-        shared         = True,
+        shared         = False,
         gui_params     = {
             "hide_when_disabled": True
         },
