@@ -865,6 +865,9 @@ class WorldDistribution(object):
                 except KeyError:
                     raise RuntimeError(
                         'Too many items were added to world %d, and not enough junk is available to be removed.' % (self.id + 1))
+                except IndexError:
+                    raise RuntimeError(
+                        'Unknown item %s being placed on location %s in world %d.' % (record.item, location, self.id + 1))
             # Update item_pool after item is replaced
             if item.name not in self.item_pool:
                 self.item_pool[item.name] = ItemPoolRecord()
