@@ -3,6 +3,7 @@ import json
 import logging
 import re
 import random
+import difflib
 
 from functools import reduce
 from collections import defaultdict
@@ -329,6 +330,24 @@ class WorldDistribution(object):
             else:
                 return lambda s: invert != (s == pattern)
 
+    # When a string isn't found in the source list, attempt to get closest match from the list
+    # ex. Given "Recovery Hart" returns "Did you mean 'Recovery Heart'?"
+    def build_close_match(self, name, type, entrance_pools=None):
+        source = []
+        if type == 'item':
+            source = item_table.keys()
+        elif type == 'location':
+            source = location_table.keys()
+        elif type == 'entrance':
+            for pool in entrance_pools.values():
+                for entrance in pool:
+                    source.append(entrance.name)
+        elif type == 'stone':
+            source = [x.name for x in gossipLocations.values()]
+        close_match = difflib.get_close_matches(name, source, 1)
+        if len(close_match) > 0:
+            return "Did you mean %s?" % (repr(close_match[0]))
+        return "" # No matches
 
     # adds the location entry only if there is no record for that location already
     def add_location(self, new_location, new_item):
@@ -425,11 +444,11 @@ class WorldDistribution(object):
                 if item.name not in self.item_pool or self.item_pool[item.name].count != 0
             ]  # Only allow items to be candidates if they haven't been set to 0
             if len(candidates) == 0:
-                raise RuntimeError("Unknown item, or item set to 0 in the item pool could not be added: " + item_name)
+                raise RuntimeError("Unknown item, or item set to 0 in the item pool could not be added: " + repr(item_name) + ". " + self.build_close_match(item_name, 'item'))
             added_items = random_choices(candidates, k=count)
         else:
             if not IsItem(item_name):
-                raise RuntimeError("Unknown item could not be added: " + item_name)
+                raise RuntimeError("Unknown item could not be added: " + repr(item_name) + ". " + self.build_close_match(item_name, 'item'))
             added_items = [item_name] * count
 
         for item in added_items:
@@ -549,8 +568,11 @@ class WorldDistribution(object):
         for (name, record) in self.entrances.items():
             if record.region is None:
                 continue
-            if not worlds[self.id].get_entrance(name):
-                raise RuntimeError('Unknown entrance in world %d: %s' % (self.id + 1, name))
+            try:
+                if not worlds[self.id].get_entrance(name):
+                    raise RuntimeError('Unknown entrance in world %d: %s. %s' % (self.id + 1, name, self.build_close_match(name, 'entrance', entrance_pools)))
+            except KeyError:
+                raise RuntimeError('Unknown entrance in world %d: %s. %s' % (self.id + 1, name, self.build_close_match(name, 'entrance', entrance_pools)))
 
             entrance_found = False
             for pool_type, entrance_pool in entrance_pools.items():
@@ -687,7 +709,7 @@ class WorldDistribution(object):
                 try:
                     location = LocationFactory(name)
                 except KeyError:
-                    raise RuntimeError('Unknown location in world %d: %s' % (world.id + 1, name))
+                    raise RuntimeError('Unknown location in world %d: %s. %s' % (world.id + 1, repr(name), self.build_close_match(name, 'location')))
                 if location.type == 'Boss':
                     raise RuntimeError('Boss or already placed in world %d: %s' % (world.id + 1, name))
                 else:
@@ -767,7 +789,7 @@ class WorldDistribution(object):
                 try:
                     location = LocationFactory(location_name)
                 except KeyError:
-                    raise RuntimeError('Unknown location in world %d: %s' % (world.id + 1, location_name))
+                    raise RuntimeError('Unknown location in world %d: %s. %s' % (world.id + 1, repr(location_name), self.build_close_match(location_name, 'location')))
                 if location.type == 'Boss':
                     continue
                 elif location.name in world.settings.disabled_locations:
@@ -867,7 +889,7 @@ class WorldDistribution(object):
                         'Too many items were added to world %d, and not enough junk is available to be removed.' % (self.id + 1))
                 except IndexError:
                     raise RuntimeError(
-                        'Unknown item %s being placed on location %s in world %d.' % (record.item, location, self.id + 1))
+                        'Unknown item %s being placed on location %s in world %d. %s' % (repr(record.item), location, self.id + 1, self.build_close_match(record.item, 'item')))
             # Update item_pool after item is replaced
             if item.name not in self.item_pool:
                 self.item_pool[item.name] = ItemPoolRecord()
@@ -875,7 +897,7 @@ class WorldDistribution(object):
                 self.item_pool[item.name].count += 1
         except IndexError:
             raise RuntimeError(
-                'Unknown item %s being placed on location %s in world %d.' % (record.item, location, self.id + 1))
+                'Unknown item %s being placed on location %s in world %d. %s' % (repr(record.item), location, self.id + 1, self.build_close_match(record.item, 'item')))
         # Ensure pool copy is persisted to real pool
         for i, new_pool in enumerate(pool):
             if new_pool:
@@ -893,7 +915,7 @@ class WorldDistribution(object):
             try:
                 location = LocationFactory(name)
             except KeyError:
-                raise RuntimeError('Unknown location in world %d: %s' % (world.id + 1, name))
+                raise RuntimeError('Unknown location in world %d: %s. %s' % (world.id + 1, repr(name), self.build_close_match(name, 'location')))
             if location.type == 'Boss':
                 continue
 
@@ -912,7 +934,7 @@ class WorldDistribution(object):
             matcher = self.pattern_matcher(name)
             stoneID = pull_random_element([stoneIDs], lambda id: matcher(gossipLocations[id].name))
             if stoneID is None:
-                raise RuntimeError('Gossip stone unknown or already assigned in world %d: %s' % (self.id + 1, name))
+                raise RuntimeError('Gossip stone unknown or already assigned in world %d: %s. %s' % (self.id + 1, repr(name), self.build_close_match(name, 'stone')))
             spoiler.hints[self.id][stoneID] = GossipText(text=record.text, colors=record.colors, prefix='')
 
 
