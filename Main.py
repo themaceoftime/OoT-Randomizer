@@ -650,7 +650,9 @@ def update_goal_items(spoiler):
 
         search = Search([world.state for world in worlds])
         # Skip Child Zelda and Link's Pocket are not technically starting items, so collect them now
-        scz = [world.get_location('Song from Impa') for world in worlds]
+        scz = []
+        if worlds[0].settings.skip_child_zelda:
+            scz = [world.get_location('Song from Impa') for world in worlds]
         pocket = [world.get_location('Links Pocket') for world in worlds]
         starting_locations = scz + pocket
         for location in search.iter_reachable_locations(starting_locations):
