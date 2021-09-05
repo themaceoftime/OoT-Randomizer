@@ -22,7 +22,7 @@ from version import __version__
 from Utils import random_choices
 from JSONDump import dump_obj, CollapseList, CollapseDict, AlignedDict, SortedDict
 import StartingItems
-from SettingsList import get_setting_info, is_mapped, get_all_settings
+from SettingsList import get_setting_info, is_mapped, setting_infos
 
 
 class InvalidFileException(Exception):
@@ -1283,22 +1283,22 @@ def pull_all_elements(pools, predicate=lambda k:True, remove=True):
 
 # When a string isn't found in the source list, attempt to get closest match from the list
 # ex. Given "Recovery Hart" returns "Did you mean 'Recovery Heart'?"
-def build_close_match(name, type, list=None):
+def build_close_match(name, value_type, source_list=None):
     source = []
-    if type == 'item':
+    if value_type == 'item':
         source = item_table.keys()
-    elif type == 'location':
+    elif value_type == 'location':
         source = location_table.keys()
-    elif type == 'entrance':
-        for pool in list.values():
+    elif value_type == 'entrance':
+        for pool in source_list.values():
             for entrance in pool:
                 source.append(entrance.name)
-    elif type == 'stone':
+    elif value_type == 'stone':
         source = [x.name for x in gossipLocations.values()]
-    elif type == 'setting':
-        source = get_all_settings()
-    elif type == 'choice':
-        source = list
+    elif value_type == 'setting':
+        source = [x.name for x in setting_infos]
+    elif value_type == 'choice':
+        source = source_list
     close_match = difflib.get_close_matches(name, source, 1)
     if len(close_match) > 0:
         return "Did you mean %s?" % (repr(close_match[0]))
