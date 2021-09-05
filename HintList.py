@@ -1297,14 +1297,14 @@ hintTable = {
 # Link's Pocket will always be an empty goal, but it's included here to 
 # prevent key errors during the dungeon reward lookup.
 goalTable = {
-    'Queen Gohma':                                              ("the Spider", "the Spider", "Green"),
-    'King Dodongo':                                             ("the Lizard", "the Lizard", "Red"),
-    'Barinade':                                                 ("the Parasite", "the Parasite", "Blue"),
-    'Phantom Ganon':                                            ("the Puppet", "the Puppet", "Green"),
-    'Volvagia':                                                 ("the Dragon", "the Dragon", "Red"),
-    'Morpha':                                                   ("the Amoeba", "the Amoeba", "Blue"),
-    'Bongo Bongo':                                              ("the Demon", "the Demon", "Pink"),
-    'Twinrova':                                                 ("the Witch", "the Witch", "Yellow"),
+    'Queen Gohma':                                              ("the Spider", "Queen Gohma", "Green"),
+    'King Dodongo':                                             ("the Dinosaur", "King Dodongo", "Red"),
+    'Barinade':                                                 ("the Tentacle", "Barinade", "Blue"),
+    'Phantom Ganon':                                            ("the Puppet", "Phantom Ganon", "Green"),
+    'Volvagia':                                                 ("the Dragon", "Volvagia", "Red"),
+    'Morpha':                                                   ("the Amoeba", "Morpha", "Blue"),
+    'Bongo Bongo':                                              ("the Hands", "Bongo Bongo", "Pink"),
+    'Twinrova':                                                 ("the Witches", "Twinrova", "Yellow"),
     'Links Pocket':                                             ("your Pocket", "your Pocket", "Light Blue"),
 }
 

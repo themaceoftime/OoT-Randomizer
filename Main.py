@@ -35,6 +35,7 @@ from Plandomizer import Distribution
 from Search import Search, RewindableSearch
 from EntranceShuffle import set_entrances
 from LocationList import set_drop_location_names
+from Goals import GoalCategory, Goal
 
 
 class dummy_window():
@@ -637,8 +638,6 @@ def update_goal_items(spoiler):
     # References first world for goal categories only
     # Goals are changed for beatable-only accessibility per-world
     for cat_name, category in worlds[0].goal_categories.items():
-        required_locations[category.name] = {}
-        
         # Disable access rules for specified entrances
         category_locks = {}
         if category.lock_entrances is not None:
@@ -650,10 +649,30 @@ def update_goal_items(spoiler):
                     exit.access_rule = lambda state, **kwargs: False
 
         search = Search([world.state for world in worlds])
+        # Skip Child Zelda and Link's Pocket are not technically starting items, so collect them now
+        scz = [world.get_location('Song from Impa') for world in worlds]
+        pocket = [world.get_location('Links Pocket') for world in worlds]
+        starting_locations = scz + pocket
+        for location in search.iter_reachable_locations(starting_locations):
+            # Collect the item for the state world it is for
+            search.collect(location.item)
+
+        # if the category requirements are already satisfied by starting items (such as Links Pocket),
+        # do not generate hints for other goals in the category
+        starting_goals = len(search.can_beat_goals(cat_name, category.goals, scan_for_items=False))
+        if (starting_goals >= category.minimum_goals):
+            # Restore access rules
+            for world_id, exits in category_locks.items():
+                for exit_name, access_rule in exits.items():
+                    exit = worlds[world_id].get_entrance(exit_name)
+                    exit.access_rule = access_rule
+            continue
+
         search.update_reachable_goals(cat_name)
         reachable_goals = search.can_beat_goals(cat_name, category.goals)
         # Exit early if no goals are beatable with category locks
         if len(reachable_goals) > 0:
+            required_locations[category.name] = {}
             for location in search.iter_reachable_locations(all_locations):
                 # Try to remove items one at a time and see if the game is still beatable
                 if location in item_locations:
@@ -670,15 +689,11 @@ def update_goal_items(spoiler):
                             # The algorithm is biased towards low contributing goals and high sphere depth, theoretically targeting late game bottlenecks
                             if location.name in always_locations or location.name in location.world.hint_exclusions:
                                 location_weights = (location, 0, 0)
-                            elif len(reachable_goals) > 1:
-                                location_weights = (location, 1 - (len(reachable_goals) - len(valid_goals)) / len(category.goals), (spoiler.full_playthrough[location.name] / spoiler.max_sphere))
                             else:
-                                location_weights = (location, 1, spoiler.full_playthrough[location.name] / spoiler.max_sphere)
+                                location_weights = (location, 1, 1)
                             required_locations[category.name][goal.name].append(location_weights)
-                            weight = max(((2*location_weights[1]-1) + 2*location_weights[2]) / 3, 0)
-                            if weight > 0.45:
-                                goal.weight += weight
-                                category.weight += weight
+                            goal.weight = 1
+                            category.weight = 1
                             # Locations added to goal exclusion for future categories
                             # Main use is to split goals between before/after rainbow bridge
                             # Requires goal categories to be sorted by priority!
@@ -692,19 +707,36 @@ def update_goal_items(spoiler):
                 exit = worlds[world_id].get_entrance(exit_name)
                 exit.access_rule = access_rule
 
-    # Filter the required location to only include locations in the world
+    # Fallback to way of the hero required items list if all goals/goal categories already satisfied.
+    # Do not use if the default woth-like goal was already added for open bridge/open ganon.
+    # If the woth list is also empty, fails gracefully to the next hint type for the distro in either case.
     required_locations_dict = {}
-    for world in worlds:
-        required_locations_dict[world.id] = {}
-        for cat_name, category in world.goal_categories.items():
-            for goal in category.goals:
-                if goal.name in required_locations[category.name]:
-                    locations = list(filter(lambda location: location[0].world.id == world.id, required_locations[category.name][goal.name]))
-                    goal.required_locations = locations
-                    if (locations != []):
-                        if not category.name in required_locations_dict[world.id]:
-                            required_locations_dict[world.id][category.name] = {}
-                        required_locations_dict[world.id][category.name][goal.name] = locations
+    if ((not required_locations) and (not 'ganon' in worlds[0].goal_categories) and worlds[0].hint_dist_user['use_default_goals']):
+        for world in worlds:
+            required_locations_dict[world.id] = {}
+            required_locations_dict[world.id]['ganon'] = {}
+            locations = [(location, 1, 1) for location in spoiler.required_locations[world.id]]
+            c = GoalCategory('ganon', 30, goal_count=1, minimum_goals=1)
+            g = Goal(world, 'the hero', 'White', items=[{'name': 'Triforce','quantity': 1,'minimum': 1,'hintable': True}])
+            g.required_locations = locations
+            c.goals.append(g)
+            world.goal_categories[c.name] = c
+            # The real protagonist of the story
+            required_locations_dict[world.id]['ganon']['the hero'] = locations
+    else:
+        # Filter the required location to only include locations in the world
+        for world in worlds:
+            required_locations_dict[world.id] = {}
+            for cat_name, category in world.goal_categories.items():
+                if cat_name in required_locations:
+                    for goal in category.goals:
+                        if goal.name in required_locations[category.name]:
+                            locations = list(filter(lambda location: location[0].world.id == world.id, required_locations[category.name][goal.name]))
+                            goal.required_locations = locations
+                            if (locations != []):
+                                if not category.name in required_locations_dict[world.id]:
+                                    required_locations_dict[world.id][category.name] = {}
+                                required_locations_dict[world.id][category.name][goal.name] = locations
     spoiler.goal_locations = required_locations_dict
 
 def create_playthrough(spoiler):

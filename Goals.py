@@ -48,13 +48,14 @@ class Goal(object):
 
 class GoalCategory(object):
 
-    def __init__(self, name, priority, goal_count=0, lock_locations=None, lock_entrances=None):
+    def __init__(self, name, priority, goal_count=0, minimum_goals=0, lock_locations=None, lock_entrances=None):
         self.name = name
         self.priority = priority
         self.lock_locations = lock_locations
         self.lock_entrances = lock_entrances
         self.goals = []
         self.goal_count = goal_count
+        self.minimum_goals = minimum_goals
         self.weight = 0
         self._goal_cache = {}
 
