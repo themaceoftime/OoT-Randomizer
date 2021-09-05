@@ -261,14 +261,16 @@ class World(object):
             self.settings.big_poe_count = random.randint(1, 10)
             self.randomized_list.append('big_poe_count')
         # If set to random in GUI, we don't want to randomize if it was specified as non-random in the distribution
-        if (self.settings.starting_tod == 'random' and 
-          ('starting_tod' not in dist_keys or self.distribution.distribution._settings['starting_tod'] == 'random')):
+        if (self.settings.starting_tod == 'random'
+            and ('starting_tod' not in dist_keys 
+             or self.distribution.distribution.src_dict['_settings']['starting_tod'] == 'random')):
             setting_info = get_setting_info('starting_tod')
             choices = [ch for ch in setting_info.choices if ch not in ['default', 'random']]
             self.settings.starting_tod = random.choice(choices)
             self.randomized_list.append('starting_tod')
-        if (self.settings.starting_age == 'random' and
-          ('starting_age' not in dist_keys or self.distribution.distribution._settings['starting_age'] == 'random')):
+        if (self.settings.starting_age == 'random'
+            and ('starting_age' not in dist_keys 
+             or self.distribution.distribution.src_dict['_settings']['starting_age'] == 'random')):
             if self.settings.open_forest == 'closed':
                 # adult is not compatible
                 self.settings.starting_age = 'child'
