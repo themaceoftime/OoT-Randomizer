@@ -1226,7 +1226,7 @@ hintTable = {
     'Shadow Temple':                                            ("the house of the dead", "Shadow Temple", 'dungeonName'),
     'Spirit Temple':                                            ("the goddess of the sand", "Spirit Temple", 'dungeonName'),
     'Ice Cavern':                                               ("a frozen maze", "Ice Cavern", 'dungeonName'),
-    'Bottom of the Well':                                       ("a shadow\'s prison", "Bottom of the Well", 'dungeonName'),
+    'Bottom of the Well':                                       ("a shadow's prison", "Bottom of the Well", 'dungeonName'),
     'Gerudo Training Ground':                                   ("the test of thieves", "Gerudo Training Ground", 'dungeonName'),
     'Ganons Castle':                                            ("a conquered citadel", "Inside Ganon's Castle", 'dungeonName'),
     
