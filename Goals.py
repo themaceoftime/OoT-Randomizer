@@ -13,22 +13,19 @@ class Goal(object):
 
     def __init__(self, world, name, color, items=None, locations=None, lock_locations=None, lock_entrances=None, required_locations=None):
         # early exit if goal initialized incorrectly
-        if (items is None and locations is None):
+        if not items and not locations:
             raise Exception('Invalid goal: no items or destinations set')
         self.world = world
         self.name = name
-        if (color in validColors):
+        if color in validColors:
             self.color = color
         else:
-            raise Exception('Invalid goal: Color not supported')
+            raise Exception('Invalid goal: Color %r not supported' % color)
         self.items = items
         self.locations = locations
         self.lock_locations = lock_locations
         self.lock_entrances = lock_entrances
-        if required_locations is None:
-            self.required_locations = []
-        else:
-            self.required_locations = required_locations
+        self.required_locations = required_locations or []
         self.weight = 0
         self._item_cache = {}
 
@@ -40,7 +37,7 @@ class Goal(object):
                 if i['name'] == item:
                     self._item_cache[item] = i
                     return i
-        raise KeyError('No such item %s for goal %s' % (item, self.name))
+        raise KeyError('No such item %r for goal %r' % (item, self.name))
 
     def requires(self, item):
         # Prevent direct hints for certain items that can have many duplicates, such as tokens and Triforce Pieces
@@ -69,4 +66,4 @@ class GoalCategory(object):
                 if g.name == goal:
                     self._goal_cache[goal] = g
                     return g
-        raise KeyError('No such goal %s' % goal)
+        raise KeyError('No such goal %r' % goal)

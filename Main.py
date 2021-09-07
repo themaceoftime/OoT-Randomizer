@@ -662,7 +662,7 @@ def update_goal_items(spoiler):
         # if the category requirements are already satisfied by starting items (such as Links Pocket),
         # do not generate hints for other goals in the category
         starting_goals = len(search.can_beat_goals(cat_name, category.goals, scan_for_items=False))
-        if (starting_goals >= category.minimum_goals):
+        if starting_goals >= category.minimum_goals:
             # Restore access rules
             for world_id, exits in category_locks.items():
                 for exit_name, access_rule in exits.items():
@@ -673,10 +673,10 @@ def update_goal_items(spoiler):
         search.update_reachable_goals(cat_name)
         reachable_goals = search.can_beat_goals(cat_name, category.goals)
         # Exit early if no goals are beatable with category locks
-        if len(reachable_goals) > 0:
+        if reachable_goals:
             required_locations[category.name] = {}
             for location in search.iter_reachable_locations(all_locations):
-                # Try to remove items one at a time and see if the game is still beatable
+                # Try to remove items one at a time and see if the goal is still reachable
                 if location in item_locations:
                     old_item = location.item
                     location.item = None
@@ -684,8 +684,12 @@ def update_goal_items(spoiler):
                     # already, but beneficially, has search it can start from
                     valid_goals = search.can_beat_goals(cat_name, category.goals)
                     for goal in category.goals:
-                        if (not goal.name in valid_goals) and (goal.name in reachable_goals) and ((not location.name in priority_locations) or priority_locations[location.name] == category.name) and (not goal.requires(old_item.name)):
-                            if not goal.name in required_locations[category.name]:
+                        if (goal.name not in valid_goals
+                            and goal.name in reachable_goals
+                            and (location.name not in priority_locations
+                                 or priority_locations[location.name] == category.name)
+                            and not goal.requires(old_item.name)):
+                            if goal.name not in required_locations[category.name]:
                                 required_locations[category.name][goal.name] = []
                             # Goal locations weight themselves by both number of contributing goals and sphere depth
                             # The algorithm is biased towards low contributing goals and high sphere depth, theoretically targeting late game bottlenecks
@@ -713,7 +717,7 @@ def update_goal_items(spoiler):
     # Do not use if the default woth-like goal was already added for open bridge/open ganon.
     # If the woth list is also empty, fails gracefully to the next hint type for the distro in either case.
     required_locations_dict = {}
-    if ((not required_locations) and (not 'ganon' in worlds[0].goal_categories) and worlds[0].hint_dist_user['use_default_goals']):
+    if not required_locations and 'ganon' not in worlds[0].goal_categories and worlds[0].hint_dist_user['use_default_goals']:
         for world in worlds:
             required_locations_dict[world.id] = {}
             required_locations_dict[world.id]['ganon'] = {}
@@ -735,8 +739,8 @@ def update_goal_items(spoiler):
                         if goal.name in required_locations[category.name]:
                             locations = list(filter(lambda location: location[0].world.id == world.id, required_locations[category.name][goal.name]))
                             goal.required_locations = locations
-                            if (locations != []):
-                                if not category.name in required_locations_dict[world.id]:
+                            if locations:
+                                if category.name not in required_locations_dict[world.id]:
                                     required_locations_dict[world.id][category.name] = {}
                                 required_locations_dict[world.id][category.name][goal.name] = locations
     spoiler.goal_locations = required_locations_dict

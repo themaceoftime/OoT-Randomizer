@@ -233,7 +233,11 @@ class World(object):
                             min_goals += 1
                         b.minimum_goals = min_goals
                     b.goal_count = len(b.goals)
-                    if (self.settings.bridge_tokens > 0 and self.settings.bridge == 'tokens' and (self.settings.shuffle_ganon_bosskey != 'on_lacs' or self.settings.lacs_condition != 'tokens' or self.settings.bridge_tokens >= self.settings.lacs_tokens)):
+                    if (self.settings.bridge_tokens > 0
+                        and self.settings.bridge == 'tokens'
+                        and (self.settings.shuffle_ganon_bosskey != 'on_lacs'
+                             or self.settings.lacs_condition != 'tokens'
+                             or self.settings.bridge_tokens >= self.settings.lacs_tokens)):
                         b.goals.append(Goal(self, 'Skulls', 'Light Blue', items=[{'name': 'Gold Skulltula Token','quantity': 100,'minimum': self.settings.bridge_tokens,'hintable': False}]))
                         b.goal_count = round(self.settings.bridge_tokens / 10)
                         b.minimum_goals = 1
@@ -268,11 +272,14 @@ class World(object):
                         gbk.goals.append(Goal(self, { 'replace': 'Spirit Medallion' }, 'Yellow', items=[{'name': 'Spirit Medallion','quantity': 1,'minimum': 1,'hintable': True}]))
                         gbk.minimum_goals = 2
                     gbk.goal_count = len(gbk.goals)
-                    if (self.settings.lacs_tokens > 0 and self.settings.lacs_condition == 'tokens' and (self.settings.bridge != 'tokens' or self.settings.bridge_tokens < self.settings.lacs_tokens)):
+                    if (self.settings.lacs_tokens > 0
+                        and self.settings.lacs_condition == 'tokens'
+                        and (self.settings.bridge != 'tokens'
+                             or self.settings.bridge_tokens < self.settings.lacs_tokens)):
                         gbk.goals.append(Goal(self, 'Skulls','Light Blue',items=[{'name': 'Gold Skulltula Token','quantity': 100,'minimum': self.lacs_tokens,'hintable': False}]))
                         gbk.goal_count = round(self.settings.lacs_tokens / 10)
                         gbk.minimum_goals = 1
-                    if len(gbk.goals) > 0:
+                    if gbk.goals:
                         self.goal_categories[gbk.name] = gbk
                 elif self.settings.shuffle_ganon_bosskey != 'remove' and self.settings.shuffle_ganon_bosskey != 'vanilla':
                     gbk = GoalCategory('ganon_bosskey', 30, goal_count=1)

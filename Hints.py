@@ -377,7 +377,7 @@ def get_goal_category(spoiler, world, goal_categories):
             cat_names.append(category.name)
             # Depends on category order to choose next in the priority list
             # Each category is guaranteed a hint first round, then weighted based on goal count
-            if (not goal_category) and (not category.name in world.hinted_categories):
+            if not goal_category and category.name not in world.hinted_categories:
                 goal_category = category
                 world.hinted_categories.append(category.name)
 
@@ -431,7 +431,7 @@ def get_goal_hint(spoiler, world, checked):
             and location[0].item.name not in world.item_hint_type_overrides['goal'],
             goal.required_locations))
 
-        if (len(goal_locations) > 0):
+        if goal_locations:
             locations, num_goals, spheres = zip(*goal_locations)
             # Goal weight to zero mitigates double hinting this goal
             # Once all goals in a category are 0, selection is true random
@@ -445,7 +445,7 @@ def get_goal_hint(spoiler, world, checked):
     #   this value will approach but never equal 1.
     # spheres is the unreduced sphere from the playthrough containing the location divided by total unreduced spheres.
     #   This value can never be 0, but can be 1
-    location = random.choices(locations, weights=(max(((2*a-1) + 2*b) / 3, 0) for a, b in zip(num_goals, spheres)))[0]
+    location = random.choices(locations, weights=max(((2*a-1) + 2*b) / 3, 0) for a, b in zip(num_goals, spheres))[0]
     checked.add(location.name)
 
     if location.parent_region.dungeon:

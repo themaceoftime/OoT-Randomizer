@@ -243,14 +243,19 @@ class Search(object):
             beaten = True
             
             # Check if already beaten
-            if (goal.items is not None):
+            if goal.items:
                 for i in goal.items:
                     # Every world has the same set of goals, but reachable item quantity varies per-world in beatable only
-                    # Avert your eyes, here be spaghetti
-                    beaten = (beaten and all(map(State.has, self.state_list, itertools.repeat(i['name']), [state.world.goal_categories[category_name].get_goal(goal.name).get_item(i['name'])['quantity'] for state in self.state_list])))
-            if (goal.locations is not None):
+                    beaten = beaten and all(map(
+                        lambda s: s.has(
+                            i['name'],
+                            s.world.goal_categories[category_name].get_goal(goal.name).get_item(i['name'])['quantity']),
+                        self.state_list))
+            if goal.locations:
                 for l in goal.locations:
-                    beaten = (beaten and all(map(self.can_reach_spot, self.state_list, itertools.repeat(l['name']), itertools.repeat(l['age']))))
+                    beaten = beaten and all(map(
+                        lambda s: s.can_reach_spot(l['name'], l['age']),
+                        self.state_list))
 
             if beaten:
                 valid_goals.append(goal.name)
