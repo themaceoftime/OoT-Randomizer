@@ -109,7 +109,7 @@ do that.
 * New `Rainbow Bridge` option `Random` that will choose one of the other options at random (besides Skulltula Tokens), and require the maximum of that goal (if applicable).
 * New `goal` hint type for use in custom hint distributions. 
   * Default goals are included for the rainbow bridge, Ganon's Castle Boss Key, and trials settings.
-  * Hints read as "They say that Kokiri Forest is on the path of Spirit.", where Spirit refers to the Spirit Medallion dungeon reward, not the Spirit Temple.
+  * Hints read as "They say that Kokiri Forest is on the path to Twinrova.", where the medallion or stone reward from defeating Twinrova can be used for the bridge or Ganon's Castle Boss Key. Twinrova is not necessarily required depending on other settings. For example, with 2 medallions for the bridge, all medallions accessible without entering Ganon's Castle, and Spirit Medallion on Twinrova, the hint only points to one possible path to building the rainbow bridge.
 
 #### Bug Fixes
 

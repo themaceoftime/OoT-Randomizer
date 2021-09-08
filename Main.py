@@ -1,4 +1,3 @@
-from Region import Region
 from collections import OrderedDict
 import copy
 import hashlib
@@ -25,7 +24,6 @@ from Fill import distribute_items_restrictive, ShuffleError
 from Item import Item
 from ItemPool import generate_itempool
 from Hints import buildGossipHints
-from HintList import getHintGroup, goalTable
 from Utils import default_output_path, is_bundled, subprocess_args, data_path
 from version import __version__
 from N64Patch import create_patch_file, apply_patch_file
@@ -35,7 +33,7 @@ from Plandomizer import Distribution
 from Search import Search, RewindableSearch
 from EntranceShuffle import set_entrances
 from LocationList import set_drop_location_names
-from Goals import GoalCategory, Goal
+from Goals import update_goal_items, maybe_set_light_arrows, replace_goal_names
 
 
 class dummy_window():
@@ -193,7 +191,6 @@ def make_spoiler(settings, worlds, window=dummy_window()):
     if settings.create_spoiler or settings.hints != 'none':
         window.update_status('Calculating Hint Data')
         logger.info('Calculating hint data.')
-        update_required_items(spoiler)
         update_goal_items(spoiler)
         buildGossipHints(spoiler, worlds)
         window.update_progress(55)
@@ -546,204 +543,12 @@ def copy_worlds(worlds):
     return worlds
 
 
-def maybe_set_light_arrows(location):
-    if not location.item.world.light_arrow_location and location.item and location.item.name == 'Light Arrows':
-        location.item.world.light_arrow_location = location
-        logging.getLogger('').debug(f'Light Arrows [{location.item.world.id}] set to [{location.name}]')
-
-
 def find_light_arrows(spoiler):
     search = Search([world.state for world in spoiler.worlds])
     for location in search.iter_reachable_locations(search.progression_locations()):
         search.collect(location.item)
         maybe_set_light_arrows(location)
 
-
-def update_required_items(spoiler):
-    worlds = spoiler.worlds
-
-    # get list of all of the progressive items that can appear in hints
-    # all_locations: all progressive items. have to collect from these
-    # item_locations: only the ones that should appear as "required"/WotH
-    all_locations = [location for world in worlds for location in world.get_filled_locations()]
-    # Set to test inclusion against
-    item_locations = {location for location in all_locations if location.item.majoritem and not location.locked and location.item.name != 'Triforce Piece'}
-
-    # if the playthrough was generated, filter the list of locations to the
-    # locations in the playthrough. The required locations is a subset of these
-    # locations. Can't use the locations directly since they are location to the
-    # copied spoiler world, so must compare via name and world id
-    if spoiler.playthrough:
-        translate = lambda loc: worlds[loc.world.id].get_location(loc.name)
-        spoiler_locations = set(map(translate, itertools.chain.from_iterable(spoiler.playthrough.values())))
-        item_locations &= spoiler_locations
-        # Skip even the checks
-        _maybe_set_light_arrows = lambda _: None
-    else:
-        _maybe_set_light_arrows = maybe_set_light_arrows
-
-    required_locations = []
-
-    search = Search([world.state for world in worlds])
-
-    for location in search.iter_reachable_locations(all_locations):
-        # Try to remove items one at a time and see if the game is still beatable
-        if location in item_locations:
-            old_item = location.item
-            location.item = None
-            # copies state! This is very important as we're in the middle of a search
-            # already, but beneficially, has search it can start from
-            if not search.can_beat_game():
-                required_locations.append(location)
-            location.item = old_item
-            _maybe_set_light_arrows(location)
-        search.state_list[location.item.world.id].collect(location.item)
-
-    # Filter the required location to only include location in the world
-    required_locations_dict = {}
-    for world in worlds:
-        required_locations_dict[world.id] = list(filter(lambda location: location.world.id == world.id, required_locations))
-    spoiler.required_locations = required_locations_dict
-
-def replace_goal_names(worlds):
-    for world in worlds:
-        bosses = [location for location in world.get_filled_locations() if location.item.type == 'DungeonReward']
-        for cat_name, category in world.goal_categories.items():
-            for goal in category.goals:
-                if isinstance(goal.name, dict):
-                    for boss in bosses:
-                        if boss.item.name == goal.name['replace']:
-                            flavorText, clearText, color = goalTable[boss.name]
-                            if world.settings.clearer_hints:
-                                goal.name = clearText
-                            else:
-                                goal.name = flavorText
-                            goal.color = color
-                            break
-
-def update_goal_items(spoiler):
-    worlds = spoiler.worlds
-
-    # get list of all of the progressive items that can appear in hints
-    # all_locations: all progressive items. have to collect from these
-    # item_locations: only the ones that should appear as "required"/WotH
-    all_locations = [location for world in worlds for location in world.get_filled_locations()]
-    # Set to test inclusion against
-    item_locations = {location for location in all_locations if location.item.majoritem and not location.locked and location.item.name != 'Triforce Piece'}
-
-    required_locations = {}
-    priority_locations = {}
-    always_locations = [location.name for world in worlds for location in getHintGroup('always', world)]
-
-    # References first world for goal categories only
-    # Goals are changed for beatable-only accessibility per-world
-    for cat_name, category in worlds[0].goal_categories.items():
-        # Disable access rules for specified entrances
-        category_locks = {}
-        if category.lock_entrances is not None:
-            for world in worlds:
-                category_locks[world.id] = {}
-                for lock in category.lock_entrances:
-                    exit = world.get_entrance(lock)
-                    category_locks[world.id][exit.name] = exit.access_rule
-                    exit.access_rule = lambda state, **kwargs: False
-
-        search = Search([world.state for world in worlds])
-        # Skip Child Zelda and Link's Pocket are not technically starting items, so collect them now
-        scz = []
-        if worlds[0].settings.skip_child_zelda:
-            scz = [world.get_location('Song from Impa') for world in worlds]
-        pocket = [world.get_location('Links Pocket') for world in worlds]
-        starting_locations = scz + pocket
-        for location in search.iter_reachable_locations(starting_locations):
-            # Collect the item for the state world it is for
-            search.collect(location.item)
-
-        # if the category requirements are already satisfied by starting items (such as Links Pocket),
-        # do not generate hints for other goals in the category
-        starting_goals = len(search.can_beat_goals(cat_name, category.goals, scan_for_items=False))
-        if starting_goals >= category.minimum_goals:
-            # Restore access rules
-            for world_id, exits in category_locks.items():
-                for exit_name, access_rule in exits.items():
-                    exit = worlds[world_id].get_entrance(exit_name)
-                    exit.access_rule = access_rule
-            continue
-
-        search.update_reachable_goals(cat_name)
-        reachable_goals = search.can_beat_goals(cat_name, category.goals)
-        # Exit early if no goals are beatable with category locks
-        if reachable_goals:
-            required_locations[category.name] = {}
-            for location in search.iter_reachable_locations(all_locations):
-                # Try to remove items one at a time and see if the goal is still reachable
-                if location in item_locations:
-                    old_item = location.item
-                    location.item = None
-                    # copies state! This is very important as we're in the middle of a search
-                    # already, but beneficially, has search it can start from
-                    valid_goals = search.can_beat_goals(cat_name, category.goals)
-                    for goal in category.goals:
-                        if (goal.name not in valid_goals
-                            and goal.name in reachable_goals
-                            and (location.name not in priority_locations
-                                 or priority_locations[location.name] == category.name)
-                            and not goal.requires(old_item.name)):
-                            if goal.name not in required_locations[category.name]:
-                                required_locations[category.name][goal.name] = []
-                            # Goal locations weight themselves by both number of contributing goals and sphere depth
-                            # The algorithm is biased towards low contributing goals and high sphere depth, theoretically targeting late game bottlenecks
-                            if location.name in always_locations or location.name in location.world.hint_exclusions:
-                                location_weights = (location, 0, 0)
-                            else:
-                                location_weights = (location, 1, 1)
-                            required_locations[category.name][goal.name].append(location_weights)
-                            goal.weight = 1
-                            category.weight = 1
-                            # Locations added to goal exclusion for future categories
-                            # Main use is to split goals between before/after rainbow bridge
-                            # Requires goal categories to be sorted by priority!
-                            priority_locations[location.name] = category.name
-                    location.item = old_item
-                search.state_list[location.item.world.id].collect(location.item)
-
-        # Restore access rules
-        for world_id, exits in category_locks.items():
-            for exit_name, access_rule in exits.items():
-                exit = worlds[world_id].get_entrance(exit_name)
-                exit.access_rule = access_rule
-
-    # Fallback to way of the hero required items list if all goals/goal categories already satisfied.
-    # Do not use if the default woth-like goal was already added for open bridge/open ganon.
-    # If the woth list is also empty, fails gracefully to the next hint type for the distro in either case.
-    required_locations_dict = {}
-    if not required_locations and 'ganon' not in worlds[0].goal_categories and worlds[0].hint_dist_user['use_default_goals']:
-        for world in worlds:
-            required_locations_dict[world.id] = {}
-            required_locations_dict[world.id]['ganon'] = {}
-            locations = [(location, 1, 1) for location in spoiler.required_locations[world.id]]
-            c = GoalCategory('ganon', 30, goal_count=1, minimum_goals=1)
-            g = Goal(world, 'the hero', 'White', items=[{'name': 'Triforce','quantity': 1,'minimum': 1,'hintable': True}])
-            g.required_locations = locations
-            c.goals.append(g)
-            world.goal_categories[c.name] = c
-            # The real protagonist of the story
-            required_locations_dict[world.id]['ganon']['the hero'] = locations
-    else:
-        # Filter the required location to only include locations in the world
-        for world in worlds:
-            required_locations_dict[world.id] = {}
-            for cat_name, category in world.goal_categories.items():
-                if cat_name in required_locations:
-                    for goal in category.goals:
-                        if goal.name in required_locations[category.name]:
-                            locations = list(filter(lambda location: location[0].world.id == world.id, required_locations[category.name][goal.name]))
-                            goal.required_locations = locations
-                            if locations:
-                                if category.name not in required_locations_dict[world.id]:
-                                    required_locations_dict[world.id][category.name] = {}
-                                required_locations_dict[world.id][category.name][goal.name] = locations
-    spoiler.goal_locations = required_locations_dict
 
 def create_playthrough(spoiler):
     worlds = spoiler.worlds

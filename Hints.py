@@ -403,7 +403,7 @@ def get_goal_hint(spoiler, world, checked):
     # If all locations for a goal are hinted, remove the goal from the list and try again.
     # If all locations for all goals are hinted, try remaining goal categories
     # If all locations for all goal categories are hinted, return no hint.
-    while True:
+    while not goal_locations:
         if not goals:
             del world.goal_categories[goal_category.name]
             goal_category = get_goal_category(spoiler, world, world.goal_categories)
@@ -431,21 +431,14 @@ def get_goal_hint(spoiler, world, checked):
             and location[0].item.name not in world.item_hint_type_overrides['goal'],
             goal.required_locations))
 
-        if goal_locations:
-            locations, num_goals, spheres = zip(*goal_locations)
-            # Goal weight to zero mitigates double hinting this goal
-            # Once all goals in a category are 0, selection is true random
-            goal.weight = 0
-            break
-        else:
+        if not goal_locations:
             goals.remove(goal)
 
-    # num_goals and spheres are normalized weights for number of goals the location locks and unreduced sphere depth
-    # For num_goals, 0 is all goals locked and 1 is no locked goals. Since no locked goals means the item is not required by definition,
-    #   this value will approach but never equal 1.
-    # spheres is the unreduced sphere from the playthrough containing the location divided by total unreduced spheres.
-    #   This value can never be 0, but can be 1
-    location = random.choices(locations, weights=max(((2*a-1) + 2*b) / 3, 0) for a, b in zip(num_goals, spheres))[0]
+    # Goal weight to zero mitigates double hinting this goal
+    # Once all goals in a category are 0, selection is true random
+    goal.weight = 0
+    locations, num_goals, spheres = zip(*goal_locations)
+    location = random.choice(locations)
     checked.add(location.name)
 
     if location.parent_region.dungeon:
@@ -453,7 +446,7 @@ def get_goal_hint(spoiler, world, checked):
     else:
         location_text = get_hint_area(location)
     
-    return (GossipText('#%s# is on the path of #%s#.' % (location_text, goal.name), [goal.color, 'Light Blue']), location)
+    return (GossipText('#%s# is on the path to #%s#.' % (location_text, goal.name), [goal.color, 'Light Blue']), location)
 
 
 def get_barren_hint(spoiler, world, checked):
