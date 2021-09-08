@@ -57,6 +57,10 @@ def getHintGroup(group, world):
         if hint.name in world.always_hints and group == 'always':
             hint.type = 'always'
 
+        if group in ['overworld', 'dungeon', 'sometimes'] and hint.name in conditional_sometimes.keys():
+            if not conditional_sometimes[hint.name](world):
+                continue
+
         # Hint inclusion override from distribution
         if group in world.added_hint_types or group in world.item_added_hint_types:
             if hint.name in world.added_hint_types[group]:
@@ -145,6 +149,11 @@ conditional_always = {
     'Kak 50 Gold Skulltula Reward': lambda world: tokens_required_by_settings(world) < 50,
 }
 
+# Some sometimes hints should only be enabled under certain settings
+conditional_sometimes = {
+    'HC Great Fairy Reward':        lambda world: world.settings.shuffle_interior_entrances == 'off',
+    'OGC Great Fairy Reward':       lambda world: world.settings.shuffle_interior_entrances == 'off',
+}
 
 # table of hints, format is (name, hint text, clear hint text, type of hint) there are special characters that are read for certain in game commands:
 # ^ is a box break
@@ -316,7 +325,7 @@ hintTable = {
     'Jabu Jabus Belly Boomerang Chest':                            ("a school of #stingers swallowed by a deity# guard", "a school of #stingers swallowed by Jabu Jabu# guard", ['dungeon', 'sometimes']),
     'Jabu Jabus Belly MQ GS Invisible Enemies Room':               ("a spider surrounded by #shadows in the belly of a deity# holds", "a spider surrounded by #shadows in Jabu Jabu's Belly# holds", ['dungeon', 'sometimes']),
     'Jabu Jabus Belly MQ Cow':                                     ("a #cow swallowed by a deity# gifts", "a #cow swallowed by Jabu Jabu# gifts", ['dungeon', 'sometimes']),
-    'Forest Temple Boss Key Chest':                                ("a #turned trunk# contains", "a #twisted corridor in the Forest Temple# hides", ['dungeon', 'sometimes']),
+    'Forest Temple Boss Key Chest':                                ("a #turned trunk# contains", "a #sideways chest in the Forest Temple# hides", ['dungeon', 'sometimes']),
     'Fire Temple Scarecrow Chest':                                 ("a #scarecrow atop the volcano# hides", "#Pierre atop the Fire Temple# hides", ['dungeon', 'sometimes']),
     'Fire Temple Megaton Hammer Chest':                            ("the #Flare Dancer atop the volcano# guards a chest containing", "the #Flare Dancer atop the Fire Temple# guards a chest containing", ['dungeon', 'sometimes']),
     'Fire Temple MQ Chest On Fire':                                ("the #Flare Dancer atop the volcano# guards a chest containing", "the #Flare Dancer atop the Fire Temple# guards a chest containing", ['dungeon', 'sometimes']),
@@ -337,7 +346,7 @@ hintTable = {
     'Spirit Temple MQ Child Hammer Switch Chest':                  ("a #temporal paradox in the Colossus# yields", "a #temporal paradox in the Spirit Temple# yields", ['dungeon', 'sometimes']),
     'Spirit Temple MQ Symphony Room Chest':                        ("a #symphony in the Colossus# yields", "a #symphony in the Spirit Temple# yields", ['dungeon', 'sometimes']),
     'Spirit Temple MQ GS Symphony Room':                           ("a #spider's symphony in the Colossus# yields", "a #spider's symphony in the Spirit Temple# yields", ['dungeon', 'sometimes']),
-    'Shadow Temple Freestanding Key':                              ("#inside a burning skull# lies", "#inside a giant pot in the Shadow Temple# lies", ['dungeon', 'sometimes']),
+    'Shadow Temple Freestanding Key':                              ("#inside a burning skull# lies", "#giant pot in the Shadow Temple# holds", ['dungeon', 'sometimes']),
     'Shadow Temple MQ Bomb Flower Chest':                          ("shadows in an #invisible maze# guard", None, ['dungeon', 'sometimes']),
     'Ice Cavern Map Chest':                                        ("#winds of ice# surround", "a chest #atop a pillar of ice# contains", ['dungeon', 'sometimes']),
     'Ganons Castle Shadow Trial Golden Gauntlets Chest':           ("#light in the test of darkness# unveils", "a #like-like in Ganon's Castle guards", ['dungeon', 'sometimes']),
