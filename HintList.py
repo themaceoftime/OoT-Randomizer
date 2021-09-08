@@ -346,10 +346,10 @@ hintTable = {
     'Spirit Temple MQ Child Hammer Switch Chest':                  ("a #temporal paradox in the Colossus# yields", "a #temporal paradox in the Spirit Temple# yields", ['dungeon', 'sometimes']),
     'Spirit Temple MQ Symphony Room Chest':                        ("a #symphony in the Colossus# yields", "a #symphony in the Spirit Temple# yields", ['dungeon', 'sometimes']),
     'Spirit Temple MQ GS Symphony Room':                           ("a #spider's symphony in the Colossus# yields", "a #spider's symphony in the Spirit Temple# yields", ['dungeon', 'sometimes']),
-    'Shadow Temple Freestanding Key':                              ("#inside a burning skull# lies", "#giant pot in the Shadow Temple# holds", ['dungeon', 'sometimes']),
+    'Shadow Temple Freestanding Key':                              ("#inside a burning skull# lies", "#a giant pot in the Shadow Temple# holds", ['dungeon', 'sometimes']),
     'Shadow Temple MQ Bomb Flower Chest':                          ("shadows in an #invisible maze# guard", None, ['dungeon', 'sometimes']),
     'Ice Cavern Map Chest':                                        ("#winds of ice# surround", "a chest #atop a pillar of ice# contains", ['dungeon', 'sometimes']),
-    'Ganons Castle Shadow Trial Golden Gauntlets Chest':           ("#light in the test of darkness# unveils", "a #like-like in Ganon's Castle guards", ['dungeon', 'sometimes']),
+    'Ganons Castle Shadow Trial Golden Gauntlets Chest':           ("#light in the test of darkness# unveils", "a #like-like in Ganon's Castle# guards", ['dungeon', 'sometimes']),
 
     'KF Kokiri Sword Chest':                                       ("the #hidden treasure of the Kokiri# is", None, 'exclude'),
     'KF Midos Top Left Chest':                                     ("the #leader of the Kokiri# hides", "#inside Mido's house# is", 'exclude'),
