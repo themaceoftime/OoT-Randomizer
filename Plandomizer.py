@@ -1168,8 +1168,16 @@ class Distribution(object):
             world_dist.goal_locations = {}
             if spoiler.goal_locations[world.id] != {}:
                 for cat_name, goals in spoiler.goal_locations[world.id].items():
-                    for goal, locations in goals.items():
-                        world_dist.goal_locations['Path of ' + goal + ' (' + cat_name + ')'] = {loc[0].name: LocationRecord.from_item(loc[0].item).to_json() for loc in locations}
+                    world_dist.goal_locations[cat_name] = {}
+                    for goal_name, location_worlds in goals.items():
+                        goal = spoiler.goal_categories[world.id][cat_name].get_goal(goal_name)
+                        goal_text = 'Path ' + goal.hint_text.replace('#','')
+                        world_dist.goal_locations[cat_name][goal_text] = {}
+                        for location_world, locations in location_worlds.items():
+                            if len(self.world_dists) == 1:
+                                world_dist.goal_locations[cat_name][goal_text] = {loc.name: LocationRecord.from_item(loc.item).to_json() for loc in locations}
+                            else:
+                                world_dist.goal_locations[cat_name][goal_text]['from World ' + str(location_world + 1)] = {loc.name: LocationRecord.from_item(loc.item).to_json() for loc in locations}
             world_dist.barren_regions = [*world.empty_areas]
             world_dist.gossip_stones = {gossipLocations[loc].name: GossipRecord(spoiler.hints[world.id][loc].to_json()) for loc in spoiler.hints[world.id]}
 

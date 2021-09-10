@@ -57,6 +57,7 @@ class Spoiler(object):
         self.metadata = {}
         self.required_locations = {}
         self.goal_locations = {}
+        self.goal_categories = {}
         self.hints = {world.id: {} for world in worlds}
         self.file_hash = []
 

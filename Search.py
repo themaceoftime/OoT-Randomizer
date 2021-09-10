@@ -242,27 +242,28 @@ class Search(object):
         if all(map(State.won, self.state_list)):
             valid_goals['way of the hero'] = True
         for category_name, category in goal_categories.items():
-            valid_goals[category_name] = []
-            for goal in category.goals:
-                beaten = True
-                
-                # Check if already beaten
-                if goal.items:
-                    for i in goal.items:
-                        # Every world has the same set of goals, but reachable item quantity varies per-world in beatable only
-                        beaten = beaten and all(map(
-                            lambda s: s.has(
-                                i['name'],
-                                s.world.goal_categories[category_name].get_goal(goal.name).get_item(i['name'])['quantity']),
-                            self.state_list))
-                if goal.locations:
-                    for l in goal.locations:
-                        beaten = beaten and all(map(
-                            lambda s: s.can_reach_spot(l['name'], l['age']),
-                            self.state_list))
-
-                if beaten:
-                    valid_goals[category_name].append(goal.name)
+            valid_goals[category_name] = {}
+            valid_goals[category_name]['stateReverse'] = {}
+            for state in self.state_list:
+                valid_goals[category_name]['stateReverse'][state.world.id] = []
+                for goal in category.goals:
+                    beaten = True
+                    if goal.name not in valid_goals[category_name]:
+                        valid_goals[category_name][goal.name] = []
+                    # Check if already beaten
+                    if goal.items:
+                        for i in goal.items:
+                            # Every world has the same set of goals, but reachable item quantity varies per-world in beatable only
+                            beaten = beaten and state.has_full_item_goal(category, goal, i)
+                    if goal.locations:
+                        for l in goal.locations:
+                            beaten = beaten and state.can_reach_spot(l['name'], l['age'])
+                    if beaten:
+                        valid_goals[category_name][goal.name].append(state.world.id)
+                        # Reverse lookup for checking if the category is already beaten.
+                        # Only used to check if starting items satisfy the category, so
+                        # don't repeat this in the scan_for_items full search section.
+                        valid_goals[category_name]['stateReverse'][state.world.id].append(goal.name)
 
         if scan_for_items:
             # collect all available items
@@ -272,23 +273,20 @@ class Search(object):
             if all(map(State.won, search.state_list)):
                 valid_goals['way of the hero'] = True
             for category_name, category in goal_categories.items():
-                for goal in category.goals:
-                    beaten = True
-                    # if every state beat the goal, then return True
-                    if goal.items:
-                        for i in goal.items:
-                            beaten = beaten and all(map(
-                                lambda s: s.has(
-                                    i['name'],
-                                    s.world.goal_categories[category_name].get_goal(goal.name).get_item(i['name'])['quantity']),
-                                search.state_list))
-                    if goal.locations:
-                        for l in goal.locations:
-                            beaten = beaten and all(map(
-                                lambda s: s.can_reach_spot(l['name'], l['age']),
-                                search.state_list))
-                    if beaten and goal.name not in valid_goals[category_name]:
-                        valid_goals[category_name].append(goal.name)
+                for state in search.state_list:
+                    for goal in category.goals:
+                        beaten = True
+                        if goal.name not in valid_goals[category_name]:
+                            valid_goals[category_name][goal.name] = []
+                        # if every state beat the goal, then return True
+                        if goal.items:
+                            for i in goal.items:
+                                beaten = beaten and state.has_full_item_goal(category, goal, i)
+                        if goal.locations:
+                            for l in goal.locations:
+                                beaten = beaten and state.can_reach_spot(l['name'], l['age'])
+                        if beaten and state.world.id not in valid_goals[category_name][goal.name]:
+                            valid_goals[category_name][goal.name].append(state.world.id)
         if 'way of the hero' not in valid_goals:
             valid_goals['way of the hero'] = False
 

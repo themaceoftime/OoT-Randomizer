@@ -398,6 +398,7 @@ def get_goal_hint(spoiler, world, checked):
         return None
 
     goals = goal_category.goals
+    goal_locations = []
 
     # Choose random goal and check if any locations are already hinted.
     # If all locations for a goal are hinted, remove the goal from the list and try again.
@@ -437,8 +438,11 @@ def get_goal_hint(spoiler, world, checked):
     # Goal weight to zero mitigates double hinting this goal
     # Once all goals in a category are 0, selection is true random
     goal.weight = 0
-    locations, num_goals, spheres = zip(*goal_locations)
-    location = random.choice(locations)
+    locations, num_goals, spheres, world_ids = zip(*goal_locations)
+    location_tuple = random.choice(goal_locations)
+    location = location_tuple[0]
+    world_ids = location_tuple[3]
+    world_id = random.choice(world_ids)
     checked.add(location.name)
 
     if location.parent_region.dungeon:
@@ -446,7 +450,14 @@ def get_goal_hint(spoiler, world, checked):
     else:
         location_text = get_hint_area(location)
     
-    return (GossipText('#%s# is on the path to #%s#.' % (location_text, goal.name), [goal.color, 'Light Blue']), location)
+    if world_id == world.id:
+        player_text = "the"
+        goal_text = goal.hint_text
+    else:
+        player_text = "Player %s's" % (world_id + 1)
+        goal_text = spoiler.goal_categories[world_id][goal_category.name].get_goal(goal.name).hint_text
+
+    return (GossipText('#%s# is on %s path %s.' % (location_text, player_text, goal_text), [goal.color, 'Light Blue']), location)
 
 
 def get_barren_hint(spoiler, world, checked):

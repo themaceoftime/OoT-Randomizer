@@ -102,8 +102,10 @@ class State(object):
         return self.prog_items[item_goal['name']] >= item_goal['minimum']
 
 
-    def has_full_item_goal(self, item_goal):
-        return self.prog_items[item_goal['name']] >= item_goal['quantity']
+    def has_full_item_goal(self, category, goal, item_goal):
+        local_goal = self.world.goal_categories[category.name].get_goal(goal.name)
+        per_world_max_quantity = local_goal.get_item(item_goal['name'])['quantity']
+        return self.prog_items[item_goal['name']] >= per_world_max_quantity
 
 
     def had_night_start(self):

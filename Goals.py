@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import logging
 
 from HintList import goalTable, getHintGroup
@@ -18,12 +19,13 @@ validColors = [
 
 class Goal(object):
 
-    def __init__(self, world, name, color, items=None, locations=None, lock_locations=None, lock_entrances=None, required_locations=None, create_empty=False):
+    def __init__(self, world, name, hint_text, color, items=None, locations=None, lock_locations=None, lock_entrances=None, required_locations=None, create_empty=False):
         # early exit if goal initialized incorrectly
         if not items and not locations and not create_empty:
             raise Exception('Invalid goal: no items or destinations set')
         self.world = world
         self.name = name
+        self.hint_text = hint_text
         if color in validColors:
             self.color = color
         else:
@@ -82,15 +84,15 @@ class GoalCategory(object):
                     self._goal_cache[goal] = g
                     return g
         raise KeyError('No such goal %r' % goal)
-    
+
 
     def is_beaten(self, search):
         # if the category requirements are already satisfied by starting items (such as Links Pocket),
         # do not generate hints for other goals in the category
         starting_goals = search.can_beat_goals({ self.name: self }, scan_for_items=False)
-        return len(starting_goals[self.name]) >= self.minimum_goals
-    
-    
+        return all(map(lambda s: len(starting_goals[self.name]['stateReverse'][s.world.id]) >= self.minimum_goals, search.state_list))
+
+
     def update_reachable_goals(self, starting_search, full_search):
         # Only reduce goal item quantity if minimum goal requirements are reachable, 
         # but not the full goal quantity. Primary use is to identify reachable
@@ -116,14 +118,14 @@ def replace_goal_names(worlds):
         bosses = [location for location in world.get_filled_locations() if location.item.type == 'DungeonReward']
         for cat_name, category in world.goal_categories.items():
             for goal in category.goals:
-                if isinstance(goal.name, dict):
+                if isinstance(goal.hint_text, dict):
                     for boss in bosses:
-                        if boss.item.name == goal.name['replace']:
+                        if boss.item.name == goal.hint_text['replace']:
                             flavorText, clearText, color = goalTable[boss.name]
                             if world.settings.clearer_hints:
-                                goal.name = clearText
+                                goal.hint_text = clearText
                             else:
-                                goal.name = flavorText
+                                goal.hint_text = flavorText
                             goal.color = color
                             break
 
@@ -156,7 +158,6 @@ def update_goal_items(spoiler):
 
         category_locks = lock_category_entrances(category, search.state_list)
 
-        # for category, exit early if needed
         if category.is_beaten(search):
             unlock_category_entrances(category_locks, search.state_list)
             continue
@@ -164,7 +165,6 @@ def update_goal_items(spoiler):
         full_search = search.copy()
         full_search.collect_locations()
         reachable_goals = {}
-        # for category
         category.update_reachable_goals(search, full_search)
         reachable_goals = full_search.can_beat_goals({ cat_name: category }, scan_for_items=False)
         identified_locations = search_goals({ cat_name: category }, reachable_goals, search, priority_locations, all_locations, item_locations, always_locations, _maybe_set_light_arrows)
@@ -185,6 +185,12 @@ def update_goal_items(spoiler):
     woth_locations = list(required_locations['way of the hero'])
     del required_locations['way of the hero']
     
+    # Update WOTH items
+    woth_locations_dict = {}
+    for world in worlds:
+        woth_locations_dict[world.id] = list(filter(lambda location: location.world.id == world.id, woth_locations))
+    spoiler.required_locations = woth_locations_dict
+
     # Fallback to way of the hero required items list if all goals/goal categories already satisfied.
     # Do not use if the default woth-like goal was already added for open bridge/open ganon.
     # If the woth list is also empty, fails gracefully to the next hint type for the distro in either case.
@@ -195,7 +201,7 @@ def update_goal_items(spoiler):
             required_locations_dict[world.id]['ganon'] = {}
             locations = [(location, 1, 1) for location in spoiler.required_locations[world.id]]
             c = GoalCategory('ganon', 30, goal_count=1, minimum_goals=1)
-            g = Goal(world, 'the hero', 'White', items=[{'name': 'Triforce','quantity': 1,'minimum': 1,'hintable': True}])
+            g = Goal(world, 'the hero', 'of the hero', 'White', items=[{'name': 'Triforce','quantity': 1,'minimum': 1,'hintable': True}])
             g.required_locations = locations
             c.add_goal(g)
             world.goal_categories[c.name] = c
@@ -204,7 +210,6 @@ def update_goal_items(spoiler):
     else:
         # Filter the required location to only include locations in the world
         for world in worlds:
-            required_locations_dict[world.id] = {}
             for cat_name, category in world.goal_categories.items():
                 if cat_name in required_locations:
                     for goal in category.goals:
@@ -212,16 +217,22 @@ def update_goal_items(spoiler):
                             locations = list(filter(lambda location: location[0].world.id == world.id, required_locations[category.name][goal.name]))
                             goal.required_locations = locations
                             if locations:
-                                if category.name not in required_locations_dict[world.id]:
-                                    required_locations_dict[world.id][category.name] = {}
-                                required_locations_dict[world.id][category.name][goal.name] = locations
+                                for location in locations:
+                                    for goal_world in location[3]:
+                                        if goal_world not in required_locations_dict:
+                                            required_locations_dict[goal_world] = {}
+                                        if category.name not in required_locations_dict[goal_world]:
+                                            required_locations_dict[goal_world][category.name] = {}
+                                        if goal.name not in required_locations_dict[goal_world][category.name]:
+                                            required_locations_dict[goal_world][category.name][goal.name] = {}
+                                        if world.id not in required_locations_dict[goal_world][category.name][goal.name]:
+                                            required_locations_dict[goal_world][category.name][goal.name][world.id] = []
+                                        required_locations_dict[goal_world][category.name][goal.name][world.id].append(location[0])
     spoiler.goal_locations = required_locations_dict
-
-    # Update WOTH items
-    woth_locations_dict = {}
+    # Copy of goal categories for the spoiler log to reference
+    # since the hint algorithm mutates the world copy
     for world in worlds:
-        woth_locations_dict[world.id] = list(filter(lambda location: location.world.id == world.id, woth_locations))
-    spoiler.required_locations = woth_locations_dict
+        spoiler.goal_categories[world.id] = OrderedDict(sorted(world.goal_categories.items(), key=lambda kv: kv[1].priority))
 
 
 def lock_category_entrances(category, state_list):
@@ -247,6 +258,7 @@ def unlock_category_entrances(category_locks, state_list):
 
 def search_goals(categories, reachable_goals, search, priority_locations, all_locations, item_locations, always_locations, _maybe_set_light_arrows, search_woth=False):
     required_locations = {}
+    world_ids = [state.world.id for state in search.state_list]
     if search_woth:
         required_locations['way of the hero'] = []
     for location in search.iter_reachable_locations(all_locations):
@@ -263,29 +275,32 @@ def search_goals(categories, reachable_goals, search, priority_locations, all_lo
                     if category.name not in required_locations:
                         required_locations[category.name] = {}
                     for goal in category.goals:
-                        if ((category.name not in valid_goals
-                                    or goal.name not in valid_goals[category.name])
+                        if ((category.name in valid_goals
+                                    and goal.name in valid_goals[category.name])
                             and goal.name in reachable_goals[category.name]
                             and (location.name not in priority_locations
                                     or priority_locations[location.name] == category.name)
                             and not goal.requires(old_item.name)):
-                            if goal.name not in required_locations[category.name]:
-                                required_locations[category.name][goal.name] = []
-                            # Placeholder weights to be set for future bottleneck targeting.
-                            # 0 weights for always-hinted locations isn't relevant currently
-                            # but is intended to screen out contributions to the overall 
-                            # goal/category weights
-                            if location.name in always_locations or location.name in location.world.hint_exclusions:
-                                location_weights = (location, 0, 0)
-                            else:
-                                location_weights = (location, 1, 1)
-                            required_locations[category.name][goal.name].append(location_weights)
-                            goal.weight = 1
-                            category.weight = 1
-                            # Locations added to goal exclusion for future categories
-                            # Main use is to split goals between before/after rainbow bridge
-                            # Requires goal categories to be sorted by priority!
-                            priority_locations[location.name] = category.name
+                            invalid_states = set(world_ids) - set(valid_goals[category.name][goal.name])
+                            hintable_states = list(invalid_states & set(reachable_goals[category.name][goal.name]))
+                            if hintable_states:
+                                if goal.name not in required_locations[category.name]:
+                                    required_locations[category.name][goal.name] = []
+                                # Placeholder weights to be set for future bottleneck targeting.
+                                # 0 weights for always-hinted locations isn't relevant currently
+                                # but is intended to screen out contributions to the overall 
+                                # goal/category weights
+                                if location.name in always_locations or location.name in location.world.hint_exclusions:
+                                    location_weights = (location, 0, 0, hintable_states)
+                                else:
+                                    location_weights = (location, 1, 1, hintable_states)
+                                required_locations[category.name][goal.name].append(location_weights)
+                                goal.weight = 1
+                                category.weight = 1
+                                # Locations added to goal exclusion for future categories
+                                # Main use is to split goals between before/after rainbow bridge
+                                # Requires goal categories to be sorted by priority!
+                                priority_locations[location.name] = category.name
             if search_woth and not valid_goals['way of the hero']:
                 required_locations['way of the hero'].append(location)
             location.item = old_item
