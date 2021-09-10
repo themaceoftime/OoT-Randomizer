@@ -369,7 +369,7 @@ def get_goal_category(spoiler, world, goal_categories):
     goal_category = None
     for cat_name, category in goal_categories.items():
         # Only add weights if the category has goals with hintable items
-        if cat_name in spoiler.goal_locations[world.id]:
+        if world.id in spoiler.goal_locations and cat_name in spoiler.goal_locations[world.id]:
             # Build lists for weighted choice
             if category.weight > 0:
                 zero_weights = False
@@ -438,7 +438,6 @@ def get_goal_hint(spoiler, world, checked):
     # Goal weight to zero mitigates double hinting this goal
     # Once all goals in a category are 0, selection is true random
     goal.weight = 0
-    locations, num_goals, spheres, world_ids = zip(*goal_locations)
     location_tuple = random.choice(goal_locations)
     location = location_tuple[0]
     world_ids = location_tuple[3]
@@ -457,7 +456,7 @@ def get_goal_hint(spoiler, world, checked):
         player_text = "Player %s's" % (world_id + 1)
         goal_text = spoiler.goal_categories[world_id][goal_category.name].get_goal(goal.name).hint_text
 
-    return (GossipText('#%s# is on %s path %s.' % (location_text, player_text, goal_text), [goal.color, 'Light Blue']), location)
+    return (GossipText('#%s# is on %s %s.' % (location_text, player_text, goal_text), [goal.color, 'Light Blue']), location)
 
 
 def get_barren_hint(spoiler, world, checked):

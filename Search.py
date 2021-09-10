@@ -237,10 +237,30 @@ class Search(object):
             return False
 
 
-    def can_beat_goals(self, goal_categories, scan_for_items=True):
-        valid_goals = {}
+    def can_beat_goals_fast(self, goal_categories):
+        valid_goals = self.test_category_goals(goal_categories)
         if all(map(State.won, self.state_list)):
             valid_goals['way of the hero'] = True
+        else:
+            valid_goals['way of the hero'] = False
+        return valid_goals
+
+
+    def can_beat_goals(self, goal_categories):
+        # collect all available items
+        # make a new search since we might be iterating over one already
+        search = self.copy()
+        search.collect_locations()
+        valid_goals = search.test_category_goals(goal_categories)
+        if all(map(State.won, search.state_list)):
+            valid_goals['way of the hero'] = True
+        else:
+            valid_goals['way of the hero'] = False
+        return valid_goals
+
+
+    def test_category_goals(self, goal_categories):
+        valid_goals = {}
         for category_name, category in goal_categories.items():
             valid_goals[category_name] = {}
             valid_goals[category_name]['stateReverse'] = {}
@@ -252,40 +272,11 @@ class Search(object):
                         valid_goals[category_name][goal.name] = []
                     # Check if already beaten
                     beaten = all(map(lambda i: state.has_full_item_goal(category, goal, i), goal.items))
-                    #if goal.items:
-                    #    for i in goal.items:
-                    #        # Every world has the same set of goals, but reachable item quantity varies per-world in beatable only
-                    #        beaten = beaten and state.has_full_item_goal(category, goal, i)
                     if beaten:
                         valid_goals[category_name][goal.name].append(state.world.id)
                         # Reverse lookup for checking if the category is already beaten.
-                        # Only used to check if starting items satisfy the category, so
-                        # don't repeat this in the scan_for_items full search section.
+                        # Only used to check if starting items satisfy the category.
                         valid_goals[category_name]['stateReverse'][state.world.id].append(goal.name)
-
-        if scan_for_items:
-            # collect all available items
-            # make a new search since we might be iterating over one already
-            search = self.copy()
-            search.collect_locations()
-            if all(map(State.won, search.state_list)):
-                valid_goals['way of the hero'] = True
-            for category_name, category in goal_categories.items():
-                for state in search.state_list:
-                    for goal in category.goals:
-                        beaten = True
-                        if goal.name not in valid_goals[category_name]:
-                            valid_goals[category_name][goal.name] = []
-                        # if every state beat the goal, then return True
-                        beaten = all(map(lambda i: state.has_full_item_goal(category, goal, i), goal.items))
-                        #if goal.items:
-                        #    for i in goal.items:
-                        #        beaten = beaten and state.has_full_item_goal(category, goal, i)
-                        if beaten and state.world.id not in valid_goals[category_name][goal.name]:
-                            valid_goals[category_name][goal.name].append(state.world.id)
-        if 'way of the hero' not in valid_goals:
-            valid_goals['way of the hero'] = False
-
         return valid_goals
 
 

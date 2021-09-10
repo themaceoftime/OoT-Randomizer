@@ -199,11 +199,11 @@ class World(object):
             gbk = GoalCategory('lacs', 20)
             trials = GoalCategory('trials', 30, minimum_goals=1)
             th = GoalCategory('triforce_hunt', 30, goal_count=round(self.settings.triforce_goal_per_world / 10), minimum_goals=1)
-            trial_goal = Goal(self, 'the Tower', 'to the Tower', 'White', items=[], create_empty=True)
+            trial_goal = Goal(self, 'the Tower', 'path to the Tower', 'White', items=[], create_empty=True)
 
             if self.settings.triforce_hunt and self.settings.triforce_goal_per_world > 0:
                 triforce_count = int((TriforceCounts[self.settings.item_pool_value] * self.settings.triforce_goal_per_world).to_integral_value(rounding=ROUND_HALF_UP))
-                th.add_goal(Goal(self, 'gold', 'of gold','Yellow',items=[{'name': 'Triforce Piece','quantity': triforce_count,'minimum': self.settings.triforce_goal_per_world,'hintable': False}]))
+                th.add_goal(Goal(self, 'gold', 'path of gold','Yellow',items=[{'name': 'Triforce Piece','quantity': triforce_count,'minimum': self.settings.triforce_goal_per_world,'hintable': False}]))
                 self.goal_categories[th.name] = th
             if not self.settings.triforce_hunt:
                 if self.settings.bridge != 'open':
@@ -229,7 +229,7 @@ class World(object):
                                 arrows = 2
                             else:
                                 arrows = 1
-                            b.add_goal(Goal(self, 'Evil\'s Bane', 'to Evil\'s Bane', 'Light Blue', items=[{'name': 'Light Arrows','quantity': arrows,'minimum': 1,'hintable': True}]))
+                            b.add_goal(Goal(self, 'Evil\'s Bane', 'path to Evil\'s Bane', 'Light Blue', items=[{'name': 'Light Arrows','quantity': arrows,'minimum': 1,'hintable': True}]))
                             min_goals += 1
                         b.minimum_goals = min_goals
                     b.goal_count = len(b.goals)
@@ -238,7 +238,7 @@ class World(object):
                         and (self.settings.shuffle_ganon_bosskey != 'on_lacs'
                              or self.settings.lacs_condition != 'tokens'
                              or self.settings.bridge_tokens >= self.settings.lacs_tokens)):
-                        b.add_goal(Goal(self, 'Skulls', 'of Skulls', 'Light Blue', items=[{'name': 'Gold Skulltula Token','quantity': 100,'minimum': self.settings.bridge_tokens,'hintable': False}]))
+                        b.add_goal(Goal(self, 'Skulls', 'path of Skulls', 'Light Blue', items=[{'name': 'Gold Skulltula Token','quantity': 100,'minimum': self.settings.bridge_tokens,'hintable': False}]))
                         b.goal_count = round(self.settings.bridge_tokens / 10)
                         b.minimum_goals = 1
                     self.goal_categories[b.name] = b
@@ -283,7 +283,7 @@ class World(object):
                         and self.settings.lacs_condition == 'tokens'
                         and (self.settings.bridge != 'tokens'
                              or self.settings.bridge_tokens < self.settings.lacs_tokens)):
-                        gbk.add_goal(Goal(self, 'Skulls', 'of Skulls', 'Light Blue', items=[{'name': 'Gold Skulltula Token','quantity': 100,'minimum': self.settings.lacs_tokens,'hintable': False}]))
+                        gbk.add_goal(Goal(self, 'Skulls', 'path of Skulls', 'Light Blue', items=[{'name': 'Gold Skulltula Token','quantity': 100,'minimum': self.settings.lacs_tokens,'hintable': False}]))
                         gbk.goal_count = round(self.settings.lacs_tokens / 10)
                         gbk.minimum_goals = 1
                     if gbk.goals:
@@ -294,7 +294,7 @@ class World(object):
                         keys = 2
                     else:
                         keys = 1
-                    gbk.add_goal(Goal(self, 'the Key', 'to the Key', 'Light Blue', items=[{'name': 'Boss Key (Ganons Castle)','quantity': keys,'minimum': 1,'hintable': True}]))
+                    gbk.add_goal(Goal(self, 'the Key', 'path to the Key', 'Light Blue', items=[{'name': 'Boss Key (Ganons Castle)','quantity': keys,'minimum': 1,'hintable': True}]))
                     gbk.minimum_goals = 1
                     self.goal_categories[gbk.name] = gbk
 
@@ -324,7 +324,7 @@ class World(object):
                 if self.settings.bridge == 'open' and (self.settings.shuffle_ganon_bosskey == 'remove' or self.settings.shuffle_ganon_bosskey == 'vanilla') and int(self.settings.trials) == 0:
                     g = GoalCategory('ganon', 30, goal_count=1)
                     # Equivalent to WOTH, but added in case WOTH hints are disabled in favor of goal hints
-                    g.add_goal(Goal(self, 'the hero', 'of the hero', 'White', items=[{'name': 'Triforce','quantity': 1,'minimum': 1,'hintable': True}]))
+                    g.add_goal(Goal(self, 'the hero', 'path of the hero', 'White', items=[{'name': 'Triforce','quantity': 1,'minimum': 1,'hintable': True}]))
                     g.minimum_goals = 1
                     self.goal_categories[g.name] = g
 

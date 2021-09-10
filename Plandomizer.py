@@ -1166,12 +1166,13 @@ class Distribution(object):
             world_dist.locations = {loc: LocationRecord.from_item(item) for (loc, item) in spoiler.locations[world.id].items()}
             world_dist.woth_locations = {loc.name: LocationRecord.from_item(loc.item) for loc in spoiler.required_locations[world.id]}
             world_dist.goal_locations = {}
-            if spoiler.goal_locations[world.id] != {}:
+            if world.id in spoiler.goal_locations and spoiler.goal_locations[world.id]:
                 for cat_name, goals in spoiler.goal_locations[world.id].items():
                     world_dist.goal_locations[cat_name] = {}
                     for goal_name, location_worlds in goals.items():
                         goal = spoiler.goal_categories[world.id][cat_name].get_goal(goal_name)
-                        goal_text = 'Path ' + goal.hint_text.replace('#','')
+                        goal_text = goal.hint_text.replace('#','')
+                        goal_text = goal_text[0].upper() + goal_text[1:]
                         world_dist.goal_locations[cat_name][goal_text] = {}
                         for location_world, locations in location_worlds.items():
                             if len(self.world_dists) == 1:

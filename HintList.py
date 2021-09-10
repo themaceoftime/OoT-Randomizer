@@ -1297,15 +1297,15 @@ hintTable = {
 # Link's Pocket will always be an empty goal, but it's included here to 
 # prevent key errors during the dungeon reward lookup.
 goalTable = {
-    'Queen Gohma':                                              ("to the #Spider#", "to #Queen Gohma#", "Green"),
-    'King Dodongo':                                             ("to the #Dinosaur#", "to #King Dodongo#", "Red"),
-    'Barinade':                                                 ("to the #Tentacle#", "to #Barinade#", "Blue"),
-    'Phantom Ganon':                                            ("to the #Puppet#", "to #Phantom Ganon#", "Green"),
-    'Volvagia':                                                 ("to the #Dragon#", "to #Volvagia#", "Red"),
-    'Morpha':                                                   ("to the #Amoeba#", "to #Morpha#", "Blue"),
-    'Bongo Bongo':                                              ("to the #Hands#", "to #Bongo Bongo#", "Pink"),
-    'Twinrova':                                                 ("to the #Witches#", "to #Twinrova#", "Yellow"),
-    'Links Pocket':                                             ("to #Links Pocket#", "to #Links Pocket#", "Light Blue"),
+    'Queen Gohma':                                              ("path to the #Spider#", "path to #Queen Gohma#", "Green"),
+    'King Dodongo':                                             ("path to the #Dinosaur#", "path to #King Dodongo#", "Red"),
+    'Barinade':                                                 ("path to the #Tentacle#", "path to #Barinade#", "Blue"),
+    'Phantom Ganon':                                            ("path to the #Puppet#", "path to #Phantom Ganon#", "Green"),
+    'Volvagia':                                                 ("path to the #Dragon#", "path to #Volvagia#", "Red"),
+    'Morpha':                                                   ("path to the #Amoeba#", "path to #Morpha#", "Blue"),
+    'Bongo Bongo':                                              ("path to the #Hands#", "path to #Bongo Bongo#", "Pink"),
+    'Twinrova':                                                 ("path to the #Witches#", "path to #Twinrova#", "Yellow"),
+    'Links Pocket':                                             ("path to #Links Pocket#", "path to #Links Pocket#", "Light Blue"),
 }
 
 # This specifies which hints will never appear due to either having known or known useless contents or due to the locations not existing.
