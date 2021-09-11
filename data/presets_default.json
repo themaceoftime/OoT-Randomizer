@@ -1055,7 +1055,7 @@
     "starting_tod":                            "default",
     "starting_age":                            "random"
   },
-  "Cop-Op Tournament Season 2": {
+  "Co-Op Tournament Season 2": {
     "world_count":                             1,
     "create_spoiler":                          false,
     "randomize_settings":                      false,
