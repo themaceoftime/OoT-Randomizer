@@ -282,7 +282,9 @@ class World(object):
             self.randomized_list.append('chicken_count')
 
         # Handle random Rainbow Bridge condition
-        if self.settings.bridge == 'random':
+        if (self.settings.bridge == 'random'
+            and ('bridge' not in dist_keys 
+             or self.distribution.distribution.src_dict['_settings']['bridge'] == 'random')):
             possible_bridge_requirements = ["open", "medallions", "dungeons", "stones", "vanilla"]
             self.settings.bridge = random.choice(possible_bridge_requirements)
             self.set_random_bridge_values()
