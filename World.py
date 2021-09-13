@@ -21,7 +21,7 @@ from Utils import read_json, data_path
 
 class World(object):
 
-    def __init__(self, id, settings):
+    def __init__(self, id, settings, resolveRandomizedSettings=True):
         self.id = id
         self.shuffle = 'vanilla'
         self.dungeons = []
@@ -98,7 +98,8 @@ class World(object):
             'Ganons Castle': False
         }
 
-        self.resolve_random_settings()
+        if resolveRandomizedSettings:
+            self.resolve_random_settings()
 
         if len(settings.hint_dist_user) == 0:
             for d in HintDistFiles():
@@ -189,12 +190,9 @@ class World(object):
 
 
     def copy(self):
-        new_world = World(self.id, self.settings)
+        new_world = World(self.id, self.settings, False)
         new_world.skipped_trials = copy.copy(self.skipped_trials)
         new_world.dungeon_mq = copy.copy(self.dungeon_mq)
-        new_world.settings.big_poe_count = copy.copy(self.settings.big_poe_count)
-        new_world.settings.starting_tod = self.settings.starting_tod
-        new_world.settings.starting_age = self.settings.starting_age
         new_world.shop_prices = copy.copy(self.shop_prices)
         new_world.triforce_goal = self.triforce_goal
         new_world.triforce_count = self.triforce_count
