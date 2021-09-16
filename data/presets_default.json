@@ -450,7 +450,7 @@
     "shuffle_medigoron_carpet_salesman": false,
     "shuffle_mapcompass": "startwith",
     "shuffle_smallkeys": "dungeon",
-    "shuffle_fortresskeys": "vanilla",
+    "shuffle_hideoutkeys": "vanilla",
     "shuffle_bosskeys": "dungeon",
     "shuffle_ganon_bosskey": "on_lacs",
     "lacs_condition": "medallions",
