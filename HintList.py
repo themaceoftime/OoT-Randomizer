@@ -286,7 +286,7 @@ hintTable = {
     'Small Key (Bottom of the Well)':                           (["a tool for unlocking a shadow's prison", "a dungeon pass for a shadow's prison", "a lock remover for a shadow's prison", "a lockpick for a shadow's prison"], "a Bottom of the Well Small Key", 'item'),
     'Small Key (Gerudo Training Ground)':                       (["a tool for unlocking the test of thieves", "a dungeon pass for the test of thieves", "a lock remover for the test of thieves", "a lockpick for the test of thieves"], "a Gerudo Training Ground Small Key", 'item'),
     'Small Key (Ganons Castle)':                                (["a tool for unlocking a conquered citadel", "a dungeon pass for a conquered citadel", "a lock remover for a conquered citadel", "a lockpick for a conquered citadel"], "a Ganon's Castle Small Key", 'item'),
-    'Small Key (Gerudo Fortress)':                              (["a get out of jail free card"], "a Jail Key", 'item'),
+    'Small Key (Thieves Hideout)':                              (["a get out of jail free card"], "a Jail Key", 'item'),
     'KeyError':                                                 (["something mysterious", "an unknown treasure"], "An Error (Please Report This)", 'item'),
     'Arrows (5)':                                               (["a few danger darts", "a few sharp shafts"], "Arrows (5 pieces)", 'item'),
     'Arrows (10)':                                              (["some danger darts", "some sharp shafts"], "Arrows (10 pieces)", 'item'),
