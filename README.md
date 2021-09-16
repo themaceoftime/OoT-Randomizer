@@ -122,6 +122,7 @@ do that.
 * Plandomizer
   * Correctly consider plando'ed prices in logic, and limit set prices to a range of -32768 to 999.
   * Fix duplicating placed shop items.
+  * Properly randomize starting age and time of day when plando sets it to random.
 * Fix some potential failures for placing junk.
 * Fix disabled song locations getting a general junk item instead of a junk song.
 * Prevent areas hinted as barren from having a location hint.

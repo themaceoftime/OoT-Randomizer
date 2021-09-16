@@ -260,12 +260,17 @@ class World(object):
         if self.settings.big_poe_count_random and 'big_poe_count' not in dist_keys:
             self.settings.big_poe_count = random.randint(1, 10)
             self.randomized_list.append('big_poe_count')
-        if self.settings.starting_tod == 'random' and 'starting_tod' not in dist_keys:
+        # If set to random in GUI, we don't want to randomize if it was specified as non-random in the distribution
+        if (self.settings.starting_tod == 'random'
+            and ('starting_tod' not in dist_keys 
+             or self.distribution.distribution.src_dict['_settings']['starting_tod'] == 'random')):
             setting_info = get_setting_info('starting_tod')
             choices = [ch for ch in setting_info.choices if ch not in ['default', 'random']]
             self.settings.starting_tod = random.choice(choices)
             self.randomized_list.append('starting_tod')
-        if self.settings.starting_age == 'random' and 'starting_age' not in dist_keys:
+        if (self.settings.starting_age == 'random'
+            and ('starting_age' not in dist_keys 
+             or self.distribution.distribution.src_dict['_settings']['starting_age'] == 'random')):
             if self.settings.open_forest == 'closed':
                 # adult is not compatible
                 self.settings.starting_age = 'child'
@@ -277,7 +282,9 @@ class World(object):
             self.randomized_list.append('chicken_count')
 
         # Handle random Rainbow Bridge condition
-        if self.settings.bridge == 'random':
+        if (self.settings.bridge == 'random'
+            and ('bridge' not in dist_keys 
+             or self.distribution.distribution.src_dict['_settings']['bridge'] == 'random')):
             possible_bridge_requirements = ["open", "medallions", "dungeons", "stones", "vanilla"]
             self.settings.bridge = random.choice(possible_bridge_requirements)
             self.set_random_bridge_values()
