@@ -129,6 +129,7 @@ do that.
 * Show the actual result settings in the spoiler instead of originally chosen settings (in case some settings like Closed Forest were modified). The settings string remains the original so the seed can be easily reproduced.
 * Fix some spoiler entries for visible ice traps.
 * Fix error thrown on some operating systems for capitalized file extensions .N64/.Z64.
+* Cache chest sizes and colors in the actor to reduce some latency with Chest Size Matches Contents.
 
 #### Other Changes
 
