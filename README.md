@@ -141,6 +141,7 @@ do that.
 * Hint distribution changes for named-item hints, including a new `vague_named_items` option for `hint_dist_user` that will name the location but not the item.
 * Hint distributions can now filter areas from being hinted as foolish, via putting the area names in `remove_locations`.
 * Improved support for certain Unicode characters and control characters in hint texts.
+* Provide the dungeon name when hinting keys.
 * Renamed some regions, locations, items, etc to make vanilla names. This will make Plandomizer files incompatible between versions.
   * Gerudo Training **Grounds** -> Gerudo Training **Ground**
   * Gerudo Fortress -> Thieves' Hideout (when referring to the interior areas or the carpenter rescue quest)

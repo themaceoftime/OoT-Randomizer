@@ -123,7 +123,7 @@ gossipLocations_reversemap = {
 }
 
 def getItemGenericName(item):
-    if item.dungeonitem:
+    if item.unshuffled_dungeon_item:
         return item.type
     else:
         return item.name

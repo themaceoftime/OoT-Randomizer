@@ -115,6 +115,12 @@ class Item(object):
     def dungeonitem(self):
         return self.smallkey or self.bosskey or self.map or self.compass
 
+    @property
+    def unshuffled_dungeon_item(self):
+        return ((self.type == 'SmallKey' and self.world.settings.shuffle_smallkeys in ['remove','vanilla','dungeon']) or
+                (self.type == 'FortressSmallKey' and self.world.settings.shuffle_fortresskeys in ['vanilla']) or
+                (self.bosskey and self.world.settings.shuffle_bosskeys in ['remove','vanilla','dungeon']) or
+                ((self.map or self.compass) and (self.world.settings.shuffle_mapcompass in ['remove','startwith','vanilla','dungeon'])))
 
     @property
     def majoritem(self):
