@@ -100,10 +100,14 @@ def stones_required_by_settings(world):
         stones = max(stones, world.settings.bridge_stones)
     if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'stones':
         stones = max(stones, world.settings.lacs_stones)
+    if world.settings.shuffle_ganon_bosskey == 'stones':
+        stones = max(stones, world.settings.ganon_bosskey_stones)
     if world.settings.bridge == 'dungeons':
         stones = max(stones, world.settings.bridge_rewards - 6)
     if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'dungeons':
         stones = max(stones, world.settings.lacs_rewards - 6)
+    if world.settings.shuffle_ganon_bosskey == 'dungeons':
+        stones = max(stones, world.settings.ganon_bosskey_rewards - 6)
 
     return stones
 
@@ -114,10 +118,14 @@ def medallions_required_by_settings(world):
         medallions = max(medallions, world.settings.bridge_medallions)
     if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'medallions':
         medallions = max(medallions, world.settings.lacs_medallions)
+    if world.settings.shuffle_ganon_bosskey == 'medallions':
+        medallions = max(medallions, world.settings.ganon_bosskey_medallions)
     if world.settings.bridge == 'dungeons':
         medallions = max(medallions, max(world.settings.bridge_rewards - 3, 0))
     if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'dungeons':
         medallions = max(medallions, max(world.settings.lacs_rewards - 3, 0))
+    if world.settings.shuffle_ganon_bosskey == 'dungeons':
+        medallions = max(medallions, max(world.settings.ganon_bosskey_rewards - 3, 0))
 
     return medallions
 
@@ -128,6 +136,8 @@ def tokens_required_by_settings(world):
         tokens = max(tokens, world.settings.bridge_tokens)
     if world.settings.shuffle_ganon_bosskey == 'on_lacs' and world.settings.lacs_condition == 'tokens':
         tokens = max(tokens, world.settings.lacs_tokens)
+    if world.settings.shuffle_ganon_bosskey == 'tokens':
+        tokens = max(tokens, world.settings.ganon_bosskey_tokens)
 
     return tokens
 
@@ -1252,6 +1262,10 @@ hintTable = {
     'ganonBK_any_dungeon':                                      ("hidden #inside a dungeon# in Hyrule", None, 'ganonBossKey'),
     'ganonBK_keysanity':                                        ("hidden somewhere #in Hyrule#", None, 'ganonBossKey'),
     'ganonBK_triforce':                                         ("given to the Hero once the #Triforce# is completed", None, 'ganonBossKey'),
+    'ganonBK_medallions':                                       ("Medallions", None, 'ganonBossKey'),
+    'ganonBK_stones':                                           ("Spiritual Stones", None, 'ganonBossKey'),
+    'ganonBK_dungeons':                                         ("Spiritual Stones and Medallions", None, 'ganonBossKey'),
+    'ganonBK_tokens':                                           ("Gold Skulltula Tokens", None, 'ganonBossKey'),
 
     'lacs_vanilla':                                             ("the #Shadow and Spirit Medallions#", None, 'lacs'),
     'lacs_medallions':                                          ("Medallions", None, 'lacs'),

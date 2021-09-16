@@ -747,7 +747,7 @@ def replace_max_item(items, item, max):
 
 def generate_itempool(world):
     junk_pool[:] = list(junk_pool_base)
-    if world.settings.junk_ice_traps == 'on': 
+    if world.settings.junk_ice_traps == 'on':
         junk_pool.append(('Ice Trap', 10))
     elif world.settings.junk_ice_traps in ['mayhem', 'onslaught']:
         junk_pool[:] = [('Ice Trap', 1)]
@@ -1314,6 +1314,12 @@ def get_pool_core(world):
     elif world.settings.shuffle_ganon_bosskey == 'vanilla':
         placed_items['Ganons Tower Boss Key Chest'] = 'Boss Key (Ganons Castle)'
 
+    if world.settings.shuffle_ganon_bosskey in ['stones', 'medallions', 'dungeons', 'tokens']:
+        placed_items['Gift from Sages'] = 'Boss Key (Ganons Castle)'
+        pool.extend(get_junk_item())
+    else:
+        placed_items['Gift from Sages'] = 'Ice Trap'
+
     if world.settings.item_pool_value == 'plentiful':
         pool.extend(easy_items)
     else:
@@ -1322,7 +1328,7 @@ def get_pool_core(world):
     if not world.settings.shuffle_kokiri_sword:
         replace_max_item(pool, 'Kokiri Sword', 0)
 
-    if world.settings.junk_ice_traps == 'off': 
+    if world.settings.junk_ice_traps == 'off':
         replace_max_item(pool, 'Ice Trap', 0)
     elif world.settings.junk_ice_traps == 'onslaught':
         for item in [item for item, weight in junk_pool_base] + ['Recovery Heart', 'Bombs (20)', 'Arrows (30)']:

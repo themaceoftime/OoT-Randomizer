@@ -133,7 +133,7 @@ do that.
 
 #### Other Changes
 
-* Add ability to provide settings through stdin (useful for shell scripting).
+* Ganon's Boss Key is now awarded when meeting the goal (if not set to LACS).
 * Ruto now knows what kind of medallion or stone she gets in Jabu Jabu.
 * Added Nayru's Love back to the minimal item pool on high damage settings.
 * Allow special characters (such as the é in Dampé) to appear in in-game hints.
@@ -161,6 +161,7 @@ do that.
 * Added validation of settings for plandomizer before attempting generation.
 * Removed size check for the decompressor.
 * Updated presets.
+* Added ability to provide settings through stdin (useful for shell scripting).
 * Added a commandline flag to use a preset by name. This still allows supplying additional settings, e.g. to control cosmetics and ROM output.
 * Added internal tracking of what items were where in vanilla OoT.
 * Logic updates.

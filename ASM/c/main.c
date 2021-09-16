@@ -13,6 +13,7 @@
 #include "chests.h"
 #include "ganon.h"
 #include "twinrova.h"
+#include "ganon_boss_key.h"
 #include "extern_ctxt.h"
 #include "weather.h"
 
@@ -37,6 +38,7 @@ void before_game_state_update() {
 void after_game_state_update() {
     draw_dungeon_info(&(z64_ctxt.gfx->overlay));
     draw_triforce_count(&(z64_ctxt.gfx->overlay));
+    give_ganon_boss_key();
 }
 
 void before_skybox_init(z64_game_t* game, int16_t skyboxId) {
