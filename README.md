@@ -158,6 +158,7 @@ do that.
 * Custom Music: Added a file `custom_music_exclusion` to specify which music files shouldn't be shuffled in with random custom music.
 * Changed internal names for the broken swords.
 * Added validation of settings for plandomizer before attempting generation.
+* Removed size check for the decompressor.
 * Updated presets.
 * Added a commandline flag to use a preset by name. This still allows supplying additional settings, e.g. to control cosmetics and ROM output.
 * Added internal tracking of what items were where in vanilla OoT.
