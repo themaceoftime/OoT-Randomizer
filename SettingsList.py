@@ -4735,7 +4735,6 @@ def get_settings_from_tab(tab_name):
                     yield setting
             return
 
-
 def is_mapped(setting_name):
     for tab in setting_map['Tabs']:
         for section in tab['sections']:
