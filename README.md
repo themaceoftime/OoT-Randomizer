@@ -131,6 +131,7 @@ do that.
 * Plandomizer
   * Correctly consider plando'ed prices in logic, and limit set prices to a range of -32768 to 999.
   * Fix duplicating placed shop items.
+  * Properly randomize starting age and time of day when plando sets it to random.
 * Fix some potential failures for placing junk.
 * Fix disabled song locations getting a general junk item instead of a junk song.
 * Prevent areas hinted as barren from having a location hint.
@@ -138,10 +139,11 @@ do that.
 * Show the actual result settings in the spoiler instead of originally chosen settings (in case some settings like Closed Forest were modified). The settings string remains the original so the seed can be easily reproduced.
 * Fix some spoiler entries for visible ice traps.
 * Fix error thrown on some operating systems for capitalized file extensions .N64/.Z64.
+* Cache chest sizes and colors in the actor to reduce some latency with Chest Size Matches Contents.
 
 #### Other Changes
 
-* Add ability to provide settings through stdin (useful for shell scripting).
+* Ganon's Boss Key is now awarded when meeting the goal (if not set to LACS).
 * Ruto now knows what kind of medallion or stone she gets in Jabu Jabu.
 * Added Nayru's Love back to the minimal item pool on high damage settings.
 * Allow special characters (such as the é in Dampé) to appear in in-game hints.
@@ -149,6 +151,7 @@ do that.
 * Hint distribution changes for named-item hints, including a new `vague_named_items` option for `hint_dist_user` that will name the location but not the item.
 * Hint distributions can now filter areas from being hinted as foolish, via putting the area names in `remove_locations`.
 * Improved support for certain Unicode characters and control characters in hint texts.
+* Provide the dungeon name when hinting keys.
 * Renamed some regions, locations, items, etc to make vanilla names. This will make Plandomizer files incompatible between versions.
   * Gerudo Training **Grounds** -> Gerudo Training **Ground**
   * Gerudo Fortress -> Thieves' Hideout (when referring to the interior areas or the carpenter rescue quest)
@@ -164,8 +167,12 @@ do that.
 * Entrance Randomizer: When warp songs are shuffled, the confirmation text now shows the actual destination.
 * Text Shuffle: Expanded the "Shuffled except Hints and Keys" to include some shop and scrub text, and renamed "Shuffled except Important Text".
 * Custom Music: Added a file `custom_music_exclusion` to specify which music files shouldn't be shuffled in with random custom music.
+* Hid the trick list on the GUI when it's disabled.
 * Changed internal names for the broken swords.
+* Added validation of settings for plandomizer before attempting generation.
+* Removed size check for the decompressor.
 * Updated presets.
+* Added ability to provide settings through stdin (useful for shell scripting).
 * Added a commandline flag to use a preset by name. This still allows supplying additional settings, e.g. to control cosmetics and ROM output.
 * Added internal tracking of what items were where in vanilla OoT.
 * Logic updates.

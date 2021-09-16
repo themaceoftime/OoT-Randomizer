@@ -1229,25 +1229,33 @@ skip_GS_BGS_text:
 ;==================================================================================================
 ; Correct Chest Sizes
 ;==================================================================================================
+
+.org 0xC0796E
+; Replaces .halfword 0x01EC
+; Increases chest actor (en_box) instance size
+    .halfword 0x01F0
+
+.orga 0xC06198
+; Replaces sb  t9,0x01E9(s0)
+    jal     GET_CHEST_OVERRIDE_WRAPPER
+
+; Chest Size
 ; Replaces lbu   v0,0x01E9(s0)
 .orga 0xC064BC
-    jal     GET_CHEST_OVERRIDE_SIZE_WRAPPER
+    lbu     v0,0x01EC(s0)
 .orga 0xC06E5C
-    jal     GET_CHEST_OVERRIDE_SIZE_WRAPPER
+    lbu     v0,0x01EC(s0)
 .orga 0xC07494
-    jal     GET_CHEST_OVERRIDE_SIZE_WRAPPER
+    lbu     v0,0x01EC(s0)
+.orga 0xC07230
+    lbu     v0,0x01EC(s0)
 
-; Replaces sw    t8,8(t6)
-;          lbu   v0,489(s0)
-.orga 0xC0722C
-    jal     GET_CHEST_OVERRIDE_SIZE_WRAPPER
-    sw      t8,8(t6)
-
-; Replaces lbu   t9,0x01E9(s0)
+; Chest Color
+; Replaces lbu   t9,0x01E9(t8)
 .orga 0xC075A8
-    jal     GET_CHEST_OVERRIDE_COLOR_WRAPPER
+    lbu     t9,0x01ED(t8)
 .orga 0xC07648
-    jal     GET_CHEST_OVERRIDE_COLOR_WRAPPER
+    lbu     t9,0x01ED(t8)
 
 ;==================================================================================================
 ; Cast Fishing Rod without B Item

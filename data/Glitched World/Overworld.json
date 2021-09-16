@@ -3,7 +3,8 @@
         "region_name": "Root",
         "hint": "Link's Pocket",
         "locations": {
-            "Links Pocket": "True"
+            "Links Pocket": "True",
+            "Gift from Sages": "can_receive_ganon_bosskey"
         },
         "exits": {
             "Root Exits": "is_starting_age or Time_Travel",

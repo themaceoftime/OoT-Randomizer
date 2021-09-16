@@ -123,7 +123,7 @@ gossipLocations_reversemap = {
 }
 
 def getItemGenericName(item):
-    if item.dungeonitem:
+    if item.unshuffled_dungeon_item:
         return item.type
     else:
         return item.name
@@ -1053,6 +1053,19 @@ def buildGanonBossKeyString(world):
             if '#' not in item_req_string:
                 item_req_string = '#%s#' % item_req_string
             bk_location_string = "provided by Zelda once %s are retrieved" % item_req_string
+        elif world.settings.shuffle_ganon_bosskey in ['stones', 'medallions', 'dungeons', 'tokens']:
+            item_req_string = getHint('ganonBK_' + world.settings.shuffle_ganon_bosskey, world.settings.clearer_hints).text
+            if world.settings.shuffle_ganon_bosskey == 'medallions':
+                item_req_string = str(world.settings.ganon_bosskey_medallions) + ' ' + item_req_string
+            elif world.settings.shuffle_ganon_bosskey == 'stones':
+                item_req_string = str(world.settings.ganon_bosskey_stones) + ' ' + item_req_string
+            elif world.settings.shuffle_ganon_bosskey == 'dungeons':
+                item_req_string = str(world.settings.ganon_bosskey_rewards) + ' ' + item_req_string
+            elif world.settings.shuffle_ganon_bosskey == 'tokens':
+                item_req_string = str(world.settings.ganon_bosskey_tokens) + ' ' + item_req_string
+            if '#' not in item_req_string:
+                item_req_string = '#%s#' % item_req_string
+            bk_location_string = "automatically granted once %s are retrieved" % item_req_string
         else:
             bk_location_string = getHint('ganonBK_' + world.settings.shuffle_ganon_bosskey, world.settings.clearer_hints).text
         string += "And the \x05\x41evil one\x05\x40's key will be %s." % bk_location_string

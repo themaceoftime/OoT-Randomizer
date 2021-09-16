@@ -115,6 +115,12 @@ class Item(object):
     def dungeonitem(self):
         return self.smallkey or self.bosskey or self.map or self.compass
 
+    @property
+    def unshuffled_dungeon_item(self):
+        return ((self.type == 'SmallKey' and self.world.settings.shuffle_smallkeys in ['remove','vanilla','dungeon']) or
+                (self.type == 'FortressSmallKey' and self.world.settings.shuffle_fortresskeys in ['vanilla']) or
+                (self.bosskey and self.world.settings.shuffle_bosskeys in ['remove','vanilla','dungeon']) or
+                ((self.map or self.compass) and (self.world.settings.shuffle_mapcompass in ['remove','startwith','vanilla','dungeon'])))
 
     @property
     def majoritem(self):
@@ -151,11 +157,17 @@ class Item(object):
             settings = ['medallions', 'dungeons']
             if self.name in ['Shadow Medallion', 'Spirit Medallion']:
                 settings.append('vanilla')
-            return self.world.settings.bridge in settings or self.world.settings.lacs_condition in settings
+            return self.world.settings.bridge in settings \
+                or self.world.settings.shuffle_ganon_bosskey in ['medallions', 'dungeons'] \
+                or (self.world.settings.shuffle_ganon_bosskey == 'on_lacs' and self.world.settings.lacs_condition in settings)
         if self.info.stone:
-            return self.world.settings.bridge in ['stones', 'dungeons'] or self.world.settings.lacs_condition in ['stones', 'dungeons']
+            return self.world.settings.bridge in ['stones', 'dungeons'] \
+                or self.world.settings.shuffle_ganon_bosskey in ['stones', 'dungeons'] \
+                or (self.world.settings.shuffle_ganon_bosskey == 'on_lacs' and self.world.settings.lacs_condition in ['stones', 'dungeons'])
         if self.type == 'Token':
-            return self.world.settings.bridge == 'tokens' or self.world.settings.lacs_condition == 'tokens'
+            return self.world.settings.bridge == 'tokens' \
+                or self.world.settings.shuffle_ganon_bosskey == 'tokens' \
+                or (self.world.settings.shuffle_ganon_bosskey == 'on_lacs' and self.world.settings.lacs_condition == 'tokens')
         #TODO check Bingo goals
 
 

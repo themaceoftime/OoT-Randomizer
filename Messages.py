@@ -424,6 +424,9 @@ def encode_text_string(text):
             for _ in range(CONTROL_CODES[n][1]):
                 result.append(ord(next(it)))
             continue
+        if n in CHARACTER_MAP.values(): # Character has already been translated
+            result.append(n)
+            continue
         raise ValueError(f"While encoding {text!r}: Unable to translate unicode character {ch!r} ({n}).  (Already decoded: {result!r})")
     return result
 

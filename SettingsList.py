@@ -2150,7 +2150,7 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
         disable        = {
-            True  : {'settings' : ['shuffle_ganon_bosskey']},
+            True  : {'settings' : ['shuffle_ganon_bosskey', 'ganon_bosskey_stones', 'ganon_bosskey_medallions', 'ganon_bosskey_rewards', 'ganon_bosskey_tokens']},
             False : {'settings' : ['triforce_goal_per_world']}
         },
     ),
@@ -3167,7 +3167,11 @@ setting_infos = [
             'overworld':       "Overworld Only",
             'any_dungeon':     "Any Dungeon",
             'keysanity':       "Anywhere (Keysanity)",
-            'on_lacs':         "Light Arrow Cutscene"
+            'on_lacs':         "Light Arrow Cutscene",
+            'stones':          "Stones",
+            'medallions':      "Medallions",
+            'dungeons':        "Dungeons",
+            'tokens':          "Tokens",
         },
         gui_tooltip    = '''\
             'Remove': Ganon's Castle Boss Key is removed
@@ -3190,8 +3194,26 @@ setting_infos = [
 
             'Light Arrow Cutscene': Ganon's Castle Boss Key will
             appear on the Light Arrow Cutscene.
+            
+            'Stones': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Spiritual Stones.
+            
+            'Medallions': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Medallions.
+                        
+            'Dungeons': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Dungeon Rewards.
+            
+            'Tokens': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Gold Skulltula Tokens.
         ''',
         shared         = True,
+        disable        = {
+            '!stones':  {'settings': ['ganon_bosskey_stones']},
+            '!medallions':  {'settings': ['ganon_bosskey_medallions']},
+            '!dungeons':  {'settings': ['ganon_bosskey_rewards']},
+            '!tokens':  {'settings': ['ganon_bosskey_tokens']},
+        },
         gui_params     = {
             'randomize_key': 'randomize_settings',
             'distribution': [
@@ -3201,6 +3223,74 @@ setting_infos = [
                 ('keysanity',       4),
                 ('on_lacs',         1)
             ],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_medallions',
+        gui_text       = "Medallions Required for Ganon's BK",
+        default        = 6,
+        min            = 1,
+        max            = 6,
+        gui_tooltip    = '''\
+            Select the amount of Medallions required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(6, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_stones',
+        gui_text       = "Spiritual Stones Required for Ganon's BK",
+        default        = 3,
+        min            = 1,
+        max            = 3,
+        gui_tooltip    = '''\
+            Select the amount of Spiritual Stones required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(3, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_rewards',
+        gui_text       = "Dungeon Rewards Required for Ganon's BK",
+        default        = 9,
+        min            = 1,
+        max            = 9,
+        gui_tooltip    = '''\
+            Select the amount of Dungeon Rewards (Medallions and Spiritual Stones)
+            required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(9, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_tokens',
+        gui_text       = "Gold Skulltula Tokens Required for Ganon's BK",
+        default        = 100,
+        min            = 1,
+        max            = 100,
+        gui_tooltip    = '''\
+            Select the amount of Gold Skulltula Tokens
+            required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "hide_when_disabled": True,
         },
     ),
     Combobox(
@@ -3219,13 +3309,13 @@ setting_infos = [
             check to give you the item from Zelda.
             
             'Vanilla': Shadow and Spirit Medallions.
-            'Medallions': A configurable amount of Medallions.
             'Stones': A configurable amount of Spiritual Stones.
+            'Medallions': A configurable amount of Medallions.
             'Dungeons': A configurable amount of Dungeon Rewards.
             'Tokens': A configurable amount of Gold Skulltula Tokens.
         ''',
         shared         = True,
-        disable={
+        disable        = {
             '!stones':  {'settings': ['lacs_stones']},
             '!medallions':  {'settings': ['lacs_medallions']},
             '!dungeons':  {'settings': ['lacs_rewards']},
@@ -3233,6 +3323,7 @@ setting_infos = [
         },
         gui_params     = {
             'randomize_key': 'randomize_settings',
+            'optional': True,
             'distribution': [
                 ('vanilla',    1),
                 ('medallions', 1),
@@ -3254,6 +3345,7 @@ setting_infos = [
         disabled_default = 0,
         gui_params     = {
             "randomize_key": "randomize_settings",
+            'optional': True,
             "hide_when_disabled": True,
             'distribution': [(6, 1)],
         },
@@ -3271,6 +3363,7 @@ setting_infos = [
         disabled_default = 0,
         gui_params     = {
             "randomize_key": "randomize_settings",
+            'optional': True,
             "hide_when_disabled": True,
             'distribution': [(3, 1)],
         },
@@ -3289,6 +3382,7 @@ setting_infos = [
         disabled_default = 0,
         gui_params     = {
             "randomize_key": "randomize_settings",
+            'optional': True,
             "hide_when_disabled": True,
             'distribution': [(9, 1)],
         },
@@ -3306,6 +3400,7 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
+            'optional': True,
             "hide_when_disabled": True,
         },
     ),
@@ -3418,7 +3513,10 @@ setting_infos = [
         type           = str,
         gui_text       = "Your current logic setting does not support the enabling of tricks.",
         gui_type       = "Textbox",
-        shared         = True,
+        shared         = False,
+        gui_params     = {
+            "hide_when_disabled": True
+        },
         choices        = {},
     ),
     Combobox(
@@ -4802,7 +4900,6 @@ def get_settings_from_tab(tab_name):
                     yield setting
             return
 
-
 def is_mapped(setting_name):
     for tab in setting_map['Tabs']:
         for section in tab['sections']:
@@ -4819,7 +4916,7 @@ with open(data_path('settings_mapping.json')) as f:
     setting_map = json.load(f)
 
 for info in setting_infos:
-    if info.gui_text is not None and not is_mapped(info.name):
+    if info.gui_text is not None and not info.gui_params.get('optional') and not is_mapped(info.name):
         raise UnmappedSettingError(f'{info.name} is defined but is not in the settings map. Add it to the settings_mapping or set the gui_text to None to suppress.')
 
     if info.disable != None:
