@@ -157,6 +157,7 @@ do that.
 * Entrance Randomizer: When warp songs are shuffled, the confirmation text now shows the actual destination.
 * Text Shuffle: Expanded the "Shuffled except Hints and Keys" to include some shop and scrub text, and renamed "Shuffled except Important Text".
 * Custom Music: Added a file `custom_music_exclusion` to specify which music files shouldn't be shuffled in with random custom music.
+* Hid the trick list on the GUI when it's disabled.
 * Changed internal names for the broken swords.
 * Added validation of settings for plandomizer before attempting generation.
 * Removed size check for the decompressor.
