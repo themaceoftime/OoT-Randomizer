@@ -22,7 +22,7 @@ from version import __version__
 from Utils import random_choices
 from JSONDump import dump_obj, CollapseList, CollapseDict, AlignedDict, SortedDict
 import StartingItems
-from SettingsList import get_setting_info, is_mapped, setting_infos
+from SettingsList import get_setting_info, setting_infos
 
 
 class InvalidFileException(Exception):
@@ -691,7 +691,7 @@ class WorldDistribution(object):
                 try:
                     location = LocationFactory(name)
                 except KeyError:
-                    raise RuntimeError('Unknown location in world %d: %s. %s' % (world.id + 1, repr(name), build_close_match(name, 'location')))
+                    raise RuntimeError('Unknown location in world %d: %r. %s' % (world.id + 1, name, build_close_match(name, 'location')))
                 if location.type == 'Boss':
                     raise RuntimeError('Boss or already placed in world %d: %s' % (world.id + 1, name))
                 else:
@@ -771,7 +771,7 @@ class WorldDistribution(object):
                 try:
                     location = LocationFactory(location_name)
                 except KeyError:
-                    raise RuntimeError('Unknown location in world %d: %s. %s' % (world.id + 1, repr(location_name), build_close_match(location_name, 'location')))
+                    raise RuntimeError('Unknown location in world %d: %r. %s' % (world.id + 1, location_name, build_close_match(location_name, 'location')))
                 if location.type == 'Boss':
                     continue
                 elif location.name in world.settings.disabled_locations:
@@ -871,7 +871,7 @@ class WorldDistribution(object):
                         'Too many items were added to world %d, and not enough junk is available to be removed.' % (self.id + 1))
                 except IndexError:
                     raise RuntimeError(
-                        'Unknown item %s being placed on location %s in world %d. %s' % (repr(record.item), location, self.id + 1, build_close_match(record.item, 'item')))
+                        'Unknown item %r being placed on location %s in world %d. %s' % (record.item, location, self.id + 1, build_close_match(record.item, 'item')))
             # Update item_pool after item is replaced
             if item.name not in self.item_pool:
                 self.item_pool[item.name] = ItemPoolRecord()
@@ -879,7 +879,7 @@ class WorldDistribution(object):
                 self.item_pool[item.name].count += 1
         except IndexError:
             raise RuntimeError(
-                'Unknown item %s being placed on location %s in world %d. %s' % (repr(record.item), location, self.id + 1, build_close_match(record.item, 'item')))
+                'Unknown item %r being placed on location %s in world %d. %s' % (record.item, location, self.id + 1, build_close_match(record.item, 'item')))
         # Ensure pool copy is persisted to real pool
         for i, new_pool in enumerate(pool):
             if new_pool:
@@ -897,7 +897,7 @@ class WorldDistribution(object):
             try:
                 location = LocationFactory(name)
             except KeyError:
-                raise RuntimeError('Unknown location in world %d: %s. %s' % (world.id + 1, repr(name), build_close_match(name, 'location')))
+                raise RuntimeError('Unknown location in world %d: %r. %s' % (world.id + 1, name, build_close_match(name, 'location')))
             if location.type == 'Boss':
                 continue
 
@@ -916,7 +916,7 @@ class WorldDistribution(object):
             matcher = self.pattern_matcher(name)
             stoneID = pull_random_element([stoneIDs], lambda id: matcher(gossipLocations[id].name))
             if stoneID is None:
-                raise RuntimeError('Gossip stone unknown or already assigned in world %d: %s. %s' % (self.id + 1, repr(name), build_close_match(name, 'stone')))
+                raise RuntimeError('Gossip stone unknown or already assigned in world %d: %r. %s' % (self.id + 1, name, build_close_match(name, 'stone')))
             spoiler.hints[self.id][stoneID] = GossipText(text=record.text, colors=record.colors, prefix='')
 
 
@@ -971,20 +971,26 @@ class Distribution(object):
         self.settings.__dict__.update(update_dict['_settings'])
         if 'settings' in self.src_dict:
             for setting, choice in self.src_dict['settings'].items():
-                if not is_mapped(setting):
-                    raise TypeError('%s is not a valid setting. %s' % (repr(setting), build_close_match(setting, 'setting')))
+                # Ensure the supplied setting name is a real setting
+                if setting not in [x.name for x in setting_infos]:
+                    raise TypeError('%r is not a valid setting. %s' % (setting, build_close_match(setting, 'setting')))
                 info = get_setting_info(setting)
+                # Ensure the type of the supplied choice is correct
                 if type(choice) != info.type:
-                    raise TypeError('Supplied choice %s for setting %s is of type %s, expecting %s' % (repr(choice), repr(setting), repr(type(choice).__name__), repr(info.type.__name__)))
-                if not isinstance(choice, list) and choice not in info.choice_list:
-                    if setting == 'compress_rom' and choice == 'Temp':
-                        continue
-                    raise ValueError('%s is not a valid choice for setting %s. %s' % (repr(choice), repr(setting), build_close_match(choice, 'choice', info.choice_list)))
+                    raise TypeError('Supplied choice %r for setting %r is of type %r, expecting %r' % (choice, setting, type(choice).__name__, info.type.__name__))
                 # If setting is a list, must check each element
-                elif isinstance(choice, list):
+                if isinstance(choice, list):
                     for element in choice:
                         if element not in info.choice_list:
-                            raise ValueError('%s is not a valid choice for setting %s. %s' % (repr(element), repr(setting), build_close_match(choice, 'choice', info.choice_list)))
+                            raise ValueError('%r is not a valid choice for setting %r. %s' % (element, setting, build_close_match(element, 'choice', info.choice_list)))
+                # Ignore dictionary settings such as hint_dist_user
+                elif isinstance(choice, dict):
+                    continue
+                # Ensure that the given choice is a valid choice for the setting
+                elif choice not in info.choice_list:
+                    if setting == 'compress_rom' and choice == 'Temp':
+                        continue
+                    raise ValueError('%r is not a valid choice for setting %r. %s' % (choice, setting, build_close_match(choice, 'choice', info.choice_list)))
             self.src_dict['_settings'] = self.src_dict['settings']
             del self.src_dict['settings']
 
@@ -1302,5 +1308,5 @@ def build_close_match(name, value_type, source_list=None):
         source = source_list
     close_match = difflib.get_close_matches(name, source, 1)
     if len(close_match) > 0:
-        return "Did you mean %s?" % (repr(close_match[0]))
+        return "Did you mean %r?" % (close_match[0])
     return "" # No matches
