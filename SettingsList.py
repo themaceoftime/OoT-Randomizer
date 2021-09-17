@@ -3272,7 +3272,6 @@ setting_infos = [
             '!tokens':  {'settings': ['lacs_tokens']},
         },
         gui_params     = {
-            'randomize_key': 'randomize_settings',
             'optional': True,
             'distribution': [
                 ('vanilla',    1),
@@ -3294,7 +3293,6 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
-            "randomize_key": "randomize_settings",
             'optional': True,
             "hide_when_disabled": True,
             'distribution': [(6, 1)],
@@ -3312,7 +3310,6 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
-            "randomize_key": "randomize_settings",
             'optional': True,
             "hide_when_disabled": True,
             'distribution': [(3, 1)],
@@ -3331,7 +3328,6 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
-            "randomize_key": "randomize_settings",
             'optional': True,
             "hide_when_disabled": True,
             'distribution': [(9, 1)],
