@@ -22,7 +22,7 @@ from version import __version__
 from Utils import random_choices
 from JSONDump import dump_obj, CollapseList, CollapseDict, AlignedDict, SortedDict
 import StartingItems
-from SettingsList import get_setting_info, is_mapped, setting_infos
+from SettingsList import get_setting_info, setting_infos
 
 
 class InvalidFileException(Exception):
@@ -970,20 +970,26 @@ class Distribution(object):
         self.settings.__dict__.update(update_dict['_settings'])
         if 'settings' in self.src_dict:
             for setting, choice in self.src_dict['settings'].items():
-                if not is_mapped(setting):
+                # Ensure the supplied setting name is a real setting
+                if setting not in [x.name for x in setting_infos]:
                     raise TypeError('%s is not a valid setting. %s' % (repr(setting), build_close_match(setting, 'setting')))
                 info = get_setting_info(setting)
+                # Ensure the type of the supplied choice is correct
                 if type(choice) != info.type:
                     raise TypeError('Supplied choice %s for setting %s is of type %s, expecting %s' % (repr(choice), repr(setting), repr(type(choice).__name__), repr(info.type.__name__)))
-                if not isinstance(choice, list) and choice not in info.choice_list:
+                # If setting is a list, must check each element
+                if isinstance(choice, list):
+                    for element in choice:
+                        if element not in info.choice_list:
+                            raise ValueError('%s is not a valid choice for setting %s. %s' % (repr(element), repr(setting), build_close_match(element, 'choice', info.choice_list)))
+                # Ignore dictionary settings such as hint_dist_user
+                elif isinstance(choice, dict):
+                    continue
+                # Ensure that the given choice is a valid choice for the setting
+                elif choice not in info.choice_list:
                     if setting == 'compress_rom' and choice == 'Temp':
                         continue
                     raise ValueError('%s is not a valid choice for setting %s. %s' % (repr(choice), repr(setting), build_close_match(choice, 'choice', info.choice_list)))
-                # If setting is a list, must check each element
-                elif isinstance(choice, list):
-                    for element in choice:
-                        if element not in info.choice_list:
-                            raise ValueError('%s is not a valid choice for setting %s. %s' % (repr(element), repr(setting), build_close_match(choice, 'choice', info.choice_list)))
             self.src_dict['_settings'] = self.src_dict['settings']
             del self.src_dict['settings']
 
