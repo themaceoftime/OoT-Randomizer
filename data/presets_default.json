@@ -282,12 +282,13 @@
     "logic_earliest_adult_trade":              "prescription",
     "logic_latest_adult_trade":                "claim_check",
     "starting_equipment":                      [],
-    "starting_items":            {
-      "Deku Nuts":   99,
-      "Deku Shield": 1,
-      "Deku Sticks": 99,
-      "Ocarina":     1
-    },
+    "starting_equipment": [
+      "deku_shield"
+    ],
+    "starting_items": [
+      "ocarina"
+    ],
+    "start_with_consumables":                  true,
     "starting_songs":                          [],
     "ocarina_songs":                           false,
     "correct_chest_sizes":                     false,
@@ -400,10 +401,6 @@
     "hint_dist":                               "ddr",
     "misc_hints":                              true,
     "item_hints": [],
-    "randomized_settings": {},
-    "item_pool":           {},
-    "entrances":           {},
-    "locations":           {},
     "text_shuffle":                            "none",
     "ice_trap_appearance":                     "junk_only",
     "junk_ice_traps":                          "normal",

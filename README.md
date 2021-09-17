@@ -167,6 +167,8 @@ do that.
 * Added ability to provide settings through stdin (useful for shell scripting).
 * Added a commandline flag to use a preset by name. This still allows supplying additional settings, e.g. to control cosmetics and ROM output.
 * Added internal tracking of what items were where in vanilla OoT.
+* Added settings validation for unittests.
+* Added unittests for settings presets.
 * Logic updates.
 * Use HTTPS for the version check to github.
 

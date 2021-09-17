@@ -3,7 +3,6 @@ import json
 import logging
 import re
 import random
-import difflib
 
 from functools import reduce
 from collections import defaultdict
@@ -22,7 +21,7 @@ from version import __version__
 from Utils import random_choices
 from JSONDump import dump_obj, CollapseList, CollapseDict, AlignedDict, SortedDict
 import StartingItems
-from SettingsList import get_setting_info, setting_infos
+from SettingsList import build_close_match, validate_settings
 
 
 class InvalidFileException(Exception):
@@ -970,27 +969,7 @@ class Distribution(object):
 
         self.settings.__dict__.update(update_dict['_settings'])
         if 'settings' in self.src_dict:
-            for setting, choice in self.src_dict['settings'].items():
-                # Ensure the supplied setting name is a real setting
-                if setting not in [x.name for x in setting_infos]:
-                    raise TypeError('%r is not a valid setting. %s' % (setting, build_close_match(setting, 'setting')))
-                info = get_setting_info(setting)
-                # Ensure the type of the supplied choice is correct
-                if type(choice) != info.type:
-                    raise TypeError('Supplied choice %r for setting %r is of type %r, expecting %r' % (choice, setting, type(choice).__name__, info.type.__name__))
-                # If setting is a list, must check each element
-                if isinstance(choice, list):
-                    for element in choice:
-                        if element not in info.choice_list:
-                            raise ValueError('%r is not a valid choice for setting %r. %s' % (element, setting, build_close_match(element, 'choice', info.choice_list)))
-                # Ignore dictionary settings such as hint_dist_user
-                elif isinstance(choice, dict):
-                    continue
-                # Ensure that the given choice is a valid choice for the setting
-                elif choice not in info.choice_list:
-                    if setting == 'compress_rom' and choice == 'Temp':
-                        continue
-                    raise ValueError('%r is not a valid choice for setting %r. %s' % (choice, setting, build_close_match(choice, 'choice', info.choice_list)))
+            validate_settings(self.src_dict['settings'])
             self.src_dict['_settings'] = self.src_dict['settings']
             del self.src_dict['settings']
 
@@ -1287,26 +1266,3 @@ def pull_all_elements(pools, predicate=lambda k:True, remove=True):
     if len(elements) == 0:
         return None
     return elements
-
-# When a string isn't found in the source list, attempt to get closest match from the list
-# ex. Given "Recovery Hart" returns "Did you mean 'Recovery Heart'?"
-def build_close_match(name, value_type, source_list=None):
-    source = []
-    if value_type == 'item':
-        source = item_table.keys()
-    elif value_type == 'location':
-        source = location_table.keys()
-    elif value_type == 'entrance':
-        for pool in source_list.values():
-            for entrance in pool:
-                source.append(entrance.name)
-    elif value_type == 'stone':
-        source = [x.name for x in gossipLocations.values()]
-    elif value_type == 'setting':
-        source = [x.name for x in setting_infos]
-    elif value_type == 'choice':
-        source = source_list
-    close_match = difflib.get_close_matches(name, source, 1)
-    if len(close_match) > 0:
-        return "Did you mean %r?" % (close_match[0])
-    return "" # No matches
