@@ -126,8 +126,9 @@ def generate(settings, window=dummy_window()):
 def build_world_graphs(settings, window=dummy_window()):
     logger = logging.getLogger('')
     worlds = []
-    for i in range(0, settings.world_count):
-        worlds.append(World(i, settings))
+    for i in range(1, settings.world_count):
+        worlds.append(World(i, copy.copy(settings)))
+    worlds.insert(0, World(0, settings))
 
     window.update_status('Creating the Worlds')
     for id, world in enumerate(worlds):
