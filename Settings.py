@@ -11,7 +11,7 @@ import textwrap
 
 from version import __version__
 from Utils import random_choices, local_path, data_path
-from SettingsList import setting_infos, get_setting_info
+from SettingsList import setting_infos, get_setting_info, validate_settings
 from Plandomizer import Distribution
 
 class ArgumentDefaultsHelpFormatter(argparse.RawTextHelpFormatter):
@@ -48,6 +48,13 @@ def text_to_bit_string(text):
         for b in range(5):
             bits += [ (index >> b) & 1 ]
     return bits
+
+
+def get_preset_files():
+    return [data_path('presets_default.json')] + sorted(
+            os.path.join(data_path('Presets'), fn)
+            for fn in os.listdir(data_path('Presets'))
+            if fn.endswith('.json'))
 
 
 # holds the particular choices for a run's settings
@@ -289,7 +296,9 @@ class Settings:
 
 
     # add the settings as fields, and calculate information based on them
-    def __init__(self, settings_dict):
+    def __init__(self, settings_dict, strict=False):
+        if strict:
+            validate_settings(settings_dict)
         self.__dict__.update(settings_dict)
         for info in setting_infos:
             if info.name not in self.__dict__:
@@ -334,10 +343,7 @@ def get_settings_from_command_line_args():
     args = parser.parse_args()
     settings_base = {}
     if args.settings_preset:
-        presetsFiles = [data_path('presets_default.json')] + sorted(
-                os.path.join(data_path('Presets'), fn)
-                for fn in os.listdir(data_path('Presets'))
-                if fn.endswith('.json'))
+        presetsFiles = get_preset_files()
         for fn in presetsFiles:
             with open(fn, encoding='utf-8') as f:
                 presets = json.load(f)

@@ -147,6 +147,7 @@ do that.
 * Ruto now knows what kind of medallion or stone she gets in Jabu Jabu.
 * Added Nayru's Love back to the minimal item pool on high damage settings.
 * Allow special characters (such as the é in Dampé) to appear in in-game hints.
+* Allow settings with a 'Random' option to be different per-world. (This does not permit settings randomized only by Randomize Main Rules to be different per-world.)
 * Randomized songs' note patterns are included in the spoiler log.
 * Hint distribution changes for named-item hints, including a new `vague_named_items` option for `hint_dist_user` that will name the location but not the item.
 * Hint distributions can now filter areas from being hinted as foolish, via putting the area names in `remove_locations`.
@@ -175,6 +176,8 @@ do that.
 * Added ability to provide settings through stdin (useful for shell scripting).
 * Added a commandline flag to use a preset by name. This still allows supplying additional settings, e.g. to control cosmetics and ROM output.
 * Added internal tracking of what items were where in vanilla OoT.
+* Added settings validation for unittests.
+* Added unittests for settings presets.
 * Logic updates.
 * Use HTTPS for the version check to github.
 

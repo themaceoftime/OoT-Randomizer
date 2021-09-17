@@ -253,7 +253,11 @@ class World(object):
                         or (setting == 'lacs_medallions' and self.settings.lacs_condition != 'medallions') \
                         or (setting == 'lacs_stones' and self.settings.lacs_condition != 'stones') \
                         or (setting == 'lacs_rewards' and self.settings.lacs_condition != 'dungeons') \
-                        or (setting == 'lacs_tokens' and self.settings.lacs_condition != 'tokens'):
+                        or (setting == 'lacs_tokens' and self.settings.lacs_condition != 'tokens') \
+                        or (setting == 'ganon_bosskey_medallions' and self.settings.shuffle_ganon_bosskey != 'medallions') \
+                        or (setting == 'ganon_bosskey_stones' and self.settings.shuffle_ganon_bosskey != 'stones') \
+                        or (setting == 'ganon_bosskey_rewards' and self.settings.shuffle_ganon_bosskey != 'dungeons') \
+                        or (setting == 'ganon_bosskey_tokens' and self.settings.shuffle_ganon_bosskey != 'tokens'):
                     self.randomized_list.remove(setting)
         if self.settings.big_poe_count_random and 'big_poe_count' not in dist_keys:
             self.settings.big_poe_count = random.randint(1, 10)

@@ -1,4 +1,5 @@
 import argparse
+import difflib
 from itertools import chain
 import re
 import math
@@ -3322,7 +3323,6 @@ setting_infos = [
             '!tokens':  {'settings': ['lacs_tokens']},
         },
         gui_params     = {
-            'randomize_key': 'randomize_settings',
             'optional': True,
             'distribution': [
                 ('vanilla',    1),
@@ -3344,7 +3344,6 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
-            "randomize_key": "randomize_settings",
             'optional': True,
             "hide_when_disabled": True,
             'distribution': [(6, 1)],
@@ -3362,7 +3361,6 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
-            "randomize_key": "randomize_settings",
             'optional': True,
             "hide_when_disabled": True,
             'distribution': [(3, 1)],
@@ -3381,7 +3379,6 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
-            "randomize_key": "randomize_settings",
             'optional': True,
             "hide_when_disabled": True,
             'distribution': [(9, 1)],
@@ -4907,6 +4904,53 @@ def is_mapped(setting_name):
                 return True
     return False
 
+
+# When a string isn't found in the source list, attempt to get closest match from the list
+# ex. Given "Recovery Hart" returns "Did you mean 'Recovery Heart'?"
+def build_close_match(name, value_type, source_list=None):
+    source = []
+    if value_type == 'item':
+        source = item_table.keys()
+    elif value_type == 'location':
+        source = location_table.keys()
+    elif value_type == 'entrance':
+        for pool in source_list.values():
+            for entrance in pool:
+                source.append(entrance.name)
+    elif value_type == 'stone':
+        source = [x.name for x in gossipLocations.values()]
+    elif value_type == 'setting':
+        source = [x.name for x in setting_infos]
+    elif value_type == 'choice':
+        source = source_list
+    close_match = difflib.get_close_matches(name, source, 1)
+    if len(close_match) > 0:
+        return "Did you mean %r?" % (close_match[0])
+    return "" # No matches
+
+
+def validate_settings(settings_dict):
+    for setting, choice in settings_dict.items():
+        # Ensure the supplied setting name is a real setting
+        if setting not in [x.name for x in setting_infos]:
+            raise TypeError('%r is not a valid setting. %s' % (setting, build_close_match(setting, 'setting')))
+        info = get_setting_info(setting)
+        # Ensure the type of the supplied choice is correct
+        if type(choice) != info.type:
+            raise TypeError('Supplied choice %r for setting %r is of type %r, expecting %r' % (choice, setting, type(choice).__name__, info.type.__name__))
+        # If setting is a list, must check each element
+        if isinstance(choice, list):
+            for element in choice:
+                if element not in info.choice_list:
+                    raise ValueError('%r is not a valid choice for setting %r. %s' % (element, setting, build_close_match(element, 'choice', info.choice_list)))
+        # Ignore dictionary settings such as hint_dist_user
+        elif isinstance(choice, dict):
+            continue
+        # Ensure that the given choice is a valid choice for the setting
+        elif info.choice_list and choice not in info.choice_list:
+            if setting == 'compress_rom' and choice == 'Temp':
+                continue
+            raise ValueError('%r is not a valid choice for setting %r. %s' % (choice, setting, build_close_match(choice, 'choice', info.choice_list)))
 
 class UnmappedSettingError(Exception):
     pass
