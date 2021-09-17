@@ -125,7 +125,8 @@ class Item(object):
     @property
     def majoritem(self):
         if self.type == 'Token':
-            return self.world.settings.bridge == 'tokens' or self.world.settings.lacs_condition == 'tokens'
+            return (self.world.settings.bridge == 'tokens' or self.world.settings.shuffle_ganon_bosskey == 'tokens' or
+                (self.world.settings.shuffle_ganon_bosskey == 'on_lacs' and self.world.settings.lacs_condition == 'tokens'))
 
         if self.type in ('Drop', 'Event', 'Shop', 'DungeonReward') or not self.advancement:
             return False
