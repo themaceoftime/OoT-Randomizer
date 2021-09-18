@@ -4486,6 +4486,7 @@ setting_infos = [
         gui_text       = 'Mirror Shield Frame Color',
         gui_type       = "Combobox",
         shared         = False,
+        cosmetic       = True,
         choices        = get_shield_frame_color_options(),
         default        = 'Red',
         gui_tooltip    = '''\
