@@ -198,7 +198,7 @@ class World(object):
 
         # Initialize default goals for win condition
         self.goal_categories = OrderedDict()
-        if self.hint_dist_user['use_default_goals'] and self.enable_goal_hints:
+        if self.hint_dist_user['use_default_goals']:
             b = GoalCategory('rainbow_bridge', 10, lock_entrances=['Ganons Castle Grounds -> Ganons Castle Lobby'])
             gbk = GoalCategory('ganon_bosskey', 20)
             trials = GoalCategory('trials', 30, minimum_goals=1)
@@ -332,7 +332,7 @@ class World(object):
                     self.goal_categories[g.name] = g
 
         # import goals from hint plando
-        if 'custom_goals' in self.hint_dist_user and self.enable_goal_hints:
+        if 'custom_goals' in self.hint_dist_user:
             for category in self.hint_dist_user['custom_goals']:
                 if category['category'] in self.goal_categories:
                     cat = self.goal_categories[category['category']]

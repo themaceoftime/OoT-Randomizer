@@ -158,58 +158,64 @@ def update_goal_items(spoiler):
     else:
         _maybe_set_light_arrows = maybe_set_light_arrows
 
-    # References first world for goal categories only
-    for cat_name, category in worlds[0].locked_goal_categories.items():
-        for cat_world in worlds:
-            search = Search([world.state for world in worlds])
-            search.collect_pseudo_starting_items()
+    if worlds[0].enable_goal_hints:
+        # References first world for goal categories only
+        for cat_name, category in worlds[0].locked_goal_categories.items():
+            for cat_world in worlds:
+                search = Search([world.state for world in worlds])
+                search.collect_pseudo_starting_items()
 
-            cat_state = list(filter(lambda s: s.world.id == cat_world.id, search.state_list))
-            category_locks = lock_category_entrances(category, cat_state)
+                cat_state = list(filter(lambda s: s.world.id == cat_world.id, search.state_list))
+                category_locks = lock_category_entrances(category, cat_state)
 
-            if category.is_beaten(search):
+                if category.is_beaten(search):
+                    unlock_category_entrances(category_locks, cat_state)
+                    continue
+
+                full_search = search.copy()
+                full_search.collect_locations()
+                reachable_goals = {}
+                # Goals are changed for beatable-only accessibility per-world
+                category.update_reachable_goals(search, full_search)
+                reachable_goals = full_search.can_beat_goals_fast({ cat_name: category })
+                identified_locations = search_goals({ cat_name: category }, reachable_goals, search, priority_locations, all_locations, item_locations, always_locations, _maybe_set_light_arrows)
+                # Multiworld can have all goals for one player's bridge entirely
+                # locked by another player's bridge. Therefore, we can't assume
+                # accurate required location lists by locking every world's
+                # entrance locks simultaneously. We must run a new search on the
+                # same category for each world's entrance locks. Without category locks,
+                # we could do a shallow merge because each category is searched exactly once.
+                for icat_name, goal_location_lists in identified_locations.items():
+                    if icat_name not in required_locations:
+                        required_locations[icat_name] = goal_location_lists
+                    else:
+                        for goal_name, world_location_lists in goal_location_lists.items():
+                            if goal_name not in required_locations[icat_name]:
+                                required_locations[icat_name][goal_name] = world_location_lists
+                            else:
+                                for world_id, locations in world_location_lists.items():
+                                    if world_id not in required_locations[icat_name][goal_name]:
+                                        required_locations[icat_name][goal_name][world_id] = locations
+                                    else:
+                                        for location in locations:
+                                            if location not in required_locations[icat_name][goal_name][world_id]:
+                                                required_locations[icat_name][goal_name][world_id].append(location)
+
                 unlock_category_entrances(category_locks, cat_state)
-                continue
-
-            full_search = search.copy()
-            full_search.collect_locations()
-            reachable_goals = {}
-            # Goals are changed for beatable-only accessibility per-world
-            category.update_reachable_goals(search, full_search)
-            reachable_goals = full_search.can_beat_goals_fast({ cat_name: category })
-            identified_locations = search_goals({ cat_name: category }, reachable_goals, search, priority_locations, all_locations, item_locations, always_locations, _maybe_set_light_arrows)
-            # Multiworld can have all goals for one player's bridge entirely
-            # locked by another player's bridge. Therefore, we can't assume
-            # accurate required location lists by locking every world's
-            # entrance locks simultaneously. We must run a new search on the
-            # same category for each world's entrance locks. Without category locks,
-            # we could do a shallow merge because each category is searched exactly once.
-            for icat_name, goal_location_lists in identified_locations.items():
-                if icat_name not in required_locations:
-                    required_locations[icat_name] = goal_location_lists
-                else:
-                    for goal_name, world_location_lists in goal_location_lists.items():
-                        if goal_name not in required_locations[icat_name]:
-                            required_locations[icat_name][goal_name] = world_location_lists
-                        else:
-                            for world_id, locations in world_location_lists.items():
-                                if world_id not in required_locations[icat_name][goal_name]:
-                                    required_locations[icat_name][goal_name][world_id] = locations
-                                else:
-                                    for location in locations:
-                                        if location not in required_locations[icat_name][goal_name][world_id]:
-                                            required_locations[icat_name][goal_name][world_id].append(location)
-
-            unlock_category_entrances(category_locks, cat_state)
 
     search = Search([world.state for world in worlds])
     search.collect_pseudo_starting_items()
-    full_search = search.copy()
-    full_search.collect_locations()
     reachable_goals = {}
-    for cat_name, category in worlds[0].unlocked_goal_categories.items():
-        category.update_reachable_goals(search, full_search)
-    reachable_goals = full_search.can_beat_goals_fast(worlds[0].unlocked_goal_categories)
+    # Force all goals to be unreachable if goal hints are not part of the distro
+    # Saves a minor amount of search time. Most of the benefit is skipping the
+    # locked goal categories. This section still needs to run to generate WOTH.
+    # WOTH isn't a goal, so it still is searched successfully.
+    if worlds[0].enable_goal_hints:
+        full_search = search.copy()
+        full_search.collect_locations()
+        for cat_name, category in worlds[0].unlocked_goal_categories.items():
+            category.update_reachable_goals(search, full_search)
+        reachable_goals = full_search.can_beat_goals_fast(worlds[0].unlocked_goal_categories)
     identified_locations = search_goals(worlds[0].unlocked_goal_categories, reachable_goals, search, priority_locations, all_locations, item_locations, always_locations, _maybe_set_light_arrows, search_woth=True)
     required_locations.update(identified_locations)
     woth_locations = list(required_locations['way of the hero'])
@@ -312,7 +318,7 @@ def search_goals(categories, reachable_goals, search, priority_locations, all_lo
             valid_goals = search.can_beat_goals(categories)
             for cat_name, category in categories.items():
                 # Exit early if no goals are beatable with category locks
-                if reachable_goals[category.name]:
+                if category.name in reachable_goals and reachable_goals[category.name]:
                     for goal in category.goals:
                         if ((category.name in valid_goals
                                     and goal.name in valid_goals[category.name])
