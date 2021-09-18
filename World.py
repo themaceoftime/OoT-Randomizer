@@ -192,9 +192,13 @@ class World(object):
         # Additional Ruto's Letter become Bottle, so we may have to collect two.
         self.max_progressions['Rutos Letter'] = 2
 
+        # Disable goal hints if the hint distro does not require them.
+        # WOTH locations are always searched.
+        self.enable_goal_hints = self.hint_dist_user['distribution']['goal']['fixed'] != 0 or self.hint_dist_user['distribution']['goal']['weight'] != 0
+
         # Initialize default goals for win condition
         self.goal_categories = OrderedDict()
-        if self.hint_dist_user['use_default_goals']:
+        if self.hint_dist_user['use_default_goals'] and self.enable_goal_hints:
             b = GoalCategory('rainbow_bridge', 10, lock_entrances=['Ganons Castle Grounds -> Ganons Castle Lobby'])
             gbk = GoalCategory('ganon_bosskey', 20)
             trials = GoalCategory('trials', 30, minimum_goals=1)
@@ -328,7 +332,7 @@ class World(object):
                     self.goal_categories[g.name] = g
 
         # import goals from hint plando
-        if 'custom_goals' in self.hint_dist_user:
+        if 'custom_goals' in self.hint_dist_user and self.enable_goal_hints:
             for category in self.hint_dist_user['custom_goals']:
                 if category['category'] in self.goal_categories:
                     cat = self.goal_categories[category['category']]

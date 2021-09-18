@@ -121,7 +121,8 @@ def resolve_settings(settings, window=dummy_window()):
 def generate(settings, window=dummy_window()):
     worlds = build_world_graphs(settings, window=window)
     place_items(settings, worlds, window=window)
-    replace_goal_names(worlds)
+    if worlds[0].enable_goal_hints:
+        replace_goal_names(worlds)
     return make_spoiler(settings, worlds, window=window)
 
 

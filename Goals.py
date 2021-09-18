@@ -159,7 +159,6 @@ def update_goal_items(spoiler):
         _maybe_set_light_arrows = maybe_set_light_arrows
 
     # References first world for goal categories only
-    # Goals are changed for beatable-only accessibility per-world
     for cat_name, category in worlds[0].locked_goal_categories.items():
         for cat_world in worlds:
             search = Search([world.state for world in worlds])
@@ -175,6 +174,7 @@ def update_goal_items(spoiler):
             full_search = search.copy()
             full_search.collect_locations()
             reachable_goals = {}
+            # Goals are changed for beatable-only accessibility per-world
             category.update_reachable_goals(search, full_search)
             reachable_goals = full_search.can_beat_goals_fast({ cat_name: category })
             identified_locations = search_goals({ cat_name: category }, reachable_goals, search, priority_locations, all_locations, item_locations, always_locations, _maybe_set_light_arrows)
@@ -225,7 +225,7 @@ def update_goal_items(spoiler):
     # Do not use if the default woth-like goal was already added for open bridge/open ganon.
     # If the woth list is also empty, fails gracefully to the next hint type for the distro in either case.
     required_locations_dict = {}
-    if not required_locations and 'ganon' not in worlds[0].goal_categories and worlds[0].hint_dist_user['use_default_goals']:
+    if not required_locations and 'ganon' not in worlds[0].goal_categories and worlds[0].hint_dist_user['use_default_goals'] and worlds[0].enable_goal_hints:
         for world in worlds:
             required_locations_dict[world.id] = {}
             required_locations_dict[world.id]['ganon'] = {}
