@@ -4268,6 +4268,7 @@ setting_infos = [
         gui_text       = 'Bombchu Trail Inner',
         gui_type       = "Combobox",
         shared         = False,
+        cosmetic       = True,
         choices        = get_bombchu_trail_color_options(),
         default        = 'Red',
         gui_tooltip    = '''\
