@@ -454,47 +454,108 @@ def get_specific_item_hint(spoiler, world, checked):
         logger = logging.getLogger('')
         logger.info("Named item hint requested, but pool is empty.")
         return None  
-    while True:
-        itemname = world.named_item_pool.pop(0)
-        if itemname == "Bottle" and world.settings.hint_dist == "bingo":
-            locations = [
-                location for location in world.get_filled_locations()
-                if (is_not_checked(location, checked)
-                    and location.name not in world.hint_exclusions
-                    and location.item.name in bingoBottlesForHints
-                    and not location.locked
-                    and location.name not in world.hint_type_overrides['named-item'])
-            ]
-        else:
-            locations = [
-                location for location in world.get_filled_locations()
-                if (is_not_checked(location, checked)
-                    and location.name not in world.hint_exclusions
-                    and location.item.name == itemname
-                    and not location.locked
-                    and location.name not in world.hint_type_overrides['named-item'])
-            ]
-        if len(locations) > 0:
-            break
-        if len(world.named_item_pool) == 0:
-            return None
-
-    location = random.choice(locations)
-    checked.add(location.name)
-    item_text = getHint(getItemGenericName(location.item), world.settings.clearer_hints).text
+    if world.settings.world_count == 1:
+        while True:
+            itemname = world.named_item_pool.pop(0)
+            if itemname == "Bottle" and world.settings.hint_dist == "bingo":
+                locations = [
+                    location for location in world.get_filled_locations()
+                    if (is_not_checked(location, checked)
+                        and location.name not in world.hint_exclusions
+                        and location.item.name in bingoBottlesForHints
+                        and not location.locked
+                        and location.name not in world.hint_type_overrides['named-item'])
+                ]
+            else:
+                locations = [
+                    location for location in world.get_filled_locations()
+                    if (is_not_checked(location, checked)
+                        and location.name not in world.hint_exclusions
+                        and location.item.name == itemname
+                        and not location.locked
+                        and location.name not in world.hint_type_overrides['named-item'])
+                ]
+            if len(locations) > 0:
+                break
+            if len(world.named_item_pool) == 0:
+                return None
+        location = random.choice(locations)
+        checked.add(location.name)
+        item_text = getHint(getItemGenericName(location.item), world.settings.clearer_hints).text
     
-    if location.parent_region.dungeon:
-        location_text = getHint(location.parent_region.dungeon.name, world.settings.clearer_hints).text
-        if world.hint_dist_user.get('vague_named_items', False):
-            return (GossipText('#%s# may be on the hero\'s path.' % (location_text), ['Green']), location)
+        if location.parent_region.dungeon:
+            location_text = getHint(location.parent_region.dungeon.name, world.settings.clearer_hints).text
+            if world.hint_dist_user.get('vague_named_items', False):
+                return (GossipText('#%s# may be on the hero\'s path.' % (location_text), ['Green']), location)
+            else:
+                return (GossipText('#%s# hoards #%s#.' % (location_text, item_text), ['Green', 'Red']), location)
         else:
-            return (GossipText('#%s# hoards #%s#.' % (location_text, item_text), ['Green', 'Red']), location)
+            location_text = get_hint_area(location)
+            if world.hint_dist_user.get('vague_named_items', False):
+                return (GossipText('#%s# may be on the hero\'s path.' % (location_text), ['Green']), location)
+            else:
+                return (GossipText('#%s# can be found at #%s#.' % (item_text, location_text), ['Red', 'Green']), location)
+
     else:
-        location_text = get_hint_area(location)
-        if world.hint_dist_user.get('vague_named_items', False):
-            return (GossipText('#%s# may be on the hero\'s path.' % (location_text), ['Green']), location)
+        while True:
+            try:
+                named_item_locations = spoiler._cached_named_item_locations
+            except AttributeError:
+                worlds = spoiler.worlds
+                all_named_items = set(itertools.chain.from_iterable([world.named_item_pool for world in worlds]))
+                if "Bottle" in all_named_items and world.settings.hint_dist == "bingo":
+                    all_named_items.update(bingoBottlesForHints)
+                logger = logging.getLogger('')
+                logger.info(all_named_items)
+                named_item_locations = [location for world in worlds for location in world.get_filled_locations() if location.item.name in all_named_items]
+                spoiler._cached_named_item_locations = named_item_locations
+                logger = logging.getLogger('')
+                logger.info("Extracted {} item locations for named items".format(len(named_item_locations)))
+            itemname = world.named_item_pool.pop(0)
+            if itemname == "Bottle" and world.settings.hint_dist == "bingo":
+                locations = [
+                    location for location in named_item_locations
+                    if (is_not_checked(location, checked)
+                        and location.item.world.id == world.id
+                        and location.name not in world.hint_exclusions
+                        and location.item.name in bingoBottlesForHints
+                        and not location.locked
+                        and location.name not in world.hint_type_overrides['named-item'])
+                ]
+            else:
+                locations = [
+                    location for location in named_item_locations
+                    if (is_not_checked(location, checked)
+                        and location.item.world.id == world.id
+                        and location.name not in world.hint_exclusions
+                        and location.item.name == itemname
+                        and not location.locked
+                        and location.name not in world.hint_type_overrides['named-item'])
+                ]
+            if len(locations) > 0:
+                break
+            else:
+                logger = logging.getLogger('')
+                logger.info("Unable to hint item {} in world {}".format(itemname, world.id))
+            if len(world.named_item_pool) == 0:
+                return None
+
+        location = random.choice(locations)
+        checked.add(location.name)
+        item_text = getHint(getItemGenericName(location.item), world.settings.clearer_hints).text
+    
+        if location.parent_region.dungeon:
+            location_text = getHint(location.parent_region.dungeon.name, world.settings.clearer_hints).text
+            if world.hint_dist_user.get('vague_named_items', False):
+                return (GossipText('#Player %d\'s %s# may be on the hero\'s path.' % (location.world.id+1, location_text), ['Green']), location)
+            else:
+                return (GossipText('#Player %d\'s %s# hoards #%s#.' % (location.world.id+1, location_text, item_text), ['Green', 'Red']), location)
         else:
-            return (GossipText('#%s# can be found at #%s#.' % (item_text, location_text), ['Red', 'Green']), location)
+            location_text = get_hint_area(location)
+            if world.hint_dist_user.get('vague_named_items', False):
+                return (GossipText('#Player %d\'s %s# may be on the hero\'s path.' % (location.world.id+1 , location_text), ['Green']), location)
+            else:
+                return (GossipText('#%s# can be found in #Player %d\'s %s#.' % (item_text, location.world.id+1, location_text), ['Red', 'Green']), location)
 
 
 def get_random_location_hint(spoiler, world, checked):
