@@ -477,6 +477,12 @@ def get_specific_item_hint(spoiler, world, checked):
                 ]
             if len(locations) > 0:
                 break
+            
+            elif world.hint_dist_user['named_items_required']:
+                raise Exception("Unable to hint item {}".format(itemname))
+            else:
+                logger = logging.getLogger('')
+                logger.info("Unable to hint item {}".format(itemname))
             if len(world.named_item_pool) == 0:
                 return None
         location = random.choice(locations)
@@ -498,6 +504,7 @@ def get_specific_item_hint(spoiler, world, checked):
 
     else:
         while True:
+            #This operation is likely to be costly (especially for large multiworlds), so cache the result for later
             try:
                 named_item_locations = spoiler._cached_named_item_locations
             except AttributeError:
@@ -509,8 +516,7 @@ def get_specific_item_hint(spoiler, world, checked):
                 logger.info(all_named_items)
                 named_item_locations = [location for world in worlds for location in world.get_filled_locations() if location.item.name in all_named_items]
                 spoiler._cached_named_item_locations = named_item_locations
-                logger = logging.getLogger('')
-                logger.info("Extracted {} item locations for named items".format(len(named_item_locations)))
+
             itemname = world.named_item_pool.pop(0)
             if itemname == "Bottle" and world.settings.hint_dist == "bingo":
                 locations = [
@@ -534,6 +540,8 @@ def get_specific_item_hint(spoiler, world, checked):
                 ]
             if len(locations) > 0:
                 break
+            elif world.hint_dist_user['named_items_required']:
+                raise Exception("Unable to hint item {} in world {}".format(itemname, world.id))
             else:
                 logger = logging.getLogger('')
                 logger.info("Unable to hint item {} in world {}".format(itemname, world.id))
