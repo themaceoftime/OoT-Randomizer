@@ -509,19 +509,18 @@ def get_specific_item_hint(spoiler, world, checked):
                 named_item_locations = spoiler._cached_named_item_locations
             except AttributeError:
                 worlds = spoiler.worlds
-                all_named_items = set(itertools.chain.from_iterable([world.named_item_pool for world in worlds]))
+                all_named_items = set(itertools.chain.from_iterable([w.named_item_pool for w in worlds]))
                 if "Bottle" in all_named_items and world.settings.hint_dist == "bingo":
                     all_named_items.update(bingoBottlesForHints)
-                logger = logging.getLogger('')
-                logger.info(all_named_items)
-                named_item_locations = [location for world in worlds for location in world.get_filled_locations() if location.item.name in all_named_items]
+                named_item_locations = [location for w in worlds for location in w.get_filled_locations() if (location.item.name in all_named_items)]
                 spoiler._cached_named_item_locations = named_item_locations
 
             itemname = world.named_item_pool.pop(0)
             if itemname == "Bottle" and world.settings.hint_dist == "bingo":
                 locations = [
                     location for location in named_item_locations
-                    if (location.item.world.id == world.id
+                    if (is_not_checked(location, checked)
+                        and location.item.world.id == world.id
                         and location.name not in world.hint_exclusions
                         and location.item.name in bingoBottlesForHints
                         and not location.locked
@@ -530,7 +529,8 @@ def get_specific_item_hint(spoiler, world, checked):
             else:
                 locations = [
                     location for location in named_item_locations
-                    if (location.item.world.id == world.id
+                    if (is_not_checked(location, checked)
+                        and location.item.world.id == world.id
                         and location.name not in world.hint_exclusions
                         and location.item.name == itemname
                         and not location.locked
@@ -859,6 +859,25 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
         itemname = world.get_location('Song from Impa').item.name 
         if itemname in world.item_hints:
             world.item_hints.remove(itemname)
+
+    #If generating a multiworld, check if any of the item_hints are in another world's always locations
+    #If so, remove from this world's item_hints list
+    if world.settings.world_count > 1 and len(world.item_hints) > 0:
+        worlds = spoiler.worlds
+        try:
+            alwaysLocations = spoiler._cached_always_locations
+        except AttributeError:
+            alwaysLocations = [(hint, w.id) for w in worlds for hint in getHintGroup('always', w)]
+            spoiler._cached_always_locations = alwaysLocations
+
+        for hint, id  in alwaysLocations:
+            location = worlds[id].get_location(hint.name)
+            if location.item.name in bingoBottlesForHints and world.settings.hint_dist == 'bingo':
+                always_item = 'Bottle'
+            else:
+                always_item = location.item.name
+            if always_item in world.item_hints and location.item.world.id == world.id:
+                    world.item_hints.remove(always_item)        
 
     world.named_item_pool = list(world.item_hints)
 
