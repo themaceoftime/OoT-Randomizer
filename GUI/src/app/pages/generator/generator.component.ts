@@ -179,8 +179,6 @@ export class GeneratorComponent implements OnInit {
     let goalErrorText = "The selected hint distribution includes the Goal hint type. This can drastically increase generation time for large multiworld seeds. Continue?";
     let goalDistros = this.global.getGlobalVar('generatorGoalDistros');
 
-    //console.log(goalDistros);
-
     if (!goalHintsConfirmed && goalDistros.indexOf(this.global.generator_settingsMap["hint_dist"]) > -1 && this.global.generator_settingsMap["world_count"] > 5) {
       this.dialogService.open(ConfirmationWindow, {
         autoFocus: true, closeOnBackdropClick: false, closeOnEsc: false, hasBackdrop: true, hasScroll: false, context: { dialogHeader: "Goal Hint Warning", dialogMessage: goalErrorText }
