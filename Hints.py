@@ -521,8 +521,7 @@ def get_specific_item_hint(spoiler, world, checked):
             if itemname == "Bottle" and world.settings.hint_dist == "bingo":
                 locations = [
                     location for location in named_item_locations
-                    if (is_not_checked(location, checked)
-                        and location.item.world.id == world.id
+                    if (location.item.world.id == world.id
                         and location.name not in world.hint_exclusions
                         and location.item.name in bingoBottlesForHints
                         and not location.locked
@@ -531,8 +530,7 @@ def get_specific_item_hint(spoiler, world, checked):
             else:
                 locations = [
                     location for location in named_item_locations
-                    if (is_not_checked(location, checked)
-                        and location.item.world.id == world.id
+                    if (location.item.world.id == world.id
                         and location.name not in world.hint_exclusions
                         and location.item.name == itemname
                         and not location.locked
@@ -917,9 +915,8 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
                 always_item = 'Bottle'
             else:
                 always_item = location.item.name
-            if always_item in world.named_item_pool:
-                world.named_item_pool.remove(always_item)
-
+            if always_item in world.named_item_pool and world.settings.world_count == 1:
+                    world.named_item_pool.remove(always_item)
             if location.name in world.hint_text_overrides:
                 location_text = world.hint_text_overrides[location.name]
             else:
