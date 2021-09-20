@@ -57,19 +57,21 @@ def getHintGroup(group, world):
         if hint.name in world.always_hints and group == 'always':
             hint.type = 'always'
 
+        conditional_keep, type_append = True, False
         if group in ['overworld', 'dungeon', 'sometimes'] and hint.name in conditional_sometimes.keys():
-            if not conditional_sometimes[hint.name](world):
-                continue
+            conditional_keep = conditional_sometimes[hint.name](world) 
 
         # Hint inclusion override from distribution
         if group in world.added_hint_types or group in world.item_added_hint_types:
             if hint.name in world.added_hint_types[group]:
                 hint.type = group
+                type_append = True
             if nameIsLocation(name, hint.type, world):
                 location = world.get_location(name)
                 for i in world.item_added_hint_types[group]:
                     if i == location.item.name:
                         hint.type = group
+                        type_append = True
                 for i in world.item_hint_type_overrides[group]:
                     if i == location.item.name:
                         hint.type = []
@@ -83,7 +85,7 @@ def getHintGroup(group, world):
                 if location.item.name in world.item_hint_type_overrides[group]:
                     type_override = True
 
-        if group in hint.type and (name not in hintExclusions(world)) and not type_override:
+        if group in hint.type and (name not in hintExclusions(world)) and not type_override and (conditional_keep or type_append):
             ret.append(hint)
     return ret
 
