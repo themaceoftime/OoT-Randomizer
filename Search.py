@@ -267,12 +267,10 @@ class Search(object):
             for state in self.state_list:
                 valid_goals[category_name]['stateReverse'][state.world.id] = []
                 for goal in category.goals:
-                    beaten = True
                     if goal.name not in valid_goals[category_name]:
                         valid_goals[category_name][goal.name] = []
                     # Check if already beaten
-                    beaten = all(map(lambda i: state.has_full_item_goal(category, goal, i), goal.items))
-                    if beaten:
+                    if all(map(lambda i: state.has_full_item_goal(category, goal, i), goal.items)):
                         valid_goals[category_name][goal.name].append(state.world.id)
                         # Reverse lookup for checking if the category is already beaten.
                         # Only used to check if starting items satisfy the category.

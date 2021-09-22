@@ -1,4 +1,4 @@
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 import logging
 
 from HintList import goalTable, getHintGroup
@@ -116,7 +116,7 @@ class GoalCategory(object):
 
         for index, state in enumerate(starting_search.state_list):
             for goal in state.world.goal_categories[self.name].goals:
-                if (goal.items is not None):
+                if goal.items:
                     if all(map(full_search.state_list[index].has_item_goal, goal.items)):
                         for i in goal.items:
                             i['quantity'] = min(full_search.state_list[index].item_count(i['name']), i['quantity'])
@@ -197,9 +197,9 @@ def update_goal_items(spoiler):
                                     if world_id not in required_locations[icat_name][goal_name]:
                                         required_locations[icat_name][goal_name][world_id] = locations
                                     else:
-                                        for location in locations:
-                                            if location not in required_locations[icat_name][goal_name][world_id]:
-                                                required_locations[icat_name][goal_name][world_id].append(location)
+                                        required_locations[icat_name][goal_name][world_id].extend(
+                                            location for location in locations
+                                            if location not in required_locations[icat_name][goal_name][world_id])
 
                 unlock_category_entrances(category_locks, cat_state)
 
@@ -230,21 +230,19 @@ def update_goal_items(spoiler):
     # Fallback to way of the hero required items list if all goals/goal categories already satisfied.
     # Do not use if the default woth-like goal was already added for open bridge/open ganon.
     # If the woth list is also empty, fails gracefully to the next hint type for the distro in either case.
-    required_locations_dict = {}
+    # required_locations_dict[goal_world][category.name][goal.name][world.id] = [...]
+    required_locations_dict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(list))))
     if not required_locations and 'ganon' not in worlds[0].goal_categories and worlds[0].hint_dist_user['use_default_goals'] and worlds[0].enable_goal_hints:
         for world in worlds:
-            required_locations_dict[world.id] = {}
-            required_locations_dict[world.id]['ganon'] = {}
-            required_locations_dict[world.id]['ganon']['the hero'] = {}
             locations = [(location, 1, 1, [world.id]) for location in spoiler.required_locations[world.id]]
             c = GoalCategory('ganon', 30, goal_count=1, minimum_goals=1)
-            g = Goal(world, 'the hero', 'way of the hero', 'White', items=[{'name': 'Triforce','quantity': 1,'minimum': 1,'hintable': True}])
+            g = Goal(world, 'the hero', 'way of the hero', 'White', items=[{'name': 'Triforce', 'quantity': 1, 'minimum': 1, 'hintable': True}])
             g.required_locations = locations
             c.add_goal(g)
             world.goal_categories[c.name] = c
             # The real protagonist of the story
             required_locations_dict[world.id]['ganon']['the hero'][world.id] = [l[0] for l in locations]
-            spoiler.goal_categories[world.id] = {(c.name): c.copy()}
+            spoiler.goal_categories[world.id] = {c.name: c.copy()}
     else:
         for world in worlds:
             for cat_name, category in world.goal_categories.items():
@@ -261,14 +259,6 @@ def update_goal_items(spoiler):
                                     # we only loop once to do that and grab the required locations for the
                                     # current goal
                                     if location[0].world.id == world.id:
-                                        if goal_world not in required_locations_dict:
-                                            required_locations_dict[goal_world] = {}
-                                        if category.name not in required_locations_dict[goal_world]:
-                                            required_locations_dict[goal_world][category.name] = {}
-                                        if goal.name not in required_locations_dict[goal_world][category.name]:
-                                            required_locations_dict[goal_world][category.name][goal.name] = {}
-                                        if world.id not in required_locations_dict[goal_world][category.name][goal.name]:
-                                            required_locations_dict[goal_world][category.name][goal.name][world.id] = []
                                         # The spoiler shows locations across worlds contributing to this world's goal
                                         required_locations_dict[goal_world][category.name][goal.name][world.id].append(location[0])
                                         if location[0] not in goal_locations:
@@ -304,7 +294,8 @@ def unlock_category_entrances(category_locks, state_list):
 
 
 def search_goals(categories, reachable_goals, search, priority_locations, all_locations, item_locations, always_locations, _maybe_set_light_arrows, search_woth=False):
-    required_locations = {}
+    # required_locations[category.name][goal.name][world_id] = [...]
+    required_locations = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     world_ids = [state.world.id for state in search.state_list]
     if search_woth:
         required_locations['way of the hero'] = []
@@ -320,8 +311,8 @@ def search_goals(categories, reachable_goals, search, priority_locations, all_lo
                 # Exit early if no goals are beatable with category locks
                 if category.name in reachable_goals and reachable_goals[category.name]:
                     for goal in category.goals:
-                        if ((category.name in valid_goals
-                                    and goal.name in valid_goals[category.name])
+                        if (category.name in valid_goals
+                            and goal.name in valid_goals[category.name]
                             and goal.name in reachable_goals[category.name]
                             and (location.name not in priority_locations[location.world.id]
                                     or priority_locations[location.world.id][location.name] == category.name)
@@ -330,12 +321,6 @@ def search_goals(categories, reachable_goals, search, priority_locations, all_lo
                             hintable_states = list(invalid_states & set(reachable_goals[category.name][goal.name]))
                             if hintable_states:
                                 for world_id in hintable_states:
-                                    if category.name not in required_locations:
-                                        required_locations[category.name] = {}
-                                    if goal.name not in required_locations[category.name]:
-                                        required_locations[category.name][goal.name] = {}
-                                    if world_id not in required_locations[category.name][goal.name]:
-                                        required_locations[category.name][goal.name][world_id] = []
                                     # Placeholder weights to be set for future bottleneck targeting.
                                     # 0 weights for always-hinted locations isn't relevant currently
                                     # but is intended to screen out contributions to the overall 
