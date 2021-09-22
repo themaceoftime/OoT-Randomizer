@@ -57,7 +57,8 @@ def getHintGroup(group, world):
         if hint.name in world.always_hints and group == 'always':
             hint.type = 'always'
 
-        conditional_keep, type_append = True, False
+        conditional_keep = True
+        type_append = False
         if group in ['overworld', 'dungeon', 'sometimes'] and hint.name in conditional_sometimes.keys():
             conditional_keep = conditional_sometimes[hint.name](world) 
 
