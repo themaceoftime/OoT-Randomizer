@@ -1,7 +1,7 @@
 from collections import OrderedDict, defaultdict
 import logging
 
-from HintList import goalTable, getHintGroup
+from HintList import goalTable, getHintGroup, hintExclusions
 from Search import Search
 
 
@@ -149,8 +149,15 @@ def update_goal_items(spoiler):
     # Set to test inclusion against
     item_locations = {location for location in all_locations if location.item.majoritem and not location.locked and location.item.name != 'Triforce Piece'}
 
-    required_locations = {}
+    # required_locations[category.name][goal.name][world_id] = [...]
+    required_locations = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     priority_locations = {(world.id): {} for world in worlds}
+    
+    # rebuild hint exclusion list
+    for world in worlds:
+        hintExclusions(world, clear_cache=True)
+
+    # getHintGroup relies on hint exclusion list
     always_locations = [location.name for world in worlds for location in getHintGroup('always', world)]
     if spoiler.playthrough:
         # Skip even the checks
@@ -177,29 +184,15 @@ def update_goal_items(spoiler):
                 reachable_goals = {}
                 # Goals are changed for beatable-only accessibility per-world
                 category.update_reachable_goals(search, full_search)
-                reachable_goals = full_search.can_beat_goals_fast({ cat_name: category })
+                reachable_goals = full_search.can_beat_goals_fast({ cat_name: category }, cat_world.id)
                 identified_locations = search_goals({ cat_name: category }, reachable_goals, search, priority_locations, all_locations, item_locations, always_locations, _maybe_set_light_arrows)
                 # Multiworld can have all goals for one player's bridge entirely
                 # locked by another player's bridge. Therefore, we can't assume
                 # accurate required location lists by locking every world's
                 # entrance locks simultaneously. We must run a new search on the
-                # same category for each world's entrance locks. Without category locks,
-                # we could do a shallow merge because each category is searched exactly once.
-                for icat_name, goal_location_lists in identified_locations.items():
-                    if icat_name not in required_locations:
-                        required_locations[icat_name] = goal_location_lists
-                    else:
-                        for goal_name, world_location_lists in goal_location_lists.items():
-                            if goal_name not in required_locations[icat_name]:
-                                required_locations[icat_name][goal_name] = world_location_lists
-                            else:
-                                for world_id, locations in world_location_lists.items():
-                                    if world_id not in required_locations[icat_name][goal_name]:
-                                        required_locations[icat_name][goal_name][world_id] = locations
-                                    else:
-                                        required_locations[icat_name][goal_name][world_id].extend(
-                                            location for location in locations
-                                            if location not in required_locations[icat_name][goal_name][world_id])
+                # same category for each world's entrance locks.
+                for goal_name, world_location_lists in identified_locations[cat_name].items():
+                    required_locations[cat_name][goal_name][cat_world.id] = list(identified_locations[cat_name][goal_name][cat_world.id])
 
                 unlock_category_entrances(category_locks, cat_state)
 
@@ -246,25 +239,26 @@ def update_goal_items(spoiler):
     else:
         for world in worlds:
             for cat_name, category in world.goal_categories.items():
-                if cat_name in required_locations:
-                    for goal in category.goals:
-                        if goal.name in required_locations[category.name]:
-                            # Filter the required locations to only include locations in the goal's world.
-                            # The fulfilled goal can be for another world, whose ID is saved previously as
-                            # the fourth entry in each location tuple
-                            goal_locations = {}
-                            for goal_world, locations in required_locations[category.name][goal.name].items():
-                                for location in locations:
-                                    # filter isn't strictly necessary for the spoiler dictionary, but this way
-                                    # we only loop once to do that and grab the required locations for the
-                                    # current goal
-                                    if location[0].world.id == world.id:
-                                        # The spoiler shows locations across worlds contributing to this world's goal
-                                        required_locations_dict[goal_world][category.name][goal.name][world.id].append(location[0])
-                                        if location[0] not in goal_locations:
-                                            goal_locations[location[0]] = []
-                                        goal_locations[location[0]].append(goal_world)
-                            goal.required_locations = [(location, 1, 1, world_ids) for location, world_ids in goal_locations.items()]
+                if cat_name not in required_locations:
+                    continue
+                for goal in category.goals:
+                    if goal.name not in required_locations[category.name]:
+                        continue
+                    # Filter the required locations to only include locations in the goal's world.
+                    # The fulfilled goal can be for another world, whose ID is saved previously as
+                    # the fourth entry in each location tuple
+                    goal_locations = defaultdict(list)
+                    for goal_world, locations in required_locations[category.name][goal.name].items():
+                        for location in locations:
+                            # filter isn't strictly necessary for the spoiler dictionary, but this way
+                            # we only loop once to do that and grab the required locations for the
+                            # current goal
+                            if location[0].world.id != world.id:
+                                continue
+                            # The spoiler shows locations across worlds contributing to this world's goal
+                            required_locations_dict[goal_world][category.name][goal.name][world.id].append(location[0])
+                            goal_locations[location[0]].append(goal_world)
+                    goal.required_locations = [(location, 1, 1, world_ids) for location, world_ids in goal_locations.items()]
         # Copy of goal categories for the spoiler log to reference
         # since the hint algorithm mutates the world copy 
         for world in worlds:

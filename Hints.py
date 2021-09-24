@@ -799,8 +799,6 @@ def buildGossipHints(spoiler, worlds):
 
 # builds out general hints based on location and whether an item is required or not
 def buildWorldGossipHints(spoiler, world, checkedLocations=None):
-    # rebuild hint exclusion list
-    hintExclusions(world, clear_cache=True)
 
     world.barren_dungeon = 0
     world.woth_dungeon = 0

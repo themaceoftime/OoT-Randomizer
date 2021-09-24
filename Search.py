@@ -237,8 +237,8 @@ class Search(object):
             return False
 
 
-    def can_beat_goals_fast(self, goal_categories):
-        valid_goals = self.test_category_goals(goal_categories)
+    def can_beat_goals_fast(self, goal_categories, world_filter = None):
+        valid_goals = self.test_category_goals(goal_categories, world_filter)
         if all(map(State.won, self.state_list)):
             valid_goals['way of the hero'] = True
         else:
@@ -259,12 +259,19 @@ class Search(object):
         return valid_goals
 
 
-    def test_category_goals(self, goal_categories):
+    def test_category_goals(self, goal_categories, world_filter = None):
         valid_goals = {}
         for category_name, category in goal_categories.items():
             valid_goals[category_name] = {}
             valid_goals[category_name]['stateReverse'] = {}
             for state in self.state_list:
+                # Must explicitly test for None as the world filter can be 0
+                # for the first world ID
+                # Skips item search when an entrance lock is active to avoid
+                # mixing accessible goals with/without the entrance lock in
+                # multiworld
+                if world_filter is not None and state.world.id != world_filter:
+                    continue
                 valid_goals[category_name]['stateReverse'][state.world.id] = []
                 for goal in category.goals:
                     if goal.name not in valid_goals[category_name]:
