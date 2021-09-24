@@ -2931,6 +2931,7 @@ setting_infos = [
             value you decide. For more control, utilize
             the Plandomizer.
         ''',
+        disabled_default =  'random',
         shared         = True,
         gui_params     = {
             "hide_when_disabled": True,
