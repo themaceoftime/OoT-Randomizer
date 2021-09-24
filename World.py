@@ -23,7 +23,6 @@ class World(object):
 
     def __init__(self, id, settings, resolveRandomizedSettings=True):
         self.id = id
-        self.shuffle = 'vanilla'
         self.dungeons = []
         self.regions = []
         self.itempool = []
