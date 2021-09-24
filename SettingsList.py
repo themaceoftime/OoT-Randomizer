@@ -2857,7 +2857,7 @@ setting_infos = [
             'random': 'Random # of Items Per Shop',
         },
         disable        = {
-            'off':  {'settings': ['shopsanity_prices']},
+            'off':  {'settings': ['shopsanity_prices', 'shopsanity_prices_custom']},
         },
         gui_tooltip    = '''\
             Randomizes Shop contents.
