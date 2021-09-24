@@ -2856,6 +2856,9 @@ setting_infos = [
             '4':      '4 Items Per Shop',
             'random': 'Random # of Items Per Shop',
         },
+        disable        = {
+            'off':  {'settings': ['shopsanity_prices']},
+        },
         gui_tooltip    = '''\
             Randomizes Shop contents.
             
@@ -2892,6 +2895,60 @@ setting_infos = [
                 ('4',      1),
                 ('random', 1),
             ],
+        },
+    ),
+    Combobox(
+        name           = 'shopsanity_prices',
+        gui_text       = 'Shopsanity Prices',
+        default        = 'random',
+        choices        = {
+            'random':          'Random',
+            'random_small':    '99 Rupees or fewer',
+            'random_medium':   '200 Rupees or fewer',
+            'random_large':    '500 Rupees or fewer',
+            'random_cursed':   '999 Rupees or fewer',
+            'affordable':      'Affordable',
+            'custom':          'Custom',
+        },
+        disable        = {
+            '!custom':  {'settings': ['shopsanity_prices_custom']},
+        },
+        gui_tooltip    = '''\
+            Controls the randomization of prices for shopsanity items.
+            
+            'Random': The default randomization. Shop prices
+            will range between 0 to 300 rupees, with a bias
+            towards values slightly below the middle of the
+            range, in multiples of 5.
+            
+            'X Rupees or fewer': Prices will be randomized
+            to fall into bands seperated by wallet size,
+            in multiples of 5. 
+            
+            'Affordable': Prices will be fixed to 10 rupees.
+
+            'Custom': All prices will be set to a fixed 
+            value you decide. For more control, utilize
+            the Plandomizer.
+        ''',
+        shared         = True,
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
+    ),
+    Scale(
+        name           = 'shopsanity_prices_custom',
+        gui_text       = "Custom Shopsanity Prices",
+        default        = 0,
+        min            = 0,
+        max            = 999,
+        gui_tooltip    = '''\
+            Select the number of rupees each randomized shop item will be fixed to.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "hide_when_disabled": True,
         },
     ),
     Combobox(
