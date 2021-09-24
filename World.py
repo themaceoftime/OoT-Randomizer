@@ -425,13 +425,13 @@ class World(object):
                         if self.settings.shopsanity_prices == 'random':
                             self.shop_prices[location.name] = int(random.betavariate(1.5, 2) * 60) * 5
                         elif self.settings.shopsanity_prices == 'random_small':
-                            self.shop_prices[location.name] = random.randrange(0,99,5)
+                            self.shop_prices[location.name] = random.randrange(0,100,5)
                         elif self.settings.shopsanity_prices == 'random_medium':
-                            self.shop_prices[location.name] = random.randrange(0,200,5)
+                            self.shop_prices[location.name] = random.randrange(0,201,5)
                         elif self.settings.shopsanity_prices == 'random_large':
-                            self.shop_prices[location.name] = random.randrange(0,500,5)
+                            self.shop_prices[location.name] = random.randrange(0,501,5)
                         elif self.settings.shopsanity_prices == 'random_cursed':
-                            self.shop_prices[location.name] = random.randrange(0,999,5)
+                            self.shop_prices[location.name] = random.randrange(0,1000,5)
                         elif self.settings.shopsanity_prices == 'affordable':
                             self.shop_prices[location.name] = 10
                         elif self.settings.shopsanity_prices == 'custom':
