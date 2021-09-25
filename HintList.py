@@ -1305,6 +1305,20 @@ hintTable = {
     '2011':                                                     ("Today, let's begin down&'The Hero is Defeated' timeline.", None, 'ganonLine'),
 }
 
+# Separate table for goal names to avoid duplicates in the hint table.
+# Link's Pocket will always be an empty goal, but it's included here to 
+# prevent key errors during the dungeon reward lookup.
+goalTable = {
+    'Queen Gohma':                                              ("path to the #Spider#", "path to #Queen Gohma#", "Green"),
+    'King Dodongo':                                             ("path to the #Dinosaur#", "path to #King Dodongo#", "Red"),
+    'Barinade':                                                 ("path to the #Tentacle#", "path to #Barinade#", "Blue"),
+    'Phantom Ganon':                                            ("path to the #Puppet#", "path to #Phantom Ganon#", "Green"),
+    'Volvagia':                                                 ("path to the #Dragon#", "path to #Volvagia#", "Red"),
+    'Morpha':                                                   ("path to the #Amoeba#", "path to #Morpha#", "Blue"),
+    'Bongo Bongo':                                              ("path to the #Hands#", "path to #Bongo Bongo#", "Pink"),
+    'Twinrova':                                                 ("path to the #Witches#", "path to #Twinrova#", "Yellow"),
+    'Links Pocket':                                             ("path to #Links Pocket#", "path to #Links Pocket#", "Light Blue"),
+}
 
 # This specifies which hints will never appear due to either having known or known useless contents or due to the locations not existing.
 def hintExclusions(world, clear_cache=False):
@@ -1329,7 +1343,8 @@ def hintExclusions(world, clear_cache=False):
                  'sometimes',
                  'overworld',
                  'dungeon',
-                 'song']):
+                 'song',
+                 'exclude']):
             location_hints.append(hint)
 
     for hint in location_hints:
@@ -1341,9 +1356,9 @@ def hintExclusions(world, clear_cache=False):
 def nameIsLocation(name, hint_type, world):
     if isinstance(hint_type, (list, tuple)):
         for htype in hint_type:
-            if htype in ['sometimes', 'song', 'overworld', 'dungeon', 'always'] and name not in hintExclusions(world):
+            if htype in ['sometimes', 'song', 'overworld', 'dungeon', 'always', 'exclude'] and name not in hintExclusions(world):
                 return True
-    elif hint_type in ['sometimes', 'song', 'overworld', 'dungeon', 'always'] and name not in hintExclusions(world):
+    elif hint_type in ['sometimes', 'song', 'overworld', 'dungeon', 'always', 'exclude'] and name not in hintExclusions(world):
         return True
     return False
 
