@@ -477,16 +477,20 @@ def get_specific_item_hint(spoiler, world, checked):
                         and location.name not in world.hint_type_overrides['named-item']
                         )
                 ]
+
             if len(locations) > 0:
                 break
             
             elif world.hint_dist_user['named_items_required']:
                 raise Exception("Unable to hint item {}".format(itemname))
+
             else:
                 logger = logging.getLogger('')
                 logger.info("Unable to hint item {}".format(itemname))
+
             if len(world.named_item_pool) == 0:
                 return None
+
         location = random.choice(locations)
         checked.add(location.name)
         item_text = getHint(getItemGenericName(location.item), world.settings.clearer_hints).text
@@ -554,17 +558,20 @@ def get_specific_item_hint(spoiler, world, checked):
                         and (itemname, world.id) not in always_locations
                         and location.name not in world.hint_type_overrides['named-item'])
                 ]
+
             if len(locations) > 0:
                 break
+
             elif world.hint_dist_user['named_items_required'] and (itemname, world.id) not in always_locations:
                 raise Exception("Unable to hint item {} in world {}".format(itemname, world.id))
+
             else:
                 logger = logging.getLogger('')
                 if (itemname, world.id) not in spoiler._cached_always_locations:
                     logger.info("Hint for item {} in world {} skipped due to Always hint".format(itemname, world.id))
                 else:
                     logger.info("Unable to hint item {} in world {}".format(itemname, world.id))
-                return None
+
             if len(world.named_item_pool) == 0:
                 return None
 
