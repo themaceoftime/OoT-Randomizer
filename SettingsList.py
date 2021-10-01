@@ -15,7 +15,7 @@ from Location import LocationIterator
 import Sounds as sfx
 import StartingItems
 from Utils import data_path
-from StartingItems import everything
+from ItemList import item_table
 
 # holds the info for a single setting
 class Setting_Info():
@@ -3675,7 +3675,7 @@ setting_infos = [
         gui_type       = None,
         gui_text       = None,
         shared         = True,
-        choices        = [everything[i][1] for i in everything]
+        choices        = [i for i in item_table if item_table[i][0] == 'Item']
     ),
     Setting_Info('hint_dist_user',    dict, None, None, True, {}),
     Combobox(
