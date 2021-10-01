@@ -3670,12 +3670,12 @@ setting_infos = [
         },
     ),
     Setting_Info(
-        name = 'item_hints',
-        type =  list,
-        gui_type = None,
-        gui_text = None,
-        shared = True,
-        choices = [everything[i][1] for i in everything]
+        name           = 'item_hints',
+        type           =  list,
+        gui_type       = None,
+        gui_text       = None,
+        shared         = True,
+        choices        = [everything[i][1] for i in everything]
     ),
     Setting_Info('hint_dist_user',    dict, None, None, True, {}),
     Combobox(
