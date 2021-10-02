@@ -632,6 +632,8 @@ logic_tricks = {
         'tooltip' : '''\
                     You can beat the quicksand by backwalking across it
                     in a specific way.
+                    Note that jumping to the carpet merchant as child
+                    typically requires a fairly precise jump slash.
                     '''},
     'Colossus Hill GS with Hookshot': {
         'name'    : 'logic_colossus_gs',
