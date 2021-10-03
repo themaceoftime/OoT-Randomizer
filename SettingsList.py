@@ -10,8 +10,10 @@ from Colors import get_tunic_color_options, get_navi_color_options, get_sword_tr
     get_bombchu_trail_color_options, get_boomerang_trail_color_options, get_gauntlet_color_options, \
     get_magic_color_options, get_heart_color_options, get_shield_frame_color_options, get_a_button_color_options,\
     get_b_button_color_options, get_c_button_color_options, get_start_button_color_options
-from Hints import HintDistList, HintDistTips
+from Hints import HintDistList, HintDistTips, gossipLocations
+from Item import item_table
 from Location import LocationIterator
+from LocationList import location_table
 import Sounds as sfx
 import StartingItems
 from Utils import data_path
