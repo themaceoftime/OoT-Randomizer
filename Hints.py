@@ -891,6 +891,9 @@ def buildGossipHints(spoiler, worlds):
             if light_arrow_world.id not in checkedLocations:
                 checkedLocations[light_arrow_world.id] = set()
             checkedLocations[light_arrow_world.id].add(location.name)
+            # Prevent conflicts with named-item hints and Ganondorf
+            if 'Light Arrows' in world.item_hints:
+                world.item_hints.remove('Light Arrows')
 
     # Build all the hints.
     for world in worlds:
