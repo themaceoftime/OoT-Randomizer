@@ -15,6 +15,7 @@ from Location import LocationIterator
 import Sounds as sfx
 import StartingItems
 from Utils import data_path
+from ItemList import item_table
 
 # holds the info for a single setting
 class Setting_Info():
@@ -3668,7 +3669,14 @@ setting_infos = [
             "hide_when_disabled" : True,
         },
     ),
-    Setting_Info('item_hints',    list, None, None, True, {}),
+    Setting_Info(
+        name           = 'item_hints',
+        type           =  list,
+        gui_type       = None,
+        gui_text       = None,
+        shared         = True,
+        choices        = [i for i in item_table if item_table[i][0] == 'Item']
+    ),
     Setting_Info('hint_dist_user',    dict, None, None, True, {}),
     Combobox(
         name           = 'text_shuffle',
