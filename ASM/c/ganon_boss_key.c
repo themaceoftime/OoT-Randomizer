@@ -24,7 +24,9 @@ unsigned int countSetBitsRec(unsigned int num)
 uint8_t GANON_BOSS_KEY_CONDITION = 0;
 uint16_t GANON_BOSS_KEY_CONDITION_COUNT = 0;
 void give_ganon_boss_key() {
-    if (z64_file.checksum != 0 && GANON_BOSS_KEY_CONDITION && !z64_file.dungeon_items[10].boss_key) {
+    // z64_file.ammo[0] != 0x32 refers to the title screen file, which contains 50 (0x32) Deku Sticks.
+    // If you want this boss key, may I recommend not having 50 Deku Sticks?
+    if (z64_file.ammo[0] != 0x32 && GANON_BOSS_KEY_CONDITION && !z64_file.dungeon_items[10].boss_key) {
         bool give_boss_key = false;
         switch (GANON_BOSS_KEY_CONDITION) {
             case 1: // Medallions
