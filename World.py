@@ -112,7 +112,14 @@ class World(object):
         else:
             self.settings.hint_dist = 'custom'
             self.hint_dist_user = self.settings.hint_dist_user
-            
+
+        # Hack for legacy hint distributions from before the goal hint
+        # type was created. Keeps validation happy.
+        if 'distribution' in self.hint_dist_user and 'goal' not in self.hint_dist_user['distribution']:
+            self.hint_dist_user['distribution']['goal'] = {"order": 0, "weight": 0.0, "fixed": 0, "copies": 0}
+        if 'use_default_goals' not in self.hint_dist_user:
+            self.hint_dist_user['use_default_goals'] = False
+
         # Validate hint distribution format
         # Originally built when I was just adding the type distributions
         # Location/Item Additions and Overrides are not validated
