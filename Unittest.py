@@ -11,7 +11,8 @@ import unittest
 from ItemList import item_table
 from ItemPool import remove_junk_items, item_groups
 from LocationList import location_groups, location_is_viewable
-from Main import main, resolve_settings, build_world_graphs
+from Main import main, resolve_settings, build_world_graphs, place_items
+from Search import Search
 from Settings import Settings, get_preset_files
 
 test_dir = os.path.join(os.path.dirname(__file__), 'tests')
@@ -335,6 +336,28 @@ class TestHints(unittest.TestCase):
                 _, spoiler = generate_with_plandomizer(filename, live_copy=True)
                 self.assertIsNotNone(spoiler.worlds[0].light_arrow_location)
                 self.assertNotEqual('Ganons Tower Boss Key Chest', spoiler.worlds[0].light_arrow_location.name)
+
+
+class TestEntranceRandomizer(unittest.TestCase):
+    def test_spawn_point_warp_reachability(self):
+        # With special interior, overworld, and warp song ER off, random spawns
+        # should always have access to the Prelude and Serenade warp areas.
+        # Currently only tests glitchless as glitched logic does not support ER yet.
+        distribution_file = load_spoiler(os.path.join(test_dir, 'plando', 'plando-er-warp-destination-reachability.json'))
+        settings = load_settings(distribution_file['settings'], seed='TESTTESTTEST', filename='plando-er-warp-destination-reachability')
+        resolve_settings(settings)
+        worlds = build_world_graphs(settings)
+        place_items(settings, worlds)
+        # Test reachability with no items to Serenade and Prelude warp regions.
+        # These should be Lake Hylia and Temple of Time, respectively.
+        # If the test succeeds, this confirms Serenade and Prelude can be foolish.
+        search = Search([world.state for world in worlds])
+        serenade = [world.get_region('Serenade of Water Warp').exits[0].connected_region for world in worlds]
+        prelude = [world.get_region('Prelude of Light Warp').exits[0].connected_region for world in worlds]
+        for region in serenade:
+            self.assertTrue(search.can_reach(region))
+        for region in prelude:
+            self.assertTrue(search.can_reach(region))
 
 
 class TestValidSpoilers(unittest.TestCase):
