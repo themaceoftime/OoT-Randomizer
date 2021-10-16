@@ -8,6 +8,7 @@ import random
 import re
 import unittest
 
+from EntranceShuffle import EntranceShuffleError
 from ItemList import item_table
 from ItemPool import remove_junk_items, item_groups
 from LocationList import location_groups, location_is_viewable
@@ -339,25 +340,27 @@ class TestHints(unittest.TestCase):
 
 
 class TestEntranceRandomizer(unittest.TestCase):
-    def test_spawn_point_warp_reachability(self):
+    def test_spawn_point_invalid_areas(self):
         # With special interior, overworld, and warp song ER off, random spawns
-        # should always have access to the Prelude and Serenade warp areas.
+        # require itemless access to Kokiri Forest or Kakariko Village. This imposes
+        # a world state such that the Prelude and Serenade warp pads are also reachable
+        # with no items, and Prelude and Serenade should be foolish. If this behaviour
+        # is changed, this unit test serves as a reminder to revisit warp song
+        # foolishness.
         # Currently only tests glitchless as glitched logic does not support ER yet.
-        distribution_file = load_spoiler(os.path.join(test_dir, 'plando', 'plando-er-warp-destination-reachability.json'))
-        settings = load_settings(distribution_file['settings'], seed='TESTTESTTEST', filename='plando-er-warp-destination-reachability')
-        resolve_settings(settings)
-        worlds = build_world_graphs(settings)
-        place_items(settings, worlds)
-        # Test reachability with no items to Serenade and Prelude warp regions.
-        # These should be Lake Hylia and Temple of Time, respectively.
-        # If the test succeeds, this confirms Serenade and Prelude can be foolish.
-        search = Search([world.state for world in worlds])
-        serenade = [world.get_region('Serenade of Water Warp').exits[0].connected_region for world in worlds]
-        prelude = [world.get_region('Prelude of Light Warp').exits[0].connected_region for world in worlds]
-        for region in serenade:
-            self.assertTrue(search.can_reach(region))
-        for region in prelude:
-            self.assertTrue(search.can_reach(region))
+        # Assumes the player starts with an ocarina to use a warp song from Sheik at
+        # Colossus or Ice Cavern.
+        filenames = [
+            "plando-er-colossus-spawn-validity",
+        ]
+        for filename in filenames:
+            distribution_file = load_spoiler(os.path.join(test_dir, 'plando', filename + '.json'))
+            settings = load_settings(distribution_file['settings'], seed='TESTTESTTEST', filename=filename)
+            resolve_settings(settings)
+            # Test for an entrance shuffle error during world validation.
+            # If the test succeeds, this confirms Serenade and Prelude can be foolish.
+            with self.assertRaises(EntranceShuffleError):
+                build_world_graphs(settings)
 
 
 class TestValidSpoilers(unittest.TestCase):
