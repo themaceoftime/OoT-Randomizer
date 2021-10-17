@@ -112,7 +112,14 @@ class World(object):
         else:
             self.settings.hint_dist = 'custom'
             self.hint_dist_user = self.settings.hint_dist_user
-            
+
+        # Hack for legacy hint distributions from before the goal hint
+        # type was created. Keeps validation happy.
+        if 'distribution' in self.hint_dist_user and 'goal' not in self.hint_dist_user['distribution']:
+            self.hint_dist_user['distribution']['goal'] = {"order": 0, "weight": 0.0, "fixed": 0, "copies": 0}
+        if 'use_default_goals' not in self.hint_dist_user:
+            self.hint_dist_user['use_default_goals'] = True
+
         # Validate hint distribution format
         # Originally built when I was just adding the type distributions
         # Location/Item Additions and Overrides are not validated
@@ -126,7 +133,7 @@ class World(object):
         if not hint_dist_valid:
             raise InvalidFileException("""Hint distributions require all hint types be present in the distro 
                                           (trial, always, woth, barren, item, song, overworld, dungeon, entrance,
-                                          sometimes, random, junk, named-item). If a hint type should not be
+                                          sometimes, random, junk, named-item, goal). If a hint type should not be
                                           shuffled, set its order to 0. Hint type format is \"type\": { 
                                           \"order\": 0, \"weight\": 0.0, \"fixed\": 0, \"copies\": 0 }""")
         
@@ -193,7 +200,12 @@ class World(object):
 
         # Disable goal hints if the hint distro does not require them.
         # WOTH locations are always searched.
-        self.enable_goal_hints = self.hint_dist_user['distribution']['goal']['fixed'] != 0 or self.hint_dist_user['distribution']['goal']['weight'] != 0
+        self.enable_goal_hints = False
+        if ('distribution' in self.hint_dist_user and
+           'goal' in self.hint_dist_user['distribution'] and
+           (self.hint_dist_user['distribution']['goal']['fixed'] != 0 or
+                self.hint_dist_user['distribution']['goal']['weight'] != 0)):
+            self.enable_goal_hints = True
 
         # Initialize default goals for win condition
         self.goal_categories = OrderedDict()
