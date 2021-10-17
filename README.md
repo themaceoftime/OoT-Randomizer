@@ -159,6 +159,7 @@ do that.
 * Allow Plandomizer to override otherwise randomized settings.
 * Allow Giant's Knife as a starting item.
 * Giant's Knife and Biggoron's Sword are considered useless in glitchless logic but not in glitched.
+* Prelude of Light and Serenade of Water are considered useless if the only Entrance Randomizer option enabled is Random Spawns (which already cannot be placed in certain areas where any items are necessary to escape).
 * Entrance Randomizer: Allow Kakariko Potion Shop and Impa's House to have their entrances appear in different areas if all hints are off.
 * Entrance Randomizer: When warp songs are shuffled, the confirmation text now shows the actual destination.
 * Text Shuffle: Expanded the "Shuffled except Hints and Keys" to include some shop and scrub text, and renamed "Shuffled except Important Text".
