@@ -30,13 +30,13 @@ class InvalidFileException(Exception):
 
 per_world_keys = (
     'randomized_settings',
-    ':effective_starting_items',
     'item_pool',
     'dungeons',
     'trials',
     'songs',
     'entrances',
     'locations',
+    ':skipped_locations',
     ':woth_locations',
     ':goal_locations',
     ':barren_regions',
@@ -228,6 +228,7 @@ class WorldDistribution(object):
         self.base_pool = []
         self.major_group = []
         self.song_as_items = False
+        self.skipped_locations = []
         self.effective_starting_items = {}
         self.update(src_dict, update_all=True)
 
@@ -266,13 +267,13 @@ class WorldDistribution(object):
     def to_json(self):
         return {
             'randomized_settings': self.randomized_settings,
-            ':effective_starting_items': SortedDict({name: record.to_json() for (name, record) in self.effective_starting_items.items()}),
             'dungeons': {name: record.to_json() for (name, record) in self.dungeons.items()},
             'trials': {name: record.to_json() for (name, record) in self.trials.items()},
             'songs': {name: record.to_json() for (name, record) in self.songs.items()},
             'item_pool': SortedDict({name: record.to_json() for (name, record) in self.item_pool.items()}),
             'entrances': {name: record.to_json() for (name, record) in self.entrances.items()},
             'locations': {name: [rec.to_json() for rec in record] if is_pattern(name) else record.to_json() for (name, record) in self.locations.items()},
+            ':skipped_locations': {loc.name: LocationRecord.from_item(loc.item).to_json() for loc in self.skipped_locations},
             ':woth_locations': None if self.woth_locations is None else {name: record.to_json() for (name, record) in self.woth_locations.items()},
             ':goal_locations': self.goal_locations,
             ':barren_regions': self.barren_regions,
@@ -950,13 +951,14 @@ class WorldDistribution(object):
 
         skipped_locations = ['Links Pocket']
         if world.settings.skip_child_zelda:
-            add_starting_item_with_ammo(items, 'Zeldas Letter')
-            skipped_locations.append('Song from Impa')
+            skipped_locations += ['HC Zeldas Letter', 'Song from Impa']
         for iter_world in worlds:
             for location in skipped_locations:
-                item = iter_world.get_location(location).item
-                if item is not None and world.id == item.world.id:
-                    add_starting_item_with_ammo(items, item.name)
+                loc = iter_world.get_location(location)
+                if iter_world.id == world.id:
+                    self.skipped_locations.append(loc)
+                if loc.item is not None and world.id == loc.item.world.id:
+                    add_starting_item_with_ammo(items, loc.item.name)
 
         self.effective_starting_items = items
 
