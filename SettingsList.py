@@ -5070,7 +5070,8 @@ def validate_settings(settings_dict):
         info = get_setting_info(setting)
         # Ensure the type of the supplied choice is correct
         if type(choice) != info.type:
-            raise TypeError('Supplied choice %r for setting %r is of type %r, expecting %r' % (choice, setting, type(choice).__name__, info.type.__name__))
+            if setting != 'starting_items' or type(choice) != dict: # allow dict (plando syntax) for starting items in addition to the list syntax used by the GUI
+                raise TypeError('Supplied choice %r for setting %r is of type %r, expecting %r' % (choice, setting, type(choice).__name__, info.type.__name__))
         # If setting is a list, must check each element
         if isinstance(choice, list):
             for element in choice:
