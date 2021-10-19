@@ -951,7 +951,7 @@ class WorldDistribution(object):
 
         skipped_locations = ['Links Pocket']
         if world.settings.skip_child_zelda:
-            skipped_locations += ['HC Zeldas Letter', 'Song from Impa']
+            skipped_locations += ['HC Malon Egg', 'HC Zeldas Letter', 'Song from Impa']
         for iter_world in worlds:
             for location in skipped_locations:
                 loc = iter_world.get_location(location)

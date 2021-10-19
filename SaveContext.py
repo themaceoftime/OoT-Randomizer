@@ -265,6 +265,8 @@ class SaveContext():
             self.give_health(count)
         elif item == "Bombchu Item":
             self.give_bombchu_item()
+        elif item == "Recovery Heart": # ItemPool.IGNORE_LOCATION
+            pass # used to disable some skipped and inaccessible locations
         elif item in SaveContext.save_writes_table:
             for address, value in SaveContext.save_writes_table[item].items():
                 if value is None:
@@ -952,7 +954,7 @@ class SaveContext():
     }
 
     giveable_items = set(chain(save_writes_table.keys(), bottle_types.keys(),
-        ["Piece of Heart", "Piece of Heart (Treasure Chest Game)", "Heart Container", "Rupee (1)"]))
+        ["Piece of Heart", "Piece of Heart (Treasure Chest Game)", "Heart Container", "Rupee (1)", "Recovery Heart"]))
 
 
     equipable_items = {

@@ -643,6 +643,12 @@ vanillaSK = {
     'Water Temple MQ Freestanding Key': 'Small Key (Water Temple)',    
 }
 
+
+# a useless placeholder item placed at some skipped and inaccessible locations
+# (e.g. HC Malon Egg with Skip Child Zelda, or the carpenters with Open Gerudo Fortress)
+IGNORE_LOCATION = 'Recovery Heart'
+
+
 junk_pool_base = [
     ('Bombs (5)',       8),
     ('Bombs (10)',      2),
@@ -829,7 +835,7 @@ def get_pool_core(world):
         pending_junk_pool.append('Rutos Letter')
 
     if world.settings.skip_child_zelda:
-        placed_items['HC Malon Egg'] = 'Recovery Heart'
+        placed_items['HC Malon Egg'] = IGNORE_LOCATION
     elif world.settings.shuffle_weird_egg:
         pool.append('Weird Egg')
     else:
@@ -1060,16 +1066,16 @@ def get_pool_core(world):
         pool.extend(['Ice Trap'] * 4)
 
     if world.settings.gerudo_fortress == 'open':
-        placed_items['Hideout Jail Guard (1 Torch)'] = 'Recovery Heart'
-        placed_items['Hideout Jail Guard (2 Torches)'] = 'Recovery Heart'
-        placed_items['Hideout Jail Guard (3 Torches)'] = 'Recovery Heart'
-        placed_items['Hideout Jail Guard (4 Torches)'] = 'Recovery Heart'
+        placed_items['Hideout Jail Guard (1 Torch)'] = IGNORE_LOCATION
+        placed_items['Hideout Jail Guard (2 Torches)'] = IGNORE_LOCATION
+        placed_items['Hideout Jail Guard (3 Torches)'] = IGNORE_LOCATION
+        placed_items['Hideout Jail Guard (4 Torches)'] = IGNORE_LOCATION
     elif world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']:
         if world.settings.gerudo_fortress == 'fast':
             pool.append('Small Key (Thieves Hideout)')
-            placed_items['Hideout Jail Guard (2 Torches)'] = 'Recovery Heart'
-            placed_items['Hideout Jail Guard (3 Torches)'] = 'Recovery Heart'
-            placed_items['Hideout Jail Guard (4 Torches)'] = 'Recovery Heart'
+            placed_items['Hideout Jail Guard (2 Torches)'] = IGNORE_LOCATION
+            placed_items['Hideout Jail Guard (3 Torches)'] = IGNORE_LOCATION
+            placed_items['Hideout Jail Guard (4 Torches)'] = IGNORE_LOCATION
         else:
             pool.extend(['Small Key (Thieves Hideout)'] * 4)
         if world.settings.item_pool_value == 'plentiful':
@@ -1077,9 +1083,9 @@ def get_pool_core(world):
     else:
         if world.settings.gerudo_fortress == 'fast':
             placed_items['Hideout Jail Guard (1 Torch)'] = 'Small Key (Thieves Hideout)'
-            placed_items['Hideout Jail Guard (2 Torches)'] = 'Recovery Heart'
-            placed_items['Hideout Jail Guard (3 Torches)'] = 'Recovery Heart'
-            placed_items['Hideout Jail Guard (4 Torches)'] = 'Recovery Heart'
+            placed_items['Hideout Jail Guard (2 Torches)'] = IGNORE_LOCATION
+            placed_items['Hideout Jail Guard (3 Torches)'] = IGNORE_LOCATION
+            placed_items['Hideout Jail Guard (4 Torches)'] = IGNORE_LOCATION
         else:
             placed_items['Hideout Jail Guard (1 Torch)'] = 'Small Key (Thieves Hideout)'
             placed_items['Hideout Jail Guard (2 Torches)'] = 'Small Key (Thieves Hideout)'
@@ -1090,7 +1096,7 @@ def get_pool_core(world):
         pool.append('Gerudo Membership Card')
     elif world.settings.shuffle_gerudo_card:
         pending_junk_pool.append('Gerudo Membership Card')
-        placed_items['Hideout Gerudo Membership Card'] = 'Ice Trap'
+        placed_items['Hideout Gerudo Membership Card'] = IGNORE_LOCATION
     else:
         placed_items['Hideout Gerudo Membership Card'] = 'Gerudo Membership Card'
     if world.settings.shuffle_gerudo_card and world.settings.item_pool_value == 'plentiful':
@@ -1322,7 +1328,7 @@ def get_pool_core(world):
         placed_items['Gift from Sages'] = 'Boss Key (Ganons Castle)'
         pool.extend(get_junk_item())
     else:
-        placed_items['Gift from Sages'] = 'Ice Trap'
+        placed_items['Gift from Sages'] = IGNORE_LOCATION
 
     if world.settings.item_pool_value == 'plentiful':
         pool.extend(easy_items)
