@@ -984,13 +984,6 @@ class Distribution(object):
             '_settings': self.src_dict.get('settings', {}),
         }
 
-        # If starting items specified in plando, remove starting items from settings.
-        # These aren't considered in logic either way, but this prevents them showing up in the spoiler.
-        if 'starting_items' in self.src_dict:
-            self.settings.starting_items = []
-            self.settings.starting_equipment = []
-            self.settings.starting_songs = []
-
         self.settings.__dict__.update(update_dict['_settings'])
         if 'settings' in self.src_dict:
             validate_settings(self.src_dict['settings'])
