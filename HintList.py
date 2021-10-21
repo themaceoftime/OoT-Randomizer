@@ -1320,6 +1320,7 @@ goalTable = {
     'Links Pocket':                                             ("path to #Links Pocket#", "path to #Links Pocket#", "Light Blue"),
 }
 
+
 # This specifies which hints will never appear due to either having known or known useless contents or due to the locations not existing.
 def hintExclusions(world, clear_cache=False):
     if not clear_cache and world.id in hintExclusions.exclusions:
@@ -1353,6 +1354,10 @@ def hintExclusions(world, clear_cache=False):
 
     return hintExclusions.exclusions[world.id]
 
+
+hintExclusions.exclusions = {}
+
+
 def nameIsLocation(name, hint_type, world):
     if isinstance(hint_type, (list, tuple)):
         for htype in hint_type:
@@ -1362,4 +1367,6 @@ def nameIsLocation(name, hint_type, world):
         return True
     return False
 
-hintExclusions.exclusions = {}
+
+def clearHintExclusionCache():
+    hintExclusions.exclusions.clear()
