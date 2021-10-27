@@ -74,8 +74,7 @@
     },
     {
         "region_name": "Kokiri Forest",
-        "pretty_name": "Kokiri Forest",
-        "font_color": "\41",
+        "font_color": "Green",
         "scene": "Kokiri Forest",
         "hint": "Kokiri Forest",
         "events": {
@@ -110,8 +109,7 @@
     },
     {
         "region_name": "KF Outside Deku Tree",
-        "pretty_name": "Kokiri Forest",
-        "font_color": "\41",
+        "font_color": "Green",
         "scene": "Kokiri Forest",
         "hint": "Kokiri Forest",
         "events": {
@@ -136,7 +134,7 @@
     },
     {
         "region_name": "KF Links House",
-        "pretty_name": "\x0F's House",
+        "pretty_name": "your house",
         "scene": "KF Links House",
         "locations": {
             "KF Links House Cow": "is_adult and can_play(Eponas_Song) and 'Links Cow'"
@@ -169,7 +167,7 @@
     },
     {
         "region_name": "KF House of Twins",
-        "pretty_name": "House of Twins",
+        "pretty_name": "the House of Twins",
         "scene": "KF House of Twins",
         "exits": {
             "Kokiri Forest": "True"
@@ -177,7 +175,7 @@
     },
     {
         "region_name": "KF Know It All House",
-        "pretty_name": "Know It All House",
+        "pretty_name": "the Know-it-All House",
         "scene": "KF Know it All House",
         "exits": {
             "Kokiri Forest": "True"
@@ -203,6 +201,7 @@
     },
     {
         "region_name": "LW Forest Exit",
+        "font_color": "Green",
         "scene": "Lost Woods",
         "hint": "the Lost Woods",
         "exits": {
@@ -211,8 +210,7 @@
     },
     {
         "region_name": "Lost Woods",
-        "pretty_name": "the Lost Woods",
-        "font_color": "\42",
+        "font_color": "Green",
         "scene": "Lost Woods",
         "hint": "the Lost Woods",
         "events": {
@@ -244,8 +242,7 @@
     },
     {
         "region_name": "LW Beyond Mido",
-        "pretty_name": "the Lost Woods",
-        "font_color": "\42",
+        "font_color": "Green",
         "scene": "Lost Woods",
         "hint": "the Lost Woods",
         "locations": {
@@ -271,6 +268,7 @@
     },
     {
         "region_name": "Lost Woods Mushroom Timeout",
+        "font_color": "Green",
         "scene": "Lost Woods",
         "hint": "the Lost Woods",
         "exits": {
@@ -279,10 +277,9 @@
     },
     {
         "region_name": "SFM Entryway",
-        "pretty_name": "the Sacred Forest Meadow",
-        "font_color": "\41",
+        "font_color": "Green",
         "scene": "Sacred Forest Meadow",
-        "hint": "Sacred Forest Meadow",
+        "hint": "the Sacred Forest Meadow",
         "exits": {
             "LW Beyond Mido": "True",
             "Sacred Forest Meadow": "
@@ -293,10 +290,9 @@
     },
     {
         "region_name": "Sacred Forest Meadow",
-        "pretty_name": "the Sacred Forest Meadow",
-        "font_color": "\41",
+        "font_color": "Green",
         "scene": "Sacred Forest Meadow",
-        "hint": "Sacred Forest Meadow",
+        "hint": "the Sacred Forest Meadow",
         "locations": {
             "Song from Saria": "is_child and Zeldas_Letter",
             "Sheik in Forest": "is_adult",
@@ -315,10 +311,9 @@
     },
     {
         "region_name": "SFM Forest Temple Entrance Ledge",
-        "pretty_name": "the Sacred Forest Meadow",
-        "font_color": "\41",
+        "font_color": "Green",
         "scene": "Sacred Forest Meadow",
-        "hint": "Sacred Forest Meadow",
+        "hint": "the Sacred Forest Meadow",
         "exits": {
             "Sacred Forest Meadow": "True",
             "Forest Temple Lobby": "True"
@@ -326,8 +321,7 @@
     },
     {
         "region_name": "LW Bridge From Forest",
-        "pretty_name": "the Lost Woods",
-        "font_color": "\42",
+        "font_color": "Green",
         "scene": "Lost Woods",
         "hint": "the Lost Woods",
         "locations": {
@@ -339,8 +333,7 @@
     },
     {
         "region_name": "LW Bridge",
-        "pretty_name": "the Lost Woods",
-        "font_color": "\42",
+        "font_color": "Green",
         "scene": "Lost Woods",
         "hint": "the Lost Woods",
         "exits": {
@@ -351,7 +344,7 @@
     },
     {
         "region_name": "Hyrule Field",
-        "pretty_name": "Hyrule Field",
+        "font_color": "Light Blue",
         "scene": "Hyrule Field",
         "hint": "Hyrule Field",
         "time_passes": true,
@@ -381,8 +374,7 @@
     },
     {
         "region_name": "Lake Hylia",
-        "pretty_name": "Lake Hylia",
-        "font_color": "\43",
+        "font_color": "Blue",
         "scene": "Lake Hylia",
         "hint": "Lake Hylia",
         "time_passes": true,
@@ -428,8 +420,7 @@
     },
     {
         "region_name": "LH Fishing Island",
-        "pretty_name": "Lake Hylia",
-        "font_color": "\43",
+        "font_color": "Blue",
         "scene": "Lake Hylia",
         "hint": "Lake Hylia",
         "exits": {
@@ -478,8 +469,7 @@
     },
     {
         "region_name": "Gerudo Valley",
-        "pretty_name": "Gerudo Valley",
-        "font_color": "\46",
+        "font_color": "Yellow",
         "scene": "Gerudo Valley",
         "hint": "Gerudo Valley",
         "time_passes": true,
@@ -499,8 +489,7 @@
     },
     {
         "region_name": "GV Upper Stream",
-        "pretty_name": "Gerudo Valley",
-        "font_color": "\46",
+        "font_color": "Yellow",
         "scene": "Gerudo Valley",
         "hint": "Gerudo Valley",
         "time_passes": true,
@@ -518,8 +507,7 @@
     },
     {
         "region_name": "GV Lower Stream",
-        "pretty_name": "Gerudo Valley",
-        "font_color": "\46",
+        "font_color": "Yellow",
         "scene": "Gerudo Valley",
         "hint": "Gerudo Valley",
         "time_passes": true,
@@ -529,8 +517,7 @@
     },
     {
         "region_name": "GV Grotto Ledge",
-        "pretty_name": "Gerudo Valley",
-        "font_color": "\46",
+        "font_color": "Yellow",
         "scene": "Gerudo Valley",
         "hint": "Gerudo Valley",
         "time_passes": true,
@@ -542,8 +529,7 @@
     },
     {
         "region_name": "GV Crate Ledge",
-        "pretty_name": "Gerudo Valley",
-        "font_color": "\46",
+        "font_color": "Yellow",
         "scene": "Gerudo Valley",
         "hint": "Gerudo Valley",
         "time_passes": true,
@@ -556,8 +542,7 @@
     },
     {
         "region_name": "GV Fortress Side",
-        "pretty_name": "Gerudo Valley",
-        "font_color": "\46",
+        "font_color": "Yellow",
         "scene": "Gerudo Valley",
         "hint": "Gerudo Valley",
         "time_passes": true,
@@ -591,8 +576,7 @@
     },
     {
         "region_name": "Gerudo Fortress",
-        "pretty_name": "Gerudo Fortress",
-        "font_color": "\41",
+        "font_color": "Yellow",
         "scene": "Gerudo Fortress",
         "hint": "Gerudo's Fortress",
         "events": {
@@ -630,8 +614,7 @@
     },
     {
         "region_name": "GF Outside Gate",
-        "pretty_name": "Gerudo Fortress",
-        "font_color": "\41",
+        "font_color": "Yellow",
         "scene": "Gerudo Fortress",
         "hint": "Gerudo's Fortress",
         "exits": {
@@ -641,10 +624,9 @@
     },
     {
         "region_name": "Wasteland Near Fortress",
-        "pretty_name": "the Haunted Wasteland",
-        "font_color": "\46",
+        "font_color": "Yellow",
         "scene": "Haunted Wasteland",
-        "hint": "Haunted Wasteland",
+        "hint": "the Haunted Wasteland",
         "exits": {
             "GF Outside Gate": "True",
             "Haunted Wasteland": "
@@ -653,10 +635,9 @@
     },
     {
         "region_name": "Haunted Wasteland",
-        "pretty_name": "the Haunted Wasteland",
-        "font_color": "\46",
+        "font_color": "Yellow",
         "scene": "Haunted Wasteland",
-        "hint": "Haunted Wasteland",
+        "hint": "the Haunted Wasteland",
         "locations": {
             "Wasteland Chest": "has_fire_source",
             "Wasteland Bombchu Salesman": "
@@ -674,10 +655,9 @@
     },
     {
         "region_name": "Wasteland Near Colossus",
-        "pretty_name": "the Haunted Wasteland",
-        "font_color": "\46",
+        "font_color": "Yellow",
         "scene": "Haunted Wasteland",
-        "hint": "Haunted Wasteland",
+        "hint": "the Haunted Wasteland",
         "exits": {
             "Desert Colossus": "True",
             "Haunted Wasteland": "logic_reverse_wasteland"
@@ -685,9 +665,9 @@
     },
     {
         "region_name": "Desert Colossus",
-        "pretty_name": "the Desert Colossus",
+        "font_color": "Yellow",
         "scene": "Desert Colossus",
-        "hint": "Desert Colossus",
+        "hint": "the Desert Colossus",
         "time_passes": true,
         "locations": {
             "Colossus Freestanding PoH": "is_adult and here(can_plant_bean)",
@@ -711,8 +691,9 @@
     },
     {
         "region_name": "Desert Colossus From Spirit Lobby",
+        "font_color": "Yellow",
         "scene": "Desert Colossus",
-        "hint": "Desert Colossus",
+        "hint": "the Desert Colossus",
         "locations": {
             "Sheik at Colossus": "True"
         },
@@ -734,6 +715,7 @@
     {
         "region_name": "Market Entrance",
         "pretty_name": "the Market Entrance",
+        "font_color": "Light Blue",
         "scene": "Market Entrance",
         "hint": "the Market",
         "exits": {
@@ -744,7 +726,7 @@
     },
     {
         "region_name": "Market",
-        "pretty_name": "the Market",
+        "font_color": "Light Blue",
         "scene": "Market",
         "hint": "the Market",
         "exits": {
@@ -762,7 +744,7 @@
     },
     {
         "region_name": "Market Back Alley",
-        "pretty_name": "the Market",
+        "font_color": "Light Blue",
         "scene": "Market",
         "hint": "the Market",
         "exits": {
@@ -775,6 +757,7 @@
     {
         "region_name": "ToT Entrance",
         "pretty_name": "the Temple of Time Entrance",
+        "font_color": "Light Blue",
         "scene": "ToT Entrance",
         "hint": "the Market",
         "locations": {
@@ -791,9 +774,9 @@
     },
     {
         "region_name": "Temple of Time",
-        "pretty_name": "the Temple of Time",
+        "font_color": "Light Blue",
         "scene": "Temple of Time",
-        "hint": "Temple of Time",
+        "hint": "the Temple of Time",
         "locations": {
             "ToT Light Arrows Cutscene": "is_adult and can_trigger_lacs"
         },
@@ -804,9 +787,9 @@
     },
     {
         "region_name": "Beyond Door of Time",
-        "pretty_name": "the Temple of Time",
+        "font_color": "Light Blue",
         "scene": "Temple of Time",
-        "hint": "Temple of Time",
+        "hint": "the Temple of Time",
         "locations": {
             "Master Sword Pedestal": "True",
             "Sheik at Temple": "Forest_Medallion and is_adult"
@@ -818,6 +801,7 @@
     {
         "region_name": "Castle Grounds",
         "pretty_name": "the Castle Grounds",
+        "font_color": "Light Blue",
         "scene": "Castle Grounds",
         "exits": {
             "Market": "is_child or at_dampe_time",
@@ -828,6 +812,7 @@
     {
         "region_name": "Hyrule Castle Grounds",
         "pretty_name": "the Castle Grounds",
+        "font_color": "Light Blue",
         "scene": "Castle Grounds",
         "hint": "Hyrule Castle",
         "time_passes": true,
@@ -850,6 +835,7 @@
     {
         "region_name": "HC Garden",
         "pretty_name": "the Castle Grounds",
+        "font_color": "Light Blue",
         "scene": "Castle Grounds",
         "hint": "Hyrule Castle",
         "exits": {
@@ -861,6 +847,7 @@
         # Directly reachable from Root in "Free Zelda"
         "region_name": "HC Garden Locations",
         "pretty_name": "the Castle Grounds",
+        "font_color": "Light Blue",
         "scene": "Castle Grounds",
         "hint": "Hyrule Castle",
         "locations": {
@@ -882,6 +869,7 @@
     {
         "region_name": "Ganons Castle Grounds",
         "pretty_name": "the Castle Grounds",
+        "font_color": "Light Blue",
         "scene": "Castle Grounds",
         "hint": "outside Ganon's Castle",
         "locations": {
@@ -1047,8 +1035,7 @@
     },
     {
         "region_name": "Kakariko Village",
-        "pretty_name": "Kakariko Village",
-        "font_color": "\45",
+        "font_color": "Pink",
         "scene": "Kakariko Village",
         "hint": "Kakariko Village",
         "events": {
@@ -1098,8 +1085,7 @@
     },
     {
         "region_name": "Kak Impas Ledge",
-        "pretty_name": "Kakariko Village",
-        "font_color": "\45",
+        "font_color": "Pink",
         "scene": "Kakariko Village",
         "hint": "Kakariko Village",
         "exits": {
@@ -1109,8 +1095,7 @@
     },
     {
         "region_name": "Kak Impas Rooftop",
-        "pretty_name": "Kakariko Village",
-        "font_color": "\45",
+        "font_color": "Pink",
         "scene": "Kakariko Village",
         "hint": "Kakariko Village",
         "locations": {
@@ -1123,8 +1108,7 @@
     },
     {
         "region_name": "Kak Odd Medicine Rooftop",
-        "pretty_name": "Kakariko Village",
-        "font_color": "\45",
+        "font_color": "Pink",
         "scene": "Kakariko Village",
         "hint": "Kakariko Village",
         "locations": {
@@ -1137,8 +1121,7 @@
     },
     {
         "region_name": "Kak Backyard",
-        "pretty_name": "Kakariko Village",
-        "font_color": "\45",
+        "font_color": "Pink",
         "scene": "Kakariko Village",
         "hint": "Kakariko Village",
         "exits": {
@@ -1292,8 +1275,7 @@
     },
     {
         "region_name": "Graveyard",
-        "pretty_name": "Graveyard",
-        "font_color": "\45",
+        "font_color": "Pink",
         "scene": "Graveyard",
         "hint": "the Graveyard",
         "locations": {
@@ -1356,7 +1338,7 @@
     },
     {
         "region_name": "Graveyard Dampes Grave",
-        "pretty_name": "Dampe's Grave",
+        "pretty_name": "Damp\u00e9's Grave",
         "scene": "Windmill and Dampes Grave",
         "events": {
             "Dampes Windmill Access": "is_adult and can_play(Song_of_Time)"
@@ -1373,7 +1355,7 @@
     },
     {
         "region_name": "Graveyard Dampes House",
-        "pretty_name": "Dampe's House",
+        "pretty_name": "Damp\u00e9's House",
         "scene": "Graveyard Dampes House",
         "exits": {
             "Graveyard": "True"
@@ -1381,8 +1363,7 @@
     },
     {
         "region_name": "Graveyard Warp Pad Region",
-        "pretty_name": "Graveyard",
-        "font_color": "\45",
+        "font_color": "Pink",
         "scene": "Graveyard",
         "hint": "the Graveyard",
         "locations": {
@@ -1398,8 +1379,7 @@
     },
     {
         "region_name": "Kak Behind Gate",
-        "pretty_name": "Kakariko Village",
-        "font_color": "\45",
+        "font_color": "Pink",
         "scene": "Kakariko Village",
         "hint": "Kakariko Village",
         "exits": {
@@ -1410,8 +1390,7 @@
     },
     {
         "region_name": "Death Mountain",
-        "pretty_name": "Death Mountain Trail",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Death Mountain",
         "hint": "Death Mountain Trail",
         "time_passes": true,
@@ -1451,8 +1430,7 @@
     },
     {
         "region_name": "Death Mountain Summit",
-        "pretty_name": "Death Mountain Trail",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Death Mountain",
         "hint": "Death Mountain Trail",
         "time_passes": true,
@@ -1488,8 +1466,7 @@
     },
     {
         "region_name": "Goron City",
-        "pretty_name": "Goron City",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Goron City",
         "hint": "Goron City",
         "events": {
@@ -1554,8 +1531,7 @@
     },
     {
         "region_name": "GC Woods Warp",
-        "pretty_name": "Goron City",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Goron City",
         "hint": "Goron City",
         "events": {
@@ -1568,8 +1544,7 @@
     },
     {
         "region_name": "GC Darunias Chamber",
-        "pretty_name": "Goron City",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Goron City",
         "hint": "Goron City",
         "events": {
@@ -1585,8 +1560,7 @@
     },
     {
         "region_name": "GC Grotto Platform",
-        "pretty_name": "Goron City",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Goron City",
         "hint": "Goron City",
         "exits": {
@@ -1617,8 +1591,7 @@
     },
     {
         "region_name": "DMC Upper Nearby",
-        "pretty_name": "Death Mountain Crater",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Death Mountain Crater",
         "hint": "Death Mountain Crater",
         "exits": {
@@ -1629,8 +1602,7 @@
     },
     {
         "region_name": "DMC Upper Local",
-        "pretty_name": "Death Mountain Crater",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Death Mountain Crater",
         "hint": "Death Mountain Crater",
         "locations": {
@@ -1651,8 +1623,7 @@
     },
     {
         "region_name": "DMC Ladder Area Nearby",
-        "pretty_name": "Death Mountain Crater",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Death Mountain Crater",
         "hint": "Death Mountain Crater",
         "locations": {
@@ -1667,8 +1638,7 @@
     },
     {
         "region_name": "DMC Lower Nearby",
-        "pretty_name": "Death Mountain Crater",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Death Mountain Crater",
         "hint": "Death Mountain Crater",
         "exits": {
@@ -1680,8 +1650,7 @@
     },
     {
         "region_name": "DMC Lower Local",
-        "pretty_name": "Death Mountain Crater",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Death Mountain Crater",
         "hint": "Death Mountain Crater",
         "exits": {
@@ -1695,8 +1664,7 @@
     },
     {
         "region_name": "DMC Central Nearby",
-        "pretty_name": "Death Mountain Crater",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Death Mountain Crater",
         "hint": "Death Mountain Crater",
         "locations": {
@@ -1712,8 +1680,7 @@
     },
     {
         "region_name": "DMC Central Local",
-        "pretty_name": "Death Mountain Crater",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Death Mountain Crater",
         "hint": "Death Mountain Crater",
         "locations": {
@@ -1733,8 +1700,7 @@
     },
     {
         "region_name": "DMC Fire Temple Entrance",
-        "pretty_name": "Death Mountain Crater",
-        "font_color": "\41",
+        "font_color": "Red",
         "scene": "Death Mountain Crater",
         "hint": "Death Mountain Crater",
         "exits": {
@@ -1766,8 +1732,7 @@
     },
     {
         "region_name": "ZR Front",
-        "pretty_name": "Zora's River",
-        "font_color": "\43",
+        "font_color": "Blue",
         "scene": "Zora River",
         "hint": "Zora's River",
         "time_passes": true,
@@ -1781,8 +1746,7 @@
     },
     {
         "region_name": "Zora River",
-        "pretty_name": "Zora's River",
-        "font_color": "\43",
+        "font_color": "Blue",
         "scene": "Zora River",
         "hint": "Zora's River",
         "time_passes": true,
@@ -1823,8 +1787,7 @@
     },
     {
         "region_name": "ZR Behind Waterfall",
-        "pretty_name": "Zora's River",
-        "font_color": "\43",
+        "font_color": "Blue",
         "scene": "Zora River",
         "hint": "Zora's River",
         "exits": {
@@ -1834,8 +1797,7 @@
     },
     {
         "region_name": "ZR Top of Waterfall",
-        "pretty_name": "Zora's River",
-        "font_color": "\43",
+        "font_color": "Blue",
         "scene": "Zora River",
         "hint": "Zora's River",
         "exits": {
@@ -1844,8 +1806,7 @@
     },
     {
         "region_name": "Zoras Domain",
-        "pretty_name": "Zora's Domain",
-        "font_color": "\43",
+        "font_color": "Blue",
         "scene": "Zoras Domain",
         "hint": "Zora's Domain",
         "events": {
@@ -1882,8 +1843,7 @@
     },
     {
         "region_name": "ZD Behind King Zora",
-        "pretty_name": "Zora's Domain",
-        "font_color": "\43",
+        "font_color": "Blue",
         "scene": "Zoras Domain",
         "hint": "Zora's Domain",
         "exits": {
@@ -1895,8 +1855,7 @@
     },
     {
         "region_name": "ZD Eyeball Frog Timeout",
-        "pretty_name": "Zora's Domain",
-        "font_color": "\43",
+        "font_color": "Blue",
         "scene": "Zoras Domain",
         "hint": "Zora's Domain",
         "exits": {
@@ -1905,8 +1864,7 @@
     },
     {
         "region_name": "Zoras Fountain",
-        "pretty_name": "Zora's Fountain",
-        "font_color": "\43",
+        "font_color": "Blue",
         "scene": "Zoras Fountain",
         "hint": "Zora's Fountain",
         "locations": {
@@ -1932,8 +1890,7 @@
     },
     {
         "region_name": "ZF Ice Ledge",
-        "pretty_name": "Zora's Domain",
-        "font_color": "\43",
+        "font_color": "Blue",
         "scene": "Zoras Fountain",
         "hint": "Zora's Fountain",
         "exits": {
@@ -1972,8 +1929,7 @@
     },
     {
         "region_name": "Lon Lon Ranch",
-        "pretty_name": "Lon Lon Ranch",
-        "font_color": "\46",
+        "font_color": "Light Blue",
         "scene": "Lon Lon Ranch",
         "hint": "Lon Lon Ranch",
         "events": {
@@ -2043,6 +1999,7 @@
     },
     {
         "region_name": "GF Storms Grotto",
+        "pretty_name": "a Fairy Fountain",
         "scene": "GF Storms Grotto",
         "locations": {
             "Free Fairies": "has_bottle"
@@ -2053,6 +2010,7 @@
     },
     {
         "region_name": "ZD Storms Grotto",
+        "pretty_name": "a Fairy Fountain",
         "scene": "ZD Storms Grotto",
         "locations": {
             "Free Fairies": "has_bottle"
@@ -2063,6 +2021,7 @@
     },
     {
         "region_name": "KF Storms Grotto",
+        "pretty_name": "a Generic Grotto",
         "scene": "KF Storms Grotto",
         "locations": {
             "KF Storms Grotto Chest": "True",
@@ -2078,6 +2037,7 @@
     },
     {
         "region_name": "LW Near Shortcuts Grotto",
+        "pretty_name": "a Generic Grotto",
         "scene": "LW Near Shortcuts Grotto",
         "locations": {
             "LW Near Shortcuts Grotto Chest": "True",
@@ -2093,6 +2053,7 @@
     },
     {
         "region_name": "Deku Theater",
+        "pretty_name": "the Deku Theater",
         "scene": "Deku Theater",
         "locations": {
             "Deku Theater Skull Mask": "is_child and 'Skull Mask'",
@@ -2104,6 +2065,7 @@
     },
     {
         "region_name": "LW Scrubs Grotto",
+        "pretty_name": "a Deku Scrub Grotto",
         "scene": "LW Scrubs Grotto",
         "locations": {
             "LW Deku Scrub Grotto Rear": "can_stun_deku",
@@ -2115,6 +2077,7 @@
     },
     {
         "region_name": "SFM Fairy Grotto",
+        "pretty_name": "a Fairy Fountain",
         "scene": "SFM Fairy Grotto",
         "locations": {
             "Free Fairies": "has_bottle"
@@ -2125,6 +2088,7 @@
     },
     {
         "region_name": "SFM Storms Grotto",
+        "pretty_name": "a Deku Scrub Grotto",
         "scene": "SFM Storms Grotto",
         "locations": {
             "SFM Deku Scrub Grotto Rear": "can_stun_deku",
@@ -2136,6 +2100,7 @@
     },
     {
         "region_name": "SFM Wolfos Grotto",
+        "pretty_name": "the Wolfos Grotto",
         "scene": "SFM Wolfos Grotto",
         "locations": {
             "SFM Wolfos Grotto Chest": "
@@ -2148,6 +2113,7 @@
     },
     {
         "region_name": "LLR Grotto",
+        "pretty_name": "a Deku Scrub Grotto",
         "scene": "LLR Grotto",
         "locations": {
             "LLR Deku Scrub Grotto Left": "can_stun_deku",
@@ -2160,6 +2126,7 @@
     },
     {
         "region_name": "HF Southeast Grotto",
+        "pretty_name": "a Generic Grotto",
         "scene": "HF Southeast Grotto",
         "locations": {
             "HF Southeast Grotto Chest": "True",
@@ -2175,6 +2142,7 @@
     },
     {
         "region_name": "HF Open Grotto",
+        "pretty_name": "a Generic Grotto",
         "scene": "HF Open Grotto",
         "locations": {
             "HF Open Grotto Chest": "True",
@@ -2190,6 +2158,7 @@
     },
     {
         "region_name": "HF Inside Fence Grotto",
+        "pretty_name": "a Deku Scrub Grotto",
         "scene": "HF Inside Fence Grotto",
         "locations": {
             "HF Deku Scrub Grotto": "can_stun_deku"
@@ -2200,6 +2169,7 @@
     },
     {
         "region_name": "HF Cow Grotto",
+        "pretty_name": "the Spider Cow Grotto",
         "scene": "HF Cow Grotto",
         "locations": {
             "HF GS Cow Grotto": "
@@ -2216,6 +2186,7 @@
     },
     {
         "region_name": "HF Near Market Grotto",
+        "pretty_name": "a Generic Grotto",
         "scene": "HF Near Market Grotto",
         "locations": {
             "HF Near Market Grotto Chest": "True",
@@ -2231,6 +2202,7 @@
     },
     {
         "region_name": "HF Fairy Grotto",
+        "pretty_name": "a Fairy Fountain",
         "scene": "HF Fairy Grotto",
         "locations": {
             "Free Fairies": "has_bottle"
@@ -2241,6 +2213,7 @@
     },
     {
         "region_name": "HF Near Kak Grotto",
+        "pretty_name": "a Skulltula Grotto",
         "scene": "HF Near Kak Grotto",
         "locations": {
             "HF GS Near Kak Grotto": "can_use(Boomerang) or can_use(Hookshot)"
@@ -2251,6 +2224,7 @@
     },
     {
         "region_name": "HF Tektite Grotto",
+        "pretty_name": "the Tektite Grotto",
         "scene": "HF Tektite Grotto",
         "locations": {
             "HF Tektite Grotto Freestanding PoH": "
@@ -2262,6 +2236,7 @@
     },
     {
         "region_name": "HC Storms Grotto",
+        "pretty_name": "a Skulltula Grotto",
         "scene": "HC Storms Grotto",
         "locations": {
             "HC GS Storms Grotto": "
@@ -2278,6 +2253,7 @@
     },
     {
         "region_name": "Kak Redead Grotto",
+        "pretty_name": "the ReDead Grotto",
         "scene": "Kak Redead Grotto",
         "locations": {
             "Kak Redead Grotto Chest": "
@@ -2290,6 +2266,7 @@
     },
     {
         "region_name": "Kak Open Grotto",
+        "pretty_name": "a Generic Grotto",
         "scene": "Kak Open Grotto",
         "locations": {
             "Kak Open Grotto Chest": "True",
@@ -2305,6 +2282,7 @@
     },
     {
         "region_name": "DMT Cow Grotto",
+        "pretty_name": "the Cow Grotto",
         "scene": "DMT Cow Grotto",
         "locations": {
             "DMT Cow Grotto Cow": "can_play(Eponas_Song)"
@@ -2315,6 +2293,7 @@
     },
     {
         "region_name": "DMT Storms Grotto",
+        "pretty_name": "a Generic Grotto",
         "scene": "DMT Storms Grotto",
         "locations": {
             "DMT Storms Grotto Chest": "True",
@@ -2330,6 +2309,7 @@
     },
     {
         "region_name": "GC Grotto",
+        "pretty_name": "a Deku Scrub Grotto",
         "scene": "GC Grotto",
         "locations": {
             "GC Deku Scrub Grotto Left": "can_stun_deku",
@@ -2342,6 +2322,7 @@
     },
     {
         "region_name": "DMC Upper Grotto",
+        "pretty_name": "a Generic Grotto",
         "scene": "DMC Upper Grotto",
         "locations": {
             "DMC Upper Grotto Chest": "True",
@@ -2357,6 +2338,7 @@
     },
     {
         "region_name": "DMC Hammer Grotto",
+        "pretty_name": "a Deku Scrub Grotto",
         "scene": "DMC Hammer Grotto",
         "locations": {
             "DMC Deku Scrub Grotto Left": "can_stun_deku",
@@ -2369,6 +2351,7 @@
     },
     {
         "region_name": "ZR Open Grotto",
+        "pretty_name": "a Generic Grotto",
         "scene": "ZR Open Grotto",
         "locations": {
             "ZR Open Grotto Chest": "True",
@@ -2384,6 +2367,7 @@
     },
     {
         "region_name": "ZR Fairy Grotto",
+        "pretty_name": "a Fairy Fountain",
         "scene": "ZR Fairy Grotto",
         "locations": {
             "Free Fairies": "has_bottle"
@@ -2394,6 +2378,7 @@
     },
     {
         "region_name": "ZR Storms Grotto",
+        "pretty_name": "a Deku Scrub Grotto",
         "scene": "ZR Storms Grotto",
         "locations": {
             "ZR Deku Scrub Grotto Rear": "can_stun_deku",
@@ -2405,6 +2390,7 @@
     },
     {
         "region_name": "LH Grotto",
+        "pretty_name": "a Deku Scrub Grotto",
         "scene": "LH Grotto",
         "locations": {
             "LH Deku Scrub Grotto Left": "can_stun_deku",
@@ -2417,6 +2403,7 @@
     },
     {
         "region_name": "Colossus Grotto",
+        "pretty_name": "a Deku Scrub Grotto",
         "scene": "Colossus Grotto",
         "locations": {
             "Colossus Deku Scrub Grotto Rear": "can_stun_deku",
@@ -2428,6 +2415,7 @@
     },
     {
         "region_name": "GV Octorok Grotto",
+        "pretty_name": "the Octorok Grotto",
         "scene": "GV Octorok Grotto",
         "exits": {
             "GV Grotto Ledge": "True"
@@ -2435,6 +2423,7 @@
     },
     {
         "region_name": "GV Storms Grotto",
+        "pretty_name": "a Deku Scrub Grotto",
         "scene": "GV Storms Grotto",
         "locations": {
             "GV Deku Scrub Grotto Rear": "can_stun_deku",
