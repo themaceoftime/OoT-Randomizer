@@ -136,6 +136,7 @@ do that.
   * Added a file `data/custom_music_exclusion.txt` where one can specify which music files shouldn't be shuffled in with random custom music.
   * Ruto now knows what kind of medallion or stone she gets in Jabu Jabu.
   * Randomized songs' note patterns are now included in the spoiler log.
+  * Chest Size Matches Content has been replaced with Chest Style Matches Content. Unique textures are applied to chests containing major items, small keys, boss keys, and remaining items. Chest sizes no longer change from vanilla with this setting.
 
 #### Bug Fixes
 
