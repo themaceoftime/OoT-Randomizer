@@ -1069,6 +1069,25 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         rom.write_int16(rom.sym('triforce_pieces_requied'), world.triforce_goal)
         rom.write_int16(rom.sym('triforce_hunt_enabled'), 1)
 
+    # Set up Ganon's Boss Key conditions.
+    symbol = rom.sym('GANON_BOSS_KEY_CONDITION')
+    count_symbol = rom.sym('GANON_BOSS_KEY_CONDITION_COUNT')
+    if world.settings.shuffle_ganon_bosskey == 'medallions':
+        rom.write_byte(symbol, 1)
+        rom.write_int16(count_symbol, world.settings.ganon_bosskey_medallions)
+    elif world.settings.shuffle_ganon_bosskey == 'dungeons':
+        rom.write_byte(symbol, 2)
+        rom.write_int16(count_symbol, world.settings.ganon_bosskey_rewards)
+    elif world.settings.shuffle_ganon_bosskey == 'stones':
+        rom.write_byte(symbol, 3)
+        rom.write_int16(count_symbol, world.settings.ganon_bosskey_stones)
+    elif world.settings.shuffle_ganon_bosskey == 'tokens':
+        rom.write_byte(symbol, 4)
+        rom.write_int16(count_symbol, world.settings.ganon_bosskey_tokens)
+    else:
+        rom.write_byte(symbol, 0)
+        rom.write_int16(count_symbol, 0)
+
     # Set up LACS conditions.
     symbol = rom.sym('LACS_CONDITION')
     count_symbol = rom.sym('LACS_CONDITION_COUNT')

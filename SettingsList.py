@@ -1,4 +1,5 @@
 import argparse
+import difflib
 from itertools import chain
 import re
 import math
@@ -9,11 +10,14 @@ from Colors import get_tunic_color_options, get_navi_color_options, get_sword_tr
     get_bombchu_trail_color_options, get_boomerang_trail_color_options, get_gauntlet_color_options, \
     get_magic_color_options, get_heart_color_options, get_shield_frame_color_options, get_a_button_color_options,\
     get_b_button_color_options, get_c_button_color_options, get_start_button_color_options
-from Hints import HintDistList, HintDistTips
+from Hints import HintDistList, HintDistTips, gossipLocations
+from Item import item_table
 from Location import LocationIterator
+from LocationList import location_table
 import Sounds as sfx
 import StartingItems
 from Utils import data_path
+from ItemList import item_table
 
 # holds the info for a single setting
 class Setting_Info():
@@ -631,6 +635,8 @@ logic_tricks = {
         'tooltip' : '''\
                     You can beat the quicksand by backwalking across it
                     in a specific way.
+                    Note that jumping to the carpet merchant as child
+                    typically requires a fairly precise jump slash.
                     '''},
     'Colossus Hill GS with Hookshot': {
         'name'    : 'logic_colossus_gs',
@@ -2150,7 +2156,7 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
         disable        = {
-            True  : {'settings' : ['shuffle_ganon_bosskey']},
+            True  : {'settings' : ['shuffle_ganon_bosskey', 'ganon_bosskey_stones', 'ganon_bosskey_medallions', 'ganon_bosskey_rewards', 'ganon_bosskey_tokens']},
             False : {'settings' : ['triforce_goal_per_world']}
         },
     ),
@@ -3117,7 +3123,11 @@ setting_infos = [
             'overworld':       "Overworld Only",
             'any_dungeon':     "Any Dungeon",
             'keysanity':       "Anywhere (Keysanity)",
-            'on_lacs':         "Light Arrow Cutscene"
+            'on_lacs':         "Light Arrow Cutscene",
+            'stones':          "Stones",
+            'medallions':      "Medallions",
+            'dungeons':        "Dungeons",
+            'tokens':          "Tokens",
         },
         gui_tooltip    = '''\
             'Remove': Ganon's Castle Boss Key is removed
@@ -3140,8 +3150,26 @@ setting_infos = [
 
             'Light Arrow Cutscene': Ganon's Castle Boss Key will
             appear on the Light Arrow Cutscene.
+            
+            'Stones': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Spiritual Stones.
+            
+            'Medallions': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Medallions.
+                        
+            'Dungeons': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Dungeon Rewards.
+            
+            'Tokens': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Gold Skulltula Tokens.
         ''',
         shared         = True,
+        disable        = {
+            '!stones':  {'settings': ['ganon_bosskey_stones']},
+            '!medallions':  {'settings': ['ganon_bosskey_medallions']},
+            '!dungeons':  {'settings': ['ganon_bosskey_rewards']},
+            '!tokens':  {'settings': ['ganon_bosskey_tokens']},
+        },
         gui_params     = {
             'randomize_key': 'randomize_settings',
             'distribution': [
@@ -3151,6 +3179,74 @@ setting_infos = [
                 ('keysanity',       4),
                 ('on_lacs',         1)
             ],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_medallions',
+        gui_text       = "Medallions Required for Ganon's BK",
+        default        = 6,
+        min            = 1,
+        max            = 6,
+        gui_tooltip    = '''\
+            Select the amount of Medallions required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(6, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_stones',
+        gui_text       = "Spiritual Stones Required for Ganon's BK",
+        default        = 3,
+        min            = 1,
+        max            = 3,
+        gui_tooltip    = '''\
+            Select the amount of Spiritual Stones required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(3, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_rewards',
+        gui_text       = "Dungeon Rewards Required for Ganon's BK",
+        default        = 9,
+        min            = 1,
+        max            = 9,
+        gui_tooltip    = '''\
+            Select the amount of Dungeon Rewards (Medallions and Spiritual Stones)
+            required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(9, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_tokens',
+        gui_text       = "Gold Skulltula Tokens Required for Ganon's BK",
+        default        = 100,
+        min            = 1,
+        max            = 100,
+        gui_tooltip    = '''\
+            Select the amount of Gold Skulltula Tokens
+            required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "hide_when_disabled": True,
         },
     ),
     Combobox(
@@ -3169,20 +3265,20 @@ setting_infos = [
             check to give you the item from Zelda.
             
             'Vanilla': Shadow and Spirit Medallions.
-            'Medallions': A configurable amount of Medallions.
             'Stones': A configurable amount of Spiritual Stones.
+            'Medallions': A configurable amount of Medallions.
             'Dungeons': A configurable amount of Dungeon Rewards.
             'Tokens': A configurable amount of Gold Skulltula Tokens.
         ''',
         shared         = True,
-        disable={
+        disable        = {
             '!stones':  {'settings': ['lacs_stones']},
             '!medallions':  {'settings': ['lacs_medallions']},
             '!dungeons':  {'settings': ['lacs_rewards']},
             '!tokens':  {'settings': ['lacs_tokens']},
         },
         gui_params     = {
-            'randomize_key': 'randomize_settings',
+            'optional': True,
             'distribution': [
                 ('vanilla',    1),
                 ('medallions', 1),
@@ -3203,7 +3299,7 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
-            "randomize_key": "randomize_settings",
+            'optional': True,
             "hide_when_disabled": True,
             'distribution': [(6, 1)],
         },
@@ -3220,7 +3316,7 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
-            "randomize_key": "randomize_settings",
+            'optional': True,
             "hide_when_disabled": True,
             'distribution': [(3, 1)],
         },
@@ -3238,7 +3334,7 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
-            "randomize_key": "randomize_settings",
+            'optional': True,
             "hide_when_disabled": True,
             'distribution': [(9, 1)],
         },
@@ -3256,6 +3352,7 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
         gui_params     = {
+            'optional': True,
             "hide_when_disabled": True,
         },
     ),
@@ -3368,7 +3465,10 @@ setting_infos = [
         type           = str,
         gui_text       = "Your current logic setting does not support the enabling of tricks.",
         gui_type       = "Textbox",
-        shared         = True,
+        shared         = False,
+        gui_params     = {
+            "hide_when_disabled": True
+        },
         choices        = {},
     ),
     Combobox(
@@ -3576,7 +3676,14 @@ setting_infos = [
             "hide_when_disabled" : True,
         },
     ),
-    Setting_Info('item_hints',    list, None, None, True, {}),
+    Setting_Info(
+        name           = 'item_hints',
+        type           =  list,
+        gui_type       = None,
+        gui_text       = None,
+        shared         = True,
+        choices        = [i for i in item_table if item_table[i][0] == 'Item']
+    ),
     Setting_Info('hint_dist_user',    dict, None, None, True, {}),
     Combobox(
         name           = 'text_shuffle',
@@ -4176,6 +4283,7 @@ setting_infos = [
         gui_text       = 'Bombchu Trail Inner',
         gui_type       = "Combobox",
         shared         = False,
+        cosmetic       = True,
         choices        = get_bombchu_trail_color_options(),
         default        = 'Red',
         gui_tooltip    = '''\
@@ -4393,6 +4501,7 @@ setting_infos = [
         gui_text       = 'Mirror Shield Frame Color',
         gui_type       = "Combobox",
         shared         = False,
+        cosmetic       = True,
         choices        = get_shield_frame_color_options(),
         default        = 'Red',
         gui_tooltip    = '''\
@@ -4738,7 +4847,6 @@ def get_settings_from_tab(tab_name):
                     yield setting
             return
 
-
 def is_mapped(setting_name):
     for tab in setting_map['Tabs']:
         for section in tab['sections']:
@@ -4746,6 +4854,53 @@ def is_mapped(setting_name):
                 return True
     return False
 
+
+# When a string isn't found in the source list, attempt to get closest match from the list
+# ex. Given "Recovery Hart" returns "Did you mean 'Recovery Heart'?"
+def build_close_match(name, value_type, source_list=None):
+    source = []
+    if value_type == 'item':
+        source = item_table.keys()
+    elif value_type == 'location':
+        source = location_table.keys()
+    elif value_type == 'entrance':
+        for pool in source_list.values():
+            for entrance in pool:
+                source.append(entrance.name)
+    elif value_type == 'stone':
+        source = [x.name for x in gossipLocations.values()]
+    elif value_type == 'setting':
+        source = [x.name for x in setting_infos]
+    elif value_type == 'choice':
+        source = source_list
+    close_match = difflib.get_close_matches(name, source, 1)
+    if len(close_match) > 0:
+        return "Did you mean %r?" % (close_match[0])
+    return "" # No matches
+
+
+def validate_settings(settings_dict):
+    for setting, choice in settings_dict.items():
+        # Ensure the supplied setting name is a real setting
+        if setting not in [x.name for x in setting_infos]:
+            raise TypeError('%r is not a valid setting. %s' % (setting, build_close_match(setting, 'setting')))
+        info = get_setting_info(setting)
+        # Ensure the type of the supplied choice is correct
+        if type(choice) != info.type:
+            raise TypeError('Supplied choice %r for setting %r is of type %r, expecting %r' % (choice, setting, type(choice).__name__, info.type.__name__))
+        # If setting is a list, must check each element
+        if isinstance(choice, list):
+            for element in choice:
+                if element not in info.choice_list:
+                    raise ValueError('%r is not a valid choice for setting %r. %s' % (element, setting, build_close_match(element, 'choice', info.choice_list)))
+        # Ignore dictionary settings such as hint_dist_user
+        elif isinstance(choice, dict):
+            continue
+        # Ensure that the given choice is a valid choice for the setting
+        elif info.choice_list and choice not in info.choice_list:
+            if setting == 'compress_rom' and choice == 'Temp':
+                continue
+            raise ValueError('%r is not a valid choice for setting %r. %s' % (choice, setting, build_close_match(choice, 'choice', info.choice_list)))
 
 class UnmappedSettingError(Exception):
     pass
@@ -4755,7 +4910,7 @@ with open(data_path('settings_mapping.json')) as f:
     setting_map = json.load(f)
 
 for info in setting_infos:
-    if info.gui_text is not None and not is_mapped(info.name):
+    if info.gui_text is not None and not info.gui_params.get('optional') and not is_mapped(info.name):
         raise UnmappedSettingError(f'{info.name} is defined but is not in the settings map. Add it to the settings_mapping or set the gui_text to None to suppress.')
 
     if info.disable != None:

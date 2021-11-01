@@ -21,6 +21,7 @@ from version import __version__
 from Utils import random_choices
 from JSONDump import dump_obj, CollapseList, CollapseDict, AlignedDict, SortedDict
 import StartingItems
+from SettingsList import build_close_match, validate_settings
 
 
 class InvalidFileException(Exception):
@@ -37,6 +38,7 @@ per_world_keys = (
     'entrances',
     'locations',
     ':woth_locations',
+    ':goal_locations',
     ':barren_regions',
     'gossip_stones',
 )
@@ -236,6 +238,7 @@ class WorldDistribution(object):
             'entrances': {name: EntranceRecord(record) for (name, record) in src_dict.get('entrances', {}).items()},
             'locations': {name: [LocationRecord(rec) for rec in record] if is_pattern(name) else LocationRecord(record) for (name, record) in src_dict.get('locations', {}).items() if not is_output_only(name)},
             'woth_locations': None,
+            'goal_locations': None,
             'barren_regions': None,
             'gossip_stones': {name: [GossipRecord(rec) for rec in record] if is_pattern(name) else GossipRecord(record) for (name, record) in src_dict.get('gossip_stones', {}).items()},
         }
@@ -267,6 +270,7 @@ class WorldDistribution(object):
             'entrances': {name: record.to_json() for (name, record) in self.entrances.items()},
             'locations': {name: [rec.to_json() for rec in record] if is_pattern(name) else record.to_json() for (name, record) in self.locations.items()},
             ':woth_locations': None if self.woth_locations is None else {name: record.to_json() for (name, record) in self.woth_locations.items()},
+            ':goal_locations': self.goal_locations,
             ':barren_regions': self.barren_regions,
             'gossip_stones': SortedDict({name: [rec.to_json() for rec in record] if is_pattern(name) else record.to_json() for (name, record) in self.gossip_stones.items()}),
         }
@@ -294,8 +298,9 @@ class WorldDistribution(object):
                     # Special handling for things not included in base_pool
                     if self.distribution.settings.triforce_hunt:
                         self.major_group.append('Triforce Piece')
-                    major_tokens = (self.distribution.settings.shuffle_ganon_bosskey == 'on_lacs' and
-                            self.distribution.settings.lacs_condition == 'tokens') or self.distribution.settings.bridge == 'tokens'
+                    major_tokens = ((self.distribution.settings.shuffle_ganon_bosskey == 'on_lacs' and
+                            self.distribution.settings.lacs_condition == 'tokens') or 
+                            self.distribution.settings.shuffle_ganon_bosskey == 'tokens' or self.distribution.settings.bridge == 'tokens')
                     if self.distribution.settings.tokensanity == 'all' and major_tokens:
                         self.major_group.append('Gold Skulltula Token')
                     if self.distribution.settings.shuffle_smallkeys == 'keysanity':
@@ -327,7 +332,6 @@ class WorldDistribution(object):
                 return lambda s: invert != s.endswith(pattern)
             else:
                 return lambda s: invert != (s == pattern)
-
 
     # adds the location entry only if there is no record for that location already
     def add_location(self, new_location, new_item):
@@ -424,11 +428,11 @@ class WorldDistribution(object):
                 if item.name not in self.item_pool or self.item_pool[item.name].count != 0
             ]  # Only allow items to be candidates if they haven't been set to 0
             if len(candidates) == 0:
-                raise RuntimeError("Unknown item, or item set to 0 in the item pool could not be added: " + item_name)
+                raise RuntimeError("Unknown item, or item set to 0 in the item pool could not be added: " + repr(item_name) + ". " + build_close_match(item_name, 'item'))
             added_items = random_choices(candidates, k=count)
         else:
             if not IsItem(item_name):
-                raise RuntimeError("Unknown item could not be added: " + item_name)
+                raise RuntimeError("Unknown item could not be added: " + repr(item_name) + ". " + build_close_match(item_name, 'item'))
             added_items = [item_name] * count
 
         for item in added_items:
@@ -548,8 +552,11 @@ class WorldDistribution(object):
         for (name, record) in self.entrances.items():
             if record.region is None:
                 continue
-            if not worlds[self.id].get_entrance(name):
-                raise RuntimeError('Unknown entrance in world %d: %s' % (self.id + 1, name))
+            try:
+                if not worlds[self.id].get_entrance(name):
+                    raise RuntimeError('Unknown entrance in world %d: %s. %s' % (self.id + 1, name, build_close_match(name, 'entrance', entrance_pools)))
+            except KeyError:
+                raise RuntimeError('Unknown entrance in world %d: %s. %s' % (self.id + 1, name, build_close_match(name, 'entrance', entrance_pools)))
 
             entrance_found = False
             for pool_type, entrance_pool in entrance_pools.items():
@@ -686,7 +693,7 @@ class WorldDistribution(object):
                 try:
                     location = LocationFactory(name)
                 except KeyError:
-                    raise RuntimeError('Unknown location in world %d: %s' % (world.id + 1, name))
+                    raise RuntimeError('Unknown location in world %d: %r. %s' % (world.id + 1, name, build_close_match(name, 'location')))
                 if location.type == 'Boss':
                     raise RuntimeError('Boss or already placed in world %d: %s' % (world.id + 1, name))
                 else:
@@ -766,7 +773,7 @@ class WorldDistribution(object):
                 try:
                     location = LocationFactory(location_name)
                 except KeyError:
-                    raise RuntimeError('Unknown location in world %d: %s' % (world.id + 1, location_name))
+                    raise RuntimeError('Unknown location in world %d: %r. %s' % (world.id + 1, location_name, build_close_match(location_name, 'location')))
                 if location.type == 'Boss':
                     continue
                 elif location.name in world.settings.disabled_locations:
@@ -864,6 +871,9 @@ class WorldDistribution(object):
                 except KeyError:
                     raise RuntimeError(
                         'Too many items were added to world %d, and not enough junk is available to be removed.' % (self.id + 1))
+                except IndexError:
+                    raise RuntimeError(
+                        'Unknown item %r being placed on location %s in world %d. %s' % (record.item, location, self.id + 1, build_close_match(record.item, 'item')))
             # Update item_pool after item is replaced
             if item.name not in self.item_pool:
                 self.item_pool[item.name] = ItemPoolRecord()
@@ -871,7 +881,7 @@ class WorldDistribution(object):
                 self.item_pool[item.name].count += 1
         except IndexError:
             raise RuntimeError(
-                'Unknown item %s being placed on location %s in world %d.' % (record.item, location, self.id + 1))
+                'Unknown item %r being placed on location %s in world %d. %s' % (record.item, location, self.id + 1, build_close_match(record.item, 'item')))
         # Ensure pool copy is persisted to real pool
         for i, new_pool in enumerate(pool):
             if new_pool:
@@ -889,7 +899,7 @@ class WorldDistribution(object):
             try:
                 location = LocationFactory(name)
             except KeyError:
-                raise RuntimeError('Unknown location in world %d: %s' % (world.id + 1, name))
+                raise RuntimeError('Unknown location in world %d: %r. %s' % (world.id + 1, name, build_close_match(name, 'location')))
             if location.type == 'Boss':
                 continue
 
@@ -908,7 +918,7 @@ class WorldDistribution(object):
             matcher = self.pattern_matcher(name)
             stoneID = pull_random_element([stoneIDs], lambda id: matcher(gossipLocations[id].name))
             if stoneID is None:
-                raise RuntimeError('Gossip stone unknown or already assigned in world %d: %s' % (self.id + 1, name))
+                raise RuntimeError('Gossip stone unknown or already assigned in world %d: %r. %s' % (self.id + 1, name, build_close_match(name, 'stone')))
             spoiler.hints[self.id][stoneID] = GossipText(text=record.text, colors=record.colors, prefix='')
 
 
@@ -962,6 +972,7 @@ class Distribution(object):
 
         self.settings.__dict__.update(update_dict['_settings'])
         if 'settings' in self.src_dict:
+            validate_settings(self.src_dict['settings'])
             self.src_dict['_settings'] = self.src_dict['settings']
             del self.src_dict['settings']
 
@@ -1154,6 +1165,20 @@ class Distribution(object):
             world_dist.entrances = {ent.name: EntranceRecord.from_entrance(ent) for ent in spoiler.entrances[world.id]}
             world_dist.locations = {loc: LocationRecord.from_item(item) for (loc, item) in spoiler.locations[world.id].items()}
             world_dist.woth_locations = {loc.name: LocationRecord.from_item(loc.item) for loc in spoiler.required_locations[world.id]}
+            world_dist.goal_locations = {}
+            if world.id in spoiler.goal_locations and spoiler.goal_locations[world.id]:
+                for cat_name, goals in spoiler.goal_locations[world.id].items():
+                    world_dist.goal_locations[cat_name] = {}
+                    for goal_name, location_worlds in goals.items():
+                        goal = spoiler.goal_categories[world.id][cat_name].get_goal(goal_name)
+                        goal_text = goal.hint_text.replace('#', '')
+                        goal_text = goal_text[0].upper() + goal_text[1:]
+                        world_dist.goal_locations[cat_name][goal_text] = {}
+                        for location_world, locations in location_worlds.items():
+                            if len(self.world_dists) == 1:
+                                world_dist.goal_locations[cat_name][goal_text] = {loc.name: LocationRecord.from_item(loc.item).to_json() for loc in locations}
+                            else:
+                                world_dist.goal_locations[cat_name][goal_text]['from World ' + str(location_world + 1)] = {loc.name: LocationRecord.from_item(loc.item).to_json() for loc in locations}
             world_dist.barren_regions = [*world.empty_areas]
             world_dist.gossip_stones = {gossipLocations[loc].name: GossipRecord(spoiler.hints[world.id][loc].to_json()) for loc in spoiler.hints[world.id]}
 
