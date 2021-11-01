@@ -77,6 +77,25 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     # Add it to the extended object table
     add_to_extended_object_table(rom, 0x194, dd_obj_file)
 
+    # Apply chest texture diffs to vanilla wooden chest texture for Chest Texture Matches Content setting
+    # new texture, vanilla texture, num bytes
+    textures = [(rom.sym('SILVER_CHEST_FRONT_TEXTURE'), 0xFEC798, 4096),
+                (rom.sym('SILVER_CHEST_BASE_TEXTURE'), 0xFED798, 2048),
+                (rom.sym('GILDED_CHEST_FRONT_TEXTURE'), 0xFEC798, 4096),
+                (rom.sym('GILDED_CHEST_BASE_TEXTURE'), 0xFED798, 2048)]
+    # Diff texture is the new texture minus the vanilla texture with byte overflow.
+    # This is done to avoid distributing copyrighted material with the randomizer,
+    # as the new textures are derivations of the wood chest textures.
+    # The following rebuilds the texture from the diff.
+    for diff_tex, vanilla_tex, size in textures:
+        db = rom.read_bytes(diff_tex, size)
+        vb = rom.read_bytes(vanilla_tex, size)
+        # bytes are immutable in python, can't edit in place
+        new_tex = bytearray(size)
+        for i in range(len(vb)):
+            new_tex[i] = (db[i] + vb[i]) & 0xFF
+        rom.write_bytes(diff_tex, new_tex)
+
     # Create an option so that recovery hearts no longer drop by changing the code which checks Link's health when an item is spawned.
     if world.settings.no_collectible_hearts:
         rom.write_byte(0xA895B7, 0x2E)

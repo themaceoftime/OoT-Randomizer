@@ -109,13 +109,13 @@ DPAD_TEXTURE:
 TRIFORCE_ICON_TEXTURE:
 .incbin("../resources/triforce_sprite.bin")
 GILDED_CHEST_FRONT_TEXTURE:
-.incbin("../resources/chest_front.bin")
+.incbin("../resources/gilded_chest_front.bin")
 GILDED_CHEST_BASE_TEXTURE:
-.incbin("../resources/chest_base.bin")
-DARK_CHEST_FRONT_TEXTURE:
-.incbin("../resources/dark_chest_front.bin")
-DARK_CHEST_BASE_TEXTURE:
-.incbin("../resources/dark_chest_base.bin")
+.incbin("../resources/gilded_chest_base.bin")
+SILVER_CHEST_FRONT_TEXTURE:
+.incbin("../resources/silver_chest_front.bin")
+SILVER_CHEST_BASE_TEXTURE:
+.incbin("../resources/silver_chest_base.bin")
 
 .align 0x10
 PAYLOAD_END:
