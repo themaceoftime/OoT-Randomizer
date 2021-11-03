@@ -69,6 +69,7 @@ RANDO_CONTEXT:
 .include "jabu_elevator.asm"
 .include "dampe.asm"
 .include "dpad.asm"
+.include "chests.asm"
 .include "bunny_hood.asm"
 .include "colors.asm"
 .include "debug.asm"

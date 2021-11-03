@@ -1183,6 +1183,30 @@ skip_GS_BGS_text:
     nop
 
 ;==================================================================================================
+; Correct Chest Sizes
+;==================================================================================================
+
+.org 0xC0796E
+; Replaces .halfword 0x01EC
+; Increases chest actor (en_box) instance size
+    .halfword 0x01F0
+
+.orga 0xC06198
+; Replaces sb  t9,0x01E9(s0)
+    jal     GET_CHEST_OVERRIDE_WRAPPER
+
+; Chest Size
+; Replaces lbu   v0,0x01E9(s0)
+.orga 0xC064BC
+    lbu     v0,0x01EC(s0)
+.orga 0xC06E5C
+    lbu     v0,0x01EC(s0)
+.orga 0xC07494
+    lbu     v0,0x01EC(s0)
+.orga 0xC07230
+    lbu     v0,0x01EC(s0)
+
+;==================================================================================================
 ; Draw Chest Base and Lid
 ;==================================================================================================
 

@@ -7,15 +7,11 @@
 #define GOLD_FRONT_TEXTURE 0x06002F98
 #define GOLD_BASE_TEXTURE 0x06003798
 
-#define BROWN_CHEST 0
-#define GILDED_CHEST 1
-#define GOLD_CHEST 2
-#define SILVER_CHEST 3
-
 #define CHEST_BASE 1
 #define CHEST_LID 3
 
 uint32_t CHEST_TEXTURE_MATCH_CONTENTS = 0;
+uint32_t CHEST_SIZE_MATCH_CONTENTS = 0;
 
 extern void* GILDED_CHEST_FRONT_TEXTURE;
 extern void* GILDED_CHEST_BASE_TEXTURE;
@@ -25,24 +21,37 @@ extern void* SILVER_CHEST_BASE_TEXTURE;
 extern Mtx_t* write_matrix_stack_top(z64_gfx_t* gfx);
 asm(".equ write_matrix_stack_top, 0x800AB900");
 
+void get_chest_override(z64_actor_t *actor) {
+	uint8_t size  = ((uint8_t*)actor)[0x01E9];
+	uint8_t color = size;
 
-int get_chest_type(z64_actor_t* actor)
-{
-    uint8_t scene = z64_game.scene_index;
-    uint8_t item_id = (actor->variable & 0x0FE0) >> 5;
-    override_t override = lookup_override(actor, scene, item_id);
+	if (CHEST_SIZE_MATCH_CONTENTS || CHEST_TEXTURE_MATCH_CONTENTS) {
+		uint8_t scene = z64_game.scene_index;
+		uint8_t item_id = (actor->variable & 0x0FE0) >> 5;
 
-    if (!CHEST_TEXTURE_MATCH_CONTENTS || override.value.item_id == 0)
-    {
-        // If no override, return either Gold or Brown
-        uint8_t type = ((uint8_t*)actor)[0x01E9];
-        if (type == 2)
-            return GOLD_CHEST;
-        return BROWN_CHEST;
-    }
+		override_t override = lookup_override(actor, scene, item_id);
+		if (override.value.item_id != 0) {
+			item_row_t *item_row = get_item_row(override.value.looks_like_item_id);
+			if (item_row == NULL) {
+			    item_row = get_item_row(override.value.item_id);
+		    }
+            if (CHEST_SIZE_MATCH_CONTENTS) {
+                if (item_row->chest_type == BROWN_CHEST || item_row->chest_type == SILVER_CHEST) {
+                    // Small chest
+                    size = 5;
+                }
+                else {
+                    // Big chest
+                    size = 0;
+                }
+            }
 
-    item_row_t *item_row = get_item_row(override.value.item_id);
-    return item_row->chest_type;
+            color = item_row->chest_type;
+		}
+	}
+
+	((uint8_t*)actor)[0x01EC] = size;
+	((uint8_t*)actor)[0x01ED] = color;
 }
 
 void draw_chest(z64_game_t* game, int part, void* unk, void* unk2,
@@ -52,7 +61,7 @@ void draw_chest(z64_game_t* game, int part, void* unk, void* unk2,
         return;
 
     z64_gfx_t *gfx = game->common.gfx;
-    int chest_type = get_chest_type(actor);
+    int chest_type = ((uint8_t*)actor)[0x01ED];
 
     //write matrix
     Mtx_t *mtx = write_matrix_stack_top(gfx);

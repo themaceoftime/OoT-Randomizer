@@ -3571,9 +3571,15 @@ setting_infos = [
                          ''',
         shared         = True,
     ),
-    Checkbutton(
-        name           = 'correct_chest_sizes',
-        gui_text       = 'Chest Style Matches Contents',
+    Combobox(
+        name           = 'correct_chest_appearances',
+        gui_text       = 'Chest Appearance Matches Contents',
+        default        = 'off',
+        choices        = {
+            'off': 'Off',
+            'textures': 'Textures',
+            'sizes': 'Size and Textures'
+        },
         gui_tooltip    = '''\
             Chest style will reflect its contents regardless
             of size.  Fancy chests will contain keys, Gilded
