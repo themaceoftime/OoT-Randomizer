@@ -17,6 +17,8 @@ extern void* GILDED_CHEST_FRONT_TEXTURE;
 extern void* GILDED_CHEST_BASE_TEXTURE;
 extern void* SILVER_CHEST_FRONT_TEXTURE;
 extern void* SILVER_CHEST_BASE_TEXTURE;
+extern void* SKULL_CHEST_FRONT_TEXTURE;
+extern void* SKULL_CHEST_BASE_TEXTURE;
 
 extern Mtx_t* write_matrix_stack_top(z64_gfx_t* gfx);
 asm(".equ write_matrix_stack_top, 0x800AB900");
@@ -36,7 +38,7 @@ void get_chest_override(z64_actor_t *actor) {
 			    item_row = get_item_row(override.value.item_id);
 		    }
             if (CHEST_SIZE_MATCH_CONTENTS) {
-                if (item_row->chest_type == BROWN_CHEST || item_row->chest_type == SILVER_CHEST) {
+                if (item_row->chest_type == BROWN_CHEST || item_row->chest_type == SILVER_CHEST || item_row->chest_type == SKULL_CHEST_SMALL) {
                     // Small chest
                     size = 5;
                 }
@@ -100,6 +102,11 @@ void draw_chest(z64_game_t* game, int part, void* unk, void* unk2,
         {
             frontTexture = &SILVER_CHEST_FRONT_TEXTURE;
             baseTexture = &SILVER_CHEST_BASE_TEXTURE;
+        }
+        else if (chest_type == SKULL_CHEST_SMALL || chest_type == SKULL_CHEST_BIG)
+        {
+            frontTexture = &SKULL_CHEST_FRONT_TEXTURE;
+            baseTexture = &SKULL_CHEST_BASE_TEXTURE;
         }
         else
         {

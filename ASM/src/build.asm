@@ -117,6 +117,10 @@ SILVER_CHEST_FRONT_TEXTURE:
 .incbin("../resources/silver_chest_front.bin")
 SILVER_CHEST_BASE_TEXTURE:
 .incbin("../resources/silver_chest_base.bin")
+SKULL_CHEST_FRONT_TEXTURE:
+.incbin("../resources/skull_chest_front.bin")
+SKULL_CHEST_BASE_TEXTURE:
+.incbin("../resources/skull_chest_base.bin")
 
 .align 0x10
 PAYLOAD_END:

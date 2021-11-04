@@ -82,7 +82,9 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     textures = [(rom.sym('SILVER_CHEST_FRONT_TEXTURE'), 0xFEC798, 4096),
                 (rom.sym('SILVER_CHEST_BASE_TEXTURE'), 0xFED798, 2048),
                 (rom.sym('GILDED_CHEST_FRONT_TEXTURE'), 0xFEC798, 4096),
-                (rom.sym('GILDED_CHEST_BASE_TEXTURE'), 0xFED798, 2048)]
+                (rom.sym('GILDED_CHEST_BASE_TEXTURE'), 0xFED798, 2048),
+                (rom.sym('SKULL_CHEST_FRONT_TEXTURE'), 0xFEC798, 4096),
+                (rom.sym('SKULL_CHEST_BASE_TEXTURE'), 0xFED798, 2048)]
     # Diff texture is the new texture minus the vanilla texture with byte overflow.
     # This is done to avoid distributing copyrighted material with the randomizer,
     # as the new textures are derivations of the wood chest textures.
@@ -1642,7 +1644,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             write_rom_item(rom, i, item)
     if world.settings.bridge == 'tokens' or world.settings.lacs_condition == 'tokens' or world.settings.shuffle_ganon_bosskey == 'tokens':
         item = read_rom_item(rom, 0x5B)
-        item['chest_type'] = 1
+        item['chest_type'] = 5
         write_rom_item(rom, 0x5B, item)       
 
     # Update chest type appearance
