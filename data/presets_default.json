@@ -224,7 +224,7 @@
     "free_scarecrow":                          false,
     "fast_bunny_hood":                         true,
     "start_with_rupees":                       false,
-    "start_with_consumables":                  false,
+    "start_with_consumables":                  true,
     "starting_hearts":                         3,
     "chicken_count_random":                    false,
     "chicken_count":                           7,
@@ -278,14 +278,12 @@
     ],
     "logic_earliest_adult_trade":              "prescription",
     "logic_latest_adult_trade":                "claim_check",
-    "starting_equipment":                      [],
     "starting_equipment": [
       "deku_shield"
     ],
     "starting_items": [
       "ocarina"
     ],
-    "start_with_consumables":                  true,
     "starting_songs":                          [],
     "ocarina_songs":                           false,
     "correct_chest_sizes":                     false,
