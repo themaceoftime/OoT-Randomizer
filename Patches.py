@@ -2030,7 +2030,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     write_shop_items(rom, shop_item_file.start + 0x1DEC, shop_items)
 
     # set end credits text to automatically fade without player input,
-    # with timing depending on the number of lines are in the text box
+    # with timing depending on the number of lines in the text box
     for message_id in (0x706F, 0x7091, 0x7092, 0x7093, 0x7094, 0x7095):
         text_codes = []
         lines_in_section = 1
