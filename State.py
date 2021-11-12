@@ -41,7 +41,7 @@ class State(object):
 
 
     def won_triforce_hunt(self):
-        return self.has('Triforce Piece', self.world.triforce_count)
+        return self.has('Triforce Piece', self.world.settings.triforce_goal_per_world)
 
 
     def won_normal(self):
@@ -96,6 +96,16 @@ class State(object):
 
     def has_dungeon_rewards(self, count):
         return (self.count_of(ItemInfo.medallions) + self.count_of(ItemInfo.stones)) >= count
+
+
+    def has_item_goal(self, item_goal):
+        return self.prog_items[item_goal['name']] >= item_goal['minimum']
+
+
+    def has_full_item_goal(self, category, goal, item_goal):
+        local_goal = self.world.goal_categories[category.name].get_goal(goal.name)
+        per_world_max_quantity = local_goal.get_item(item_goal['name'])['quantity']
+        return self.prog_items[item_goal['name']] >= per_world_max_quantity
 
 
     def had_night_start(self):
