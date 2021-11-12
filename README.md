@@ -177,7 +177,7 @@ do that.
 * Added Nayru's Love back to the minimal item pool on high damage settings.
 * Allow settings with a 'Random' option to be different per-world. (This does not permit settings randomized only by Randomize Main Rules to be different per-world.)
 * Updated sometimes hints.
-* Renamed some regions, locations, items, etc to make vanilla names. This will make Plandomizer files incompatible between versions.
+* Renamed some regions, locations, items, etc to match vanilla names. This will make Plandomizer files incompatible between versions.
   * Gerudo Training **Grounds** -> Gerudo Training **Ground**
   * Gerudo Fortress -> Thieves' Hideout (when referring to the interior areas or the carpenter rescue quest)
   * Graveyard Composers' Grave -> Royal Family's Tomb
