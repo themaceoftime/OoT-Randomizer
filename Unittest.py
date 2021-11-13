@@ -8,10 +8,12 @@ import random
 import re
 import unittest
 
+from EntranceShuffle import EntranceShuffleError
 from ItemList import item_table
 from ItemPool import remove_junk_items, item_groups
 from LocationList import location_groups, location_is_viewable
-from Main import main, resolve_settings, build_world_graphs
+from Main import main, resolve_settings, build_world_graphs, place_items
+from Search import Search
 from Settings import Settings, get_preset_files
 
 test_dir = os.path.join(os.path.dirname(__file__), 'tests')
@@ -337,6 +339,30 @@ class TestHints(unittest.TestCase):
                 self.assertNotEqual('Ganons Tower Boss Key Chest', spoiler.worlds[0].light_arrow_location.name)
 
 
+class TestEntranceRandomizer(unittest.TestCase):
+    def test_spawn_point_invalid_areas(self):
+        # With special interior, overworld, and warp song ER off, random spawns
+        # require itemless access to Kokiri Forest or Kakariko Village. This imposes
+        # a world state such that the Prelude and Serenade warp pads are also reachable
+        # with no items, and Prelude and Serenade should be foolish. If this behaviour
+        # is changed, this unit test serves as a reminder to revisit warp song
+        # foolishness.
+        # Currently only tests glitchless as glitched logic does not support ER yet.
+        # Assumes the player starts with an ocarina to use a warp song from Sheik at
+        # Colossus or Ice Cavern.
+        filenames = [
+            "plando-er-colossus-spawn-validity",
+        ]
+        for filename in filenames:
+            distribution_file = load_spoiler(os.path.join(test_dir, 'plando', filename + '.json'))
+            settings = load_settings(distribution_file['settings'], seed='TESTTESTTEST', filename=filename)
+            resolve_settings(settings)
+            # Test for an entrance shuffle error during world validation.
+            # If the test succeeds, this confirms Serenade and Prelude can be foolish.
+            with self.assertRaises(EntranceShuffleError):
+                build_world_graphs(settings)
+
+
 class TestValidSpoilers(unittest.TestCase):
 
     # Normalizes spoiler dict for single world or multiple worlds
@@ -393,7 +419,7 @@ class TestValidSpoilers(unittest.TestCase):
         # No disabled locations
         disables = set(spoiler['settings'].get('disabled_locations', []))
         self.assertEqual(
-            expected_none,
+            {p: set() for p in locations},  # keys might differ bt locations/items
             {p: disables & c for p, c in locations.items()},
             'Disabled locations deemed required')
         # No more than one of any 'once' item
@@ -427,8 +453,11 @@ class TestValidSpoilers(unittest.TestCase):
         # Everybody reached the win condition in the playthrough
         if spoiler['settings'].get('triforce_hunt', False) or spoiler['randomized_settings'].get('triforce_hunt', False):
             item_pool = self.normalize_worlds_dict(spoiler['item_pool'])
+            # playthrough assumes each player gets exactly the goal
+            req = spoiler['settings'].get('triforce_goal_per_world', None) or spoiler['randomized_settings'].get('triforce_goal_per_world', None)
             self.assertEqual(
-                {p: item_pool[p]['Triforce Piece'] for p in items},
+                {p: req or item_pool[p]['Triforce Piece']
+                    for p in items},
                 {p: c['Triforce Piece'] for p, c in items.items()},
                 'Playthrough missing some (or having extra) Triforce Pieces')
         else:
