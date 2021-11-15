@@ -40,7 +40,7 @@ class Goal(object):
         self._item_cache = {}
     
     def copy(self):
-        new_goal = Goal(self.world, self.name, self.hint_text, self.color, self.items, self.locations, self.lock_locations, self.lock_entrances, self.required_locations)
+        new_goal = Goal(self.world, self.name, self.hint_text, self.color, self.items, self.locations, self.lock_locations, self.lock_entrances, self.required_locations, True)
         return new_goal
 
     def get_item(self, item):
