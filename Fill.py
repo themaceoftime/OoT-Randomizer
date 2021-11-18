@@ -368,6 +368,7 @@ def fill_restrictive(window, worlds, base_search, locations, itempool, count=-1)
     logging.getLogger('').debug(f'Placing {len(itempool)} items among {len(locations)} potential locations.')
 
     # loop until there are no items or locations
+    perform_access_check = False
     while itempool and locations:
         # if remaining count is 0, return. Negative means unbounded.
         if count == 0:
@@ -394,7 +395,7 @@ def fill_restrictive(window, worlds, base_search, locations, itempool, count=-1)
         elif worlds[0].settings.reachable_locations == 'goals':
             # for All Goals Reachable, we have to track whether any goal items have been placed,
             # since we then have to start checking their reachability.
-            perform_access_check = item_to_place.goalitem or not max_search.can_beat_game(scan_for_items=False)
+            perform_access_check = perform_access_check or item_to_place.goalitem or not max_search.can_beat_game(scan_for_items=False)
             extra_location_checks = [location for world in worlds for location in world.get_filled_locations() if location.item.goalitem]
         else:
             # if any world can not longer be beatable with the remaining items
@@ -403,7 +404,7 @@ def fill_restrictive(window, worlds, base_search, locations, itempool, count=-1)
             # stop checking, then we could place an item needed in one world
             # in an unreachable place in another world.
             # scan_for_items would cause an unnecessary copy+collect
-            perform_access_check = not max_search.can_beat_game(scan_for_items=False)
+            perform_access_check = perform_access_check or not max_search.can_beat_game(scan_for_items=False)
             extra_location_checks = []
 
         # find a location that the item can be placed. It must be a valid location
