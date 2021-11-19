@@ -218,8 +218,7 @@ class Search(object):
     # conditions are possible, such as in Triforce Hunt, where only the total
     # amount of an item across all worlds matter, not specifcally who has it
     #
-    # Win condition can be a string that gets mapped to a function(state_list) here
-    # or just a function(state_list)
+    # predicate must be a function (state) -> bool, that will be applied to all states
     def can_beat_game(self, scan_for_items=True, predicate=State.won):
 
         # Check if already beaten
