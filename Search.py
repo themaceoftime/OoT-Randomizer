@@ -273,11 +273,12 @@ class Search(object):
                 if world_filter is not None and state.world.id != world_filter:
                     continue
                 valid_goals[category_name]['stateReverse'][state.world.id] = []
-                for goal in category.goals:
+                world_category = state.world.goal_categories[category_name]
+                for goal in world_category.goals:
                     if goal.name not in valid_goals[category_name]:
                         valid_goals[category_name][goal.name] = []
                     # Check if already beaten
-                    if all(map(lambda i: state.has_full_item_goal(category, goal, i), goal.items)):
+                    if all(map(lambda i: state.has_full_item_goal(world_category, goal, i), goal.items)):
                         valid_goals[category_name][goal.name].append(state.world.id)
                         # Reverse lookup for checking if the category is already beaten.
                         # Only used to check if starting items satisfy the category.
