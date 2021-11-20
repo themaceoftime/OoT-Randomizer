@@ -1298,7 +1298,7 @@ def get_pool_core(world):
     if not world.keysanity and not world.dungeon_mq['Fire Temple']:
         world.state.collect(ItemFactory('Small Key (Fire Temple)'))
 
-    if world.triforce_hunt:
+    if world.settings.triforce_hunt:
         pending_junk_pool.extend(['Triforce Piece'] * world.settings.triforce_count_per_world)
 
     if world.settings.shuffle_ganon_bosskey == 'on_lacs':
