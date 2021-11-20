@@ -391,7 +391,8 @@ def fill_restrictive(window, worlds, base_search, locations, itempool, count=-1)
         if worlds[0].check_beatable_only:
             if worlds[0].settings.reachable_locations == 'goals':
                 # If this item is required for a goal, it must be placed somewhere reachable.
-                predicate = State.has_all_item_goals
+                # We also need to check to make sure the game is beatable, since custom goals might not imply that.
+                predicate = lambda state: state.won and state.has_all_item_goals
             else:
                 # If the game is not beatable without this item, it must be placed somewhere reachable.
                 predicate = State.won
