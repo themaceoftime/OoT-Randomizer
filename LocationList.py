@@ -72,7 +72,7 @@ location_table = OrderedDict([
     ("KF Midos Bottom Right Chest",                                  ("Chest",        0x28,  0x03, None,                        'Recovery Heart',                        ("Kokiri Forest", "Forest",))),
     ("KF Kokiri Sword Chest",                                        ("Chest",        0x55,  0x00, None,                        'Kokiri Sword',                          ("Kokiri Forest", "Forest",))),
     ("KF Storms Grotto Chest",                                       ("Chest",        0x3E,  0x0C, None,                        'Rupees (20)',                           ("Kokiri Forest", "Forest", "Grottos"))),
-    ("KF Links House Cow",                                           ("NPC",          0x34,  0x15, None,                        'Milk',                                  ("KF Links House", "Forest", "Cow", "Minigames"))),
+    ("KF Links House Cow",                                           ("NPC",          0x34,  0x15, None,                        'Milk',                                  ("Kokiri Forest", "Forest", "Cow", "Minigames"))),
     ("KF GS Know It All House",                                      ("GS Token",     0x0C,  0x02, None,                        'Gold Skulltula Token',                  ("Kokiri Forest", "Skulltulas",))),
     ("KF GS Bean Patch",                                             ("GS Token",     0x0C,  0x01, None,                        'Gold Skulltula Token',                  ("Kokiri Forest", "Skulltulas",))),
     ("KF GS House of Twins",                                         ("GS Token",     0x0C,  0x04, None,                        'Gold Skulltula Token',                  ("Kokiri Forest", "Skulltulas",))),
