@@ -368,8 +368,8 @@ location_table = OrderedDict([
     ("Colossus GS Hill",                                             ("GS Token",     0x15,  0x04, None,                        'Gold Skulltula Token',                  ("Desert Colossus", "Skulltulas",))),
 
     # Outside Ganon's Castle
-    ("OGC Great Fairy Reward",                                       ("Cutscene",     0xFF,  0x15, None,                        'Double Defense',                        ("outside Ganon's Castle", "Market", "Fairies"))),
-    ("OGC GS",                                                       ("GS Token",     0x0E,  0x01, None,                        'Gold Skulltula Token',                  ("outside Ganon's Castle", "Skulltulas",))),
+    ("OGC Great Fairy Reward",                                       ("Cutscene",     0xFF,  0x15, None,                        'Double Defense',                        ("Outside Ganon's Castle", "Market", "Fairies"))),
+    ("OGC GS",                                                       ("GS Token",     0x0E,  0x01, None,                        'Gold Skulltula Token',                  ("Outside Ganon's Castle", "Skulltulas",))),
 
     ## Dungeons
     # Deku Tree vanilla
