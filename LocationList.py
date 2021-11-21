@@ -165,7 +165,7 @@ location_table = OrderedDict([
     ("HC GS Storms Grotto",                                          ("GS Token",     0x0E,  0x02, None,                        'Gold Skulltula Token',                  ("Hyrule Castle", "Skulltulas", "Grottos"))),
 
     # Lon Lon Ranch
-    ("LLR Talons Chickens",                                          ("NPC",          0x4C,  0x14, None,                        'Bottle with Milk',                      ("Lon Lon Ranch", "Kakariko", "Minigames"))),
+    ("LLR Talons Chickens",                                          ("NPC",          0x4C,  0x14, None,                        'Bottle with Milk',                      ("Lon Lon Ranch", "Minigames"))),
     ("LLR Freestanding PoH",                                         ("Collectable",  0x4C,  0x01, None,                        'Piece of Heart',                        ("Lon Lon Ranch",))),
     ("LLR Deku Scrub Grotto Left",                                   ("GrottoNPC",    0xFC,  0x30, None,                        'Buy Deku Nut (5)',                      ("Lon Lon Ranch", "Deku Scrub", "Grottos"))),
     ("LLR Deku Scrub Grotto Center",                                 ("GrottoNPC",    0xFC,  0x33, None,                        'Buy Deku Seeds (30)',                   ("Lon Lon Ranch", "Deku Scrub", "Grottos"))),
