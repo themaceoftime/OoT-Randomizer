@@ -107,6 +107,9 @@ do that.
 * Fix seed generation for All Goals Reachable.
 * Fix a minor optimization for counting needed Skulltula Tokens.
 
+#### Other changes
+* Renamed setting `Enable Useful Cutscenes` to `Enable Specific Glitch-Useful Cutscenes` for clarity.
+
 ### 6.1
 
 #### New Features
