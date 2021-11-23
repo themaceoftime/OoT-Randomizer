@@ -108,6 +108,7 @@ do that.
 * Fix a minor optimization for counting needed Skulltula Tokens.
 
 #### Other changes
+* Allow foolish hints to apply even if an area has an Always hint (but no other types).
 * Renamed setting `Enable Useful Cutscenes` to `Enable Specific Glitch-Useful Cutscenes` for clarity.
 
 ### 6.1
