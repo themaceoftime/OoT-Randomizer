@@ -105,6 +105,7 @@ do that.
 
 * Fix seed generation for multiworld with random trials.
 * Fix seed generation for All Goals Reachable.
+* Fix a minor optimization for counting needed Skulltula Tokens.
 
 ### 6.1
 
