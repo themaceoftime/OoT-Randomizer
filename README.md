@@ -106,6 +106,7 @@ do that.
 * Fix seed generation for multiworld with random trials.
 * Fix seed generation for All Goals Reachable.
 * Fix a minor optimization for counting needed Skulltula Tokens.
+* Fix some erroneous category tags for locations.
 
 #### Other changes
 * Allow foolish hints to apply even if an area has an Always hint (but no other types).
