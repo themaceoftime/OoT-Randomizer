@@ -1060,7 +1060,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
             raise Exception('User-provided item hints were requested, but copies per named-item hint is zero')
         else:
             for i in range(0, len(world.named_item_pool)):
-                hint = get_specific_item_hint(spoiler, world, set.union(checkedLocations, checkedAlwaysLocations))
+                hint = get_specific_item_hint(spoiler, world, checkedLocations | checkedAlwaysLocations)
                 if hint:
                     gossip_text, location = hint
                     place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, hint_dist['named-item'][1], location)
@@ -1117,12 +1117,12 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
             except IndexError:
                 raise Exception('Not enough valid hints to fill gossip stone locations.')
 
-        allCheckedLocations = set.union(checkedLocations, checkedAlwaysLocations)
+        allCheckedLocations = checkedLocations | checkedAlwaysLocations
         if hint_type == 'barren':
             hint = hint_func[hint_type](spoiler, world, checkedLocations)
         else:
             hint = hint_func[hint_type](spoiler, world, allCheckedLocations)
-        checkedLocations.update(allCheckedLocations.difference(set.union(checkedLocations, checkedAlwaysLocations)))
+            checkedLocations.update(allCheckedLocations - checkedAlwaysLocations)
 
         if hint == None:
             index = hint_types.index(hint_type)
