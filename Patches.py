@@ -1771,6 +1771,10 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     if world.settings.ocarina_songs:
         replace_songs(world, rom)
 
+    # Remove battle music
+    if world.settings.disable_battle_music:
+        rom.write_byte(0xBE447F, 0x00)
+
     # actually write the save table to rom
     world.distribution.give_items(save_context)
     if world.settings.starting_age == 'adult':
