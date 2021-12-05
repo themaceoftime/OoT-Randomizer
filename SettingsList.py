@@ -3930,6 +3930,9 @@ setting_infos = [
         cosmetic       = True,
         gui_tooltip    = '''\
             Disable standard battle music.
+	    This prevents background music from being
+	    interrupted by the battle theme when being
+	    near enemies.
         ''',
         default        = False,
     ),
