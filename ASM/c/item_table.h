@@ -4,11 +4,11 @@
 #include "z64.h"
 
 #define BROWN_CHEST 0
-#define GILDED_CHEST 1
 #define GOLD_CHEST 2
-#define SILVER_CHEST 3
-#define SKULL_CHEST_SMALL 4
-#define SKULL_CHEST_BIG 5
+#define GILDED_CHEST 12
+#define SILVER_CHEST 13
+#define SKULL_CHEST_SMALL 14
+#define SKULL_CHEST_BIG 15
 
 typedef uint16_t (*upgrade_fn)(z64_file_t *save, uint16_t item_id);
 typedef void (*effect_fn)(z64_file_t *save, int16_t arg1, int16_t arg2);
