@@ -16,7 +16,7 @@ from Messages import read_messages, update_message_by_id, read_shop_items, updat
         write_shop_items, remove_unused_messages, make_player_message, \
         add_item_messages, repack_messages, shuffle_messages, \
         get_message_by_id
-from OcarinaSongs import replace_songs, replace_warp_songs
+from OcarinaSongs import replace_songs, replace_toprow_songs, replace_warp_songs
 from MQ import patch_files, File, update_dmadata, insert_space, add_relocations
 from SaveContext import SaveContext
 import StartingItems
@@ -1770,6 +1770,9 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
     if world.settings.ocarina_songs == 'all':
         replace_songs(world, rom)
+
+    if world.settings.ocarina_songs == 'toprow':
+        replace_toprow_songs(world, rom)
 
     if world.settings.ocarina_songs == 'warp':
         replace_warp_songs(world, rom)

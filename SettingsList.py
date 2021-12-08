@@ -3566,15 +3566,16 @@ setting_infos = [
         default        = 'off',
         choices        = {
             'off': 'Off',
+            'toprow': 'Top Row Songs Only',
             'warp': 'Warp Songs Only',
             'all':  'All Songs',
         },
         gui_tooltip    = '''\
-                         Will need to memorize a new set of songs.
-                         Can be silly, but difficult. Songs are
-                         generally sensible, and warp songs are
-                         typically more difficult.
-                         ''',
+            Will need to memorize a new set of songs.
+            Can be silly, but difficult. Songs are
+            generally sensible, and warp songs are
+            typically more difficult.
+            ''',
         shared         = True,
     ),
     Checkbutton(
