@@ -305,7 +305,7 @@
 80401AA4 @@swap
 80401AD0 after_time_travel
 80401B0C @@going_back
-80401B14 @@done
+80401B2C @@done
 80401B44 update_c_button
 80401B70 @@return
 80401B78 after_going_forward
