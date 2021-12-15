@@ -44,53 +44,21 @@ DIFFICULTY_ORDER = [
     'Requiem of Spirit',
     'Nocturne of Shadow',
 ]
-ROM_INDICES = {
-    'Zeldas Lullaby': 8,
-    'Eponas Song': 7,
-    'Sarias Song': 6,
-    'Suns Song': 9,
-    'Song of Time': 10,
-    'Song of Storms': 11,
-    'Minuet of Forest': 0,
-    'Bolero of Fire': 1,
-    'Serenade of Water': 2,
-    'Requiem of Spirit': 3,
-    'Nocturne of Shadow': 4,
-    'Prelude of Light': 5,
-}
 
-DIFFICULTY_ORDER_TOPROW = [
-    'Zeldas Lullaby',
-    'Sarias Song',
-    'Eponas Song',
-    'Song of Storms',
-    'Song of Time',
-    'Suns Song',
-]
-ROM_INDICES_TOPROW = {
-    'Zeldas Lullaby': 8,
-    'Eponas Song': 7,
-    'Sarias Song': 6,
-    'Suns Song': 9,
-    'Song of Time': 10,
-    'Song of Storms': 11,
-}
-
-DIFFICULTY_ORDER_WARP = [
-    'Prelude of Light',
-    'Minuet of Forest',
-    'Bolero of Fire',
-    'Serenade of Water',
-    'Requiem of Spirit',
-    'Nocturne of Shadow',
-]
-ROM_INDICES_WARP = {
-    'Minuet of Forest': 0,
-    'Bolero of Fire': 1,
-    'Serenade of Water': 2,
-    'Requiem of Spirit': 3,
-    'Nocturne of Shadow': 4,
-    'Prelude of Light': 5,
+#    Song name:    (rom index, warp,   vanilla activation),
+SONG_TABLE = {
+    'Zeldas Lullaby':     ( 8, False, '<^><^>'),
+    'Eponas Song':        ( 7, False, '^<>^<>'),
+    'Sarias Song':        ( 6, False, 'v><v><'),
+    'Suns Song':          ( 9, False, '>v^>v^'),
+    'Song of Time':       (10, False, '>Av>Av'),
+    'Song of Storms':     (11, False, 'Av^Av^'),
+    'Minuet of Forest':   ( 0, True,  'A^<><>'),
+    'Bolero of Fire':     ( 1, True,  'vAvA>v>v'),
+    'Serenade of Water':  ( 2, True,  'Av>><'),
+    'Requiem of Spirit':  ( 3, True,  'AvA>vA'),
+    'Nocturne of Shadow': ( 4, True,  '<>>A<>v'),
+    'Prelude of Light':   ( 5, True,  '^>^><^'),
 }
 
 import random
@@ -106,33 +74,7 @@ def subsong(song1, song2):
     s2 = ''.join( map(chr, song2.activation))
     # check if either is a substring of the other
     return (s1 in s2) or (s2 in s1)
-    
-# Checks if it matches a top row song
-def subsongtoprow(song0):
-    # convert both lists to strings
-    s0 = ''.join( map(chr, song0.activation))
-    s1 = ''.join( '<^><^>')
-    s2 = ''.join( '^<>^<>')
-    s3 = ''.join( 'v><v><')
-    s4 = ''.join( '>v^>v^')
-    s5 = ''.join( '>Av>Av')
-    s6 = ''.join( 'Av^Av^')
-    # check if either is a substring of the other
-    return (s0 in s1) or (s1 in s0) or (s0 in s2) or (s2 in s0) or (s0 in s3) or (s3 in s0) or (s0 in s4) or (s4 in s0) or (s0 in s5) or (s5 in s0) or (s0 in s6) or (s6 in s0)
 
-# Checks if it matches a vanilla warp song
-def subsongwarp(song0):
-    # convert both lists to strings
-    s0 = ''.join( map(chr, song0.activation))
-    s1 = ''.join( 'A^<><>')
-    s2 = ''.join( 'vAvA>v>v')
-    s3 = ''.join( 'Av>><')
-    s4 = ''.join( '<>>A<>v')
-    s5 = ''.join( 'AvA>vA')
-    s6 = ''.join( '^>^><^')
-    # check if either is a substring of the other
-    return (s0 in s1) or (s1 in s0) or (s0 in s2) or (s2 in s0) or (s0 in s3) or (s3 in s0) or (s0 in s4) or (s4 in s0) or (s0 in s5) or (s5 in s0) or (s0 in s6) or (s6 in s0)
-    
 # give random durations and volumes to the notes
 def fast_playback(activation):
     playback = []
@@ -382,11 +324,16 @@ def get_random_song():
 
 
 # create a list of 12 songs, none of which are sub-strings of any other song
-def generate_song_list(world):
-    fixed_songs = {name: Song.from_str(notes) for name, notes in world.distribution.configure_songs().items()}
+def generate_song_list(world, toprow, warp):
+    fixed_songs = {}
+    if not toprow:
+        fixed_songs.update({name: Song.from_str(notes) for name, (_, is_warp, notes) in SONG_TABLE.items() if not is_warp})
+    if not warp:
+        fixed_songs.update({name: Song.from_str(notes) for name, (_, is_warp, notes) in SONG_TABLE.items() if is_warp})
+    fixed_songs.update({name: Song.from_str(notes) for name, notes in world.distribution.configure_songs().items()})
     for name1, song1 in fixed_songs.items():
-        if name1 not in ROM_INDICES:
-            raise ValueError(f'Unknown song: {name1!r}. Please use one of these: {", ".join(ROM_INDICES)}')
+        if name1 not in SONG_TABLE:
+            raise ValueError(f'Unknown song: {name1!r}. Please use one of these: {", ".join(SONG_TABLE)}')
         if not song1.activation:
             raise ValueError(f'{name1} is empty')
         if len(song1.activation) > 8:
@@ -421,137 +368,25 @@ def generate_song_list(world):
             fixed_songs[name] = random_songs.pop(0)
     return fixed_songs
 
-# create a list of 6 songs, just for top row songs.
-def generate_toprow_song_list(world):
-    fixed_songs = {name: Song.from_str(notes) for name, notes in world.distribution.configure_songs().items()}
-    for name1, song1 in fixed_songs.items():
-        if name1 not in ROM_INDICES_TOPROW:
-            raise ValueError(f'Unknown song: {name1!r}. Please use one of these: {", ".join(ROM_INDICES_TOPROW)}')
-        if not song1.activation:
-            raise ValueError(f'{name1} is empty')
-        if len(song1.activation) > 8:
-            raise ValueError(f'{name1} is too long (maximum is 8 notes)')
-        for name2, song2 in fixed_songs.items():
-            if name1 != name2 and subsong(song1, song2):
-                raise ValueError(f'{name2} is unplayable because it contains {name1}')
-    random_songs = []
-
-    for _ in range(6 - len(fixed_songs)):
-        for _ in range(1000):
-            # generate a completely random song
-            song = get_random_song()
-            # test the song against all existing songs
-            is_good = True
-
-            for other_song in chain(fixed_songs.values(), random_songs):
-                if subsong(song, other_song):
-                    is_good = False
-                # Verifies that it won't contain any of the vanilla warp song arrangements.
-                if subsongwarp(song):
-                    is_good = False
-            if is_good:
-                random_songs.append(song)
-                break
-
-    if len(fixed_songs) + len(random_songs) < 6:
-        # this can happen if the fixed songs are so short that any random set of songs would have them as subsongs
-        raise ShuffleError('Could not generate random songs')
-
-    # sort the songs by length
-    random_songs.sort(key=lambda s: s.difficulty)
-    for name in DIFFICULTY_ORDER_TOPROW:
-        if name not in fixed_songs:
-            fixed_songs[name] = random_songs.pop(0)
-    return fixed_songs
-
-# create a list of 6 songs, just for warps.
-def generate_warp_song_list(world):
-    fixed_songs = {name: Song.from_str(notes) for name, notes in world.distribution.configure_songs().items()}
-    for name1, song1 in fixed_songs.items():
-        if name1 not in ROM_INDICES_WARP:
-            raise ValueError(f'Unknown song: {name1!r}. Please use one of these: {", ".join(ROM_INDICES_WARP)}')
-        if not song1.activation:
-            raise ValueError(f'{name1} is empty')
-        if len(song1.activation) > 8:
-            raise ValueError(f'{name1} is too long (maximum is 8 notes)')
-        for name2, song2 in fixed_songs.items():
-            if name1 != name2 and subsong(song1, song2):
-                raise ValueError(f'{name2} is unplayable because it contains {name1}')
-    random_songs = []
-
-    for _ in range(6 - len(fixed_songs)):
-        for _ in range(1000):
-            # generate a completely random song
-            song = get_random_song()
-            # test the song against all existing songs
-            is_good = True
-
-            for other_song in chain(fixed_songs.values(), random_songs):
-                if subsong(song, other_song):
-                    is_good = False
-                # Checks against the top row of songs
-                if subsongtoprow(song):
-                    is_good = False
-            if is_good:
-                random_songs.append(song)
-                break
-
-    if len(fixed_songs) + len(random_songs) < 6:
-        # this can happen if the fixed songs are so short that any random set of songs would have them as subsongs
-        raise ShuffleError('Could not generate random songs')
-
-    # sort the songs by length
-    random_songs.sort(key=lambda s: s.difficulty)
-    for name in DIFFICULTY_ORDER_WARP:
-        if name not in fixed_songs:
-            fixed_songs[name] = random_songs.pop(0)
-    return fixed_songs
 
 
 # replace the playback and activation requirements for the ocarina songs
-def replace_songs(world, rom):
-    songs = generate_song_list(world)
+def replace_songs(world, rom, *, toprow, warp):
+    songs = generate_song_list(world, toprow, warp)
     world.song_notes = songs
 
     for name, song in songs.items():
+        if str(song) == SONG_TABLE[name][2]:
+            continue # song activation is vanilla (possibly because this row wasn't randomized), don't randomize playback
 
         # fix the song of time
         if name == 'Song of Time':
             song.increase_duration_to(260)
 
         # write the song to the activation table
-        cur_offset = ACTIVATION_START + ROM_INDICES[name] * ACTIVATION_LENGTH
+        cur_offset = ACTIVATION_START + SONG_TABLE[name][0] * ACTIVATION_LENGTH
         rom.write_bytes(cur_offset, song.activation_data)
 
         # write the songs to the playback table
-        song_offset = PLAYBACK_START + ROM_INDICES[name] * PLAYBACK_LENGTH
-        rom.write_bytes(song_offset, song.playback_data)
-
-def replace_toprow_songs(world, rom):
-    songs = generate_toprow_song_list(world)
-    world.song_notes = songs
-
-    for name, song in songs.items():
-
-        # write the song to the activation table
-        cur_offset = ACTIVATION_START + ROM_INDICES_TOPROW[name] * ACTIVATION_LENGTH
-        rom.write_bytes(cur_offset, song.activation_data)
-
-        # write the songs to the playback table
-        song_offset = PLAYBACK_START + ROM_INDICES_TOPROW[name] * PLAYBACK_LENGTH
-        rom.write_bytes(song_offset, song.playback_data)
-
-# replace the playback and activation requirements for the warp songs only
-def replace_warp_songs(world, rom):
-    songs = generate_warp_song_list(world)
-    world.song_notes = songs
-
-    for name, song in songs.items():
-
-        # write the song to the activation table
-        cur_offset = ACTIVATION_START + ROM_INDICES_WARP[name] * ACTIVATION_LENGTH
-        rom.write_bytes(cur_offset, song.activation_data)
-
-        # write the songs to the playback table
-        song_offset = PLAYBACK_START + ROM_INDICES_WARP[name] * PLAYBACK_LENGTH
+        song_offset = PLAYBACK_START + SONG_TABLE[name][0] * PLAYBACK_LENGTH
         rom.write_bytes(song_offset, song.playback_data)
