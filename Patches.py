@@ -1821,7 +1821,12 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             item = read_rom_item (rom, i)
             item['chest_type'] = GOLD_CHEST_SMALL
             write_rom_item(rom, i, item)
-    #TODO put heart pieces and containers in big chests if bridge/LACS/Ganon bk on hearts
+    if world.settings.bridge == 'hearts' or world.settings.lacs_condition == 'hearts' or world.settings.shuffle_ganon_bosskey == 'hearts':
+        heart_ids = [0x3D, 0x3E, 0x76]
+        for i in heart_ids:
+            item = read_rom_item(rom, i)
+            item['chest_type'] = GILDED_CHEST
+            write_rom_item(rom, i, item)
 
     # Update chest type appearance
     if world.settings.correct_chest_appearances == 'textures':
