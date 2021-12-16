@@ -1119,6 +1119,7 @@ class World(object):
         if self.settings.plant_beans:
             # Magic Beans are useless if beans are already planted
             exclude_item_list.append('Magic Bean')
+            exclude_item_list.append('Buy Magic Bean')
             exclude_item_list.append('Magic Bean Pack')
 
         for i in self.item_hint_type_overrides['barren']:

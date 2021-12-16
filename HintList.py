@@ -371,6 +371,7 @@ hintTable = {
     'Bombs (20)':                                               (["lots-o-explosives", "plenty of blast balls"], "Bombs (20 pieces)", 'item'),
     'Ice Trap':                                                 (["a gift from Ganon", "a chilling discovery", "frosty fun"], "an Ice Trap", 'item'),
     'Magic Bean':                                               (["a wizardly legume"], "a Magic Bean", 'item'),
+    'Buy Magic Bean':                                           (["a wizardly legume"], "a Magic Bean", 'item'),
     'Magic Bean Pack':                                          (["wizardly legumes"], "Magic Beans", 'item'),
     'Bombchus':                                                 (["mice bombs", "proximity mice", "wall crawlers", "trail blazers"], "Bombchus", 'item'),
     'Bombchus (5)':                                             (["a few mice bombs", "a few proximity mice", "a few wall crawlers", "a few trail blazers"], "Bombchus (5 pieces)", 'item'),
