@@ -2,6 +2,7 @@
 #include "dpad.h"
 
 extern uint8_t CFG_DISPLAY_DPAD;
+extern uint8_t CFG_AGELESS_BOOTS;
 
 //unknown 00 is a pointer to some vector transformation when the sound is tied to an actor. actor + 0x3E, when not tied to an actor (map), always 80104394
 //unknown 01 is always 4 in my testing
