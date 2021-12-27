@@ -4453,6 +4453,9 @@ setting_infos = [
             Exceptions are the bow and magic arrows
             as child, hookshot as child, and magic
             beans as adult.
+
+            Not considered by logic. It may be possible
+            to softlock yourself if you are not careful.
         ''',
         default        = False,
         shared         = True,
