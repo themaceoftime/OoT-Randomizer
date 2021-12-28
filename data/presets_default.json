@@ -837,7 +837,7 @@
     "chicken_count": 7,
     "big_poe_count_random": false,
     "big_poe_count": 10,
-    "ocarina_songs": true,
+    "ocarina_songs": "all",
     "correct_chest_sizes": false,
     "clearer_hints": false,
     "no_collectible_hearts": true,
