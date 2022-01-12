@@ -1734,23 +1734,24 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
     write_shop_items(rom, shop_item_file.start + 0x1DEC, shop_items)
 
-    # set end credits text to automatically fade without player input,
-    # with timing depending on the number of lines in the text box
-    for message_id in (0x706F, 0x7091, 0x7092, 0x7093, 0x7094, 0x7095):
-        text_codes = []
-        lines_in_section = 1
-        for code in get_message_by_id(messages, message_id).text_codes:
-            if code.code == 0x04: # box-break
-                text_codes.append(Text_Code(0x0c, 30 * lines_in_section))
-                lines_in_section = 1
-            elif code.code == 0x02: # end
-                text_codes.append(Text_Code(0x0e, 30 * lines_in_section))
-                text_codes.append(code)
-            else:
-                if code.code == 0x01: # line-break
-                    lines_in_section += 1
-                text_codes.append(code)
-        update_message_by_id(messages, message_id, ''.join(code.get_string() for code in text_codes))
+    if world.settings.credits_autoscroll:
+        # set end credits text to automatically fade without player input,
+        # with timing depending on the number of lines in the text box
+        for message_id in (0x706F, 0x7091, 0x7092, 0x7093, 0x7094, 0x7095):
+            text_codes = []
+            lines_in_section = 1
+            for code in get_message_by_id(messages, message_id).text_codes:
+                if code.code == 0x04: # box-break
+                    text_codes.append(Text_Code(0x0c, 40 * lines_in_section))
+                    lines_in_section = 1
+                elif code.code == 0x02: # end
+                    text_codes.append(Text_Code(0x0e, 40 * lines_in_section))
+                    text_codes.append(code)
+                else:
+                    if code.code == 0x01: # line-break
+                        lines_in_section += 1
+                    text_codes.append(code)
+            update_message_by_id(messages, message_id, ''.join(code.get_string() for code in text_codes))
 
     permutation = None
 

@@ -3692,6 +3692,21 @@ setting_infos = [
         shared         = True,
     ),
     Checkbutton(
+        name           = 'credits_autoscroll',
+        gui_text       = 'Automatically Advance Credits Test',
+        gui_tooltip    = '''\
+            Zelda's text boxes in the cutscene that plays
+            after defeating Ganon will automatically fade
+            after a set amount of time, rather than only
+            advancing on player input. This allows the
+            entire cutscene and credits sequence to play
+            automatically from the final hit on Ganon
+            (or the final Triforce Piece).
+        ''',
+        shared         = True,
+        default        = True,
+    ),
+    Checkbutton(
         name           = 'misc_hints',
         gui_text       = 'Misc. Hints',
         gui_tooltip    = '''\
