@@ -360,9 +360,11 @@ class World(object):
             self.settings.trials = dist_num_chosen + random.randint(0, len(trial_pool))
             self.randomized_list.append('trials')
         num_trials = int(self.settings.trials)
-        choosen_trials = random.sample(trial_pool, num_trials - dist_num_chosen)
+        if num_trials < dist_num_chosen:
+            raise RuntimeError("%d trials set to active on world %d, but only %d active trials allowed." % (dist_num_chosen, self.id, num_trials))
+        chosen_trials = random.sample(trial_pool, num_trials - dist_num_chosen)
         for trial in self.skipped_trials:
-            if trial not in choosen_trials and trial not in dist_chosen:
+            if trial not in chosen_trials and trial not in dist_chosen:
                 self.skipped_trials[trial] = True
 
         # Determine MQ Dungeons
@@ -375,6 +377,8 @@ class World(object):
             self.settings.mq_dungeons = list(self.dungeon_mq.values()).count(True)
             self.randomized_list.append('mq_dungeons')
         else:
+            if self.settings.mq_dungeons < dist_num_mq:
+                raise RuntimeError("%d dungeons are set to MQ on world %d, but only %d MQ dungeons allowed." % (dist_num_mq, self.id, self.settings.mq_dungeons))
             mqd_picks = random.sample(dungeon_pool, self.settings.mq_dungeons - dist_num_mq)
             for dung in mqd_picks:
                 self.dungeon_mq[dung] = True
