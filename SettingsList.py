@@ -3577,19 +3577,19 @@ setting_infos = [
         default        = 'off',
         choices        = {
             'off': 'Off',
-            'textures': 'Textures',
-            'sizes': 'Size and Textures'
+            'textures': 'Texture',
+            'sizes': 'Size and Texture'
         },
         gui_tooltip    = '''\
-            Chest style will reflect its contents regardless
-            of size.  Fancy chests will contain keys, Gilded
-            chests will contain major items, shuffled tokens
-            will be in Webbed chests, and Wooden chests
+            If enabled, chest texture will reflect its contents
+            regardless of size.  Fancy chests will contain keys,
+            Gilded chests will contain major items, shuffled
+            tokens will be in Webbed chests, and Wooden chests
             will contain the rest.
             This allows skipping chests if they are wooden. 
             However, skipping wooden chests will mean having 
             low health, ammo, and rupees, so doing so is a risk.
-            Size matches content will change chests with major
+            "Size and Texture" will change chests with major
             items and boss keys into big chests, and everything
             else into small chests.
         ''',
