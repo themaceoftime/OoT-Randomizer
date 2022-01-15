@@ -295,6 +295,9 @@ class WorldDistribution(object):
             if pattern == '#MajorItem':
                 if not self.major_group: # If necessary to compute major_group, do so only once
                     self.major_group = [item for item in group if item in self.base_pool]
+                    # Songs included by default, remove them if songs not set to anywhere
+                    if self.distribution.settings.shuffle_song_items != "any":
+                        self.major_group = [x for x in self.major_group if x not in item_groups['Song']]
                     # Special handling for things not included in base_pool
                     if self.distribution.settings.triforce_hunt:
                         self.major_group.append('Triforce Piece')
@@ -1173,6 +1176,11 @@ class Distribution(object):
                         goal = spoiler.goal_categories[world.id][cat_name].get_goal(goal_name)
                         goal_text = goal.hint_text.replace('#', '')
                         goal_text = goal_text[0].upper() + goal_text[1:]
+                        # Add Token/Triforce Piece reachability data
+                        if goal.items[0]['name'] == 'Triforce Piece':
+                            goal_text +=  ' (' + str(goal.items[0]['quantity']) + '/' + str(world.triforce_count) + ' reachable)'
+                        if goal.items[0]['name'] == 'Gold Skulltula Token':
+                            goal_text +=  ' (' + str(goal.items[0]['quantity']) + '/100 reachable)'
                         world_dist.goal_locations[cat_name][goal_text] = {}
                         for location_world, locations in location_worlds.items():
                             if len(self.world_dists) == 1:

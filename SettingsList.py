@@ -164,7 +164,7 @@ logic_tricks = {
                     going through the Kakariko Village Gate as child
                     when coming from the Mountain Trail side.
                     '''},
-    'Child Deadhand without Kokiri Sword': {
+    'Child Dead Hand without Kokiri Sword': {
         'name'    : 'logic_child_deadhand',
         'tags'    : ("Bottom of the Well",),
         'tooltip' : '''\
@@ -2236,7 +2236,7 @@ setting_infos = [
             to beat the game, but otherwise behaves like 'Required Only'.
             Goal items are the items required for the rainbow bridge and/or Ganon's Boss Key, so for example if the bridge is
             set to 1 Medallion and Ganon's Boss Key to 1 Gold Skulltula Token, all 6 Medallions and all 100 Tokens will
-            be obtainable. In Triforce Hunt, this will also guarantee that all Triforce Pieces can be obtained.
+            be obtainable. In Triforce Hunt, this will instead guarantee that all Triforce Pieces can be obtained.
 
             'Required Only': Only items and locations required to beat the game will be guaranteed reachable.
         ''',
@@ -2399,11 +2399,12 @@ setting_infos = [
     ),
     Checkbutton(
         name           = 'useful_cutscenes',
-        gui_text       = 'Enable Useful Cutscenes',
+        gui_text       = 'Enable Specific Glitch-Useful Cutscenes',
         gui_tooltip    = '''\
-            The cutscenes of the Poes in Forest Temple,
-            Darunia in Fire Temple, and the introduction
-            to Twinrova will not be skipped.
+            The cutscenes of the Poes in Forest Temple and Darunia in
+            Fire Temple will not be skipped. These cutscenes are useful
+            in glitched gameplay only and do not provide any timesave
+            for glitchless playthroughs.
         ''',
         shared         = True,
     ),
@@ -4881,7 +4882,8 @@ def build_close_match(name, value_type, source_list=None):
         source = [x.name for x in setting_infos]
     elif value_type == 'choice':
         source = source_list
-    close_match = difflib.get_close_matches(name, source, 1)
+    # Ensure name and source are type string to prevent errors
+    close_match = difflib.get_close_matches(str(name), map(str, source), 1)
     if len(close_match) > 0:
         return "Did you mean %r?" % (close_match[0])
     return "" # No matches
