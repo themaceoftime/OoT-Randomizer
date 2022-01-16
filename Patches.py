@@ -1070,6 +1070,9 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     save_context.write_bits(0x0EEB, 0x01) # "Entered Dodongo's Cavern"
     save_context.write_bits(0x0F08, 0x08) # "Entered Hyrule Castle"
 
+    if world.dungeon_mq['Shadow Temple']:
+        save_context.write_bits(0x019F, 0x80) # "Turn On Clear Wall Blocking Hover Boots Room"
+
     # Set the number of chickens to collect
     rom.write_byte(0x00E1E523, world.settings.chicken_count)
 

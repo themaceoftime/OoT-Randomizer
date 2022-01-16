@@ -117,6 +117,7 @@ do that.
   * Prevent Dead Hand from spawning outside the room collision.
   * Magic arrows equipped as adult no longer revert to the Bow after traveling through time to child and back.
   * Rainbow Bridge set to vanilla no longer spawns without Light Arrows.
+  * Fix MQ Shadow Template making use of shared flags.
 
 * **Misc**
   * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
