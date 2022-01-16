@@ -3732,16 +3732,27 @@ setting_infos = [
                          ''',
         shared         = True,
     ),
-    Checkbutton(
-        name           = 'correct_chest_sizes',
-        gui_text       = 'Chest Size Matches Contents',
+    Combobox(
+        name           = 'correct_chest_appearances',
+        gui_text       = 'Chest Appearance Matches Contents',
+        default        = 'off',
+        choices        = {
+            'off': 'Off',
+            'textures': 'Texture',
+            'sizes': 'Size and Texture'
+        },
         gui_tooltip    = '''\
-            Chests will be large if they contain a major
-            item and small if they don't. Boss keys will
-            be in gold chests. This allows skipping
-            chests if they are small. However, skipping
-            small chests will mean having low health,
-            ammo, and rupees, so doing so is a risk.
+            If enabled, chest texture will reflect its contents
+            regardless of size.  Fancy chests will contain keys,
+            Gilded chests will contain major items, shuffled
+            tokens will be in Webbed chests, and Wooden chests
+            will contain the rest.
+            This allows skipping chests if they are wooden. 
+            However, skipping wooden chests will mean having 
+            low health, ammo, and rupees, so doing so is a risk.
+            "Size and Texture" will change chests with major
+            items and boss keys into big chests, and everything
+            else into small chests.
         ''',
         shared         = True,
     ),
