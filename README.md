@@ -103,15 +103,17 @@ do that.
 
 #### New Features
 
-* **Gameplay Settings**
+* **Settings**
   * New setting `Dungeon Shortcuts` opens shortcuts in blue warp dungeons to the boss room. This is toggleable per-dungeon, and affects glitchless logic.
   * New setting `Shopsanity Prices` adds additional price range options when Shopsanity is enabled, including "Affordable" which sets all prices to 10 rupees (to match the same option in Scrub Shuffle).
   * `Chest Size Matches Content` has been replaced with `Chest Appearance Matches Content`. Unique textures are applied to chests containing major items, small keys, boss keys, skulltula tokens, and remaining items. An additional option also changes chest sizes like the previous setting.
+  * New cosmetic setting `Disable battle music` turns off the battle music from being near enemies, allowing the background music to continue uninterrupted.
 
-* **Cosmetics**
-  * New setting `Disable battle music` turns off the battle music from being near enemies, allowing the background music to continue uninterrupted.
+* **Gameplay**
+  * Shortened the animation for equipping magic arrows.
 
-* **Bug Fixes**
+
+#### Bug fixes
   * Return the color of the "OK" and "No" options of the warp song prompts to their correct colors in Warp Song Shuffle.
   * Horseback Archery will no longer delay ending based on the fanfare.
   * Prevent Dead Hand from spawning outside the room collision.
@@ -121,11 +123,10 @@ do that.
   * Fix MQ Fire Temple missing the Hammer chest from the map and minimap.
   * Add correct default Goals for Ganon's Boss Key when Light Arrow Cutscene is non-vanilla.
 
-* **Misc**
+#### Other changes
   * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
-  * Shortened the animation for equipping magic arrows.
-  * Warp song prompts (in Warp Song Shuffle) now use the hint area of the destination rather than a separate description.
   * Improve some error messages when running the generator.
+  * Fix logic parser shortcuts not working right in newer Python versions.
 
 ### 6.2
 
