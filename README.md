@@ -103,8 +103,9 @@ do that.
 
 #### New Features
 
-* **Objective Settings**
+* **Settings**
   * New setting `Dungeon Shortcuts` opens shortcuts in blue warp dungeons to the boss room. This is toggleable per-dungeon, and affects glitchless logic.
+  * New setting `Shopsanity Prices` adds additional price range options when Shopsanity is enabled, including "Affordable" which sets all prices to 10 rupees (to match the same option in Scrub Shuffle).
 
 ### 6.2
 

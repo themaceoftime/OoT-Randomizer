@@ -485,7 +485,18 @@ class World(object):
             for location in region.locations:
                 if location.type == 'Shop':
                     if location.name[-1:] in shop_item_indexes[:shop_item_count]:
-                        self.shop_prices[location.name] = int(random.betavariate(1.5, 2) * 60) * 5
+                        if self.settings.shopsanity_prices == 'random':
+                            self.shop_prices[location.name] = int(random.betavariate(1.5, 2) * 60) * 5
+                        elif self.settings.shopsanity_prices == 'random_starting':
+                            self.shop_prices[location.name] = random.randrange(0,100,5)
+                        elif self.settings.shopsanity_prices == 'random_adult':
+                            self.shop_prices[location.name] = random.randrange(0,201,5)
+                        elif self.settings.shopsanity_prices == 'random_giant':
+                            self.shop_prices[location.name] = random.randrange(0,501,5)
+                        elif self.settings.shopsanity_prices == 'random_tycoon':
+                            self.shop_prices[location.name] = random.randrange(0,1000,5)
+                        elif self.settings.shopsanity_prices == 'affordable':
+                            self.shop_prices[location.name] = 10
 
 
     def set_scrub_prices(self):

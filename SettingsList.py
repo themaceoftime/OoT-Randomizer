@@ -2981,6 +2981,9 @@ setting_infos = [
             '4':      '4 Items Per Shop',
             'random': 'Random # of Items Per Shop',
         },
+        disable        = {
+            'off':  {'settings': ['shopsanity_prices']},
+        },
         gui_tooltip    = '''\
             Randomizes Shop contents.
             
@@ -3017,6 +3020,42 @@ setting_infos = [
                 ('4',      1),
                 ('random', 1),
             ],
+        },
+    ),
+    Combobox(
+        name           = 'shopsanity_prices',
+        gui_text       = 'Shopsanity Prices',
+        default        = 'random',
+        choices        = {
+            'random':          'Random',
+            'random_starting':    'Starting Wallet',
+            'random_adult':   'Adult\'s Wallet',
+            'random_giant':    'Giant\'s Wallet',
+            'random_tycoon':   'Tycoon\'s Wallet',
+            'affordable':      'Affordable',
+        },
+        disable        = {
+        },
+        gui_tooltip    = '''\
+            Controls the randomization of prices for shopsanity items.
+            For more control, utilize the plandomizer.
+
+            'Random': The default randomization. Shop prices for
+            shopsanity items will range between 0 to 300 rupees,
+            with a bias towards values slightly below the middle of the
+            range, in multiples of 5.
+
+            'X Wallet': Shop prices for shopsanity items will range
+            between 0 and the specified wallet's maximum capacity,
+            in multiples of 5.
+
+            'Affordable': Shop prices for shopsanity items will be
+            fixed to 10 rupees.
+        ''',
+        disabled_default =  'random',
+        shared         = True,
+        gui_params     = {
+            "hide_when_disabled": True,
         },
     ),
     Combobox(
