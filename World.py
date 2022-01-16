@@ -390,8 +390,6 @@ class World(object):
         for region in region_json:
             new_region = Region(region['region_name'])
             new_region.world = self
-            if 'pretty_name' in region:
-                new_region.pretty_name = region['pretty_name']
             if 'font_color' in region:
                 new_region.font_color = region['font_color']
             if 'scene' in region:
@@ -968,7 +966,7 @@ class World(object):
         # Link's Pocket and None are not real areas
         excluded_areas = [None, "Link's Pocket"]
         for location in self.get_locations():
-            location_hint = get_hint_area(location)
+            location_hint, _ = get_hint_area(location)
 
             # We exclude event and locked locations. This means that medallions
             # and stones are not considered here. This is not really an accurate

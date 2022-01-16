@@ -124,6 +124,7 @@ do that.
 * **Misc**
   * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
   * Shortened the animation for equipping magic arrows.
+  * Warp song prompts (in Warp Song Shuffle) now use the hint area of the destination rather than a separate description.
 
 ### 6.2
 
