@@ -108,6 +108,9 @@ do that.
   * New setting `Shopsanity Prices` adds additional price range options when Shopsanity is enabled, including "Affordable" which sets all prices to 10 rupees (to match the same option in Scrub Shuffle).
   * `Chest Size Matches Content` has been replaced with `Chest Appearance Matches Content`. Unique textures are applied to chests containing major items, small keys, boss keys, skulltula tokens, and remaining items. An additional option also changes chest sizes like the previous setting.
 
+* **Misc**
+  * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
+
 ### 6.2
 
 #### Bug fixes
