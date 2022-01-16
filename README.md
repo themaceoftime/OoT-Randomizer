@@ -118,6 +118,7 @@ do that.
 
 * **Misc**
   * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
+  * Shortened the animation for equipping magic arrows.
 
 ### 6.2
 
