@@ -20348,7 +20348,7 @@
         "Icons": [
           {
             "Icon": 0,
-            "Count": 5,
+            "Count": 6,
             "IconPoints": [
               {
                 "Flag": 1,
@@ -20374,6 +20374,11 @@
                 "Flag": 12,
                 "x": 47,
                 "y": -26
+              },
+              {
+                "Flag": 0,
+                "x": 48,
+                "y": -17
               }
             ]
           },
@@ -20469,12 +20474,18 @@
       {
         "Icons": [
           {
-            "Icon": -1,
-            "Count": 0,
-            "IconPoints": []
+            "Icon": 0,
+            "Count": 1,
+            "IconPoints": [
+              {
+                "Flag": 0,
+                "x": 71,
+                "y": 60
+              }
+            ]
           },
           {
-            "Icon": 0,
+            "Icon": -1,
             "Count": 0,
             "IconPoints": []
           },
