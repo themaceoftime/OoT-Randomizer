@@ -101,6 +101,13 @@ do that.
 
 ### Dev
 
+#### New Features
+
+* **Objective Settings**
+  * New setting `Dungeon Shortcuts` opens shortcuts in blue warp dungeons to the boss room. This is toggleable per-dungeon, and affects glitchless logic.
+
+### 6.2
+
 #### Bug fixes
 
 * Fix seed generation for multiworld with random trials.
