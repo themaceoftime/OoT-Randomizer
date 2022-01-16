@@ -332,7 +332,7 @@
 80401ADC @@swap
 80401B08 after_time_travel
 80401B44 @@going_back
-80401B4C @@done
+80401B64 @@done
 80401B7C update_c_button
 80401BA8 @@return
 80401BB0 after_going_forward
