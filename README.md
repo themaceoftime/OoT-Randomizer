@@ -114,6 +114,7 @@ do that.
 * **Bug Fixes**
   * Return the color of the "OK" and "No" options of the warp song prompts to their correct colors in Warp Song Shuffle.
   * Horseback Archery will no longer delay ending based on the fanfare.
+  * Prevent Dead Hand from spawning outside the room collision.
 
 * **Misc**
   * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
