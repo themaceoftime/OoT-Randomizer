@@ -152,6 +152,7 @@
             "open_door_of_time",
             "zora_fountain",
             "gerudo_fortress",
+            "dungeon_shortcuts",
             "bridge",
             "bridge_medallions",
             "bridge_stones",
@@ -189,6 +190,7 @@
           "settings": [
             "shuffle_song_items",
             "shopsanity",
+            "shopsanity_prices",
             "tokensanity",
             "shuffle_scrubs",
             "shuffle_cows",
@@ -330,7 +332,7 @@
           "row_span": [1,1,1],
           "settings": [
             "ocarina_songs",
-            "correct_chest_sizes",
+            "correct_chest_appearances",
             "clearer_hints",
             "hints",
             "hint_dist",
@@ -451,6 +453,7 @@
           "row_span": [6,6,13],
           "settings": [
             "background_music",
+            "disable_battle_music",
             "fanfares",
             "ocarina_fanfares",
             "sfx_low_hp",
