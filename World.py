@@ -201,6 +201,9 @@ class World(object):
         # Additional Ruto's Letter become Bottle, so we may have to collect two.
         self.max_progressions['Rutos Letter'] = 2
 
+        # Available Gold Skulltula Tokens in world. Set to proper value in ItemPool.py.
+        self.available_tokens = 100
+
         # Disable goal hints if the hint distro does not require them.
         # WOTH locations are always searched.
         self.enable_goal_hints = False
@@ -277,6 +280,7 @@ class World(object):
 
         new_world.always_hints = list(self.always_hints)
         new_world.max_progressions = copy.copy(self.max_progressions)
+        new_world.available_tokens = self.available_tokens
 
         return new_world
 
