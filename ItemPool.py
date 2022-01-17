@@ -766,13 +766,22 @@ def generate_itempool(world):
 
     # set up item pool
     (pool, placed_items) = get_pool_core(world)
+    placed_items_count = {}
     world.itempool = ItemFactory(pool, world)
     for (location, item) in placed_items.items():
+        placed_items_count[item] = placed_items_count.get(item, 0) + 1
         world.push_item(location, ItemFactory(item, world))
         world.get_location(location).locked = True
 
     world.initialize_items()
     world.distribution.set_complete_itempool(world.itempool)
+
+    # make sure that there are enough gold skulltulas for bridge/ganon boss key/lacs
+    gold_skulltula_count = placed_items_count.get("Gold Skulltula Token", 0) \
+                         + pool.count("Gold Skulltula Token") \
+                         + world.distribution.starting_items.get("Gold Skulltula Token", 0)
+    if world.max_progressions["Gold Skulltula Token"] > gold_skulltula_count:
+        raise ValueError(f"Not enough available Gold Skulltula Tokens to meet requirements. Available: {gold_skulltula_count}, Required: {world.max_progressions['Gold Skulltula Token']}.")
 
 
 def try_collect_heart_container(world, pool):
