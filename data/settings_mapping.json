@@ -152,6 +152,7 @@
             "open_door_of_time",
             "zora_fountain",
             "gerudo_fortress",
+            "dungeon_shortcuts",
             "bridge",
             "bridge_medallions",
             "bridge_stones",
@@ -191,6 +192,7 @@
           "settings": [
             "shuffle_song_items",
             "shopsanity",
+            "shopsanity_prices",
             "tokensanity",
             "shuffle_scrubs",
             "shuffle_cows",
