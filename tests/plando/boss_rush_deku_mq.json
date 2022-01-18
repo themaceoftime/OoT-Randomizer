@@ -3,7 +3,10 @@
   "spawn_positions":                         true,
   "shuffle_dungeon_entrances":               true,
   "open_forest":                             "open",
-  "mq_dungeons":                             1,
+  "mq_dungeons_mode":                        "specific",
+  "mq_dungeons_specific":                    [
+    "Deku Tree"
+  ],
   "dungeon_shortcuts":                       ["deku_tree"],
   "starting_equipment":                      [
     "deku_shield",
