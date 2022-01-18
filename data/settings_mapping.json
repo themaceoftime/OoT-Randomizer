@@ -168,6 +168,9 @@
           "row_span": [6,6,9],
           "settings": [
             "starting_age",
+            "mq_dungeons_mode",
+            "mq_dungeons_specific",
+            "mq_dungeons_count",
             "shuffle_interior_entrances",
             "shuffle_grotto_entrances",
             "shuffle_dungeon_entrances",
@@ -178,9 +181,7 @@
             "triforce_hunt",
             "triforce_goal_per_world",
             "bombchus_in_logic",
-            "one_item_per_dungeon",
-            "mq_dungeons_random",
-            "mq_dungeons"
+            "one_item_per_dungeon"
           ]
         },
         {
