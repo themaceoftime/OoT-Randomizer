@@ -18,9 +18,9 @@
         "locations": {
             "Jabu Jabus Belly MQ Second Room Lower Chest": "True",
             "Jabu Jabus Belly MQ Second Room Upper Chest": "
-                here(can_use(Slingshot)) and 
+                here(can_use(Slingshot)) and
                 (can_use(Hover_Boots) or can_use(Hookshot) or
-                at('Jabu Jabus Belly Boss Area', is_child) or
+                at('Jabu Jabus Belly Before Boss', is_child) or
                 jabu_shortcuts)",
             "Jabu Jabus Belly MQ Compass Chest": "
                 can_use(Slingshot) or (has_bombchus and is_child) or
@@ -31,7 +31,7 @@
         "exits": {
             "Jabu Jabus Belly Beginning": "True",
             "Jabu Jabus Belly Main": "can_dive or here(is_child) or logic_jabu_alcove_jump_dive or can_use(Iron_Boots)",
-            "Jabu Jabus Belly Boss Area": "jabu_shortcuts"
+            "Jabu Jabus Belly Before Boss": "jabu_shortcuts or 'Jabu Jabus Belly Floor Lowered'"
         }
     },
     {
@@ -48,9 +48,9 @@
                 (at('Jabu Jabus Belly Depths', True) or jabu_shortcuts) and
                 ((can_use(Hookshot) and can_use(Hover_Boots)) or
                 (here((logic_lens_jabu_mq or can_use(Lens_of_Truth)) and
-                    (can_use(Slingshot) or can_use(Bow) or can_use(Longshot) or
-                    (can_use(Hookshot) and can_use(Iron_Boots) and logic_lens_jabu_mq))) and
-                    (can_use(Boomerang) or (can_use(Hookshot) and can_use(Iron_Boots)))))"
+                (can_use(Slingshot) or can_use(Bow) or can_use(Longshot) or
+                (can_use(Hookshot) and can_use(Iron_Boots) and logic_lens_jabu_mq))) and
+                (can_use(Boomerang) or (can_use(Hookshot) and can_use(Iron_Boots)))))"
         },
         "exits": {
             "Jabu Jabus Belly Elevator Room": "True",
@@ -77,21 +77,22 @@
         },
         "exits": {
             "Jabu Jabus Belly Main": "True",
-            "Jabu Jabus Belly Boss Area": "True"
+            "Jabu Jabus Belly Before Boss": "True"
+        },
+        "events": {
+            "Jabu Jabus Belly Floor Lowered": "True"
         }
     },
     {
-        "region_name": "Jabu Jabus Belly Boss Area",
+        "region_name": "Jabu Jabus Belly Before Boss",
         "dungeon": "Jabu Jabus Belly",
         "locations": {
             "Jabu Jabus Belly MQ Near Boss Chest": "can_use(Slingshot)",
-            "Jabu Jabus Belly Barinade Heart": "can_use(Boomerang) and (Sticks or Kokiri_Sword)",
-            "Barinade": "can_use(Boomerang) and (Sticks or Kokiri_Sword)",
-            "Jabu Jabus Belly MQ GS Near Boss": "can_use(Boomerang) or can_use(Longshot)",
-            "Fairy Pot": "has_bottle"
+            "Jabu Jabus Belly MQ GS Near Boss": "can_use(Boomerang) or can_use(Longshot)"
         },
         "exits": {
-            "Jabu Jabus Belly Main": "True"
+            "Jabu Jabus Belly Main": "True",
+            "Barinade Boss Room": "here(can_use(Slingshot)) or jabu_shortcuts"
         }
     }
 ]

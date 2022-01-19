@@ -922,13 +922,22 @@ logic_tricks = {
                     needing a Bow.
                     Applies in both vanilla and MQ Shadow.
                     '''},
-    'Shadow Temple Bongo Bongo with Nothing': {
+    'Shadow Temple Bongo Bongo without projectiles': {
         'name'    : 'logic_shadow_bongo',
         'tags'    : ("Shadow Temple",),
         'tooltip' : '''\
-                    If Shadow Temple dungeon shortcuts are enabled, 
-                    Bongo Bongo can be fought without projectiles
-                    using precise sword slashes.
+                    Using precise sword slashes, Bongo Bongo can be
+                    defeated without using projectiles.  This is
+                    only relevant in conjunction with Shadow Temple
+                    dungeon shortcuts or shuffled dungeon bosses.
+                    '''},
+    'Shadow Temple Bongo Bongo without Lens of Truth': {
+        'name'    : 'logic_lens_bongo',
+        'tags'    : ("Shadow Temple", "Entrance"),
+        'tooltip' : '''\
+                    Bongo Bongo can be defeated without the use of
+                    Lens of Truth, as the hands give a pretty good
+                    idea of where the eye is.
                     '''},
     'Stop Link the Goron with Din\'s Fire': {
         'name'    : 'logic_link_goron_dins',
@@ -1043,8 +1052,8 @@ logic_tricks = {
                     Skulltula somehow first. It can be killed
                     using Longshot, Bow, Bombchus or Din's Fire.
                     '''},
-    'Jabu Near Boss GS without Boomerang as Adult': {
-        'name'    : 'logic_jabu_boss_gs_adult',
+    'Jabu Near Boss Room with Hover Boots': {
+        'name'    : 'logic_jabu_boss_hover',
         'tags'    : ("Jabu Jabu's Belly", "Skulltulas", "Entrance",),
         'tooltip' : '''\
                     You can easily get over to the door to the
@@ -1054,6 +1063,28 @@ logic_tricks = {
                     switch pressed. One way is to quickly roll
                     from the switch and open the door before it
                     closes.
+                    '''},
+    'Jabu Boss Door Switch with Bombchus': {
+        'name'    : 'logic_jabu_boss_door_chus',
+        'tags'    : ("Jabu Jabu's Belly", "Entrance",),
+        'tooltip' : '''\
+                    You can trigger the switch that opens the 
+                    final door before the Jabu boss room with
+                    a precisely aimed bombchu. 
+                    Since a boomerang is still required to
+                    defeat Barinade, this trick is only useful
+                    in conjunction with shuffled dungeon bosses.
+                    '''},
+    'Jabu Boss Door Switch with Slingshot or Bow': {
+        'name'    : 'logic_jabu_boss_door_bow',
+        'tags'    : ("Jabu Jabu's Belly", "Entrance",),
+        'tooltip' : '''\
+                    You can trigger the switch that opens the 
+                    final door before the Jabu boss room with
+                    a precisely aimed slingshot or bow shot.
+                    Since a boomerang is still required to
+                    defeat Barinade, this trick is only useful
+                    in conjunction with shuffled dungeon bosses.
                     '''},
     'Kakariko Rooftop GS with Hover Boots': {
         'name'    : 'logic_kakariko_rooftop_gs',
@@ -1980,7 +2011,7 @@ setting_infos = [
             True : {
                 'sections' : ['open_section', 'shuffle_section', 'shuffle_dungeon_section'],
                 'settings': ['starting_age', 'shuffle_interior_entrances', 'shuffle_grotto_entrances', 'shuffle_dungeon_entrances',
-                             'shuffle_overworld_entrances', 'owl_drops', 'warp_songs', 'spawn_positions',
+                             'shuffle_bosses', 'shuffle_overworld_entrances', 'owl_drops', 'warp_songs', 'spawn_positions',
                              'triforce_hunt', 'triforce_goal_per_world', 'bombchus_in_logic', 'one_item_per_dungeon'],
             }
         },
@@ -2309,7 +2340,8 @@ setting_infos = [
             'glitchless': {'settings' : ['tricks_list_msg']},
             'glitched'  : {'settings' : ['allowed_tricks', 'shuffle_interior_entrances', 'shuffle_grotto_entrances',
                                          'shuffle_dungeon_entrances', 'shuffle_overworld_entrances', 'owl_drops',
-                                         'warp_songs', 'spawn_positions', 'mq_dungeons_random', 'mq_dungeons', 'dungeon_shortcuts']},
+                                         'warp_songs', 'spawn_positions', 'mq_dungeons_random', 'mq_dungeons',
+                                         'shuffle_bosses', 'dungeon_shortcuts']},
             'none'      : {'settings' : ['allowed_tricks', 'logic_no_night_tokens_without_suns_song', 'reachable_locations']},
         },
         shared         = True,
@@ -2892,6 +2924,20 @@ setting_infos = [
 
             Additionally, the entrances of Deku Tree, Fire Temple and 
             Bottom of the Well are opened for both adult and child.
+        ''',
+        default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Checkbutton(
+        name           = 'shuffle_bosses',
+        gui_text       = 'Shuffle Dungeon Bosses',
+        gui_tooltip    = '''\
+            Shuffle Dungeon Boss Rooms.  This effects all stone and medallion dungeons.
+
+            This means you might e.g. walk through the boss door of Fire Temple and end up at the Morpha fight.
         ''',
         default        = False,
         shared         = True,

@@ -111,6 +111,8 @@ do that.
   * New cosmetic setting `Disable Battle Music` turns off the battle music from being near enemies, allowing the background music to continue uninterrupted.
   * New setting `Plant Magic Beans` automatically plants all the Magic Beans from the start.
   * New setting `Key Rings` which can be enabled per-dungeon to replace all of its individual Small Keys into a singular Small Key Ring containing all the small keys for that dungeon.
+  * New cosmetic setting `Disable battle music` turns off the battle music from being near enemies, allowing the background music to continue uninterrupted.
+  * New setting `Shuffle Boss Entrances` allows boss rooms to be shuffled between dungeons. This is only available in glitchless logic.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
