@@ -2436,7 +2436,7 @@ setting_infos = [
         default        = 'off',
         choices        = {
             'off':       'Off',
-            'choice':    'Choices dungeons',
+            'choice':    'Choice dungeons',
             'all':	  'All dungeons',
             'random': 'Random dungeons'
         },
