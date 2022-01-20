@@ -348,6 +348,7 @@ class World(object):
         if (self.settings.dungeon_shortcuts == 'random'):
             dungeons = ['deku_tree', 'dodongos_cavern', 'jabu_jabus_belly', 'forest_temple', 'fire_temple', 'water_temple', 'shadow_temple', 'spirit_temple']
             self.settings.dungeon_shortcuts_list = random.sample(dungeons, random.randint(0, len(dungeons)))
+            self.randomized_list.append('dungeon_shortcuts_list')
         elif (self.settings.dungeon_shortcuts == 'all'):
             self.settings.dungeon_shortcuts_list = ['deku_tree', 'dodongos_cavern', 'jabu_jabus_belly', 'forest_temple', 'fire_temple', 'water_temple', 'shadow_temple', 'spirit_temple']
 
