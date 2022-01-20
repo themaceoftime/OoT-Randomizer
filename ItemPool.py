@@ -1291,7 +1291,7 @@ def get_pool_core(world):
             world.state.collect(ItemFactory('Small Key (Spirit Temple)'))
             world.state.collect(ItemFactory('Small Key (Spirit Temple)'))
             world.state.collect(ItemFactory('Small Key (Spirit Temple)'))
-        if 'shadow_temple' in world.settings.dungeon_shortcuts:
+        if 'shadow_temple' in world.settings.dungeon_shortcuts_list:
             # Reverse Shadow is broken with vanilla keys in both vanilla/MQ
             world.state.collect(ItemFactory('Small Key (Shadow Temple)'))
             world.state.collect(ItemFactory('Small Key (Shadow Temple)'))

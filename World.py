@@ -343,6 +343,13 @@ class World(object):
         if self.settings.chicken_count_random and 'chicken_count' not in dist_keys:
             self.settings.chicken_count = random.randint(0, 7)
             self.randomized_list.append('chicken_count')
+        
+        # Determine dungeons with shortcuts
+        if (self.settings.dungeon_shortcuts == 'random'):
+            dungeons = ['deku_tree', 'dodongos_cavern', 'jabu_jabus_belly', 'forest_temple', 'fire_temple', 'water_temple', 'shadow_temple', 'spirit_temple']
+            self.settings.dungeon_shortcuts_list = random.sample(dungeons, random.randint(0, len(dungeons)))
+        elif (self.settings.dungeon_shortcuts == 'all'):
+            self.settings.dungeon_shortcuts_list = ['deku_tree', 'dodongos_cavern', 'jabu_jabus_belly', 'forest_temple', 'fire_temple', 'water_temple', 'shadow_temple', 'spirit_temple']
 
         # Handle random Rainbow Bridge condition
         if (self.settings.bridge == 'random'

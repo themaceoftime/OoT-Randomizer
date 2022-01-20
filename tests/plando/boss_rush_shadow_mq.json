@@ -4,7 +4,8 @@
   "shuffle_dungeon_entrances":               true,
   "open_forest":                             "open",
   "mq_dungeons":                             1,
-  "dungeon_shortcuts":                       ["shadow_temple"],
+  "dungeon_shortcuts":                       "choices",
+  "dungeon_shortcuts_list":                       ["shadow_temple"],
   "starting_equipment":                      [
     "deku_shield",
     "kokiri_sword",
