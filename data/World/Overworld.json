@@ -2441,7 +2441,7 @@
             "Shadow Temple Bongo Bongo Heart": "
                 (Kokiri_Sword or is_adult) and (can_use(Hookshot) or can_use(Bow) or can_use(Slingshot) or
                 logic_shadow_bongo) and (can_use(Lens_of_Truth) or logic_lens_bongo)",
-            "Bongo Bongo": ",
+            "Bongo Bongo": "
                 (Kokiri_Sword or is_adult) and (can_use(Hookshot) or can_use(Bow) or can_use(Slingshot) or
                 logic_shadow_bongo) and (can_use(Lens_of_Truth) or logic_lens_bongo)"
         },
