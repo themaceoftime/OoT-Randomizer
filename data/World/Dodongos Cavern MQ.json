@@ -106,8 +106,10 @@
                 (dodongos_cavern_shortcuts and (can_child_attack or Progressive_Strength_Upgrade)) or
                 (Sticks or ((Nuts or Boomerang) and (Kokiri_Sword or Slingshot)))",
             "Fairy Pot": "
-                is_adult or has_explosives or can_use(Dins_Fire) or dodongos_cavern_shortcuts or
-                (Sticks or ((Nuts or Boomerang) and (Kokiri_Sword or Slingshot)))"
+                has_bottle and (
+                    is_adult or has_explosives or can_use(Dins_Fire) or dodongos_cavern_shortcuts or
+                    (Sticks or ((Nuts or Boomerang) and (Kokiri_Sword or Slingshot)))
+                )"
         },
         "exits": {
             "King Dodongo Boss Room": "
