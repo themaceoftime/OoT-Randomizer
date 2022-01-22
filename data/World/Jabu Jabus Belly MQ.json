@@ -27,11 +27,16 @@
                 (logic_jabu_mq_rang_jump and can_use(Boomerang)) or
                 ((can_dive or logic_jabu_alcove_jump_dive or Iron_Boots) and
                 (Bow or Hookshot or has_bombchus) and is_adult)"
+            "Jabu Jabus Belly MQ Near Boss Chest": "
+                here(can_use(Slingshot)) and
+                (can_use(Hover_Boots) or can_use(Hookshot) or jabu_shortcuts or 'Jabu Jabus Belly Floor Lowered')"
         },
         "exits": {
             "Jabu Jabus Belly Beginning": "True",
             "Jabu Jabus Belly Main": "can_dive or here(is_child) or logic_jabu_alcove_jump_dive or can_use(Iron_Boots)",
-            "Jabu Jabus Belly Before Boss": "jabu_shortcuts or 'Jabu Jabus Belly Floor Lowered'"
+            "Jabu Jabus Belly Before Boss": "
+                jabu_shortcuts or 'Jabu Jabus Belly Floor Lowered' or
+                ('Jabu Jabus Belly Parasitic Tentacle Cleared' and (can_use(Hover Boots) or can_use(Hookshot))"
         }
     },
     {
@@ -60,6 +65,9 @@
     {
         "region_name": "Jabu Jabus Belly Depths",
         "dungeon": "Jabu Jabus Belly",
+        "events": {
+            "Jabu Jabus Belly Parasitic Tentacle Cleared": "True"
+        },
         "locations": {
             "Jabu Jabus Belly MQ Falling Like Like Room Chest": "True",
             "Jabu Jabus Belly MQ GS Tailpasaran Room": "Sticks or can_use(Dins_Fire)"
@@ -87,7 +95,6 @@
         "region_name": "Jabu Jabus Belly Before Boss",
         "dungeon": "Jabu Jabus Belly",
         "locations": {
-            "Jabu Jabus Belly MQ Near Boss Chest": "can_use(Slingshot)",
             "Jabu Jabus Belly MQ GS Near Boss": "can_use(Boomerang) or can_use(Longshot)"
         },
         "exits": {
