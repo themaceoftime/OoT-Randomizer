@@ -27,9 +27,6 @@
                 (logic_jabu_mq_rang_jump and can_use(Boomerang)) or
                 ((can_dive or logic_jabu_alcove_jump_dive or Iron_Boots) and
                 (Bow or Hookshot or has_bombchus) and is_adult)"
-            "Jabu Jabus Belly MQ Near Boss Chest": "
-                here(can_use(Slingshot)) and
-                (can_use(Hover_Boots) or can_use(Hookshot) or jabu_shortcuts or 'Jabu Jabus Belly Floor Lowered')"
         },
         "exits": {
             "Jabu Jabus Belly Beginning": "True",
@@ -95,7 +92,8 @@
         "region_name": "Jabu Jabus Belly Before Boss",
         "dungeon": "Jabu Jabus Belly",
         "locations": {
-            "Jabu Jabus Belly MQ GS Near Boss": "can_use(Boomerang) or can_use(Longshot)"
+            "Jabu Jabus Belly MQ GS Near Boss": "can_use(Boomerang) or can_use(Longshot)",
+            "Jabu Jabus Belly MQ Near Boss Chest": "can_use(Slingshot)"
         },
         "exits": {
             "Jabu Jabus Belly Main": "True",
