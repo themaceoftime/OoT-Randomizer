@@ -2133,14 +2133,11 @@ setting_infos = [
             'Random': A random Rainbow Bridge requirement excluding Gold Skulltula Tokens.
         ''',
         shared         = True,
-        disable={
-            'open':       {'settings': ['bridge_medallions', 'bridge_stones', 'bridge_rewards', 'bridge_tokens']},
-            'vanilla':    {'settings': ['bridge_medallions', 'bridge_stones', 'bridge_rewards', 'bridge_tokens']},
-            'stones':     {'settings': ['bridge_medallions', 'bridge_rewards', 'bridge_tokens']},
-            'medallions': {'settings': ['bridge_stones', 'bridge_rewards', 'bridge_tokens']},
-            'dungeons':   {'settings': ['bridge_medallions', 'bridge_stones', 'bridge_tokens']},
-            'tokens':     {'settings': ['bridge_medallions', 'bridge_stones', 'bridge_rewards']},
-            'random':     {'settings': ['bridge_medallions', 'bridge_stones', 'bridge_rewards', 'bridge_tokens']}
+        disable        = {
+            '!stones':     {'settings': ['bridge_stones']},
+            '!medallions': {'settings': ['bridge_medallions']},
+            '!dungeons':   {'settings': ['bridge_rewards']},
+            '!tokens':     {'settings': ['bridge_tokens']},
         },
         gui_params     = {
             'randomize_key': 'randomize_settings',
