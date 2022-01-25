@@ -26,8 +26,8 @@
             "create_wad_file",
             "create_uncompressed_rom",
             "wad_file",
-            "wad_channel_title",
             "wad_channel_id",
+            "wad_channel_title",
             "open_output_dir",
             "open_python_dir"
           ]

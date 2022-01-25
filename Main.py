@@ -87,7 +87,7 @@ def resolve_settings(settings, window=dummy_window()):
 
     # we load the rom before creating the seed so that errors get caught early
     outputting_specific_world = settings.create_uncompressed_rom or settings.create_compressed_rom or settings.create_wad_file
-    using_rom = outputting_specific_world or settings.create_patch_file
+    using_rom = outputting_specific_world or settings.create_patch_file or settings.patch_without_output
     if not (using_rom or settings.patch_without_output) and not settings.create_spoiler:
         raise Exception('You must have at least one output type or spoiler log enabled to produce anything.')
 
@@ -232,8 +232,10 @@ def compress_rom(input_file, output_file, window=dummy_window(), delete_input=Fa
         else:
             compressor_path += "\\Compress32.exe"
     elif platform.system() == 'Linux':
-        if platform.machine() == 'aarch64' or platform.machine() == 'arm64':
+        if platform.machine() in ['arm64', 'aarch64', 'aarch64_be', 'armv8b', 'armv8l']:
             compressor_path += "/Compress_ARM64"
+        elif platform.machine() in ['arm', 'armv7l', 'armhf']:
+            compressor_path += "/Compress_ARM32"
         else:
             compressor_path += "/Compress"
     elif platform.system() == 'Darwin':
@@ -255,10 +257,19 @@ def generate_wad(wad_file, rom_file, output_file, channel_title, channel_id, win
         raise Exception("Cannot open base WAD file.")
 
     gzinject_path = "." if is_bundled() else "gzinject"
+    gzinject_patch_path = gzinject_path + "/ootr.gzi"
     if platform.system() == 'Windows':
-        gzinject_path += "\\gzinject.exe"
+        if 8 * struct.calcsize("P") == 64:
+            gzinject_path += "\\gzinject.exe"
+        else:
+            gzinject_path += "\\gzinject32.exe"
     elif platform.system() == 'Linux':
-        gzinject_path += "/gzinject"
+        if platform.machine() in ['arm64', 'aarch64', 'aarch64_be', 'armv8b', 'armv8l']:
+            gzinject_path += "/gzinject_ARM64"
+        elif platform.machine() in ['arm', 'armv7l', 'armhf']:
+            gzinject_path += "/gzinject_ARM32"
+        else:
+            gzinject_path += "/gzinject"
     elif platform.system() == 'Darwin':
         gzinject_path += "/gzinject.out"
     else:
@@ -267,7 +278,8 @@ def generate_wad(wad_file, rom_file, output_file, channel_title, channel_id, win
 
     run_process(window, logger, [gzinject_path, "-a", "genkey"], b'45e')
     run_process(window, logger, [gzinject_path, "-a", "inject", "--rom", rom_file, "--wad", wad_file,
-                                 "-o", output_file, "-i", channel_id, "-t", channel_title])
+                                 "-o", output_file, "-i", channel_id, "-t", channel_title,
+                                 "-p", gzinject_patch_path, "--cleanup"])
     os.remove("common-key.bin")
     if delete_input:
         os.remove(rom_file)

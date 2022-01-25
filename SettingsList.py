@@ -1930,6 +1930,9 @@ setting_infos = [
     Checkbutton(
         name           = 'create_cosmetics_log',
         gui_text       = 'Create Cosmetics Log',
+        gui_tooltip='''\
+                 Cosmetics Logs are only output if one of the output types below are enabled.
+                 ''',
         default        = True,
         disabled_default = False,
     ),
@@ -1986,15 +1989,15 @@ setting_infos = [
         gui_tooltip    = '''\
             Uncompressed ROMs may be helpful for developers
             but should not be used to play through a seed
-            normally as it can crash in emulators. Use a
-            compressed ROM instead.
+            normally as it will very likely cause crashes.
+            Use a compressed ROM instead.
         ''',
         shared         = False,
     ),
     Setting_Info(
         name        = 'wad_file',
         type        = str,
-        gui_text    = "WAD File",
+        gui_text    = "Base WAD File",
         gui_type    = "Fileinput",
         shared      = False,
         choices     = {},
@@ -2020,7 +2023,7 @@ setting_infos = [
         gui_type    = "Textinput",
         shared      = False,
         choices     = {},
-        default     = "OOTE",
+        default     = "NICE",
         gui_tooltip = """\
             4 characters, should end with E to ensure Dolphin compatibility.
             Note: If you have multiple OoTR WAD files with different Channel IDs installed, the game can crash on a soft reset. Use a Title Deleter to remove old WADs.
@@ -2028,6 +2031,7 @@ setting_infos = [
         gui_params  = {
             "size"               : "small",
             "max_length"         : 4,
+            "no_line_break": True,
             "hide_when_disabled" : True,
         }
     ),
@@ -2043,7 +2047,6 @@ setting_infos = [
         gui_params  = {
             "size"               : "medium",
             "max_length"         : 20,
-            "no_line_break": True,
             "hide_when_disabled" : True,
         }
     ),
@@ -5233,8 +5236,6 @@ def validate_settings(settings_dict):
             continue
         # Ensure that the given choice is a valid choice for the setting
         elif info.choice_list and choice not in info.choice_list:
-            if setting == 'compress_rom' and choice == 'Temp':
-                continue
             raise ValueError('%r is not a valid choice for setting %r. %s' % (choice, setting, build_close_match(choice, 'choice', info.choice_list)))
 
 class UnmappedSettingError(Exception):
