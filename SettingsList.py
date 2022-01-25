@@ -1716,6 +1716,8 @@ setting_infos = [
     Checkbutton('cosmetics_only', None),
     Checkbutton('check_version', None),
     Checkbutton('output_settings', None),
+    Checkbutton('patch_without_output', None),
+    Checkbutton('disable_custom_music', None),
     Checkbutton(
         name           = 'generate_from_file',
         gui_text       = 'Generate From Patch File',
@@ -1724,7 +1726,7 @@ setting_infos = [
             True : {
                 'tabs' : ['main_tab', 'detailed_tab', 'starting_tab', 'other_tab'],
                 'sections' : ['preset_section'],
-                'settings' : ['count', 'create_spoiler', 'world_count', 'enable_distribution_file', 'distribution_file'],
+                'settings' : ['count', 'create_spoiler', 'world_count', 'enable_distribution_file', 'distribution_file', 'create_patch_file'],
             },
             False : {
                 'settings' : ['repatch_cosmetics'],
@@ -1932,40 +1934,62 @@ setting_infos = [
         disabled_default = False,
     ),
     Setting_Info(
-        name           = 'compress_rom',
+        name           = 'output_types',
         type           = str,
-        gui_text       = "Output Type",
-        gui_type       = "Radiobutton",
+        gui_text       = "Output Types",
+        gui_type       = "Textbox",
         shared         = False,
-        choices        = {
-            'WAD':   'WAD File',
-            'True':  'Compressed ROM',
-            'False': 'Uncompressed ROM [Crashes]',
-            'Patch': 'Patch File',
-            'None':  'No Output',
-        },
-        default        = 'True',
-        disable        = {
-            'None':  {'settings' : ['player_num', 'create_cosmetics_log', 'enable_cosmetic_file', 'cosmetic_file', 'rom']},
-            'Patch': {'settings' : ['player_num']},
-            'False': {'settings' : ['player_num']},
-            '!WAD':  {'settings' : ['wad_file', 'wad_channel_title', 'wad_channel_id']},
-
-        },
-        gui_tooltip = '''\
-            The first time compressed generation will take a while,
-            but subsequent generations will be quick. It is highly
-            recommended to compress or the game will crash
-            frequently except on real N64 hardware.
-
+        choices        = {},
+    ),
+    Checkbutton(
+        name           = 'create_patch_file',
+        gui_text       = '.zpf (Patch File)',
+        gui_tooltip    = '''\
             Patch files are used to send the patched data to other
             people without sending the ROM file.
-
-            Wad files are used to play on Wii Virtual Console or Dolphin Emulator
         ''',
-        gui_params={
-            'horizontal': True
+        shared         = False,
+        gui_params     = {
+            "no_line_break": True,
         },
+    ),
+    Checkbutton(
+        name           = 'create_compressed_rom',
+        gui_text       = '.z64 (N64/Emulator)',
+        default        = True,
+        gui_tooltip    = '''\
+            A "compressed" .z64 ROM file for use on
+            N64 emulators or with an N64 flash cart.
+        ''',
+        shared         = False,
+        gui_params     = {
+            "no_line_break": True,
+        },
+    ),
+    Checkbutton(
+        name           = 'create_wad_file',
+        gui_text       = '.wad (Wii VC)',
+        gui_tooltip    = '''\
+            .wad files are used to play on Wii Virtual Console or Dolphin Emulator.
+        ''',
+        shared         = False,
+        disable        = {
+            False: {'settings' : ['wad_file', 'wad_channel_title', 'wad_channel_id']},
+        },
+        gui_params     = {
+            "no_line_break": True,
+        },
+    ),
+    Checkbutton(
+        name           = 'create_uncompressed_rom',
+        gui_text       = 'Uncompressed ROM (Development)',
+        gui_tooltip    = '''\
+            Uncompressed ROMs may be helpful for developers
+            but should not be used to play through a seed
+            normally as it can crash in emulators. Use a
+            compressed ROM instead.
+        ''',
+        shared         = False,
     ),
     Setting_Info(
         name        = 'wad_file',
