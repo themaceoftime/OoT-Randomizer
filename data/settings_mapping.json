@@ -210,6 +210,7 @@
             "shuffle_mapcompass",
             "shuffle_smallkeys",
             "shuffle_hideoutkeys",
+            "key_packs",
             "shuffle_bosskeys",
             "shuffle_ganon_bosskey",
             "ganon_bosskey_medallions",
