@@ -1,7 +1,10 @@
 {
 "seed": "TESTTESTTEST",
 "create_spoiler": true,
-"compress_rom": "None",
+"create_patch_file": false,
+"create_compressed_rom": false,
+"create_wad_file": false,
+"create_uncompressed_rom": false,
 "randomize_settings": false,
 "open_forest": "open",
 "open_kakariko": "open",

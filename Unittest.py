@@ -54,7 +54,10 @@ junk = set(remove_junk_items)
 def make_settings_for_test(settings_dict, seed=None, outfilename=None):
     # Some consistent settings for testability
     settings_dict.update({
-        'compress_rom': "None",
+        'create_patch_file': False,
+        'create_compressed_rom': False,
+        'create_wad_file': False,
+        'create_uncompressed_rom': False,
         'count': 1,
         'create_spoiler': True,
         'output_file': os.path.join(test_dir, 'Output', outfilename),
@@ -95,7 +98,10 @@ def generate_with_plandomizer(filename, live_copy=False):
         settings = Settings({
             'enable_distribution_file': True,
             'distribution_file': os.path.join(test_dir, 'plando', filename + '.json'),
-            'compress_rom': "None",
+            'create_patch_file': False,
+            'create_compressed_rom': False,
+            'create_wad_file': False,
+            'create_uncompressed_rom': False,
             'count': 1,
             'create_spoiler': True,
             'output_file': os.path.join(test_dir, 'Output', filename),
@@ -190,7 +196,11 @@ class TestPlandomizer(unittest.TestCase):
         settings = Settings({
             'enable_distribution_file': True,
             'distribution_file': os.path.join(test_dir, 'plando', filename + '.json'),
-            'compress_rom': "Patch",
+            'patch_without_output': True,
+            'create_patch_file': False,
+            'create_compressed_rom': False,
+            'create_wad_file': False,
+            'create_uncompressed_rom': False,
             'count': 1,
             'create_spoiler': True,
             'create_cosmetics_log': False,
@@ -584,12 +594,15 @@ class TestValidSpoilers(unittest.TestCase):
         random.seed()
         fuzz_settings = [Settings({
             'randomize_settings': True,
-            'compress_rom': "None",
+            'create_patch_file': False,
+            'create_compressed_rom': False,
+            'create_wad_file': False,
+            'create_uncompressed_rom': False,
             'create_spoiler': True,
             'output_file': os.path.join(output_dir, 'fuzz-%d' % i),
         }) for i in range(10)]
-        out_keys = ['randomize_settings', 'compress_rom',
-                    'create_spoiler', 'output_file', 'seed']
+        out_keys = ['randomize_settings', 'create_patch_file', 'create_compressed_rom', 'create_wad_file',
+                    'create_uncompressed_rom', 'patch_without_output', 'create_spoiler', 'output_file', 'seed']
         for settings in fuzz_settings:
             output_file = '%s_Spoiler.json' % settings.output_file
             settings_file = '%s_%s_Settings.json' % (settings.output_file, settings.seed)
