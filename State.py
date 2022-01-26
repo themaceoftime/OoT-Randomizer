@@ -161,7 +161,7 @@ class State(object):
     def remove(self, item):
         if 'Small Key Ring' in item.name:
             keyname = item.name.replace("Ring ", "")
-            self.prog_items[keyname] = 0
+            self.prog_items[keyname] -= 10
         if self.prog_items[item.name] > 0:
             self.prog_items[item.name] -= 1
             if self.prog_items[item.name] <= 0:
