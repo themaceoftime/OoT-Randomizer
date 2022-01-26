@@ -1073,6 +1073,7 @@ def get_pool_core(world):
         else:
             if 'thieves_hideout' in world.settings.key_rings:
                 pool.extend(['Small Key Ring (Thieves Hideout)'])
+                pool.extend(get_junk_item(3))
             else:
                 pool.extend(['Small Key (Thieves Hideout)'] * 4)
         if world.settings.item_pool_value == 'plentiful':

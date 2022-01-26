@@ -147,6 +147,11 @@ class State(object):
     # Be careful using this function. It will not collect any
     # items that may be locked behind the item, only the item itself.
     def collect(self, item):
+        # If this item is a small key ring, we want to logically
+        # consider having as many normal small keys as we could need.
+        if 'Small Key Ring' in item.name:
+            keyname = item.name.replace("Ring ", "")
+            self.prog_items[keyname] += 10
         if item.advancement:
             self.prog_items[item.name] += 1
 
