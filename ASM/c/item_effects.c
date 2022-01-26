@@ -1,4 +1,5 @@
 #include "item_effects.h"
+#include "dungeon_info.h"
 
 #define rupee_cap ((uint16_t*)0x800F8CEC)
 volatile uint8_t MAX_RUPEES = 0;
@@ -67,6 +68,84 @@ void give_small_key(z64_file_t *save, int16_t dungeon_id, int16_t arg2) {
         keys = 0;
     }
     save->dungeon_keys[dungeon_id] = keys + 1;
+}
+
+void give_small_key_pack(z64_file_t *save, int16_t dungeon_id, int16_t arg2) {
+    int8_t keys = save->dungeon_keys[dungeon_id];
+    if (keys < 0) {
+        keys = 0;
+    }
+    int8_t amt = 0;
+    switch(dungeon_id) {
+        case FOREST_ID:
+            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
+                amt = 6;
+            }
+            else {
+                amt = 5;
+            }
+            break;
+        case FIRE_ID:
+            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
+                amt = 5;
+            }
+            else {
+                amt = 8;
+            }
+            break;
+        case WATER_ID:
+            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
+                amt = 2;
+            }
+            else {
+                amt = 6;
+            }
+            break;
+        case SPIRIT_ID:
+            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
+                amt = 7;
+            }
+            else {
+                amt = 5;
+            }
+            break;
+        case SHADOW_ID:
+            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
+                amt = 6;
+            }
+            else {
+                amt = 5;
+            }
+            break;
+        case BOTW_ID:
+            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
+                amt = 2;
+            }
+            else {
+                amt = 3;
+            }
+            break;
+        case GTG_ID:
+            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
+                amt = 3;
+            }
+            else {
+                amt = 9;
+            }
+            break;
+        case FORT_ID:
+            amt = 4;
+            break;
+        case CASTLE_ID:
+            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
+                amt = 3;
+            }
+            else {
+                amt = 2;
+            }
+            break;
+    }
+    save->dungeon_keys[dungeon_id] = keys + amt;
 }
 
 void give_defense(z64_file_t *save, int16_t arg1, int16_t arg2) {
