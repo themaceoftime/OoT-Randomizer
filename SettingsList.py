@@ -3246,8 +3246,11 @@ setting_infos = [
             at once in a ring rather than individually. 
 
             For example, instead of shuffling 5 Forest Temple 
-            small keys into the pool, you will find a key ring
-            which will give you all 5 keys at once.
+            small keys into the pool, you will find a single
+            key ring which will give you all 5 keys at once.
+
+            Selecting key ring for dungeons will have no effect
+            if Small Keys are set to Remove or Vanilla.
 
             Selecting key ring for Thieves' Hideout will have 
             no effect if Thieves' Hideout keys are in vanilla 

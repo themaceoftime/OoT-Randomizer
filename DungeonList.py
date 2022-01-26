@@ -150,7 +150,7 @@ def create_dungeons(world):
         world.load_regions_from_json(dungeon_json)
 
         boss_keys = ItemFactory(['Boss Key (%s)' % name] * dungeon_info['boss_key'])
-        if dungeon_info['id'] in world.settings.key_rings:
+        if dungeon_info['id'] in world.settings.key_rings and world.settings.shuffle_smallkeys != "vanilla":
             small_keys = ItemFactory(['Small Key Ring (%s)' % name])
         else:
             if not world.dungeon_mq[dungeon_info['name']]:
