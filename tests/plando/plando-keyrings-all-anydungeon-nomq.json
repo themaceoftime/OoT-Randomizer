@@ -1,0 +1,18 @@
+{
+  "settings":                  {
+    "shuffle_smallkeys":                       "any_dungeon",
+    "shuffle_hideoutkeys":                     "any_dungeon",
+    "key_rings":                               [
+      "forest_temple",
+      "water_temple",
+      "ganons_castle",
+      "spirit_temple",
+      "thieves_hideout",
+      "fire_temple",
+      "shadow_temple",
+      "gerudo_training_ground",
+      "bottom_of_the_well"
+    ],
+    "mq_dungeons":                             0
+  }
+}
