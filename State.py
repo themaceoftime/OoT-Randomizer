@@ -159,6 +159,9 @@ class State(object):
     # Be careful using this function. It will not uncollect any
     # items that may be locked behind the item, only the item itself.
     def remove(self, item):
+        if 'Small Key Ring' in item.name:
+            keyname = item.name.replace("Ring ", "")
+            self.prog_items[keyname] = 0
         if self.prog_items[item.name] > 0:
             self.prog_items[item.name] -= 1
             if self.prog_items[item.name] <= 0:
