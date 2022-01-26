@@ -154,7 +154,6 @@ SYMBOL TABLE:
 00000000         *UND*	00000000 SILVER_CHEST_BASE_TEXTURE
 00003200 g     F .text	0000006c after_item_received
 000044fc g     F .text	00000008 no_upgrade
-000041bc g     F .text	0000011c give_small_key_pack
 000050d0 g     F .text	00000224 update_navi_colors
 00002ae8 g     F .text	00000148 give_ganon_boss_key
 000046a8 g     F .text	0000001c arrows_to_rupee
@@ -199,6 +198,7 @@ SYMBOL TABLE:
 00000020 g     O .sdata	00000004 text_cursor_border_max
 00000000         *UND*	00000000 DPAD_TEXTURE
 00003000 g     F .text	00000060 push_pending_item
+000041bc g     F .text	0000011c give_small_key_ring
 00000008 g     F .text	0000002c agony_outside_radius_setup
 00002fd8 g     F .text	00000028 set_outgoing_override
 00000024 g     O .sbss	00000004 active_item_object_id

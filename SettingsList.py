@@ -3225,9 +3225,9 @@ setting_infos = [
         },
     ),
     Setting_Info(
-        name           = 'key_packs',
+        name           = 'key_rings',
         type           = list,
-        gui_text       = 'Key Packs',
+        gui_text       = 'Key Rings',
         gui_type       = "MultipleSelect",
         choices        = {
             'hideout': 'Thieves\' Hideout',
@@ -3242,14 +3242,15 @@ setting_infos = [
         },
         default        = [],
         gui_tooltip    = '''\
-            Selected dungeons will have their keys found 
-            in a pack rather than individually.
+            Selected dungeons will have all of their
+            keys found at once in a ring rather than
+            individually. 
 
             For example, instead of shuffling 5 Forest Temple 
-            small keys into the pool, you will find a key pack 
+            small keys into the pool, you will find a key ring
             which will give you all 5 keys at once.
 
-            Selecting key pack for Thieves' Hideout will have 
+            Selecting key ring for Thieves' Hideout will have 
             no effect if Thieves' Hideout keys are in vanilla 
             locations.
         ''',

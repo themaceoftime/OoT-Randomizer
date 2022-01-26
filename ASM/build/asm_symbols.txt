@@ -756,7 +756,7 @@
 80407C5C give_bottle,00000038
 80407C94 give_dungeon_item,00000014
 80407CA8 give_small_key,00000024
-80407CCC give_small_key_pack,0000011C
+80407CCC give_small_key_ring,0000011C
 80407DE8 give_defense,0000001C
 80407E04 give_magic,0000001C
 80407E20 give_double_magic,00000024

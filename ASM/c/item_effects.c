@@ -70,7 +70,7 @@ void give_small_key(z64_file_t *save, int16_t dungeon_id, int16_t arg2) {
     save->dungeon_keys[dungeon_id] = keys + 1;
 }
 
-void give_small_key_pack(z64_file_t *save, int16_t dungeon_id, int16_t arg2) {
+void give_small_key_ring(z64_file_t *save, int16_t dungeon_id, int16_t arg2) {
     int8_t keys = save->dungeon_keys[dungeon_id];
     if (keys < 0) {
         keys = 0;
