@@ -3733,9 +3733,9 @@ setting_infos = [
         },
         gui_tooltip    = '''\
             Will need to memorize a new set of songs.
-            Can be silly, but difficult. Songs are
-            generally sensible, and warp songs are
-            typically more difficult.
+            Can be silly, but difficult. All songs are
+            generally sensible, but warp songs are
+            typically more difficult than frog songs.
             ''',
         shared         = True,
     ),
