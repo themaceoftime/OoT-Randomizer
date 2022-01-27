@@ -225,21 +225,21 @@ def log_and_update_window(window, message):
 
 def compress_rom(input_file, output_file, window=dummy_window(), delete_input=False):
     logger = logging.getLogger('')
-    compressor_path = "." if is_bundled() else "Compress"
+    compressor_path = "./" if is_bundled() else "bin/Compress/"
     if platform.system() == 'Windows':
         if 8 * struct.calcsize("P") == 64:
-            compressor_path += "\\Compress.exe"
+            compressor_path += "Compress.exe"
         else:
-            compressor_path += "\\Compress32.exe"
+            compressor_path += "Compress32.exe"
     elif platform.system() == 'Linux':
         if platform.machine() in ['arm64', 'aarch64', 'aarch64_be', 'armv8b', 'armv8l']:
-            compressor_path += "/Compress_ARM64"
+            compressor_path += "Compress_ARM64"
         elif platform.machine() in ['arm', 'armv7l', 'armhf']:
-            compressor_path += "/Compress_ARM32"
+            compressor_path += "Compress_ARM32"
         else:
-            compressor_path += "/Compress"
+            compressor_path += "Compress"
     elif platform.system() == 'Darwin':
-        compressor_path += "/Compress.out"
+        compressor_path += "Compress.out"
     else:
         logger.info("OS not supported for ROM compression.")
         raise Exception("This operating system does not support ROM compression. You may only output patch files or uncompressed ROMs.")
@@ -256,22 +256,22 @@ def generate_wad(wad_file, rom_file, output_file, channel_title, channel_id, win
     if not os.path.isfile(wad_file):
         raise Exception("Cannot open base WAD file.")
 
-    gzinject_path = "." if is_bundled() else "gzinject"
-    gzinject_patch_path = gzinject_path + "/ootr.gzi"
+    gzinject_path = "./" if is_bundled() else "bin/gzinject/"
+    gzinject_patch_path = gzinject_path + "ootr.gzi"
     if platform.system() == 'Windows':
         if 8 * struct.calcsize("P") == 64:
-            gzinject_path += "\\gzinject.exe"
+            gzinject_path += "gzinject.exe"
         else:
-            gzinject_path += "\\gzinject32.exe"
+            gzinject_path += "gzinject32.exe"
     elif platform.system() == 'Linux':
         if platform.machine() in ['arm64', 'aarch64', 'aarch64_be', 'armv8b', 'armv8l']:
-            gzinject_path += "/gzinject_ARM64"
+            gzinject_path += "gzinject_ARM64"
         elif platform.machine() in ['arm', 'armv7l', 'armhf']:
-            gzinject_path += "/gzinject_ARM32"
+            gzinject_path += "gzinject_ARM32"
         else:
-            gzinject_path += "/gzinject"
+            gzinject_path += "gzinject"
     elif platform.system() == 'Darwin':
-        gzinject_path += "/gzinject.out"
+        gzinject_path += "gzinject.out"
     else:
         logger.info("OS not supported for WAD generation.")
         raise Exception("This operating system does not support outputting .wad files.")

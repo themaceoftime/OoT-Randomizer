@@ -25,6 +25,7 @@ common-key.bin
 *.sav
 *.spec
 .*.sw*
+*.wad
 
 tests/Output
 !tests/*.sav
