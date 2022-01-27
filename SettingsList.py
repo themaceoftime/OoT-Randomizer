@@ -1866,7 +1866,19 @@ setting_infos = [
     # GUI Settings
     Setting_Info('presets',           str, "", "Presetinput", False, {},
         default        = "[New Preset]",
-        gui_tooltip    = 'Select a setting preset to apply.',
+        gui_tooltip    = '''\
+            Select a setting preset to apply.
+
+            Default/Beginner is aimed at those familiar with vanilla who desire a similar progression.
+            No timesaver skips are enabled in this preset and the world begins closed.
+
+            Easy Mode is aimed and those who have perhaps seen a few randomizer runs previously 
+            and/or wish to dive right in. Most timesaver skips are enabled and the world is 
+            more open after leaving Kokiri Forest.
+
+            After a preset is loaded, the settings can be viewed/changed in the other tabs before
+            generating a seed.
+            ''',
     ),
     Setting_Info('open_output_dir',   str, "Open Output Directory", "Button", False, {},
         gui_params = {
