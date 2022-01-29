@@ -97,7 +97,7 @@
         },
         "exits": {
             "Dodongos Cavern Lobby": "True",
-            "King Dodongo Boss Room": "True"
+            "Dodongos Cavern Boss Door": "True"
         }
     }
 ]

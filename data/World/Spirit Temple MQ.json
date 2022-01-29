@@ -66,7 +66,7 @@
             "Mirror Shield Hand": "
                 (Small_Key_Spirit_Temple, 5) and can_play(Song_of_Time) and
                 (logic_lens_spirit_mq or can_use(Lens_of_Truth)) and (has_explosives or Nuts)",
-            "Spirit Temple Before Boss": "spirit_temple_shortcuts"
+            "Spirit Temple Boss Door": "spirit_temple_shortcuts"
         }
     },
     {
@@ -129,16 +129,7 @@
             logic_lens_spirit_mq or can_use(Lens_of_Truth)"
         },
         "exits": {
-            "Spirit Temple Before Boss": "Mirror_Shield"
-        }
-    },
-    {
-        # This apparent redundancy is due to the requirement that connections used by ER match up between normal and MQ,
-        # thus the connection must be "Spirit Temple Before Boss -> Twinrova Boss Room" in both sets of logic.
-        "region_name": "Spirit Temple Before Boss",
-        "dungeon": "Spirit Temple",
-        "exits": {
-            "Twinrova Boss Room": "Boss_Key_Spirit_Temple"
+            "Spirit Temple Boss Door": "Mirror_Shield"
         }
     },
     {

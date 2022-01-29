@@ -161,7 +161,7 @@
             "Forest Temple MQ Basement Chest": "True"
         },
         "exits": {
-            "Phantom Ganon Boss Room": "Boss_Key_Forest_Temple"
+            "Forest Temple Boss Door": "True"
         }
     }
 ]

@@ -154,7 +154,7 @@
             "Forest Temple GS Basement": "can_use(Hookshot) or can_use(Boomerang)"
         },
         "exits": {
-            "Phantom Ganon Boss Room": "Boss_Key_Forest_Temple"
+            "Forest Temple Boss Door": "True"
         }
     }
 ]

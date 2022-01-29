@@ -181,7 +181,7 @@
             "Shadow Temple MQ GS Near Boss": "has_projectile(adult) or can_use(Dins_Fire)"
         },
         "exits": {
-            "Bongo Bongo Boss Room": "Boss_Key_Shadow_Temple"
+            "Shadow Temple Boss Door": "True"
         }
     }
 ]

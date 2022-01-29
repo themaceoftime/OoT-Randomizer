@@ -122,8 +122,8 @@
             "Shadow Temple GS Triple Giant Pot": "True"
         },
         "exits": {
-            "Bongo Bongo Boss Room": "
-                (Small_Key_Shadow_Temple, 5) and Boss_Key_Shadow_Temple and
+            "Shadow Temple Boss Door": "
+                (Small_Key_Shadow_Temple, 5) and
                 (Bow or can_use(Distant_Scarecrow) or (logic_shadow_statue and has_bombchus) or
                 shadow_temple_shortcuts)"
         }
