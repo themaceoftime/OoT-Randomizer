@@ -37,12 +37,12 @@ void handle_dpad() {
 
         if (z64_file.link_age == 1) {
             if (pad_pressed.dr && CAN_USE_CHILD_TRADE) {
-                z64_usebutton(&z64_game,&z64_link,z64_file.items[0x17], 2);
+                z64_usebutton(&z64_game,&z64_link,z64_file.items[Z64_SLOT_CHILD_TRADE], 2);
             }
         }
 
         if (pad_pressed.dd && CAN_USE_OCARINA) {
-            z64_usebutton(&z64_game,&z64_link,z64_file.items[0x07], 2);
+            z64_usebutton(&z64_game,&z64_link,z64_file.items[Z64_SLOT_OCARINA], 2);
         }
     }
 }
@@ -82,17 +82,17 @@ void draw_dpad() {
             }
         }
 
-        if (z64_file.items[0x17] >= 0x21 && z64_file.items[0x17] <= 0x2B && z64_file.link_age == 1) {
+        if (z64_file.items[Z64_SLOT_CHILD_TRADE] >= Z64_ITEM_WEIRD_EGG && z64_file.items[Z64_SLOT_CHILD_TRADE] <= Z64_ITEM_MASK_OF_TRUTH && z64_file.link_age == 1) {
             if(alpha==0xFF && !CAN_USE_CHILD_TRADE) gDPSetPrimColor(db->p++, 0, 0, 0xFF, 0xFF, 0xFF, 0x46);
             else gDPSetPrimColor(db->p++, 0, 0, 0xFF, 0xFF, 0xFF, alpha);
-            sprite_load(db, &items_sprite, z64_file.items[0x17], 1);
+            sprite_load(db, &items_sprite, z64_file.items[Z64_SLOT_CHILD_TRADE], 1);
             sprite_draw(db, &items_sprite, 0, 285, 66, 12, 12);
         }
 
-        if (z64_file.items[0x07] == 0x07 || z64_file.items[0x07] == 0x08) {
+        if (z64_file.items[Z64_SLOT_OCARINA] == Z64_ITEM_FAIRY_OCARINA || z64_file.items[Z64_SLOT_OCARINA] == Z64_ITEM_OCARINA_OF_TIME) {
             if(alpha==0xFF && !CAN_USE_OCARINA) gDPSetPrimColor(db->p++, 0, 0, 0xFF, 0xFF, 0xFF, 0x46);
             else gDPSetPrimColor(db->p++, 0, 0, 0xFF, 0xFF, 0xFF, alpha);
-            sprite_load(db, &items_sprite, z64_file.items[0x07], 1);
+            sprite_load(db, &items_sprite, z64_file.items[Z64_SLOT_OCARINA], 1);
             sprite_draw(db, &items_sprite, 0, 273, 77, 12,12);
         }
 
