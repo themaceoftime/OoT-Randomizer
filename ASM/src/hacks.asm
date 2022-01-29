@@ -2320,9 +2320,5 @@ skip_GS_BGS_text:
 ;==================================================================================================
 ; Prevent Mask de-equip if not on a C-button
 ;==================================================================================================
-.orga 0xBCF854
-    lbu     a2, 0x8B(v1)    ; lbu     a2, 0x69(v1)
-.orga 0xBCF888
-    lbu     a0, 0x8B(v1)    ; lbu     a0, 0x6A(v1)
-.orga 0xBCF8B8
-    lbu     a2, 0x8B(v1)    ; lbu     a2, 0x6B(v1)
+.orga 0xBCF8CC
+    jal     mask_check_trade_slot   ; sb      zero, 0x014F(t0)
