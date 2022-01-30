@@ -239,7 +239,10 @@ def compress_rom(input_file, output_file, window=dummy_window(), delete_input=Fa
         else:
             compressor_path += "Compress"
     elif platform.system() == 'Darwin':
-        compressor_path += "Compress.out"
+        if platform.machine() == 'arm64':
+            compressor_path += "Compress_ARM64.out"
+        else:
+            compressor_path += "Compress.out"
     else:
         logger.info("OS not supported for ROM compression.")
         raise Exception("This operating system does not support ROM compression. You may only output patch files or uncompressed ROMs.")
@@ -271,7 +274,10 @@ def generate_wad(wad_file, rom_file, output_file, channel_title, channel_id, win
         else:
             gzinject_path += "gzinject"
     elif platform.system() == 'Darwin':
-        gzinject_path += "gzinject.out"
+        if platform.machine() == 'arm64':
+            gzinject_path += "gzinject_ARM64.out"
+        else:
+            gzinject_path += "gzinject.out"
     else:
         logger.info("OS not supported for WAD generation.")
         raise Exception("This operating system does not support outputting .wad files.")
