@@ -1834,7 +1834,7 @@ setting_infos = [
             "file_types": [
                 {
                   "name": "Patch File Archive",
-                  "extensions": [ "zpfz", "zpf" ]
+                  "extensions": [ "zpfz", "zpf", "patch" ]
                 },
                 {
                   "name": "All Files",

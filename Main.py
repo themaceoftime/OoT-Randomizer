@@ -27,6 +27,7 @@ from Hints import buildGossipHints
 from HintList import clearHintExclusionCache
 from Utils import default_output_path, is_bundled, subprocess_args, data_path
 from N64Patch import create_patch_file, apply_patch_file
+from MBSDIFFPatch import apply_mbsdiff_patch_file
 from SettingsList import setting_infos, logic_tricks
 from Rules import set_rules, set_shop_rules
 from Plandomizer import Distribution
@@ -473,13 +474,16 @@ def from_patch_file(settings, window=dummy_window()):
     output_path = os.path.join(output_dir, output_filename_base)
 
     window.update_status('Patching ROM')
-    if extension == 'zpf':
-        subfile = None
+    if extension == 'patch':
+        apply_mbsdiff_patch_file(rom, settings.patch_file)
+        create_patch_file(rom, output_path + '.zpf')
     else:
-        subfile = 'P%d.zpf' % (settings.player_num)
-        if not settings.output_file:
-            output_path += 'P%d' % (settings.player_num)
-    apply_patch_file(rom, settings.patch_file, subfile)
+        subfile = None
+        if extension == 'zpfz':
+            subfile = f"P{settings.player_num}.zpf"
+            if not settings.output_file:
+                output_path += f"P{settings.player_num}"
+        apply_patch_file(rom, settings.patch_file, subfile)
     cosmetics_log = None
     if settings.repatch_cosmetics:
         cosmetics_log = patch_cosmetics(settings, rom)
