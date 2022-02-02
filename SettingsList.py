@@ -4093,14 +4093,14 @@ setting_infos = [
     ),
     Checkbutton(
         name           = 'disable_battle_music',
-        gui_text       = 'Disable battle music',
+        gui_text       = 'Disable Battle Music',
         shared         = False,
         cosmetic       = True,
         gui_tooltip    = '''\
             Disable standard battle music.
-	    This prevents background music from being
-	    interrupted by the battle theme when being
-	    near enemies.
+	        This prevents background music from being
+	        interrupted by the battle theme when being
+	        near enemies.
         ''',
         default        = False,
     ),
