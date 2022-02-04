@@ -1,6 +1,6 @@
 OOT wooden chest textures use two RGBA5551-encoded images for the front and sides. The front is a 32x64 pixel (width x height) image, and the side is a 32x32 pixel image. The front is the left half of the front face, which is mirrored by the game to make the full front texture. The side is the upper-left corner of a face, which is mirrored by the game vertically and horizontally to make the full texture. The lid re-uses parts of each texture. These parts are highlighted red in the two images contained in this folder. Vanilla textures can be extracted from decomp in the folder assets/objects/object_box/.
 
-To make a new chest texture from scratch, create two 24-bit PNGs with the dimensions specified above. To patch into the game, the PNGs must be converted to RGBA5551-encoded binary data. This can be accomplished with imagemagick using the following commands:
+To make a new chest texture from scratch, create two 32-bit PNGs (8 bits per color channel + 8bit alpha channel) with the dimensions specified above. To patch into the game, the PNGs must be converted to RGBA5551-encoded binary data. This can be accomplished with imagemagick using the following commands:
 
 front texture (32x64):
 magick -size 32x64 -depth 8 front.png ^
@@ -41,5 +41,5 @@ Chest types for purposes of this feature look up the type from the item table ba
 
 To add a new type or change and existing type, the type definitions in item_table.h and Patches.py must match.
 
-Boss key textures use different a display list for the lid. This appears to use the side texture for both the side and top faces. This display list does not support custom textures, but the actor display list can be changed to use the boss key texture by changing the dlist variable in the draw_chest function in ASM/c/chests.c. It is already applied for boss key chests.
+Boss key textures use a different display list for the lid. This appears to use the side texture for both the side and top faces. This display list does not support custom textures, but the actor display list can be changed to use the boss key texture by changing the dlist variable in the draw_chest function in ASM/c/chests.c. It is already applied for boss key chests.
 
