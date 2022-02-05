@@ -11,7 +11,7 @@ import json
 from enum import Enum
 import itertools
 
-from HintList import getHint, getHintGroup, Hint, hintExclusions
+from HintList import getHint, getDual, getHintGroup, Hint, hintExclusions
 from Item import MakeEventItem
 from Messages import COLOR_MAP, update_message_by_id
 from Region import Region
@@ -745,6 +745,28 @@ def get_overworld_hint(spoiler, world, checked):
 def get_dungeon_hint(spoiler, world, checked):
     return get_specific_hint(spoiler, world, checked, 'dungeon')
 
+def get_dual_hint(spoiler, world, checked):
+    dual_hints = list(filter(lambda hint: hint.name not in checked, getHintGroup('dual', world)))
+    
+    if not dual_hints:
+        return None
+    
+    hint = random.choice(hintGroup)
+    dual = getDual(hint.name)
+    first_location = world.get_location(dual.firstLocation)
+    second_location = world.get_location(dual.secondLocation)
+    
+    checked.add(hint.name)
+    checked.add(first_location.name)
+    checked.add(second_location.name)
+    
+    location_text = hint.text
+    if '#' not in location_text:
+        location_text = '#%s#' % location_text
+    first_item_text = getHint(getItemGenericName(first_location.item), world.settings.clearer_hints).text
+    second_item_text = getHint(getItemGenericName(second_location.item), world.settings.clearer_hints).text
+    
+    return (GossipStone('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), None)
 
 def get_entrance_hint(spoiler, world, checked):
     if not world.entrance_shuffle:
@@ -802,6 +824,7 @@ hint_func = {
     'barren':           get_barren_hint,
     'item':             get_good_item_hint,
     'sometimes':        get_sometimes_hint,
+    'dual':             get_dual_hint,
     'song':             get_song_hint,
     'overworld':        get_overworld_hint,
     'dungeon':          get_dungeon_hint,
@@ -823,6 +846,7 @@ hint_dist_keys = {
     'dungeon',
     'entrance',
     'sometimes',
+    'dual',
     'random',
     'junk',
     'named-item'

@@ -47,6 +47,9 @@ def getHint(name, clearer_hint=False):
     else:
         return Hint(name, textOptions, type)
 
+def getDual(name):
+    firstLocation, secondLocation
+    return Dual(firstLocation, secondLocation)
 
 def getHintGroup(group, world):
     ret = []
@@ -166,6 +169,11 @@ conditional_always = {
 conditional_sometimes = {
     'HC Great Fairy Reward':        lambda world: world.settings.shuffle_interior_entrances == 'off',
     'OGC Great Fairy Reward':       lambda world: world.settings.shuffle_interior_entrances == 'off',
+}
+
+# Some dual hints should only be enabled under certain settings
+conditional_dual = {
+    'LW Deku Theater Rewards':      lambda world: world.settings.complete_mask_quest,
 }
 
 # table of hints, format is (name, hint text, clear hint text, type of hint) there are special characters that are read for certain in game commands:
@@ -401,6 +409,16 @@ hintTable = {
     'Ice Cavern MQ Iron Boots Chest':                              ("a #monster in a frozen cavern# guards", "the #final treasure of Ice Cavern# is", ['dungeon', 'sometimes']),
     'Ganons Castle Shadow Trial Golden Gauntlets Chest':           ("#deep in the test of darkness# lies", "a #like-like in Ganon's Shadow Trial# guards", ['dungeon', 'sometimes']),
     'Ganons Castle MQ Shadow Trial Eye Switch Chest':              ("#deep in the test of darkness# lies", "shooting an #eye switch in Ganon's Shadow Trial# reveals", ['dungeon', 'sometimes']),
+
+    'Deku Theater Rewards':                                        ("the #Lost Woods Stage# offers, for the Skull Mask and Mask of Truth respectively...^", None, ['overworld', 'dual']),
+    'HF Ocarina of Time Retrival':                                 ("During her escape, #Princess Zelda# entrusted you with both...^", None, ['overworld', 'dual']),
+    'Market Bombchu Bowling Rewards':                              ("at the #Bombchu Bowling Alley#, the first and second prizes are...^", None, ['overworld', 'dual']),
+    'LH Fishing Hole Rewards':                                     ("at the #fishing hole# near the lake, catching a big fish gives, as a child and an adult...^", None, ['overworld', 'dual']),
+    'GF Horseback Archery Rewards':                                ("at the #Gerudo Horseback Archery#, scoring 1000 and 1500 gives, respectivaly...^", None, ['overworld', 'dual']),
+
+    'Spirit Temple Child Lower':                                   ("a #child's challenge in the Colossus# gives...^", None, ['dungeon', 'dual']),
+    'Ice Cavern Final Room':                                       ("the #deepest reaches of a frozen cavern# hold...^", None, ['dungeon', 'dual']),
+    'Ice Cavern MQ Final Room':                                    ("the #deepest reaches of a frozen cavern# hold...^", None, ['dungeon', 'dual']),
 
     'KF Kokiri Sword Chest':                                       ("the #hidden treasure of the Kokiri# is", None, 'exclude'),
     'KF Midos Top Left Chest':                                     ("the #leader of the Kokiri# hides", "#inside Mido's house# is", 'exclude'),
@@ -1303,6 +1321,19 @@ hintTable = {
     '2009':                                                     ("Many tricks are up my sleeve,&to save yourself&you'd better leave!", None, 'ganonLine'),
     '2010':                                                     ("After what you did to&Koholint Island, how can&you call me the bad guy?", None, 'ganonLine'),
     '2011':                                                     ("Today, let's begin down&'The Hero is Defeated' timeline.", None, 'ganonLine'),
+}
+
+# Table containing the pairs of locations for the dual hint
+dualTable = {
+    'LW Deku Theater Rewards':                                  ('Deku Theater Skull Mask', 'Deku Theater Mask of Truth'),
+    'HF Ocarina of Time Retrival':                              ('HF Ocarina of Time Item', 'Song from Ocarina of Time'),
+    'Market Bombchu Bowling Rewards':                           ('Market Bombchu Bowling First Prize', 'Market Bombchu Bowling Second Prize'),
+    'LH Fishing Hole Rewards':                                  ('LH Child Fishing', 'LH Adult Fishing'),
+    'GF Horseback Archery Rewards':                             ('GF HBA 1000 Points', 'GF HBA 1500 Points'),
+
+    'Spirit Temple Child Lower':                                ('Spirit Temple Child Bridge Chest', 'Spirit Temple Child Early Torches Chest'),
+    'Ice Cavern Final Room':                                    ('Ice Cavern Iron Boots Chest', 'Sheik in Ice Cavern'),
+    'Ice Cavern MQ Final Room':                                 ('Ice Cavern MQ Iron Boots Chest', 'Sheik in Ice Cavern'),
 }
 
 # Separate table for goal names to avoid duplicates in the hint table.
