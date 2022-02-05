@@ -255,9 +255,9 @@ class Rom(BigStream):
 
 
     # This will scan for any changes that have been made to the DMA table
-    # This assumes any changes here are new files, so this should only be called
+    # By default, this assumes any changes here are new files, so this should only be called
     # after patching in the new files, but before vanilla files are repointed
-    def scan_dmadata_update(self):
+    def scan_dmadata_update(self, preserve_from_file=False, assume_move=False):
         cur = DMADATA_START
         dma_data_end = None
         dma_index = 0
@@ -271,7 +271,12 @@ class Rom(BigStream):
 
             # If the entries do not match, the flag the changed entry
             if not (dma_start == old_dma_start and dma_end == old_dma_end):
-                self.changed_dma[dma_index] = (-1, dma_start, dma_end - dma_start)
+                from_file = -1
+                if preserve_from_file and dma_index in self.changed_dma:
+                    from_file = self.changed_dma[dma_index][0]
+                elif assume_move and dma_index < 1496:
+                    from_file = old_dma_start
+                self.changed_dma[dma_index] = (from_file, dma_start, dma_end - dma_start)
 
             cur += 0x10
             dma_index += 1
