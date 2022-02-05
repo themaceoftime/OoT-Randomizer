@@ -423,9 +423,9 @@ hintTable = {
     'LH Fishing Hole Rewards':                                     ("at the #fishing hole# near the lake, catching a big fish gives, as a child and an adult...^", None, 'dual'),
     'GF Horseback Archery Rewards':                                ("at the #Gerudo Horseback Archery#, scoring 1000 and 1500 gives, respectivaly...^", None, 'dual'),
 
-    'Spirit Temple Child Lower':                                   ("a #child's challenge in the Colossus# gives...^", None, ['dual']),
-    'Ice Cavern Final Room':                                       ("the #deepest reaches of a frozen cavern# hold...^", None, ['dual']),
-    'Ice Cavern MQ Final Room':                                    ("the #deepest reaches of a frozen cavern# hold...^", None, ['dual']),
+    'Spirit Temple Child Lower':                                   ("a #child's challenge in the Colossus# gives...^", None, ['dungeon', 'dual']),
+    'Ice Cavern Final Room':                                       ("the #deepest reaches of a frozen cavern# hold...^", None, ['dungeon', 'dual']),
+    'Ice Cavern MQ Final Room':                                    ("the #deepest reaches of a frozen cavern# hold...^", None, ['dungeon', 'dual']),
 
     'KF Kokiri Sword Chest':                                       ("the #hidden treasure of the Kokiri# is", None, 'exclude'),
     'KF Midos Top Left Chest':                                     ("the #leader of the Kokiri# hides", "#inside Mido's house# is", 'exclude'),
@@ -1340,7 +1340,7 @@ dualTable = {
 
     'Spirit Temple Child Lower':                                ('Spirit Temple Child Bridge Chest', 'Spirit Temple Child Early Torches Chest'),
     'Ice Cavern Final Room':                                    ('Ice Cavern Iron Boots Chest', 'Sheik in Ice Cavern'),
-    # 'Ice Cavern MQ Final Room':                                 ('Ice Cavern MQ Iron Boots Chest', 'Sheik in Ice Cavern'),
+    'Ice Cavern MQ Final Room':                                 ('Ice Cavern MQ Iron Boots Chest', 'Sheik in Ice Cavern'),
 }
 
 # Separate table for goal names to avoid duplicates in the hint table.

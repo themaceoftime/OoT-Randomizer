@@ -766,7 +766,7 @@ def get_dual_hint(spoiler, world, checked):
     first_item_text = getHint(getItemGenericName(first_location.item), world.settings.clearer_hints).text
     second_item_text = getHint(getItemGenericName(second_location.item), world.settings.clearer_hints).text
     
-    return (GossipStone('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), None)
+    return (GossipText('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), first_location)
 
 def get_entrance_hint(spoiler, world, checked):
     if not world.entrance_shuffle:
