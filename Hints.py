@@ -751,7 +751,7 @@ def get_dual_hint(spoiler, world, checked):
     if not dual_hints:
         return None
     
-    hint = random.choice(hintGroup)
+    hint = random.choice(dual_hints)
     dual = getDual(hint.name)
     first_location = world.get_location(dual.firstLocation)
     second_location = world.get_location(dual.secondLocation)

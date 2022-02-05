@@ -37,6 +37,13 @@ class Hint(object):
             else:
                 self.text = text[choice]
 
+class Dual(object):
+    firstLocation = ""
+    secondLocation = ""
+    
+    def __init__(self, firstLocation, secondLocation):
+        self.firstLocation = firstLocation
+        self.secondLocation = secondLocation
 
 def getHint(name, clearer_hint=False):
     textOptions, clearText, type = hintTable[name]
@@ -48,7 +55,7 @@ def getHint(name, clearer_hint=False):
         return Hint(name, textOptions, type)
 
 def getDual(name):
-    firstLocation, secondLocation
+    firstLocation, secondLocation = dualTable[name]
     return Dual(firstLocation, secondLocation)
 
 def getHintGroup(group, world):
@@ -410,15 +417,15 @@ hintTable = {
     'Ganons Castle Shadow Trial Golden Gauntlets Chest':           ("#deep in the test of darkness# lies", "a #like-like in Ganon's Shadow Trial# guards", ['dungeon', 'sometimes']),
     'Ganons Castle MQ Shadow Trial Eye Switch Chest':              ("#deep in the test of darkness# lies", "shooting an #eye switch in Ganon's Shadow Trial# reveals", ['dungeon', 'sometimes']),
 
-    'Deku Theater Rewards':                                        ("the #Lost Woods Stage# offers, for the Skull Mask and Mask of Truth respectively...^", None, ['overworld', 'dual']),
-    'HF Ocarina of Time Retrival':                                 ("During her escape, #Princess Zelda# entrusted you with both...^", None, ['overworld', 'dual']),
-    'Market Bombchu Bowling Rewards':                              ("at the #Bombchu Bowling Alley#, the first and second prizes are...^", None, ['overworld', 'dual']),
-    'LH Fishing Hole Rewards':                                     ("at the #fishing hole# near the lake, catching a big fish gives, as a child and an adult...^", None, ['overworld', 'dual']),
-    'GF Horseback Archery Rewards':                                ("at the #Gerudo Horseback Archery#, scoring 1000 and 1500 gives, respectivaly...^", None, ['overworld', 'dual']),
+    'Deku Theater Rewards':                                        ("the #Lost Woods Stage# offers, for the Skull Mask and Mask of Truth respectively...^", None, 'dual'),
+    'HF Ocarina of Time Retrival':                                 ("During her escape, #Princess Zelda# entrusted you with both...^", None, 'dual'),
+    'Market Bombchu Bowling Rewards':                              ("at the #Bombchu Bowling Alley#, the first and second prizes are...^", None, 'dual'),
+    'LH Fishing Hole Rewards':                                     ("at the #fishing hole# near the lake, catching a big fish gives, as a child and an adult...^", None, 'dual'),
+    'GF Horseback Archery Rewards':                                ("at the #Gerudo Horseback Archery#, scoring 1000 and 1500 gives, respectivaly...^", None, 'dual'),
 
-    'Spirit Temple Child Lower':                                   ("a #child's challenge in the Colossus# gives...^", None, ['dungeon', 'dual']),
-    'Ice Cavern Final Room':                                       ("the #deepest reaches of a frozen cavern# hold...^", None, ['dungeon', 'dual']),
-    'Ice Cavern MQ Final Room':                                    ("the #deepest reaches of a frozen cavern# hold...^", None, ['dungeon', 'dual']),
+    'Spirit Temple Child Lower':                                   ("a #child's challenge in the Colossus# gives...^", None, ['dual']),
+    'Ice Cavern Final Room':                                       ("the #deepest reaches of a frozen cavern# hold...^", None, ['dual']),
+    'Ice Cavern MQ Final Room':                                    ("the #deepest reaches of a frozen cavern# hold...^", None, ['dual']),
 
     'KF Kokiri Sword Chest':                                       ("the #hidden treasure of the Kokiri# is", None, 'exclude'),
     'KF Midos Top Left Chest':                                     ("the #leader of the Kokiri# hides", "#inside Mido's house# is", 'exclude'),
@@ -1325,7 +1332,7 @@ hintTable = {
 
 # Table containing the pairs of locations for the dual hint
 dualTable = {
-    'LW Deku Theater Rewards':                                  ('Deku Theater Skull Mask', 'Deku Theater Mask of Truth'),
+    'Deku Theater Rewards':                                  ('Deku Theater Skull Mask', 'Deku Theater Mask of Truth'),
     'HF Ocarina of Time Retrival':                              ('HF Ocarina of Time Item', 'Song from Ocarina of Time'),
     'Market Bombchu Bowling Rewards':                           ('Market Bombchu Bowling First Prize', 'Market Bombchu Bowling Second Prize'),
     'LH Fishing Hole Rewards':                                  ('LH Child Fishing', 'LH Adult Fishing'),
@@ -1333,7 +1340,7 @@ dualTable = {
 
     'Spirit Temple Child Lower':                                ('Spirit Temple Child Bridge Chest', 'Spirit Temple Child Early Torches Chest'),
     'Ice Cavern Final Room':                                    ('Ice Cavern Iron Boots Chest', 'Sheik in Ice Cavern'),
-    'Ice Cavern MQ Final Room':                                 ('Ice Cavern MQ Iron Boots Chest', 'Sheik in Ice Cavern'),
+    # 'Ice Cavern MQ Final Room':                                 ('Ice Cavern MQ Iron Boots Chest', 'Sheik in Ice Cavern'),
 }
 
 # Separate table for goal names to avoid duplicates in the hint table.
