@@ -456,31 +456,31 @@ hintTable = {
     'Graveyard Royal Family Tomb Contents':                        ("inside the #Royal Family Tomb#, darkness and Redeads guards...^", None, 'dual'),
     'DMC Child Upper Checks':                                      ("at #the crater#, a child can obtain, from a spider and a Business Scrub...^", None, 'dual'),
 
-    'Deku Tree MQ Basement GS':                                    ("at the #base of the Great Deku Tree#, two spiders hold...^", None, ['dungeon', 'dual']),
-    'Dodongos Cavern Upper Business Scrubs':                       ("in the #upper parts of Dodongo's Cavern#, Business Scrubs sell...^", None, ['dungeon', 'dual']),
-    'Dodongos Cavern MQ Larvae Room':                              ("amid #larvaes in Dodongo's Cavern#, one can find...^", None, ['dungeon', 'dual']),
-    'Dodongos Cavern MQ Depths':                                   ("at the #back of Dodongo's Cavern#, spider and ghost guard...^", None, ['dungeon', 'dual']),
-    'Forest Temple Basement':                                      ("in the #lowers part of the Forest Temple#, a chest and a spider hold...^", None, ['dungeon', 'dual']),
-    'Fire Temple Lower Loop':                                      ("in the #lowest part#, a child can find...^", None, ['dungeon', 'dual']),
-    'Water Temple River Loop Chests':                              ("in the #Water Temple#, chests past a shadow fight hold...^", None, ['dungeon', 'dual']),
-    'Water Temple River Checks':                                   ("at the #river of the Water Temple#,a spider and a chest hold...^", None, ['dungeon', 'dual']),
-    'Water Temple North Basement Checks':                          ("the #northern parts of the Water Temple# holds...^", None, ['dungeon', 'dual']),
-    'Water Temple MQ North Basement Checks':                       ("the #northern parts of the Water Temple# holds...^", None, ['dungeon', 'dual']),
-    'Water Temple MQ Lower Checks':                                ("the #lowest parts of the Water Temple# holds...^", None, ['dungeon', 'dual']),
-    'Spirit Temple Colossus Hands':                                ("#the Colossus# hold in the palm of her hands...^", None, ['dungeon', 'dual']),
-    'Spirit Temple Child Lower':                                   ("in #the Spirit Temple, past a narrow path#, a child can find...^", None, ['dungeon', 'dual']),
-    'Spirit Temple Adult Lower':                                   ("in #the Spirit Temple, past a silver block#, an adult can find...^", None, ['dungeon', 'dual']),
-    'Spirit Temple MQ Symphony Room':                              ("in #the Spirit Temple, past five melodies#, a chest and a spider hold...^", None, ['dungeon', 'dual']),
-    'Shadow Temple Spike Walls Room':                              ("in #the depths of the Shadow Temple#, behind spiked walls, chests contain...^", None, ['dungeon', 'dual']),
-    'Shadow Temple MQ Upper Checks':                               ("not far from #the entrance of the Shadow Temple#, chests contain...^", None, ['dungeon', 'dual']),
-    'Shadow Temple MQ Spike Walls Room':                           ("in #the depths of the Shadow Temple#, behind spiked walls, chests contain...^", None, ['dungeon', 'dual']),
-    'Bottom of the Well Inner Rooms GS':                           ("in the #inner rooms of the Well#, spiders hold...^", None, ['dungeon', 'dual']),
-    'Bottom of the Well Dead Hand Room':                           ("at the #bottom of the Well#, Dead Hand's den contains...^", None, ['dungeon', 'dual']),
-    'Bottom of the Well MQ Dead Hand Room':                        ("at the #bottom of the Well#, Dead Hand's den contains...^", None, ['dungeon', 'dual']),
-    'Bottom of the Well MQ Basement':                              ("in the #deepest parts of the Well#, Dead Hand's den contains...^", None, ['dungeon', 'dual']),
-    'Ice Cavern Final Room':                                       ("the #deepest reaches of Ice Cavern# hold...^", None, ['dungeon', 'dual']),
-    'Ice Cavern MQ Final Room':                                    ("the #deepest reaches of Ice Cavern# hold...^", None, ['dungeon', 'dual']),
-    'Ganons Castle Spirit Trial Chests':                           ("within the #Spirit Trial#, chests hold...^", None, ['dungeon', 'dual']),
+    'Deku Tree MQ Basement GS':                                    ("at the #base of the Great Deku Tree#, two spiders hold...^", None, 'dual'),
+    'Dodongos Cavern Upper Business Scrubs':                       ("in the #upper parts of Dodongo's Cavern#, Business Scrubs sell...^", None, 'dual'),
+    'Dodongos Cavern MQ Larvae Room':                              ("amid #larvae in Dodongo's Cavern#, one can find...^", None, 'dual'),
+    'Dodongos Cavern MQ Depths':                                   ("at the #back of Dodongo's Cavern#, spider and ghost guard...^", None, 'dual'),
+    'Forest Temple Basement':                                      ("in the #lowers part of the Forest Temple#, a chest and a spider hold...^", None, 'dual'),
+    'Fire Temple Lower Loop':                                      ("in the #lowest part#, a child can find...^", None, 'dual'),
+    'Water Temple River Loop Chests':                              ("in the #Water Temple#, chests past a shadow fight hold...^", None, 'dual'),
+    'Water Temple River Checks':                                   ("at the #river of the Water Temple#,a spider and a chest hold...^", None, 'dual'),
+    'Water Temple North Basement Checks':                          ("the #northern parts of the Water Temple# holds...^", None, 'dual'),
+    'Water Temple MQ North Basement Checks':                       ("the #northern parts of the Water Temple# holds...^", None, 'dual'),
+    'Water Temple MQ Lower Checks':                                ("the #lowest parts of the Water Temple# holds...^", None, 'dual'),
+    'Spirit Temple Colossus Hands':                                ("#the Colossus# hold in the palm of her hands...^", None, 'dual'),
+    'Spirit Temple Child Lower':                                   ("in #the Spirit Temple, past a narrow path#, a child can find...^", None, 'dual'),
+    'Spirit Temple Adult Lower':                                   ("in #the Spirit Temple, past a silver block#, an adult can find...^", None, 'dual'),
+    'Spirit Temple MQ Symphony Room':                              ("in #the Spirit Temple, past five melodies#, a chest and a spider hold...^", None, 'dual'),
+    'Shadow Temple Spike Walls Room':                              ("in #the depths of the Shadow Temple#, behind spiked walls, chests contain...^", None, 'dual'),
+    'Shadow Temple MQ Upper Checks':                               ("not far from #the entrance of the Shadow Temple#, chests contain...^", None, 'dual'),
+    'Shadow Temple MQ Spike Walls Room':                           ("in #the depths of the Shadow Temple#, behind spiked walls, chests contain...^", None, 'dual'),
+    'Bottom of the Well Inner Rooms GS':                           ("in the #inner rooms of the Well#, spiders hold...^", None, 'dual'),
+    'Bottom of the Well Dead Hand Room':                           ("at the #bottom of the Well#, Dead Hand's den contains...^", None, 'dual'),
+    'Bottom of the Well MQ Dead Hand Room':                        ("at the #bottom of the Well#, Dead Hand's den contains...^", None, 'dual'),
+    'Bottom of the Well MQ Basement':                              ("in the #deepest parts of the Well#, Dead Hand's den contains...^", None, 'dual'),
+    'Ice Cavern Final Room':                                       ("the #deepest reaches of Ice Cavern# hold...^", None, 'dual'),
+    'Ice Cavern MQ Final Room':                                    ("the #deepest reaches of Ice Cavern# hold...^", None, 'dual'),
+    'Ganons Castle Spirit Trial Chests':                           ("within the #Spirit Trial#, chests hold...^", None, 'dual'),
 
     'KF Kokiri Sword Chest':                                       ("the #hidden treasure of the Kokiri# is", None, 'exclude'),
     'KF Midos Top Left Chest':                                     ("the #leader of the Kokiri# hides", "#inside Mido's house# is", 'exclude'),
@@ -1468,13 +1468,18 @@ def hintExclusions(world, clear_cache=False):
                  'overworld',
                  'dungeon',
                  'song',
+                 'dual',
                  'exclude']):
             location_hints.append(hint)
 
     for hint in location_hints:
-        if hint.name not in world_location_names and hint.name not in hintExclusions.exclusions[world.id]:
-            hintExclusions.exclusions[world.id].append(hint.name)
-
+        if 'dual' not in hint.type:
+            if hint.name not in world_location_names and hint.name not in hintExclusions.exclusions[world.id]:
+                hintExclusions.exclusions[world.id].append(hint.name)
+        else:
+            dual = getDual(hint.name)
+            if (dual.firstLocation not in world_location_names or dual.secondLocation not in world_location_names) and hint.name not in hintExclusions.exclusions[world.id]:
+                hintExclusions.exclusions[world.id].append(hint.name)
     return hintExclusions.exclusions[world.id]
 
 
