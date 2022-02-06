@@ -38,12 +38,10 @@ class Hint(object):
                 self.text = text[choice]
 
 class Dual(object):
-    firstLocation = ""
-    secondLocation = ""
+    dualLocation = ""
     
-    def __init__(self, firstLocation, secondLocation):
-        self.firstLocation = firstLocation
-        self.secondLocation = secondLocation
+    def __init__(self, dualLocation):
+        self.dualLocation = dualLocation
 
 def getHint(name, clearer_hint=False):
     textOptions, clearText, type = hintTable[name]
@@ -55,8 +53,8 @@ def getHint(name, clearer_hint=False):
         return Hint(name, textOptions, type)
 
 def getDual(name):
-    firstLocation, secondLocation = dualTable[name]
-    return Dual(firstLocation, secondLocation)
+    dualLocation = dualTable[name]
+    return Dual(dualLocation)
 
 def getHintGroup(group, world):
     ret = []
@@ -71,6 +69,9 @@ def getHintGroup(group, world):
         type_append = False
         if group in ['overworld', 'dungeon', 'sometimes'] and hint.name in conditional_sometimes.keys():
             conditional_keep = conditional_sometimes[hint.name](world)
+            
+        if group == 'dual' and hint.name in conditional_dual.keys():
+            conditional_keep = conditional_dual[hint.name](world)
 
         # Hint inclusion override from distribution
         if group in world.added_hint_types or group in world.item_added_hint_types:
@@ -180,7 +181,30 @@ conditional_sometimes = {
 
 # Some dual hints should only be enabled under certain settings
 conditional_dual = {
-    'LW Deku Theater Rewards':      lambda world: world.settings.complete_mask_quest,
+    'LW Deku Theater Rewards':                                  lambda world: world.settings.complete_mask_quest,
+    'HF Ocarina of Time Retrival':                              lambda world: world.settings.shuffle_ocarinas and world.settings.shuffle_song_items != 'off',
+    'HF Valley Grotto':                                         lambda world: world.settings.shuffle_cows and world.settings.tokensanity in ['overworld', 'all'],
+    'LH Lake Lab Pool':                                         lambda world: world.settings.tokensanity in ['overworld', 'all'],
+    'GV Pieces of Heart Ledges':                                lambda world: not world.settings.shuffle_cows and not world.settings.tokensanity in ['overworld', 'all'],
+    'Colossus Nighttime GS':                                    lambda world: world.settings.tokensanity in ['overworld', 'all'],
+    'Graveyard Royal Family Tomb Contents':                     lambda world: world.settings.shuffle_song_items != 'off',
+    'DMC Child Upper Checks':                                   lambda world: world.settings.tokensanity in ['overworld', 'all'] and world.settings.shuffle_scrubs != 'off',
+
+    'Deku Tree MQ Basement GS':                                 lambda world: world.settings.tokensanity in ['dungeon', 'all'],
+    'Dodongos Cavern Upper Business Scrubs':                    lambda world: world.settings.shuffle_scrubs != 'off',
+    'Dodongos Cavern MQ Larvae Room':                           lambda world: world.settings.tokensanity in ['dungeon', 'all'],
+    'Dodongos Cavern MQ Depths':                                lambda world: world.settings.tokensanity in ['dungeon', 'all'],
+    'Forest Temple Basement':                                   lambda world: world.settings.tokensanity in ['dungeon', 'all'],
+    'Fire Temple Lower Loop':                                   lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
+    'Water Temple River Loop Chests':                           lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
+    'Water Temple River Checks':                                lambda world: world.settings.tokensanity in ['dungeon', 'all'],
+    'Water Temple North Basement Checks':                       lambda world: world.settings.tokensanity in ['dungeon', 'all'],
+    'Water Temple MQ North Basement Checks':                    lambda world: world.settings.tokensanity in ['dungeon', 'all'],
+    'Water Temple MQ Lower Checks':                             lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
+    'Spirit Temple Child Lower':                                lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
+    'Spirit Temple MQ Symphony Room':                           lambda world: world.settings.tokensanity in ['dungeon', 'all'],
+    'Bottom of the Well Inner Rooms GS':                        lambda world: world.settings.tokensanity in ['dungeon', 'all'],
+    'Bottom of the Well MQ Basement':                           lambda world: world.settings.tokensanity in ['dungeon', 'all'],
 }
 
 # table of hints, format is (name, hint text, clear hint text, type of hint) there are special characters that are read for certain in game commands:
@@ -417,15 +441,44 @@ hintTable = {
     'Ganons Castle Shadow Trial Golden Gauntlets Chest':           ("#deep in the test of darkness# lies", "a #like-like in Ganon's Shadow Trial# guards", ['dungeon', 'sometimes']),
     'Ganons Castle MQ Shadow Trial Eye Switch Chest':              ("#deep in the test of darkness# lies", "shooting an #eye switch in Ganon's Shadow Trial# reveals", ['dungeon', 'sometimes']),
 
-    'Deku Theater Rewards':                                        ("the #Lost Woods Stage# offers, for the Skull Mask and Mask of Truth respectively...^", None, 'dual'),
-    'HF Ocarina of Time Retrival':                                 ("During her escape, #Princess Zelda# entrusted you with both...^", None, 'dual'),
+    'Deku Theater Rewards':                                        ("the #Deku Theater# offers, for the Skull Mask and Mask of Truth respectively...^", None, 'dual'),
+    'HF Ocarina of Time Retrival':                                 ("during her escape, #Princess Zelda# entrusted you with both...^", None, 'dual'),
+    'HF Valley Grotto':                                            ("in a grotto in #Hyrule Field, near the valley#, a cow and a spider hold...^", None, 'dual'),
     'Market Bombchu Bowling Rewards':                              ("at the #Bombchu Bowling Alley#, the first and second prizes are...^", None, 'dual'),
-    'LH Fishing Hole Rewards':                                     ("at the #fishing hole# near the lake, catching a big fish gives, as a child and an adult...^", None, 'dual'),
+    'LH Lake Lab Pool':                                            ("reaching the bottom of the pool of the laboratory at Lake Hylia, by diving and with heavy boots, gives...^", None, 'dual'),
+    'LH Fishing Hole Rewards':                                     ("at the #fishing hole# near Lake Hylia, catching a big fish gives, as a child and an adult...^", None, 'dual'),
+    'GV Pieces of Heart Ledges':                                   ("within the #valley#, one can find on the ledges...^", None, 'dual'),
     'GF Horseback Archery Rewards':                                ("at the #Gerudo Horseback Archery#, scoring 1000 and 1500 gives, respectivaly...^", None, 'dual'),
+    'Colossus Nighttime GS':                                       ("#outside the Desert Colossus#, spiders roams at night on palm trees and hills, holding...^", None, 'dual'),
+    'Graveyard Dampe Race Rewards':                                ("running fast to follow #Dampe's ghost# has as rewards...^", None, 'dual'),
+    'Graveyard Royal Family Tomb Contents':                        ("inside the #Royal Family Tomb#, darkness and Redeads guards...^", None, 'dual'),
+    'DMC Child Upper Checks':                                      ("at #the crater#, a child can obtain, from a spider and a Business Scrub...^", None, 'dual'),
 
-    'Spirit Temple Child Lower':                                   ("a #child's challenge in the Colossus# gives...^", None, ['dungeon', 'dual']),
-    'Ice Cavern Final Room':                                       ("the #deepest reaches of a frozen cavern# hold...^", None, ['dungeon', 'dual']),
-    'Ice Cavern MQ Final Room':                                    ("the #deepest reaches of a frozen cavern# hold...^", None, ['dungeon', 'dual']),
+    'Deku Tree MQ Basement GS':                                    ("at the #base of the Great Deku Tree#, two spiders hold...^", None, ['dungeon', 'dual']),
+    'Dodongos Cavern Upper Business Scrubs':                       ("in the #upper parts of Dodongo's Cavern#, Business Scrubs sell...^", None, ['dungeon', 'dual']),
+    'Dodongos Cavern MQ Larvae Room':                              ("amid #larvaes in Dodongo's Cavern#, one can find...^", None, ['dungeon', 'dual']),
+    'Dodongos Cavern MQ Depths':                                   ("at the #back of Dodongo's Cavern#, spider and ghost guard...^", None, ['dungeon', 'dual']),
+    'Forest Temple Basement':                                      ("in the #lowers part of the Forest Temple#, a chest and a spider hold...^", None, ['dungeon', 'dual']),
+    'Fire Temple Lower Loop':                                      ("in the #lowest part#, a child can find...^", None, ['dungeon', 'dual']),
+    'Water Temple River Loop Chests':                              ("in the #Water Temple#, chests past a shadow fight hold...^", None, ['dungeon', 'dual']),
+    'Water Temple River Checks':                                   ("at the #river of the Water Temple#,a spider and a chest hold...^", None, ['dungeon', 'dual']),
+    'Water Temple North Basement Checks':                          ("the #northern parts of the Water Temple# holds...^", None, ['dungeon', 'dual']),
+    'Water Temple MQ North Basement Checks':                       ("the #northern parts of the Water Temple# holds...^", None, ['dungeon', 'dual']),
+    'Water Temple MQ Lower Checks':                                ("the #lowest parts of the Water Temple# holds...^", None, ['dungeon', 'dual']),
+    'Spirit Temple Colossus Hands':                                ("#the Colossus# hold in the palm of her hands...^", None, ['dungeon', 'dual']),
+    'Spirit Temple Child Lower':                                   ("in #the Spirit Temple, past a narrow path#, a child can find...^", None, ['dungeon', 'dual']),
+    'Spirit Temple Adult Lower':                                   ("in #the Spirit Temple, past a silver block#, an adult can find...^", None, ['dungeon', 'dual']),
+    'Spirit Temple MQ Symphony Room':                              ("in #the Spirit Temple, past five melodies#, a chest and a spider hold...^", None, ['dungeon', 'dual']),
+    'Shadow Temple Spike Walls Room':                              ("in #the depths of the Shadow Temple#, behind spiked walls, chests contain...^", None, ['dungeon', 'dual']),
+    'Shadow Temple MQ Upper Checks':                               ("not far from #the entrance of the Shadow Temple#, chests contain...^", None, ['dungeon', 'dual']),
+    'Shadow Temple MQ Spike Walls Room':                           ("in #the depths of the Shadow Temple#, behind spiked walls, chests contain...^", None, ['dungeon', 'dual']),
+    'Bottom of the Well Inner Rooms GS':                           ("in the #inner rooms of the Well#, spiders hold...^", None, ['dungeon', 'dual']),
+    'Bottom of the Well Dead Hand Room':                           ("at the #bottom of the Well#, Dead Hand's den contains...^", None, ['dungeon', 'dual']),
+    'Bottom of the Well MQ Dead Hand Room':                        ("at the #bottom of the Well#, Dead Hand's den contains...^", None, ['dungeon', 'dual']),
+    'Bottom of the Well MQ Basement':                              ("in the #deepest parts of the Well#, Dead Hand's den contains...^", None, ['dungeon', 'dual']),
+    'Ice Cavern Final Room':                                       ("the #deepest reaches of Ice Cavern# hold...^", None, ['dungeon', 'dual']),
+    'Ice Cavern MQ Final Room':                                    ("the #deepest reaches of Ice Cavern# hold...^", None, ['dungeon', 'dual']),
+    'Ganons Castle Spirit Trial Chests':                           ("within the #Spirit Trial#, chests hold...^", None, ['dungeon', 'dual']),
 
     'KF Kokiri Sword Chest':                                       ("the #hidden treasure of the Kokiri# is", None, 'exclude'),
     'KF Midos Top Left Chest':                                     ("the #leader of the Kokiri# hides", "#inside Mido's house# is", 'exclude'),
@@ -1331,16 +1384,46 @@ hintTable = {
 }
 
 # Table containing the pairs of locations for the dual hint
+# The is used in order to add the locations to the checked list
 dualTable = {
-    'Deku Theater Rewards':                                  ('Deku Theater Skull Mask', 'Deku Theater Mask of Truth'),
-    'HF Ocarina of Time Retrival':                              ('HF Ocarina of Time Item', 'Song from Ocarina of Time'),
-    'Market Bombchu Bowling Rewards':                           ('Market Bombchu Bowling First Prize', 'Market Bombchu Bowling Second Prize'),
-    'LH Fishing Hole Rewards':                                  ('LH Child Fishing', 'LH Adult Fishing'),
-    'GF Horseback Archery Rewards':                             ('GF HBA 1000 Points', 'GF HBA 1500 Points'),
+    'Deku Theater Rewards':                                     (['Deku Theater Skull Mask', 'Deku Theater Mask of Truth']),
+    'HF Ocarina of Time Retrival':                              (['HF Ocarina of Time Item', 'Song from Ocarina of Time']),
+    'HF Valley Grotto':                                         (['HF GS Cow Grotto', 'HF Cow Grotto Cow']),
+    'Market Bombchu Bowling Rewards':                           (['Market Bombchu Bowling First Prize', 'Market Bombchu Bowling Second Prize']),
+    'LH Lake Lab Pool':                                         (['LH Lab Dive', 'LH GS Lab Crate']),
+    'LH Fishing Hole Rewards':                                  (['LH Child Fishing', 'LH Adult Fishing']),
+    'GV Pieces of Heart Ledges':                                (['GV Waterfall Freestanding PoH', 'GV Crate Freestanding PoH']),
+    'GF Horseback Archery Rewards':                             (['GF HBA 1000 Points', 'GF HBA 1500 Points']),
+    'Colossus Nighttime GS':                                    (['Colossus GS Tree', 'Colossus GS Hill']),
+    'Graveyard Dampe Race Rewards':                             (['Graveyard Hookshot Chest', 'Graveyard Dampe Race Freestanding PoH']),
+    'Graveyard Royal Family Tomb Contents':                     (['Graveyard Royal Familys Tomb Chest', 'Song from Royal Familys Tomb']),
+    'DMC Child Upper Checks':                                   (['DMC Deku Scrub', 'DMC GS Crate']),
 
-    'Spirit Temple Child Lower':                                ('Spirit Temple Child Bridge Chest', 'Spirit Temple Child Early Torches Chest'),
-    'Ice Cavern Final Room':                                    ('Ice Cavern Iron Boots Chest', 'Sheik in Ice Cavern'),
-    'Ice Cavern MQ Final Room':                                 ('Ice Cavern MQ Iron Boots Chest', 'Sheik in Ice Cavern'),
+    'Deku Tree MQ Basement GS':                                 (['Deku Tree MQ GS Basement Graves Room','Deku Tree MQ GS Basement Back Room']),
+    'Dodongos Cavern Upper Business Scrubs':                    (['Dodongos Cavern Deku Scrub Near Bomb Bag Left', 'Dodongos Cavern Deku Scrub Near Bomb Bag Right']),
+    'Dodongos Cavern MQ Larvae Room':                           (['Dodongos Cavern MQ Larvae Room Chest', 'Dodongos Cavern MQ GS Larvae Room']),
+    'Dodongos Cavern MQ Depths':                                (['Dodongos Cavern MQ GS Back Area' ,'Dodongos Cavern MQ Under Grave Chest']),
+    'Forest Temple Basement':                                   (['Forest Temple Basement Chest', 'Forest Temple GS Basement']),
+    'Fire Temple Lower Loop':                                   (['Fire Temple Flare Dancer Chest', 'Fire Temple Boss Key Chest']),
+    'Water Temple River Loop Chests':                           (['Water Temple Longshot Chest', 'Water Temple River Chest']),
+    'Water Temple River Checks':                                (['Water Temple River Chest', 'Water Temple GS River']),
+    'Water Temple North Basement Checks':                       (['Water Temple GS Near Boss Key Chest', 'Water Temple Boss Key Chest']),
+    'Water Temple MQ North Basement Checks':                    (['Water Temple MQ Freestanding Key', 'Water Temple MQ GS Freestanding Key Area']),
+    'Water Temple MQ Lower Checks':                             (['Water Temple MQ Boss Key Chest', 'Water Temple MQ Freestanding Key']),
+    'Spirit Temple Colossus Hands':                             (['Spirit Temple Silver Gauntlets Chest', 'Spirit Temple Mirror Shield Chest']),
+    'Spirit Temple Child Lower':                                (['Spirit Temple Child Bridge Chest', 'Spirit Temple Child Early Torches Chest']),
+    'Spirit Temple Adult Lower':                                (['Spirit Temple Compass Chest', 'Spirit Temple Early Adult Right Chest']),
+    'Spirit Temple MQ Symphony Room':                           (['Spirit Temple MQ Symphony Room Chest', 'Spirit Temple MQ GS Symphony Room']),
+    'Shadow Temple Spike Walls Room':                           (['Shadow Temple Boss Key Chest', 'Shadow Temple Spike Walls Left Chest']),
+    'Shadow Temple MQ Upper Checks':                            (['Shadow Temple MQ Compass Chest', 'Shadow Temple MQ Hover Boots Chest']),
+    'Shadow Temple MQ Spike Walls Room':                        (['Shadow Temple MQ Boss Key Chest', 'Shadow Temple MQ Spike Walls Left Chest']),
+    'Bottom of the Well Inner Rooms GS':                        (['Bottom of the Well GS West Inner Room', 'Bottom of the Well GS East Inner Room']),
+    'Bottom of the Well Dead Hand Room':                        (['Bottom of the Well Lens of Truth Chest', 'Bottom of the Well Invisible Chest']),
+    'Bottom of the Well MQ Dead Hand Room':                     (['Bottom of the Well MQ Compass Chest', 'Bottom of the Well MQ Dead Hand Freestanding Key']),
+    'Bottom of the Well MQ Basement':                           (['Bottom of the Well MQ GS Basement', 'Bottom of the Well MQ Map Chest']),
+    'Ice Cavern Final Room':                                    (['Ice Cavern Iron Boots Chest', 'Sheik in Ice Cavern']),
+    'Ice Cavern MQ Final Room':                                 (['Ice Cavern MQ Iron Boots Chest', 'Sheik in Ice Cavern']),
+    'Ganons Castle Spirit Trial Chests':                        (['Ganons Castle Spirit Trial Crystal Switch Chest', 'Ganons Castle Spirit Trial Invisible Chest']),
 }
 
 # Separate table for goal names to avoid duplicates in the hint table.

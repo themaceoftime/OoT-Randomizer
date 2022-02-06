@@ -753,8 +753,8 @@ def get_dual_hint(spoiler, world, checked):
     
     hint = random.choice(dual_hints)
     dual = getDual(hint.name)
-    first_location = world.get_location(dual.firstLocation)
-    second_location = world.get_location(dual.secondLocation)
+    second_location = world.get_location(dual.dualLocation.pop())
+    first_location = world.get_location(dual.dualLocation.pop())
     
     checked.add(hint.name)
     checked.add(first_location.name)
