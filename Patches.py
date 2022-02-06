@@ -1742,7 +1742,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         item = read_rom_item(rom, 0x5B)
         item['chest_type'] = SKULL_CHEST_BIG
         write_rom_item(rom, 0x5B, item)
-    if world.settings.correct_chest_appearances == 'sizes':
+    if world.settings.correct_chest_appearances == 'classic':
         key_ids = [0xAF, 0xB0, 0xB1, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7]
         for i in key_ids:
             item = read_rom_item (rom, i)
@@ -1753,14 +1753,14 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     if world.settings.correct_chest_appearances == 'textures':
         symbol = rom.sym('CHEST_TEXTURE_MATCH_CONTENTS')
         rom.write_int32(symbol, 0x00000001)
-    if world.settings.correct_chest_appearances == 'sizes':
+    if world.settings.correct_chest_appearances == 'classic':
         symbol = rom.sym('CHEST_SIZE_MATCH_CONTENTS')
         rom.write_int32(symbol, 0x00000001)
     if world.settings.correct_chest_appearances == 'both':
         symbol = rom.sym('CHEST_SIZE_TEXTURE')
         rom.write_int32(symbol, 0x00000001)
         # Move Ganon's Castle's Zelda's Lullaby Chest back so is reachable if large
-    if world.settings.correct_chest_appearances == 'sizes' or world.settings.correct_chest_appearances == 'both':
+    if world.settings.correct_chest_appearances == 'classic' or world.settings.correct_chest_appearances == 'both':
         if not world.dungeon_mq['Ganons Castle']:
             chest_name = 'Ganons Castle Light Trial Lullaby Chest'
             location = world.get_location(chest_name)

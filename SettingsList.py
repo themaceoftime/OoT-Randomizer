@@ -3739,8 +3739,8 @@ setting_infos = [
         choices        = {
             'off': 'Off',
             'textures': 'Texture',
-            'sizes': 'Size',
-			'both':  'Both Size and Texture'
+            'both':  'Both Size and Texture',
+            'classic': 'Classic'
         },
         gui_tooltip    = '''\
             
@@ -3754,13 +3754,14 @@ setting_infos = [
             However, skipping wooden chests will mean having 
             low health, ammo, and rupees, so doing so is a risk.
             
-            "Size" will change chests with major items and boss keys into big chests.
-            Bosskeys will remain in their fancy chest, while small key will be in a
-            smaller version of the fancy chest.
-			
             "Size and Texture" will change chests with major
             items and boss keys into big chests, and everything
             else into small chests.
+            
+            "Classic" is the behavior of CSMC in previous versions of the randomizer.
+            This will change chests with major items and boss keys into big chests.
+            Boss keys will remain in their fancy chest, while small key will be in a
+            smaller version of the fancy chest.
         ''',
         shared         = True,
     ),
