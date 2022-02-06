@@ -511,6 +511,18 @@ def get_barren_hint(spoiler, world, checked):
 
 def is_not_checked(location, checked):
     return not (location.name in checked or get_hint_area(location)[0] in checked)
+    
+def is_not_checked_dual(world, dual, checked):
+    not_checked = True
+    
+    
+    
+    firstLocation = world.get_location(dual.firstLocation)
+    secondLocation = world.get_location(dual.secondLocation)
+    if firstLocation.name in checked or secondLocation.name in checked or get_hint_area(firstLocation)[0] in checked or get_hint_area(secondLocation)[0] in checked:
+        not_checked = False  
+        
+    return not_checked
 
 
 def get_good_item_hint(spoiler, world, checked):
@@ -746,27 +758,27 @@ def get_dungeon_hint(spoiler, world, checked):
     return get_specific_hint(spoiler, world, checked, 'dungeon')
 
 def get_dual_hint(spoiler, world, checked):
-    dual_hints = list(filter(lambda hint: hint.name not in checked, getHintGroup('dual', world)))
+    hint_group = getHintGroup('dual', world)
+    dual_hints = list(filter(lambda hint: is_not_checked_dual(world, getDual(hint.name), checked), hint_group))
     
     if not dual_hints:
         return None
     
     hint = random.choice(dual_hints)
     dual = getDual(hint.name)
-    second_location = world.get_location(dual.dualLocation.pop())
-    first_location = world.get_location(dual.dualLocation.pop())
-    
-    checked.add(hint.name)
-    checked.add(first_location.name)
-    checked.add(second_location.name)
+    firstLocation = world.get_location(dual.firstLocation)
+    secondLocation = world.get_location(dual.secondLocation)
+
+    checked.add(firstLocation.name)
+    checked.add(secondLocation.name)
     
     location_text = hint.text
     if '#' not in location_text:
         location_text = '#%s#' % location_text
-    first_item_text = getHint(getItemGenericName(first_location.item), world.settings.clearer_hints).text
-    second_item_text = getHint(getItemGenericName(second_location.item), world.settings.clearer_hints).text
+    first_item_text = getHint(getItemGenericName(firstLocation.item), world.settings.clearer_hints).text
+    second_item_text = getHint(getItemGenericName(secondLocation.item), world.settings.clearer_hints).text
     
-    return (GossipText('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), first_location)
+    return (GossipText('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), firstLocation)
 
 def get_entrance_hint(spoiler, world, checked):
     if not world.entrance_shuffle:
