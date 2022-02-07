@@ -450,7 +450,7 @@ hintTable = {
     'LH Lake Lab Pool':                                            ("reaching the bottom of the pool of the laboratory at Lake Hylia, by diving and with heavy boots, gives...^", None, 'dual'),
     'LH Fishing Hole Rewards':                                     ("at the #fishing hole# near Lake Hylia, catching a big fish gives, as a child and an adult...^", None, 'dual'),
     'GV Pieces of Heart Ledges':                                   ("within the #valley#, one can find on the ledges...^", None, 'dual'),
-    'GF Horseback Archery Rewards':                                ("at the #Gerudo Horseback Archery#, scoring 1000 and 1500 gives, respectivaly...^", None, 'dual'),
+    'GF Horseback Archery Rewards':                                ("at the #Gerudo Horseback Archery#, scoring 1000 and 1500 gives, respectively...^", None, 'dual'),
     'Colossus Nighttime GS':                                       ("#outside the Desert Colossus#, spiders roams at night on palm trees and hills, holding...^", None, 'dual'),
     'Graveyard Dampe Race Rewards':                                ("running fast to follow #Dampe's ghost# has as rewards...^", None, 'dual'),
     'Graveyard Royal Family Tomb Contents':                        ("inside the #Royal Family Tomb#, darkness and Redeads guards...^", None, 'dual'),
