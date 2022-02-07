@@ -461,7 +461,7 @@ hintTable = {
     'Dodongos Cavern MQ Larvae Room':                              ("amid #larvae in Dodongo's Cavern#, one can find...^", None, 'dual'),
     'Dodongos Cavern MQ Depths':                                   ("at the #back of Dodongo's Cavern#, spider and ghost guard...^", None, 'dual'),
     'Forest Temple Basement':                                      ("in the #lowers part of the Forest Temple#, a chest and a spider hold...^", None, 'dual'),
-    'Fire Temple Lower Loop':                                      ("in the #lowest part#, a child can find...^", None, 'dual'),
+    'Fire Temple Lower Loop':                                      ("in the #lowest part of the Fire Temple#, the hammer locks...^", None, 'dual'),
     'Water Temple River Loop Chests':                              ("in the #Water Temple#, chests past a shadow fight hold...^", None, 'dual'),
     'Water Temple River Checks':                                   ("at the #river of the Water Temple#,a spider and a chest hold...^", None, 'dual'),
     'Water Temple North Basement Checks':                          ("the #northern parts of the Water Temple# holds...^", None, 'dual'),
