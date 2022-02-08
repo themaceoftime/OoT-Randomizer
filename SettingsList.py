@@ -1880,7 +1880,7 @@ setting_infos = [
             Hell Mode enables every setting to provide maximum randomness, but still uses glitchless
             logic to ensure a beatable seed. However, be aware that all glitchless "tricks" are enabled
             which have the potential to require the player to perform difficult techniques. 
-            Expect an long playthrough, even with good note-taking.
+            Expect a long playthrough, even with good note-taking.
 
             The other presets are for racing and/or touranments. 
 
