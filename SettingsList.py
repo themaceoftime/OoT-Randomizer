@@ -1870,11 +1870,19 @@ setting_infos = [
             Select a setting preset to apply.
 
             Default/Beginner is aimed at those familiar with vanilla who desire a similar progression.
-            No timesaver skips are enabled in this preset and the world begins closed.
+            Uses base glitchless logic. No timesavers (See the tab "Other") are enabled in this preset 
+            and the world begins closed. Expect a long playthrough.
 
-            Easy Mode is aimed and those who have perhaps seen a few randomizer runs previously 
-            and/or wish to dive right in. Most timesaver skips are enabled and the world is 
-            more open after leaving Kokiri Forest.
+            Easy Mode is aimed and those who have perhaps seen a few randomizer runs previously and/or 
+            wish to dive right in. Uses base glitchless logic. Most timesavers (See the tab "Other") 
+            are enabled and the world is more open after leaving Kokiri Forest.
+
+            Hell Mode enables every setting to provide maximum randomness, but still uses glitchless
+            logic to ensure a beatable seed. However, be aware that all glitchless "tricks" are enabled
+            which have the potential to require the player to perform difficult techniques. 
+            Expect an long playthrough, even with good note-taking.
+
+            The other presets are for racing and/or touranments. 
 
             After a preset is loaded, the settings can be viewed/changed in the other tabs before
             generating a seed.
