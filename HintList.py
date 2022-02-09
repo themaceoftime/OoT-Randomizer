@@ -1463,7 +1463,7 @@ def hintExclusions(world, clear_cache=False):
                 hintExclusions.exclusions[world.id].append(hint.name)
         else:
             dual = getDual(hint.name)
-            if (dual.firstLocation not in world_location_names or dual.secondLocation not in world_location_names):
+            if dual.firstLocation not in world_location_names or dual.secondLocation not in world_location_names:
                 hintExclusions.exclusions[world.id].append(hint.name)
             elif world.get_location(dual.firstLocation).locked or world.get_location(dual.secondLocation).locked:
                 hintExclusions.exclusions[world.id].append(hint.name)
