@@ -190,6 +190,7 @@ conditional_dual = {
     'Water Temple River Loop Chests':                           lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
     'Water Temple MQ Lower Checks':                             lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
     'Spirit Temple Child Lower':                                lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
+    'Spirit Temple Adult Lower':                                lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
 }
 
 # table of hints, format is (name, hint text, clear hint text, type of hint) there are special characters that are read for certain in game commands:
@@ -1405,7 +1406,7 @@ dualTable = {
     'Bottom of the Well Inner Rooms GS':                        ('Bottom of the Well GS West Inner Room', 'Bottom of the Well GS East Inner Room'),
     'Bottom of the Well Dead Hand Room':                        ('Bottom of the Well Lens of Truth Chest', 'Bottom of the Well Invisible Chest'),
     'Bottom of the Well MQ Dead Hand Room':                     ('Bottom of the Well MQ Compass Chest', 'Bottom of the Well MQ Dead Hand Freestanding Key'),
-    'Bottom of the Well MQ Basement':                           ('Bottom of the Well MQ GS Basement', 'Bottom of the Well MQ Map Chest'),
+    'Bottom of the Well MQ Basement':                           ('Bottom of the Well MQ GS Basement', 'Bottom of the Well MQ Lens of Truth Chest'),
     'Ice Cavern Final Room':                                    ('Ice Cavern Iron Boots Chest', 'Sheik in Ice Cavern'),
     'Ice Cavern MQ Final Room':                                 ('Ice Cavern MQ Iron Boots Chest', 'Sheik in Ice Cavern'),
     'Ganons Castle Spirit Trial Chests':                        ('Ganons Castle Spirit Trial Crystal Switch Chest', 'Ganons Castle Spirit Trial Invisible Chest'),
