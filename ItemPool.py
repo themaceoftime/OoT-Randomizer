@@ -261,7 +261,7 @@ vanilla_shop_items = {
     'KF Shop Item 8': 'Buy Heart',
     'Kak Potion Shop Item 1': 'Buy Deku Nut (5)',
     'Kak Potion Shop Item 2': 'Buy Fish',
-    'Kak Potion Shop Item 3': 'Buy Red Potion [30]',
+    'Kak Potion Shop Item 3': 'Buy Red Potion for 30',
     'Kak Potion Shop Item 4': 'Buy Green Potion',
     'Kak Potion Shop Item 5': 'Buy Blue Fire',
     'Kak Potion Shop Item 6': 'Buy Bottle Bug',
@@ -277,14 +277,14 @@ vanilla_shop_items = {
     'Market Bombchu Shop Item 8': 'Buy Bombchu (20)',
     'Market Potion Shop Item 1': 'Buy Green Potion',
     'Market Potion Shop Item 2': 'Buy Blue Fire',
-    'Market Potion Shop Item 3': 'Buy Red Potion [30]',
+    'Market Potion Shop Item 3': 'Buy Red Potion for 30',
     'Market Potion Shop Item 4': 'Buy Fairy\'s Spirit',
     'Market Potion Shop Item 5': 'Buy Deku Nut (5)',
     'Market Potion Shop Item 6': 'Buy Bottle Bug',
     'Market Potion Shop Item 7': 'Buy Poe',
     'Market Potion Shop Item 8': 'Buy Fish',
     'Market Bazaar Item 1': 'Buy Hylian Shield',
-    'Market Bazaar Item 2': 'Buy Bombs (5) [35]',
+    'Market Bazaar Item 2': 'Buy Bombs (5) for 35',
     'Market Bazaar Item 3': 'Buy Deku Nut (5)',
     'Market Bazaar Item 4': 'Buy Heart',
     'Market Bazaar Item 5': 'Buy Arrows (10)',
@@ -292,7 +292,7 @@ vanilla_shop_items = {
     'Market Bazaar Item 7': 'Buy Deku Stick (1)',
     'Market Bazaar Item 8': 'Buy Arrows (30)',
     'Kak Bazaar Item 1': 'Buy Hylian Shield',
-    'Kak Bazaar Item 2': 'Buy Bombs (5) [35]',
+    'Kak Bazaar Item 2': 'Buy Bombs (5) for 35',
     'Kak Bazaar Item 3': 'Buy Deku Nut (5)',
     'Kak Bazaar Item 4': 'Buy Heart',
     'Kak Bazaar Item 5': 'Buy Arrows (10)',
@@ -306,14 +306,14 @@ vanilla_shop_items = {
     'ZD Shop Item 5': 'Buy Deku Nut (5)',
     'ZD Shop Item 6': 'Buy Arrows (50)',
     'ZD Shop Item 7': 'Buy Fish',
-    'ZD Shop Item 8': 'Buy Red Potion [50]',
-    'GC Shop Item 1': 'Buy Bombs (5) [25]',
+    'ZD Shop Item 8': 'Buy Red Potion for 50',
+    'GC Shop Item 1': 'Buy Bombs (5) for 25',
     'GC Shop Item 2': 'Buy Bombs (10)',
     'GC Shop Item 3': 'Buy Bombs (20)',
     'GC Shop Item 4': 'Buy Bombs (30)',
     'GC Shop Item 5': 'Buy Goron Tunic',
     'GC Shop Item 6': 'Buy Heart',
-    'GC Shop Item 7': 'Buy Red Potion [40]',
+    'GC Shop Item 7': 'Buy Red Potion for 40',
     'GC Shop Item 8': 'Buy Heart',
 }
 
@@ -328,9 +328,9 @@ min_shop_items = (
     ['Buy Deku Seeds (30)'] +
     ['Buy Arrows (10)'] * 2 + ['Buy Arrows (30)'] + ['Buy Arrows (50)'] +
     ['Buy Bombchu (5)'] + ['Buy Bombchu (10)'] * 2 + ['Buy Bombchu (20)'] +
-    ['Buy Bombs (5) [25]'] + ['Buy Bombs (5) [35]'] + ['Buy Bombs (10)'] + ['Buy Bombs (20)'] +
+    ['Buy Bombs (5) for 25'] + ['Buy Bombs (5) for 35'] + ['Buy Bombs (10)'] + ['Buy Bombs (20)'] +
     ['Buy Green Potion'] +
-    ['Buy Red Potion [30]'] +
+    ['Buy Red Potion for 30'] +
     ['Buy Blue Fire'] +
     ['Buy Fairy\'s Spirit'] +
     ['Buy Bottle Bug'] +
@@ -338,29 +338,29 @@ min_shop_items = (
 
 
 vanilla_deku_scrubs = {
-    'ZR Deku Scrub Grotto Rear': 'Buy Red Potion [30]',
+    'ZR Deku Scrub Grotto Rear': 'Buy Red Potion for 30',
     'ZR Deku Scrub Grotto Front': 'Buy Green Potion',
-    'SFM Deku Scrub Grotto Rear': 'Buy Red Potion [30]',
+    'SFM Deku Scrub Grotto Rear': 'Buy Red Potion for 30',
     'SFM Deku Scrub Grotto Front': 'Buy Green Potion',
     'LH Deku Scrub Grotto Left': 'Buy Deku Nut (5)',
-    'LH Deku Scrub Grotto Right': 'Buy Bombs (5) [35]',
+    'LH Deku Scrub Grotto Right': 'Buy Bombs (5) for 35',
     'LH Deku Scrub Grotto Center': 'Buy Arrows (30)',
-    'GV Deku Scrub Grotto Rear': 'Buy Red Potion [30]',
+    'GV Deku Scrub Grotto Rear': 'Buy Red Potion for 30',
     'GV Deku Scrub Grotto Front': 'Buy Green Potion',
     'LW Deku Scrub Near Deku Theater Right': 'Buy Deku Nut (5)',
     'LW Deku Scrub Near Deku Theater Left': 'Buy Deku Stick (1)',
     'LW Deku Scrub Grotto Rear': 'Buy Arrows (30)',
-    'Colossus Deku Scrub Grotto Rear': 'Buy Red Potion [30]',
+    'Colossus Deku Scrub Grotto Rear': 'Buy Red Potion for 30',
     'Colossus Deku Scrub Grotto Front': 'Buy Green Potion',
-    'DMC Deku Scrub': 'Buy Bombs (5) [35]',
+    'DMC Deku Scrub': 'Buy Bombs (5) for 35',
     'DMC Deku Scrub Grotto Left': 'Buy Deku Nut (5)',
-    'DMC Deku Scrub Grotto Right': 'Buy Bombs (5) [35]',
+    'DMC Deku Scrub Grotto Right': 'Buy Bombs (5) for 35',
     'DMC Deku Scrub Grotto Center': 'Buy Arrows (30)',
     'GC Deku Scrub Grotto Left': 'Buy Deku Nut (5)',
-    'GC Deku Scrub Grotto Right': 'Buy Bombs (5) [35]',
+    'GC Deku Scrub Grotto Right': 'Buy Bombs (5) for 35',
     'GC Deku Scrub Grotto Center': 'Buy Arrows (30)',
     'LLR Deku Scrub Grotto Left': 'Buy Deku Nut (5)',
-    'LLR Deku Scrub Grotto Right': 'Buy Bombs (5) [35]',
+    'LLR Deku Scrub Grotto Right': 'Buy Bombs (5) for 35',
     'LLR Deku Scrub Grotto Center': 'Buy Arrows (30)',
 }
 
@@ -1166,7 +1166,7 @@ def get_pool_core(world):
             placed_items['Dodongos Cavern MQ Deku Scrub Lobby Rear'] = 'Buy Deku Stick (1)'
             placed_items['Dodongos Cavern MQ Deku Scrub Lobby Front'] = 'Buy Deku Seeds (30)'
             placed_items['Dodongos Cavern MQ Deku Scrub Staircase'] = 'Buy Deku Shield'
-            placed_items['Dodongos Cavern MQ Deku Scrub Side Room Near Lower Lizalfos'] = 'Buy Red Potion [30]'
+            placed_items['Dodongos Cavern MQ Deku Scrub Side Room Near Lower Lizalfos'] = 'Buy Red Potion for 30'
         else:
             placed_items['Dodongos Cavern Deku Scrub Near Bomb Bag Left'] = 'Buy Deku Nut (5)'
             placed_items['Dodongos Cavern Deku Scrub Side Room Near Dodongos'] = 'Buy Deku Stick (1)'
@@ -1176,14 +1176,14 @@ def get_pool_core(world):
             placed_items['Jabu Jabus Belly Deku Scrub'] = 'Buy Deku Nut (5)'
         if world.dungeon_mq['Ganons Castle']:
             placed_items['Ganons Castle MQ Deku Scrub Right'] = 'Buy Deku Nut (5)'
-            placed_items['Ganons Castle MQ Deku Scrub Center-Left'] = 'Buy Bombs (5) [35]'
+            placed_items['Ganons Castle MQ Deku Scrub Center-Left'] = 'Buy Bombs (5) for 35'
             placed_items['Ganons Castle MQ Deku Scrub Center'] = 'Buy Arrows (30)'
-            placed_items['Ganons Castle MQ Deku Scrub Center-Right'] = 'Buy Red Potion [30]'
+            placed_items['Ganons Castle MQ Deku Scrub Center-Right'] = 'Buy Red Potion for 30'
             placed_items['Ganons Castle MQ Deku Scrub Left'] = 'Buy Green Potion'
         else:
-            placed_items['Ganons Castle Deku Scrub Center-Left'] = 'Buy Bombs (5) [35]'
+            placed_items['Ganons Castle Deku Scrub Center-Left'] = 'Buy Bombs (5) for 35'
             placed_items['Ganons Castle Deku Scrub Center-Right'] = 'Buy Arrows (30)'
-            placed_items['Ganons Castle Deku Scrub Right'] = 'Buy Red Potion [30]'
+            placed_items['Ganons Castle Deku Scrub Right'] = 'Buy Red Potion for 30'
             placed_items['Ganons Castle Deku Scrub Left'] = 'Buy Green Potion'
         placed_items.update(vanilla_deku_scrubs)
 
