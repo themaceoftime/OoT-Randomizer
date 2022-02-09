@@ -184,29 +184,12 @@ conditional_sometimes = {
 # Some dual hints should only be enabled under certain settings
 conditional_dual = {
     'LW Deku Theater Rewards':                                  lambda world: world.settings.complete_mask_quest,
-    'HF Ocarina of Time Retrival':                              lambda world: world.settings.shuffle_ocarinas and world.settings.shuffle_song_items != 'off',
-    'HF Valley Grotto':                                         lambda world: world.settings.shuffle_cows and world.settings.tokensanity in ['overworld', 'all'],
-    'LH Lake Lab Pool':                                         lambda world: world.settings.tokensanity in ['overworld', 'all'],
     'GV Pieces of Heart Ledges':                                lambda world: not world.settings.shuffle_cows and not world.settings.tokensanity in ['overworld', 'all'],
-    'Colossus Nighttime GS':                                    lambda world: world.settings.tokensanity in ['overworld', 'all'],
-    'Graveyard Royal Family Tomb Contents':                     lambda world: world.settings.shuffle_song_items != 'off',
-    'DMC Child Upper Checks':                                   lambda world: world.settings.tokensanity in ['overworld', 'all'] and world.settings.shuffle_scrubs != 'off',
 
-    'Deku Tree MQ Basement GS':                                 lambda world: world.settings.tokensanity in ['dungeon', 'all'],
-    'Dodongos Cavern Upper Business Scrubs':                    lambda world: world.settings.shuffle_scrubs != 'off',
-    'Dodongos Cavern MQ Larvae Room':                           lambda world: world.settings.tokensanity in ['dungeon', 'all'],
-    'Dodongos Cavern MQ Depths':                                lambda world: world.settings.tokensanity in ['dungeon', 'all'],
-    'Forest Temple Basement':                                   lambda world: world.settings.tokensanity in ['dungeon', 'all'],
     'Fire Temple Lower Loop':                                   lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
     'Water Temple River Loop Chests':                           lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
-    'Water Temple River Checks':                                lambda world: world.settings.tokensanity in ['dungeon', 'all'],
-    'Water Temple North Basement Checks':                       lambda world: world.settings.tokensanity in ['dungeon', 'all'],
-    'Water Temple MQ North Basement Checks':                    lambda world: world.settings.tokensanity in ['dungeon', 'all'],
     'Water Temple MQ Lower Checks':                             lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
     'Spirit Temple Child Lower':                                lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
-    'Spirit Temple MQ Symphony Room':                           lambda world: world.settings.tokensanity in ['dungeon', 'all'],
-    'Bottom of the Well Inner Rooms GS':                        lambda world: world.settings.tokensanity in ['dungeon', 'all'],
-    'Bottom of the Well MQ Basement':                           lambda world: world.settings.tokensanity in ['dungeon', 'all'],
 }
 
 # table of hints, format is (name, hint text, clear hint text, type of hint) there are special characters that are read for certain in game commands:
@@ -1456,6 +1439,8 @@ def hintExclusions(world, clear_cache=False):
         if location.locked:
             hintExclusions.exclusions[world.id].append(location.name)
 
+    
+    
     world_location_names = [
         location.name for location in world.get_locations()]
 
@@ -1478,7 +1463,9 @@ def hintExclusions(world, clear_cache=False):
                 hintExclusions.exclusions[world.id].append(hint.name)
         else:
             dual = getDual(hint.name)
-            if (dual.firstLocation not in world_location_names or dual.secondLocation not in world_location_names) and hint.name not in hintExclusions.exclusions[world.id]:
+            if (dual.firstLocation not in world_location_names or dual.secondLocation not in world_location_names):
+                hintExclusions.exclusions[world.id].append(hint.name)
+            elif world.get_location(dual.firstLocation).locked or world.get_location(dual.secondLocation).locked:
                 hintExclusions.exclusions[world.id].append(hint.name)
     return hintExclusions.exclusions[world.id]
 
