@@ -68,7 +68,7 @@ class Rom(BigStream):
         return new_rom
 
 
-    def decompress_rom_file(self, file, decomp_file):
+    def decompress_rom_file(self, file, decomp_file, verify_crc=True):
         validCRC = [
             [0xEC, 0x70, 0x11, 0xB7, 0x76, 0x16, 0xD7, 0x2B], # Compressed
             [0x70, 0xEC, 0xB7, 0x11, 0x16, 0x76, 0x2B, 0xD7], # Byteswap compressed
@@ -78,7 +78,7 @@ class Rom(BigStream):
         # Validate ROM file
         file_name = os.path.splitext(file)
         romCRC = list(self.buffer[0x10:0x18])
-        if romCRC not in validCRC:
+        if verify_crc and romCRC not in validCRC:
             # Bad CRC validation
             raise RuntimeError('ROM file %s is not a valid OoT 1.0 US ROM.' % file)
         elif len(self.buffer) < 0x2000000 or len(self.buffer) > (0x4000000) or file_name[1].lower() not in ['.z64', '.n64']:
@@ -282,6 +282,22 @@ class Rom(BigStream):
             dma_index += 1
             dma_start, dma_end, dma_size = self._get_dmadata_record(cur)
             old_dma_start, old_dma_end, old_dma_size = self.original._get_dmadata_record(cur)
+
+
+    # This will rescan the entire ROM, compare to original ROM, and repopulate changed_address.
+    def rescan_changed_bytes(self):
+        self.changed_address = {}
+        size = len(self.buffer)
+        original_size = len(self.original.buffer)
+        for i, byte in enumerate(self.buffer):
+            if i >= original_size:
+                self.changed_address[i] = byte
+                continue
+            orig_byte = self.original.read_byte(i)
+            if byte != orig_byte:
+                self.changed_address[i] = byte
+        if size < original_size:
+            self.changed_address.update(zip(range(size, original_size-1), [0]*(original_size-size)))
 
 
     # gets the last used byte of rom defined in the DMA table
