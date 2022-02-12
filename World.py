@@ -61,7 +61,7 @@ class World(object):
         self.entrance_shuffle = (
             self.shuffle_interior_entrances or settings.shuffle_grotto_entrances or settings.shuffle_dungeon_entrances
             or settings.shuffle_overworld_entrances or settings.owl_drops or settings.warp_songs
-            or settings.spawn_positions or settings.shuffle_bosses
+            or settings.spawn_positions or (settings.shuffle_bosses != 'off')
         )
 
         self.ensure_tod_access = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances or settings.spawn_positions
@@ -71,7 +71,7 @@ class World(object):
             settings.open_forest == 'closed'
             and (
                 self.shuffle_special_interior_entrances or settings.shuffle_overworld_entrances
-                or settings.warp_songs or settings.spawn_positions or settings.shuffle_bosses
+                or settings.warp_songs or settings.spawn_positions or (settings.shuffle_bosses != 'off')
             )
         ):
             self.settings.open_forest = 'closed_deku'
@@ -963,7 +963,7 @@ class World(object):
 
     def get_boss_map(self):
         map = dict((boss, boss) for boss in self.boss_location_names)
-        if not self.settings.shuffle_bosses:
+        if self.settings.shuffle_bosses == 'off':
             return map
 
         for entrance in self.get_shuffled_entrances('Boss', True):

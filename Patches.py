@@ -825,7 +825,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
         return exit_table
 
-    if world.settings.shuffle_bosses:
+    if (world.settings.shuffle_bosses != 'off'):
         # Credit to rattus128 for this ASM block.
         # Gohma's save/death warp is optimized to use immediate 0 for the
         # deku tree respawn. Use the delay slot before the switch table
@@ -844,7 +844,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
     def set_entrance_updates(entrances):
         blue_warp_remaps = {}
-        if world.settings.shuffle_bosses:
+        if (world.settings.shuffle_bosses != 'off'):
             # Connect lake hylia fill exit to revisit exit
             rom.write_int16(0xAC995A, 0x060C)
 
@@ -958,7 +958,10 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         # Purge temp flags on entrance to spirit from colossus through the front door.
         rom.write_byte(0x021862E3, 0xC2)
 
-    if world.settings.shuffle_overworld_entrances or world.settings.shuffle_dungeon_entrances or world.settings.shuffle_bosses:
+    if (
+            world.settings.shuffle_overworld_entrances or world.settings.shuffle_dungeon_entrances
+            or (world.settings.shuffle_bosses != 'off')
+    ):
         # Remove deku sprout and drop player at SFM after forest completion
         rom.write_int16(0xAC9F96, 0x0608)
 

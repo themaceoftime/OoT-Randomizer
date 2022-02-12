@@ -2932,15 +2932,24 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
-    Checkbutton(
+    Combobox(
         name           = 'shuffle_bosses',
         gui_text       = 'Shuffle Boss Entrances',
         gui_tooltip    = '''\
-            Shuffle Dungeon Boss Rooms.  This effects all stone and medallion dungeons.
+            Shuffle Dungeon Boss Rooms.  This effects the boss rooms of all stone and medallion dungeons.
 
-            This means you might e.g. walk through the boss door of Fire Temple and end up at the Morpha fight.
+            'Age-Appropriate':
+            Shuffle the locations of child boss rooms amongst themselves, and adult boss rooms amongst themselves.
+
+            'Full''
+            Shuffle the locations of all boss rooms.  Child may be expected to defeat Phantom Ganon and/or Bongo Bongo.
         ''',
-        default        = False,
+        default        = 'off',
+        choices        = {
+            'off':       'Off',
+            'limited':   'Age-Appropriate',
+            'full':      'Full',
+        },
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
