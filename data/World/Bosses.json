@@ -45,13 +45,13 @@
         "locations": {
             "Dodongos Cavern Boss Room Chest": "True",
             "Dodongos Cavern King Dodongo Heart": "
-                can_blast_or_smash and
-                (Bombs or Progressive_Strength_Upgrade) and
-                can_jumpslash",
+                ((can_use(Megaton_Hammer) and logic_dc_hammer_floor) or
+                    has_explosives or dodongos_cavern_shortcuts) and
+                (Bombs or Progressive_Strength_Upgrade) and can_jumpslash",
             "King Dodongo": "
-                can_blast_or_smash and
-                (Bombs or Progressive_Strength_Upgrade) and
-                can_jumpslash",
+                ((can_use(Megaton_Hammer) and logic_dc_hammer_floor) or
+                    has_explosives or dodongos_cavern_shortcuts) and
+                (Bombs or Progressive_Strength_Upgrade) and can_jumpslash",
             "Fairy Pot": "has_bottle"
         },
         "exits": {

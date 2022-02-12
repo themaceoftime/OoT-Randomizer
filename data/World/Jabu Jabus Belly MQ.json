@@ -20,8 +20,7 @@
             "Jabu Jabus Belly MQ Second Room Upper Chest": "
                 here(can_use(Slingshot)) and
                 (can_use(Hover_Boots) or can_use(Hookshot) or
-                at('Jabu Jabus Belly Before Boss', is_child) or
-                jabu_shortcuts)",
+                'Jabu Jabus Belly Floor Lowered' or jabu_shortcuts)",
             "Jabu Jabus Belly MQ Compass Chest": "
                 can_use(Slingshot) or (has_bombchus and is_child) or
                 (logic_jabu_mq_rang_jump and can_use(Boomerang)) or
@@ -50,9 +49,9 @@
                 (at('Jabu Jabus Belly Depths', True) or jabu_shortcuts) and
                 ((can_use(Hookshot) and can_use(Hover_Boots)) or
                 (here((logic_lens_jabu_mq or can_use(Lens_of_Truth)) and
-                (can_use(Slingshot) or can_use(Bow) or can_use(Longshot) or
-                (can_use(Hookshot) and can_use(Iron_Boots) and logic_lens_jabu_mq))) and
-                (can_use(Boomerang) or (can_use(Hookshot) and can_use(Iron_Boots)))))"
+                    (can_use(Slingshot) or can_use(Bow) or can_use(Longshot) or
+                    (can_use(Hookshot) and can_use(Iron_Boots) and logic_lens_jabu_mq))) and
+                    (can_use(Boomerang) or (can_use(Hookshot) and can_use(Iron_Boots)))))"
         },
         "exits": {
             "Jabu Jabus Belly Elevator Room": "True",
@@ -81,8 +80,7 @@
             "Jabu Jabus Belly MQ Cow" : "can_play(Eponas_Song)"
         },
         "exits": {
-            "Jabu Jabus Belly Main": "True",
-            "Jabu Jabus Belly Before Boss": "True"
+            "Jabu Jabus Belly Main": "True"
         },
         "events": {
             "Jabu Jabus Belly Floor Lowered": "True"
@@ -92,8 +90,9 @@
         "region_name": "Jabu Jabus Belly Before Boss",
         "dungeon": "Jabu Jabus Belly",
         "locations": {
+            "Jabu Jabus Belly MQ Near Boss Chest": "can_use(Slingshot)",
             "Jabu Jabus Belly MQ GS Near Boss": "can_use(Boomerang) or can_use(Longshot)",
-            "Jabu Jabus Belly MQ Near Boss Chest": "can_use(Slingshot)"
+            "Fairy Pot": "has_bottle"
         },
         "exits": {
             "Jabu Jabus Belly Main": "True",

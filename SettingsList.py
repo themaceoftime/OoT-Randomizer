@@ -1357,6 +1357,16 @@ logic_tricks = {
                     you also enable the Adult variant: "Dodongo's
                     Cavern Spike Trap Room Jump without Hover Boots".
                     '''},
+    'Dodongo\'s Cavern Smash the Boss Lobby Floor': {
+        'name'    : 'logic_dc_hammer_floor',
+        'tags'    : ("Dodongo's Cavern" "Entrance",),
+        'tooltip' : '''\
+                    The bombable floor before King Dodongo can be destroyed
+                    with Hammer if hit in the very center. This is only
+                    relevant with Shuffle Boss Entrances or if Dodongo's Cavern
+                    is MQ and either variant of "Dodongo's Cavern MQ Light the
+                    Eyes with Strength" is on.
+                    '''},
     'Dodongo\'s Cavern MQ Light the Eyes with Strength as Adult': {
         'name'    : 'logic_dc_mq_eyes_adult',
         'tags'    : ("Dodongo's Cavern",),
@@ -1364,15 +1374,6 @@ logic_tricks = {
                     If you move very quickly, it is possible to use
                     the bomb flower at the top of the room to light
                     the eyes.
-                    '''},
-    'Dodongo\'s Cavern MQ Smash the Boss Lobby Floor': {
-        'name'    : 'logic_dc_mq_hammer_floor',
-        'tags'    : ("Dodongo's Cavern",),
-        'tooltip' : '''\
-                    The bombable floor before King Dodongo can be destroyed
-                    with Hammer if hit in the very center. This is only
-                    relevant if either the adult or child variant of
-                    "Dodongo's Cavern MQ Light the Eyes with Strength" are on.
                     '''},
     'Dodongo\'s Cavern MQ Light the Eyes with Strength as Child': {
         'name'    : 'logic_dc_mq_eyes_child',
@@ -2933,7 +2934,7 @@ setting_infos = [
     ),
     Checkbutton(
         name           = 'shuffle_bosses',
-        gui_text       = 'Shuffle Dungeon Bosses',
+        gui_text       = 'Shuffle Boss Entrances',
         gui_tooltip    = '''\
             Shuffle Dungeon Boss Rooms.  This effects all stone and medallion dungeons.
 
