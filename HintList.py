@@ -191,6 +191,7 @@ conditional_dual = {
     'Water Temple MQ Lower Checks':                             lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
     'Spirit Temple Child Lower':                                lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
     'Spirit Temple Adult Lower':                                lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
+    'Shadow Temple Inviaible Blades Chests':                    lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
 }
 
 # table of hints, format is (name, hint text, clear hint text, type of hint) there are special characters that are read for certain in game commands:
@@ -455,7 +456,9 @@ hintTable = {
     'Spirit Temple Child Lower':                                   ("in #the Spirit Temple, past a narrow path#, a child can find...^", None, 'dual'),
     'Spirit Temple Adult Lower':                                   ("in #the Spirit Temple, past a silver block#, an adult can find...^", None, 'dual'),
     'Spirit Temple MQ Symphony Room':                              ("in #the Spirit Temple, past five melodies#, a chest and a spider hold...^", None, 'dual'),
+    'Shadow Temple Inviaible Blades Chests':                       ("in the #Shadow Temple, invisible blades# guard...^", None, 'dual'),
     'Shadow Temple Spike Walls Room':                              ("in #the depths of the Shadow Temple#, behind spiked walls, chests contain...^", None, 'dual'),
+    'Shadow Temple MQ Inviaible Blades Chests':                    ("in the #Shadow Temple, invisible blades# guard...^", None, 'dual'),
     'Shadow Temple MQ Upper Checks':                               ("not far from #the entrance of the Shadow Temple#, chests contain...^", None, 'dual'),
     'Shadow Temple MQ Spike Walls Room':                           ("in #the depths of the Shadow Temple#, behind spiked walls, chests contain...^", None, 'dual'),
     'Bottom of the Well Inner Rooms GS':                           ("in the #inner rooms of the Well#, spiders hold...^", None, 'dual'),
@@ -1400,7 +1403,9 @@ dualTable = {
     'Spirit Temple Child Lower':                                ('Spirit Temple Child Bridge Chest', 'Spirit Temple Child Early Torches Chest'),
     'Spirit Temple Adult Lower':                                ('Spirit Temple Compass Chest', 'Spirit Temple Early Adult Right Chest'),
     'Spirit Temple MQ Symphony Room':                           ('Spirit Temple MQ Symphony Room Chest', 'Spirit Temple MQ GS Symphony Room'),
+    'Shadow Temple Invisible Blades Chests':                    ('Shadow Temple Invisible Blades Visible Chest', 'Shadow Temple Invisible Blades Invisible Chest'),
     'Shadow Temple Spike Walls Room':                           ('Shadow Temple Boss Key Chest', 'Shadow Temple Spike Walls Left Chest'),
+    'Shadow Temple MQ Invisible Blades Chests':                 ('Shadow Temple MQ Invisible Blades Visible Chest', 'Shadow Temple MQ Invisible Blades Invisible Chest'),
     'Shadow Temple MQ Upper Checks':                            ('Shadow Temple MQ Compass Chest', 'Shadow Temple MQ Hover Boots Chest'),
     'Shadow Temple MQ Spike Walls Room':                        ('Shadow Temple MQ Boss Key Chest', 'Shadow Temple MQ Spike Walls Left Chest'),
     'Bottom of the Well Inner Rooms GS':                        ('Bottom of the Well GS West Inner Room', 'Bottom of the Well GS East Inner Room'),
