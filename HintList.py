@@ -188,11 +188,8 @@ conditional_sometimes = {
     'Water Temple River Loop Chests':                           lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
     'Water Temple MQ Lower Checks':                             lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
     'Spirit Temple Child Lower':                                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
-    'Spirit Temple Child Top':                                  lambda world: world.settings.tokensanity in ['dungeon', 'all'],
     'Spirit Temple Adult Lower':                                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
-    'Spirit Temple MQ Child Top':                               lambda world: world.settings.tokensanity in ['dungeon', 'all'],
     'Shadow Temple Invisible Blades Chests':                    lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
-    'Shadow Temple Single Pot Room':                            lambda world: world.settings.tokensanity in ['dungeon', 'all'],
 # table of hints, format is (name, hint text, clear hint text, type of hint) there are special characters that are read for certain in game commands:
 # ^ is a box break
 # & is a new line
