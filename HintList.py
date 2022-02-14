@@ -1445,8 +1445,6 @@ def hintExclusions(world, clear_cache=False):
         if location.locked:
             hintExclusions.exclusions[world.id].append(location.name)
 
-    
-    
     world_location_names = [
         location.name for location in world.get_locations()]
 
