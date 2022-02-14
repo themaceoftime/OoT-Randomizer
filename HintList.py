@@ -181,6 +181,7 @@ conditional_sometimes = {
     'OGC Great Fairy Reward':       lambda world: world.settings.shuffle_interior_entrances == 'off',
 }
 
+conditional_dual = {
     'LW Deku Theater Rewards':                                  lambda world: world.settings.complete_mask_quest,
     'GV Pieces of Heart Ledges':                                lambda world: not world.settings.shuffle_cows and world.settings.tokensanity not in ['overworld', 'all'],
 
@@ -190,6 +191,8 @@ conditional_sometimes = {
     'Spirit Temple Child Lower':                                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
     'Spirit Temple Adult Lower':                                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
     'Shadow Temple Invisible Blades Chests':                    lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+}
+    
 # table of hints, format is (name, hint text, clear hint text, type of hint) there are special characters that are read for certain in game commands:
 # ^ is a box break
 # & is a new line
@@ -449,7 +452,7 @@ hintTable = {
     'Water Temple River Checks':                                   ("at the #whirlpool river# in the Water Temple a spider and a chest hold respectively...^", None, 'dual'),
     'Water Temple North Basement Checks':                          ("beyond #rolling boulders in the Water Temple# a spider and a chest hold respectively ...^", None, 'dual'),
     'Water Temple MQ North Basement Checks':                       ("#crates in the basement# of the Water Temple contain...^", None, 'dual'),
-    'Water Temple MQ Dark Link Loop':                              ("#a spider and a chest past a shadowy fight# in the Water Temple hold...^", None, 'dual'),
+    'Water Temple MQ Lower Checks':                                ("#a gilded chest and a crate in locked basements# in the Water Temple hold...^", None, 'dual'),
     'Spirit Temple Colossus Hands':                                ("upon the #Colossus's right and left hands# are respectively...^", None, 'dual'),
     'Spirit Temple Child Lower':                                   ("#in between crawl spaces# in the Spirit Temple chests contain...^", None, 'dual'),
     'Spirit Temple Child Top':                                     ("#near a sunny block in the Spirit Temple# a chest and a spider hold respectively...^", None, 'dual'),
@@ -1402,7 +1405,7 @@ dualTable = {
     'Water Temple River Checks':                                ('Water Temple GS River', 'Water Temple River Chest'),
     'Water Temple North Basement Checks':                       ('Water Temple GS Near Boss Key Chest', 'Water Temple Boss Key Chest'),
     'Water Temple MQ North Basement Checks':                    ('Water Temple MQ Freestanding Key', 'Water Temple MQ GS Freestanding Key Area'),
-    'Water Temple MQ Dark Link Loop':                           ('Water Temple MQ GS River', 'Water Temple MQ Boss Key Chest'),
+    'Water Temple MQ Lower Checks':                             ('Water Temple MQ Boss Key Chest', 'Water Temple MQ Freestanding Key'),
     'Spirit Temple Colossus Hands':                             ('Spirit Temple Silver Gauntlets Chest', 'Spirit Temple Mirror Shield Chest'),
     'Spirit Temple Child Lower':                                ('Spirit Temple Child Bridge Chest', 'Spirit Temple Child Early Torches Chest'),
     'Spirit Temple Child Top':                                  ('Spirit Temple Sun Block Room Chest', 'Spirit Temple GS Hall After Sun Block Room'),
