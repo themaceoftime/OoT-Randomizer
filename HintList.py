@@ -181,6 +181,7 @@ conditional_sometimes = {
     'OGC Great Fairy Reward':       lambda world: world.settings.shuffle_interior_entrances == 'off',
 }
 
+# Some dual hints should only be enabled under certain settings
 conditional_dual = {
     'LW Deku Theater Rewards':                                  lambda world: world.settings.complete_mask_quest,
     'GV Pieces of Heart Ledges':                                lambda world: not world.settings.shuffle_cows and world.settings.tokensanity not in ['overworld', 'all'],
