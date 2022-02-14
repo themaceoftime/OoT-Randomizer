@@ -184,14 +184,14 @@ conditional_sometimes = {
 # Some dual hints should only be enabled under certain settings
 conditional_dual = {
     'LW Deku Theater Rewards':                                  lambda world: world.settings.complete_mask_quest,
-    'GV Pieces of Heart Ledges':                                lambda world: not world.settings.shuffle_cows and not world.settings.tokensanity in ['overworld', 'all'],
+    'GV Pieces of Heart Ledges':                                lambda world: not world.settings.shuffle_cows and world.settings.tokensanity not in ['overworld', 'all'],
 
-    'Fire Temple Lower Loop':                                   lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
-    'Water Temple River Loop Chests':                           lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
-    'Water Temple MQ Lower Checks':                             lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
-    'Spirit Temple Child Lower':                                lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
-    'Spirit Temple Adult Lower':                                lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
-    'Shadow Temple Invisible Blades Chests':                    lambda world: not world.settings.tokensanity in ['dungeon', 'all'],
+    'Fire Temple Lower Loop':                                   lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+    'Water Temple River Loop Chests':                           lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+    'Water Temple MQ Lower Checks':                             lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+    'Spirit Temple Child Lower':                                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+    'Spirit Temple Adult Lower':                                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+    'Shadow Temple Invisible Blades Chests':                    lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
 }
 
 # table of hints, format is (name, hint text, clear hint text, type of hint) there are special characters that are read for certain in game commands:
@@ -1464,14 +1464,14 @@ def hintExclusions(world, clear_cache=False):
             location_hints.append(hint)
 
     for hint in location_hints:
-        if 'dual' not in hint.type:
-            if hint.name not in world_location_names and hint.name not in hintExclusions.exclusions[world.id]:
-                hintExclusions.exclusions[world.id].append(hint.name)
-        else:
+        if 'dual' in hint.type:
             dual = getDual(hint.name)
             if dual.firstLocation not in world_location_names or dual.secondLocation not in world_location_names:
                 hintExclusions.exclusions[world.id].append(hint.name)
             elif world.get_location(dual.firstLocation).locked or world.get_location(dual.secondLocation).locked:
+                hintExclusions.exclusions[world.id].append(hint.name)
+        else:
+            if hint.name not in world_location_names and hint.name not in hintExclusions.exclusions[world.id]:
                 hintExclusions.exclusions[world.id].append(hint.name)
     return hintExclusions.exclusions[world.id]
 

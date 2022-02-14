@@ -515,8 +515,6 @@ def is_not_checked(location, checked):
 def is_not_checked_dual(world, dual, checked):
     not_checked = True
     
-    
-    
     firstLocation = world.get_location(dual.firstLocation)
     secondLocation = world.get_location(dual.secondLocation)
     if firstLocation.name in checked or secondLocation.name in checked or get_hint_area(firstLocation)[0] in checked or get_hint_area(secondLocation)[0] in checked:
