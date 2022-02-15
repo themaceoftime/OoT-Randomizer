@@ -3745,7 +3745,7 @@ setting_infos = [
         gui_tooltip    = '''\
             
 			
-			If "Texture" is enabled, chest texture will reflect its contents
+            If "Texture" is enabled, chest texture will reflect its contents
             regardless of size.  Fancy chests will contain keys,
             Gilded chests will contain major items, shuffled
             tokens will be in Webbed chests, and Wooden chests
