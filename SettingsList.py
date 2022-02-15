@@ -2611,6 +2611,20 @@ setting_infos = [
         shared         = True,
     ),
     Checkbutton(
+        name           = 'plant_beans',
+        gui_text       = 'Plant Magic Beans',
+        gui_tooltip    = '''\
+            Enabling this plants all 10 magic beans in soft soil
+            causing the bean plants to be available as adult. You
+            can still get beans normally.
+        ''',
+        default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Checkbutton(
         name           = 'chicken_count_random',
         gui_text       = 'Random Cucco Count',
         gui_tooltip    = '''\
