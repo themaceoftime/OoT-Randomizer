@@ -62,90 +62,31 @@ void give_dungeon_item(z64_file_t *save, int16_t mask, int16_t dungeon_id) {
     save->dungeon_items[dungeon_id].items |= mask;
 }
 
+char key_counts[14][2] = {
+    {0, 0}, // Deku Tree
+    {0, 0}, // Dodongo's Cavern
+    {0, 0}, // Inside Jabu Jabu's Belly
+    {5, 6}, // Forest Temple
+    {8, 5}, // Fire Temple
+    {6, 2}, // Water Temple
+    {5, 7}, // Spirit Temple
+    {5, 6}, // Shadow Temple
+    {3, 2}, // Bottom of the Well
+    {0, 0}, // Ice Cavern
+    {0, 0}, // Ganon's Tower
+    {9, 3}, // Gerudo Training Ground
+    {4, 4}, // Thieves' Hideout
+    {2, 3}, // Ganon's Castle
+};
+
 void give_small_key(z64_file_t *save, int16_t dungeon_id, int16_t arg2) {
-    int8_t keys = save->dungeon_keys[dungeon_id];
-    if (keys < 0) {
-        keys = 0;
-    }
+    int8_t keys = save->dungeon_keys[dungeon_id] > 0 ? save->dungeon_keys[dungeon_id] : 0;
     save->dungeon_keys[dungeon_id] = keys + 1;
 }
 
 void give_small_key_ring(z64_file_t *save, int16_t dungeon_id, int16_t arg2) {
-    int8_t keys = save->dungeon_keys[dungeon_id];
-    if (keys < 0) {
-        keys = 0;
-    }
-    int8_t amt = 0;
-    switch(dungeon_id) {
-        case FOREST_ID:
-            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
-                amt = 6;
-            }
-            else {
-                amt = 5;
-            }
-            break;
-        case FIRE_ID:
-            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
-                amt = 5;
-            }
-            else {
-                amt = 8;
-            }
-            break;
-        case WATER_ID:
-            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
-                amt = 2;
-            }
-            else {
-                amt = 6;
-            }
-            break;
-        case SPIRIT_ID:
-            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
-                amt = 7;
-            }
-            else {
-                amt = 5;
-            }
-            break;
-        case SHADOW_ID:
-            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
-                amt = 6;
-            }
-            else {
-                amt = 5;
-            }
-            break;
-        case BOTW_ID:
-            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
-                amt = 2;
-            }
-            else {
-                amt = 3;
-            }
-            break;
-        case GTG_ID:
-            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
-                amt = 3;
-            }
-            else {
-                amt = 9;
-            }
-            break;
-        case FORT_ID:
-            amt = 4;
-            break;
-        case CASTLE_ID:
-            if (CFG_DUNGEON_IS_MQ[dungeon_id]) {
-                amt = 3;
-            }
-            else {
-                amt = 2;
-            }
-            break;
-    }
-    save->dungeon_keys[dungeon_id] = keys + amt;
+    int8_t keys = save->dungeon_keys[dungeon_id] > 0 ? save->dungeon_keys[dungeon_id] : 0;
+    save->dungeon_keys[dungeon_id] = keys + key_counts[dungeon_id][CFG_DUNGEON_IS_MQ[dungeon_id]];
 }
 
 void give_defense(z64_file_t *save, int16_t arg1, int16_t arg2) {
