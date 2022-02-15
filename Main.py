@@ -4,7 +4,7 @@ import hashlib
 import io
 import itertools
 import logging
-import os, os.path
+import os
 import platform
 import random
 import shutil
@@ -25,9 +25,9 @@ from Item import Item
 from ItemPool import generate_itempool
 from Hints import buildGossipHints
 from HintList import clearHintExclusionCache
-from Utils import default_output_path, is_bundled, subprocess_args, data_path
+from Utils import default_output_path, is_bundled, run_process, data_path
 from N64Patch import create_patch_file, apply_patch_file
-from MBSDIFFPatch import apply_mbsdiff_patch_file
+from MBSDIFFPatch import apply_ootr_3_web_patch
 from SettingsList import setting_infos, logic_tricks
 from Rules import set_rules, set_shop_rules
 from Plandomizer import Distribution
@@ -475,7 +475,7 @@ def from_patch_file(settings, window=dummy_window()):
 
     window.update_status('Patching ROM')
     if extension == 'patch':
-        apply_mbsdiff_patch_file(rom, settings.patch_file)
+        apply_ootr_3_web_patch(settings, rom, window)
         create_patch_file(rom, output_path + '.zpf')
     else:
         subfile = None
@@ -637,26 +637,6 @@ def diff_roms(settings, diff_rom_file):
     logger.info(f"Created patchfile at: {output_path}.zpf")
     logger.info('Done. Enjoy.')
     logger.debug('Total Time: %s', time.process_time() - start)
-
-
-def run_process(window, logger, args, stdin=None):
-    process = subprocess.Popen(args, bufsize=1, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-    filecount = None
-    if stdin is not None:
-        process.communicate(input=stdin)
-    else:
-        while True:
-            line = process.stdout.readline()
-            if line != b'':
-                find_index = line.find(b'files remaining')
-                if find_index > -1:
-                    files = int(line[:find_index].strip())
-                    if filecount == None:
-                        filecount = files
-                    window.update_progress(65 + 30*(1 - files/filecount))
-                logger.info(line.decode('utf-8').strip('\n'))
-            else:
-                break
 
 
 def copy_worlds(worlds):
