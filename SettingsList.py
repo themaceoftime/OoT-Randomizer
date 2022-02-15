@@ -2431,14 +2431,14 @@ setting_infos = [
         },
     ),
     Combobox(
-        name           = 'dungeon_shortcuts',
-        gui_text       = 'Dungeon Boss Shortcuts ',
+        name           = 'dungeon_shortcuts_choice',
+        gui_text       = 'Dungeon Boss Shortcuts Choice',
         default        = 'off',
         choices        = {
             'off':       'Off',
             'choice':    'Choice dungeons',
-            'all':	  'All dungeons',
-            'random': 'Random dungeons'
+            'all':	     'All dungeons',
+            'random':    'Random dungeons'
         },
         gui_tooltip    = '''\
             Shortcuts to dungeon bosses are available
@@ -2462,19 +2462,19 @@ setting_infos = [
             shortcut silver blocks moved, central room
             platform lowered, and statue face melted
 
-            Choice : Select dungeons with shortcuts
-            All : Enable all dungeons shortcuts
-            Random : Random dungeon shortcuts
+            Choice: Select dungeons with shortcuts
+            All: Enable all dungeons shortcuts
+            Random: Random dungeon shortcuts
         ''',
         shared         = True,
         disable={
-            'off': {'settings' : ['dungeon_shortcuts_list']},
-            'all': {'settings' : ['dungeon_shortcuts_list']},
-            'random': {'settings' : ['dungeon_shortcuts_list']},
+            'off': {'settings' : ['dungeon_shortcuts']},
+            'all': {'settings' : ['dungeon_shortcuts']},
+            'random': {'settings' : ['dungeon_shortcuts']},
         },
     ),
     Setting_Info(
-        name           = 'dungeon_shortcuts_list',
+        name           = 'dungeon_shortcuts',
         type           = list,
         gui_text       = 'Dungeon Boss Shortcuts List',
         gui_type       = "MultipleSelect",
