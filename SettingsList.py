@@ -2936,18 +2936,18 @@ setting_infos = [
         name           = 'shuffle_bosses',
         gui_text       = 'Shuffle Boss Entrances',
         gui_tooltip    = '''\
-            Shuffle Dungeon Boss Rooms.  This effects the boss rooms of all stone and medallion dungeons.
+            Shuffle dungeon boss rooms.  This affects the boss rooms of all stone and medallion dungeons.
 
-            'Age-Appropriate':
-            Shuffle the locations of child boss rooms amongst themselves, and adult boss rooms amongst themselves.
+            'Age-Restricted':
+            Shuffle the locations of child boss rooms and adult boss rooms separately.
 
-            'Full''
-            Shuffle the locations of all boss rooms.  Child may be expected to defeat Phantom Ganon and/or Bongo Bongo.
+            'Full':
+            Shuffle the locations of all boss rooms together.  Child may be expected to defeat Phantom Ganon and/or Bongo Bongo.
         ''',
         default        = 'off',
         choices        = {
             'off':       'Off',
-            'limited':   'Age-Appropriate',
+            'limited':   'Age-Restricted',
             'full':      'Full',
         },
         shared         = True,
