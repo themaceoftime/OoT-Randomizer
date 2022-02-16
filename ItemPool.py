@@ -35,8 +35,8 @@ overworld_always_items = ([
     + ['Progressive Wallet'] * 2
     + ['Magic Meter'] * 2
     + ['Double Defense']
-    + ['Deku Stick Capacity'] * 2
-    + ['Deku Nut Capacity'] * 2
+    + ['Deku Stick Capacity']
+    + ['Deku Nut Capacity']
     + ['Piece of Heart (Treasure Chest Game)'])
 
 
@@ -66,9 +66,9 @@ easy_items = ([
     'Bomb Bag',
     'Double Defense'] +
     ['Heart Container'] * 8 +
-    ['Piece of Heart'] * 2)
+    ['Piece of Heart'])
 
-normal_items = (['Piece of Heart'] * 34)
+normal_items = (['Piece of Heart'] * 33)
 
 
 item_difficulty_max = {
@@ -172,34 +172,6 @@ min_shop_items = (
     ['Buy Fairy\'s Spirit'] +
     ['Buy Bottle Bug'] +
     ['Buy Fish'])
-
-
-vanilla_deku_scrubs = {
-    'ZR Deku Scrub Grotto Rear': 'Buy Red Potion [30]',
-    'ZR Deku Scrub Grotto Front': 'Buy Green Potion',
-    'SFM Deku Scrub Grotto Rear': 'Buy Red Potion [30]',
-    'SFM Deku Scrub Grotto Front': 'Buy Green Potion',
-    'LH Deku Scrub Grotto Left': 'Buy Deku Nut (5)',
-    'LH Deku Scrub Grotto Right': 'Buy Bombs (5) [35]',
-    'LH Deku Scrub Grotto Center': 'Buy Arrows (30)',
-    'GV Deku Scrub Grotto Rear': 'Buy Red Potion [30]',
-    'GV Deku Scrub Grotto Front': 'Buy Green Potion',
-    'LW Deku Scrub Near Deku Theater Right': 'Buy Deku Nut (5)',
-    'LW Deku Scrub Near Deku Theater Left': 'Buy Deku Stick (1)',
-    'LW Deku Scrub Grotto Rear': 'Buy Arrows (30)',
-    'Colossus Deku Scrub Grotto Rear': 'Buy Red Potion [30]',
-    'Colossus Deku Scrub Grotto Front': 'Buy Green Potion',
-    'DMC Deku Scrub': 'Buy Bombs (5) [35]',
-    'DMC Deku Scrub Grotto Left': 'Buy Deku Nut (5)',
-    'DMC Deku Scrub Grotto Right': 'Buy Bombs (5) [35]',
-    'DMC Deku Scrub Grotto Center': 'Buy Arrows (30)',
-    'GC Deku Scrub Grotto Left': 'Buy Deku Nut (5)',
-    'GC Deku Scrub Grotto Right': 'Buy Bombs (5) [35]',
-    'GC Deku Scrub Grotto Center': 'Buy Arrows (30)',
-    'LLR Deku Scrub Grotto Left': 'Buy Deku Nut (5)',
-    'LLR Deku Scrub Grotto Right': 'Buy Bombs (5) [35]',
-    'LLR Deku Scrub Grotto Center': 'Buy Arrows (30)',
-}
 
 
 deku_scrubs_items = (
@@ -534,6 +506,13 @@ def get_pool_core(world):
                 pool.append(item)
                 continue
 
+        if location.type in ["Scrub", "GrottoNPC"]:
+            if location.vanilla_item in ['Piece of Heart', 'Deku Stick Capacity', 'Deku Nut Capacity']:
+                pool.append(location.vanilla_item)
+            elif world.settings.shuffle_scrubs == 'off':
+                placed_items[location.name] = location.vanilla_item
+            continue
+
         if location.vanilla_item == 'Milk':
             if world.settings.shuffle_cows:
                 pool.extend(get_junk_item())
@@ -695,34 +674,6 @@ def get_pool_core(world):
         pool.extend(deku_scrubs_items)
         for _ in range(7):
             pool.append('Arrows (30)' if random.randint(0,3) > 0 else 'Deku Seeds (30)')
-
-    else:
-        if world.dungeon_mq['Deku Tree']:
-            placed_items['Deku Tree MQ Deku Scrub'] = 'Buy Deku Shield'
-        if world.dungeon_mq['Dodongos Cavern']:
-            placed_items['Dodongos Cavern MQ Deku Scrub Lobby Rear'] = 'Buy Deku Stick (1)'
-            placed_items['Dodongos Cavern MQ Deku Scrub Lobby Front'] = 'Buy Deku Seeds (30)'
-            placed_items['Dodongos Cavern MQ Deku Scrub Staircase'] = 'Buy Deku Shield'
-            placed_items['Dodongos Cavern MQ Deku Scrub Side Room Near Lower Lizalfos'] = 'Buy Red Potion [30]'
-        else:
-            placed_items['Dodongos Cavern Deku Scrub Near Bomb Bag Left'] = 'Buy Deku Nut (5)'
-            placed_items['Dodongos Cavern Deku Scrub Side Room Near Dodongos'] = 'Buy Deku Stick (1)'
-            placed_items['Dodongos Cavern Deku Scrub Near Bomb Bag Right'] = 'Buy Deku Seeds (30)'
-            placed_items['Dodongos Cavern Deku Scrub Lobby'] = 'Buy Deku Shield'
-        if not world.dungeon_mq['Jabu Jabus Belly']:
-            placed_items['Jabu Jabus Belly Deku Scrub'] = 'Buy Deku Nut (5)'
-        if world.dungeon_mq['Ganons Castle']:
-            placed_items['Ganons Castle MQ Deku Scrub Right'] = 'Buy Deku Nut (5)'
-            placed_items['Ganons Castle MQ Deku Scrub Center-Left'] = 'Buy Bombs (5) [35]'
-            placed_items['Ganons Castle MQ Deku Scrub Center'] = 'Buy Arrows (30)'
-            placed_items['Ganons Castle MQ Deku Scrub Center-Right'] = 'Buy Red Potion [30]'
-            placed_items['Ganons Castle MQ Deku Scrub Left'] = 'Buy Green Potion'
-        else:
-            placed_items['Ganons Castle Deku Scrub Center-Left'] = 'Buy Bombs (5) [35]'
-            placed_items['Ganons Castle Deku Scrub Center-Right'] = 'Buy Arrows (30)'
-            placed_items['Ganons Castle Deku Scrub Right'] = 'Buy Red Potion [30]'
-            placed_items['Ganons Castle Deku Scrub Left'] = 'Buy Green Potion'
-        placed_items.update(vanilla_deku_scrubs)
 
     pool.extend(overworld_always_items)
 

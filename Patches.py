@@ -1977,7 +1977,7 @@ def get_override_entry(location):
     else:
         looks_like_item_id = 0
 
-    if location.type in ['NPC', 'BossHeart']:
+    if location.type in ['NPC', 'Scrub', 'BossHeart']:
         type = 0
     elif location.type == 'Chest':
         type = 1
