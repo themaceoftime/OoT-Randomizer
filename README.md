@@ -126,6 +126,7 @@ do that.
   * Add correct default Goals for Ganon's Boss Key when Light Arrow Cutscene is non-vanilla.
   * Fix a softlock caused by 8-note Sun's Songs when using `Randomize Ocarina Song Notes`.
   * Fix slow text when acquiring certain items (Hookshot, Bombchus, etc.)
+  * Using Farore's Wind as both ages should no longer result in the wrong temporary flags being loaded.
 
 #### Other changes
   * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
