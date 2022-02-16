@@ -922,7 +922,7 @@ class WorldDistribution(object):
             stoneID = pull_random_element([stoneIDs], lambda id: matcher(gossipLocations[id].name))
             if stoneID is None:
                 # Allow planning of explicit textids
-                match = re.match('^\$([a-fA-F0-9]{4})$', name)
+                match = re.match(r"^(?:\$|x|0x)?([0-9a-f]{4})$", name, flags=re.IGNORECASE)
                 if match:
                     stoneID = int(match[1], base=16)
                 else:
@@ -1199,7 +1199,7 @@ class Distribution(object):
                 if loc in gossipLocations:
                     world_dist.gossip_stones[gossipLocations[loc].name] = hint
                 else:
-                    world_dist.gossip_stones["${:04x}".format(loc)] = hint
+                    world_dist.gossip_stones["0x{:04X}".format(loc)] = hint
 
         self.playthrough = {}
         for (sphere_nr, sphere) in spoiler.playthrough.items():
