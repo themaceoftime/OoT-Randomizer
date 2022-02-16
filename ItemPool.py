@@ -11,38 +11,27 @@ from decimal import Decimal, ROUND_HALF_UP
 
 # Generates itempools and places fixed items based on settings.
 
-alwaysitems = ([
+overworld_always_items = ([
     'Biggoron Sword',
-    'Boomerang',
-    'Lens of Truth',
-    'Megaton Hammer',
-    'Iron Boots',
     'Goron Tunic',
     'Zora Tunic',
-    'Hover Boots',
-    'Mirror Shield',
     'Stone of Agony',
     'Fire Arrows',
-    'Ice Arrows',
     'Light Arrows',
     'Dins Fire',
     'Farores Wind',
     'Nayrus Love',
     'Rupee (1)']
-    + ['Progressive Hookshot'] * 2
-    + ['Deku Shield']
+    + ['Progressive Hookshot']
     + ['Hylian Shield']
-    + ['Progressive Strength Upgrade'] * 3
+    + ['Progressive Strength Upgrade']
     + ['Progressive Scale'] * 2
-    + ['Recovery Heart'] * 6
-    + ['Bow'] * 3
-    + ['Slingshot'] * 3
-    + ['Bomb Bag'] * 3
-    + ['Bombs (5)'] * 2
-    + ['Bombs (10)']
+    + ['Recovery Heart']
+    + ['Bow'] * 2
+    + ['Slingshot'] * 2
+    + ['Bomb Bag'] * 2
+    + ['Bombs (5)']
     + ['Bombs (20)']
-    + ['Arrows (5)']
-    + ['Arrows (10)'] * 5
     + ['Progressive Wallet'] * 2
     + ['Magic Meter'] * 2
     + ['Double Defense']
@@ -76,12 +65,10 @@ easy_items = ([
     'Slingshot', 
     'Bomb Bag',
     'Double Defense'] +
-    ['Heart Container'] * 16 +
-    ['Piece of Heart'] * 3)
-
-normal_items = (
     ['Heart Container'] * 8 +
-    ['Piece of Heart'] * 35)
+    ['Piece of Heart'] * 2)
+
+normal_items = (['Piece of Heart'] * 34)
 
 
 item_difficulty_max = {
@@ -126,87 +113,6 @@ TriforceCounts = {
     'minimal':   Decimal(1.00),
 }
 
-DT_vanilla = (
-    ['Recovery Heart'] * 2)
-
-DT_MQ = (
-    ['Deku Shield'] * 2 +
-    ['Rupees (50)'])
-
-DC_vanilla = (
-    ['Rupees (20)'])
-
-DC_MQ = (
-    ['Hylian Shield'] +
-    ['Rupees (5)'])
-
-JB_MQ = (
-    ['Deku Nuts (5)'] * 4 +
-    ['Recovery Heart'] +
-    ['Deku Shield'] +
-    ['Deku Stick (1)'])
-
-FoT_vanilla = (
-    ['Recovery Heart'] +
-    ['Arrows (10)'] +
-    ['Arrows (30)'])
-
-FoT_MQ = (
-    ['Arrows (5)'])
-
-FiT_vanilla = (
-    ['Rupees (200)'])
-
-FiT_MQ = (
-    ['Bombs (20)'] +
-    ['Hylian Shield'])
-
-SpT_vanilla = (
-    ['Deku Shield'] * 2 +
-    ['Recovery Heart'] +
-    ['Bombs (20)'])
-
-SpT_MQ = (
-    ['Rupees (50)'] * 2 +
-    ['Arrows (30)'])
-
-ShT_vanilla = (
-    ['Arrows (30)'])
-
-ShT_MQ = (
-    ['Arrows (5)'] * 2 +
-    ['Rupees (20)'])
-
-BW_vanilla = (
-    ['Recovery Heart'] +
-    ['Bombs (10)'] +
-    ['Rupees (200)'] +
-    ['Deku Nuts (5)'] +
-    ['Deku Nuts (10)'] +
-    ['Deku Shield'] +
-    ['Hylian Shield'])
-
-GTG_vanilla = (
-    ['Arrows (30)'] * 3 +
-    ['Rupees (200)'])
-
-GTG_MQ = (
-    ['Rupee (Treasure Chest Game)'] * 2 +
-    ['Arrows (10)'] +
-    ['Rupee (1)'] +
-    ['Rupees (50)'])
-
-GC_vanilla = (
-    ['Rupees (5)'] * 3 +
-    ['Arrows (30)'])
-
-GC_MQ = (
-    ['Arrows (10)'] * 2 +
-    ['Bombs (5)'] +
-    ['Rupees (20)'] +
-    ['Recovery Heart'])
-
-
 normal_bottles = [
     'Bottle',
     'Bottle with Milk',
@@ -237,15 +143,14 @@ dungeon_rewards = [
 
 
 normal_rupees = (
-    ['Rupees (5)'] * 13 +
-    ['Rupees (20)'] * 5 +
-    ['Rupees (50)'] * 7 +
+    ['Rupees (5)'] * 5 +
+    ['Rupees (20)'] * 4 +
+    ['Rupees (50)'] * 6 +
     ['Rupees (200)'] * 3)
 
 shopsanity_rupees = (
-    ['Rupees (5)'] * 2 +
-    ['Rupees (20)'] * 10 +
-    ['Rupees (50)'] * 10 +
+    ['Rupees (20)'] * 6 +
+    ['Rupees (50)'] * 6 +
     ['Rupees (200)'] * 5 +
     ['Progressive Wallet'])
 
@@ -591,7 +496,11 @@ def get_pool_core(world):
         placed_items['GC Medigoron'] = 'Giants Knife'
 
     remain_shop_items = []
+    # Use the vanilla items in the world's locations when appropriate.
     for location in world.get_locations():
+        if location.vanilla_item is None:
+            continue
+
         if location.type == "Shop":
             if world.settings.shopsanity == 'off':
                 if world.settings.bombchus_in_logic and location.name in ['KF Shop Item 8', 'Market Bazaar Item 4', 'Kak Bazaar Item 4']:
@@ -603,8 +512,8 @@ def get_pool_core(world):
             continue
 
         if location.vanilla_item == 'Gold Skulltula Token':
-            if world.settings.tokensanity == 'off' or (world.settings.tokensanity == 'dungeons' and location.scene >= 0x0A) \
-                    or (world.settings.tokensanity == 'overworld' and location.scene < 0x0A):
+            if world.settings.tokensanity == 'off' or (world.settings.tokensanity == 'dungeons' and location.dungeon) \
+                    or (world.settings.tokensanity == 'overworld' and not location.dungeon):
                 placed_items[location.name] = 'Gold Skulltula Token'
             else:
                 pool.append('Gold Skulltula Token')
@@ -617,6 +526,13 @@ def get_pool_core(world):
                     or (world.settings.shuffle_smallkeys == 'vanilla' and location.vanilla_item == f"Small Key ({dungeon.name})"):
                 placed_items[location.name] = location.vanilla_item
                 continue
+            if location.type in ["Chest", "Collectable", "BossHeart"] \
+                    and location.vanilla_item not in [f"Boss Key ({dungeon.name})", f"Map ({dungeon.name})", f"Compass ({dungeon.name})", f"Small Key ({dungeon.name})"]:
+                item = location.vanilla_item
+                if world.settings.bombchus_in_logic and item.startswith('Bombchus'):
+                    item = 'Bombchus'
+                pool.append(item)
+                continue
 
         if location.vanilla_item == 'Milk':
             if world.settings.shuffle_cows:
@@ -624,46 +540,19 @@ def get_pool_core(world):
             else:
                 placed_items[location.name] = 'Milk'
             continue
-
+    # End of Locations loop.
 
     if world.settings.bombchus_in_logic:
-        pool.extend(['Bombchus'] * 4)
-        if world.dungeon_mq['Jabu Jabus Belly']:
-            pool.extend(['Bombchus'])
-        if world.dungeon_mq['Spirit Temple']:
-            pool.extend(['Bombchus'] * 2)
-        if not world.dungeon_mq['Bottom of the Well']:
-            pool.extend(['Bombchus'])
-        if world.dungeon_mq['Gerudo Training Ground']:
-            pool.extend(['Bombchus'])
+        pool.extend(['Bombchus'])
         if world.settings.shuffle_medigoron_carpet_salesman:
             pool.append('Bombchus')
-
     else:
-        pool.extend(['Bombchus (5)'] + ['Bombchus (10)'] * 2)
-        if world.dungeon_mq['Jabu Jabus Belly']:
-                pool.extend(['Bombchus (10)'])
-        if world.dungeon_mq['Spirit Temple']:
-                pool.extend(['Bombchus (10)'] * 2)
-        if not world.dungeon_mq['Bottom of the Well']:
-                pool.extend(['Bombchus (10)'])
-        if world.dungeon_mq['Gerudo Training Ground']:
-                pool.extend(['Bombchus (10)'])
-        if world.dungeon_mq['Ganons Castle']:
-            pool.extend(['Bombchus (10)'])
-        else:
-            pool.extend(['Bombchus (20)'])
+        pool.extend(['Bombchus (10)'])
         if world.settings.shuffle_medigoron_carpet_salesman:
             pool.append('Bombchus (10)')
 
     if not world.settings.shuffle_medigoron_carpet_salesman:
         placed_items['Wasteland Bombchu Salesman'] = 'Bombchus (10)'
-
-    pool.extend(['Ice Trap'])
-    if not world.dungeon_mq['Gerudo Training Ground']:
-        pool.extend(['Ice Trap'])
-    if not world.dungeon_mq['Ganons Castle']:
-        pool.extend(['Ice Trap'] * 4)
 
     if world.settings.gerudo_fortress == 'open':
         placed_items['Hideout Jail Guard (1 Torch)'] = 'Recovery Heart'
@@ -835,44 +724,7 @@ def get_pool_core(world):
             placed_items['Ganons Castle Deku Scrub Left'] = 'Buy Green Potion'
         placed_items.update(vanilla_deku_scrubs)
 
-    pool.extend(alwaysitems)
-    
-    if world.dungeon_mq['Deku Tree']:
-        pool.extend(DT_MQ)
-    else:
-        pool.extend(DT_vanilla)
-    if world.dungeon_mq['Dodongos Cavern']:
-        pool.extend(DC_MQ)
-    else:
-        pool.extend(DC_vanilla)
-    if world.dungeon_mq['Jabu Jabus Belly']:
-        pool.extend(JB_MQ)
-    if world.dungeon_mq['Forest Temple']:
-        pool.extend(FoT_MQ)
-    else:
-        pool.extend(FoT_vanilla)
-    if world.dungeon_mq['Fire Temple']:
-        pool.extend(FiT_MQ)
-    else:
-        pool.extend(FiT_vanilla)
-    if world.dungeon_mq['Spirit Temple']:
-        pool.extend(SpT_MQ)
-    else:
-        pool.extend(SpT_vanilla)
-    if world.dungeon_mq['Shadow Temple']:
-        pool.extend(ShT_MQ)
-    else:
-        pool.extend(ShT_vanilla)
-    if not world.dungeon_mq['Bottom of the Well']:
-        pool.extend(BW_vanilla)
-    if world.dungeon_mq['Gerudo Training Ground']:
-        pool.extend(GTG_MQ)
-    else:
-        pool.extend(GTG_vanilla)
-    if world.dungeon_mq['Ganons Castle']:
-        pool.extend(GC_MQ)
-    else:
-        pool.extend(GC_vanilla)
+    pool.extend(overworld_always_items)
 
     for i in range(bottle_count):
         if i >= ruto_bottles:
