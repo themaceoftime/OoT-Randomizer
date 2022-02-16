@@ -3258,6 +3258,41 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
+    Setting_Info(
+        name           = 'key_rings',
+        type           = list,
+        gui_text       = 'Key Rings',
+        gui_type       = "MultipleSelect",
+        choices        = {
+            'thieves_hideout': 'Thieves\' Hideout',
+            'forest_temple': 'Forest Temple',
+            'fire_temple': 'Fire Temple',
+            'water_temple': 'Water Temple',
+            'shadow_temple': 'Shadow Temple',
+            'spirit_temple': 'Spirit Temple',
+            'bottom_of_the_well': 'Bottom of the Well',
+            'gerudo_training_ground': 'Gerudo Training Ground',
+            'ganons_castle': 'Ganon\'s Castle'
+        },
+        default        = [],
+        gui_tooltip    = '''\
+            Selected dungeons will have all of their keys found 
+            at once in a ring rather than individually. 
+
+            For example, instead of shuffling 5 Forest Temple 
+            small keys into the pool, you will find a single
+            key ring which will give you all 5 keys at once.
+
+            Selecting key ring for dungeons will have no effect
+            if Small Keys are set to Remove or Vanilla.
+
+            Selecting key ring for Thieves' Hideout will have 
+            no effect if Thieves' Hideout keys are in vanilla 
+            locations or Gerudo's Fortress is set to Rescue
+            One Carpenter.
+        ''',
+        shared         = True,
+    ),
     Combobox(
         name           = 'shuffle_bosskeys',
         gui_text       = 'Boss Keys',

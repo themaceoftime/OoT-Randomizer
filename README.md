@@ -109,6 +109,7 @@ do that.
   * `Chest Size Matches Content` has been replaced with `Chest Appearance Matches Content`. Unique textures are applied to chests containing major items, small keys, boss keys, skulltula tokens, and remaining items. An additional option also changes chest sizes like the previous setting.
   * New cosmetic setting `Disable battle music` turns off the battle music from being near enemies, allowing the background music to continue uninterrupted.
   * New setting `Plant Magic Beans` automatically plants all the Magic Beans from the start.
+  * New setting `Key Rings` which can be enabled per-dungeon to replace all of its individual Small Keys into a singular Small Key Ring containing all the small keys for that dungeon.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.

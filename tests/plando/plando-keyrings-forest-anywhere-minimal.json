@@ -1,0 +1,10 @@
+{
+  "settings":                  {
+    "item_pool_value":                         "minimal",
+    "shuffle_smallkeys":                       "keysanity",
+    "key_rings":                               [
+      "forest_temple"
+    ],
+    "mq_dungeons":                             0
+  }
+}
