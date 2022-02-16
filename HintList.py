@@ -1478,11 +1478,14 @@ def hintExclusions(world, clear_cache=False):
                  'dungeon',
                  'song',
                  'dual',
-                 'exclude']):
+                 'exclude',
+                 'dual_exclude']):
             location_hints.append(hint)
 
     for hint in location_hints:
-        if 'dual' in hint.type:
+        if any(item in hint.type for item in 
+                ['dual',
+                 'dual_exclude']):
             dual = getDual(hint.name)
             if dual.firstLocation not in world_location_names or dual.secondLocation not in world_location_names:
                 hintExclusions.exclusions[world.id].append(hint.name)
