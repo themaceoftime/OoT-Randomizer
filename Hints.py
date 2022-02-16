@@ -142,7 +142,7 @@ def isRestrictedDungeonItem(dungeon, item):
     return False
 
 
-def add_hint(spoiler, world, groups, gossip_text, count, location=None, force_reachable=False):
+def add_hint(spoiler, world, groups, gossip_text, count, location=None, secondLocation=None, force_reachable=False):
     random.shuffle(groups)
     skipped_groups = []
     duplicates = []
@@ -160,7 +160,7 @@ def add_hint(spoiler, world, groups, gossip_text, count, location=None, force_re
             if any(map(lambda id: gossipLocations[id].reachable, group)):
                 stone_names = [gossipLocations[id].location for id in group]
                 stone_locations = [world.get_location(stone_name) for stone_name in stone_names]
-                if not first or any(map(lambda stone_location: can_reach_hint(spoiler.worlds, stone_location, location), stone_locations)):
+                if not first or any(map(lambda stone_location: can_reach_hint(spoiler.worlds, stone_location, location) and can_reach_hint(spoiler.worlds, stone_location, secondLocation), stone_locations)):
                     if first and location:
                         # just name the event item after the gossip stone directly
                         event_item = None
@@ -776,7 +776,7 @@ def get_dual_hint(spoiler, world, checked):
     first_item_text = getHint(getItemGenericName(firstLocation.item), world.settings.clearer_hints).text
     second_item_text = getHint(getItemGenericName(secondLocation.item), world.settings.clearer_hints).text
     
-    return (GossipText('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), firstLocation)
+    return (GossipText('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), firstLocation, secondLocation)
 
 def get_entrance_hint(spoiler, world, checked):
     if not world.entrance_shuffle:
@@ -1174,8 +1174,12 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
             # to fit hint types in remaining gossip stones
             hint_dist[hint_type] = (0.0, copies)
         else:
-            gossip_text, location = hint
-            place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, copies, location)
+            if hint_type == 'dual':
+                gossip_text, location, secondLocation = hint
+                place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, copies, location, secondLocation)
+            else:
+                gossip_text, location = hint
+                place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, copies, location)
             if place_ok:
                 hint_counts[hint_type] = hint_counts.get(hint_type, 0) + 1
                 if location is None:
