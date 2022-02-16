@@ -2436,8 +2436,8 @@ setting_infos = [
         default        = 'off',
         choices        = {
             'off':       'Off',
-            'choice':    'Choice dungeons',
-            'all':	     'All dungeons',
+            'choice':    'Choose dungeons',
+            'all':       'All dungeons',
             'random':    'Random dungeons'
         },
         gui_tooltip    = '''\
@@ -2462,7 +2462,7 @@ setting_infos = [
             shortcut silver blocks moved, central room
             platform lowered, and statue face melted
 
-            Choice: Select dungeons with shortcuts
+            Choose: Select dungeons with shortcuts
             All: Enable all dungeons shortcuts
             Random: Random dungeon shortcuts
         ''',
