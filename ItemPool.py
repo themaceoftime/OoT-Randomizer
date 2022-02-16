@@ -250,74 +250,6 @@ shopsanity_rupees = (
     ['Progressive Wallet'])
 
 
-vanilla_shop_items = {
-    'KF Shop Item 1': 'Buy Deku Shield',
-    'KF Shop Item 2': 'Buy Deku Nut (5)',
-    'KF Shop Item 3': 'Buy Deku Nut (10)',
-    'KF Shop Item 4': 'Buy Deku Stick (1)',
-    'KF Shop Item 5': 'Buy Deku Seeds (30)',
-    'KF Shop Item 6': 'Buy Arrows (10)',
-    'KF Shop Item 7': 'Buy Arrows (30)',
-    'KF Shop Item 8': 'Buy Heart',
-    'Kak Potion Shop Item 1': 'Buy Deku Nut (5)',
-    'Kak Potion Shop Item 2': 'Buy Fish',
-    'Kak Potion Shop Item 3': 'Buy Red Potion [30]',
-    'Kak Potion Shop Item 4': 'Buy Green Potion',
-    'Kak Potion Shop Item 5': 'Buy Blue Fire',
-    'Kak Potion Shop Item 6': 'Buy Bottle Bug',
-    'Kak Potion Shop Item 7': 'Buy Poe',
-    'Kak Potion Shop Item 8': 'Buy Fairy\'s Spirit',
-    'Market Bombchu Shop Item 1': 'Buy Bombchu (5)',
-    'Market Bombchu Shop Item 2': 'Buy Bombchu (10)',
-    'Market Bombchu Shop Item 3': 'Buy Bombchu (10)',
-    'Market Bombchu Shop Item 4': 'Buy Bombchu (10)',
-    'Market Bombchu Shop Item 5': 'Buy Bombchu (20)',
-    'Market Bombchu Shop Item 6': 'Buy Bombchu (20)',
-    'Market Bombchu Shop Item 7': 'Buy Bombchu (20)',
-    'Market Bombchu Shop Item 8': 'Buy Bombchu (20)',
-    'Market Potion Shop Item 1': 'Buy Green Potion',
-    'Market Potion Shop Item 2': 'Buy Blue Fire',
-    'Market Potion Shop Item 3': 'Buy Red Potion [30]',
-    'Market Potion Shop Item 4': 'Buy Fairy\'s Spirit',
-    'Market Potion Shop Item 5': 'Buy Deku Nut (5)',
-    'Market Potion Shop Item 6': 'Buy Bottle Bug',
-    'Market Potion Shop Item 7': 'Buy Poe',
-    'Market Potion Shop Item 8': 'Buy Fish',
-    'Market Bazaar Item 1': 'Buy Hylian Shield',
-    'Market Bazaar Item 2': 'Buy Bombs (5) [35]',
-    'Market Bazaar Item 3': 'Buy Deku Nut (5)',
-    'Market Bazaar Item 4': 'Buy Heart',
-    'Market Bazaar Item 5': 'Buy Arrows (10)',
-    'Market Bazaar Item 6': 'Buy Arrows (50)',
-    'Market Bazaar Item 7': 'Buy Deku Stick (1)',
-    'Market Bazaar Item 8': 'Buy Arrows (30)',
-    'Kak Bazaar Item 1': 'Buy Hylian Shield',
-    'Kak Bazaar Item 2': 'Buy Bombs (5) [35]',
-    'Kak Bazaar Item 3': 'Buy Deku Nut (5)',
-    'Kak Bazaar Item 4': 'Buy Heart',
-    'Kak Bazaar Item 5': 'Buy Arrows (10)',
-    'Kak Bazaar Item 6': 'Buy Arrows (50)',
-    'Kak Bazaar Item 7': 'Buy Deku Stick (1)',
-    'Kak Bazaar Item 8': 'Buy Arrows (30)',
-    'ZD Shop Item 1': 'Buy Zora Tunic',
-    'ZD Shop Item 2': 'Buy Arrows (10)',
-    'ZD Shop Item 3': 'Buy Heart',
-    'ZD Shop Item 4': 'Buy Arrows (30)',
-    'ZD Shop Item 5': 'Buy Deku Nut (5)',
-    'ZD Shop Item 6': 'Buy Arrows (50)',
-    'ZD Shop Item 7': 'Buy Fish',
-    'ZD Shop Item 8': 'Buy Red Potion [50]',
-    'GC Shop Item 1': 'Buy Bombs (5) [25]',
-    'GC Shop Item 2': 'Buy Bombs (10)',
-    'GC Shop Item 3': 'Buy Bombs (20)',
-    'GC Shop Item 4': 'Buy Bombs (30)',
-    'GC Shop Item 5': 'Buy Goron Tunic',
-    'GC Shop Item 6': 'Buy Heart',
-    'GC Shop Item 7': 'Buy Red Potion [40]',
-    'GC Shop Item 8': 'Buy Heart',
-}
-
-
 min_shop_items = (
     ['Buy Deku Shield'] +
     ['Buy Hylian Shield'] +
@@ -784,21 +716,6 @@ def get_pool_core(world):
         placed_items['LW Gift from Saria'] = 'Ocarina'
         placed_items['HF Ocarina of Time Item'] = 'Ocarina'
 
-    if world.settings.shuffle_cows:
-        pool.extend(get_junk_item(10 if world.dungeon_mq['Jabu Jabus Belly'] else 9))
-    else:
-        placed_items['LLR Stables Left Cow'] = 'Milk'
-        placed_items['LLR Stables Right Cow'] = 'Milk'
-        placed_items['LLR Tower Left Cow'] = 'Milk'
-        placed_items['LLR Tower Right Cow'] = 'Milk'
-        placed_items['KF Links House Cow'] = 'Milk'
-        placed_items['Kak Impas House Cow'] = 'Milk'
-        placed_items['GV Cow'] = 'Milk'
-        placed_items['DMT Cow Grotto Cow'] = 'Milk'
-        placed_items['HF Cow Grotto Cow'] = 'Milk'
-        if world.dungeon_mq['Jabu Jabus Belly']:
-            placed_items['Jabu Jabus Belly MQ Cow'] = 'Milk'
-
     if world.settings.shuffle_beans:
         if world.distribution.get_starting_item('Magic Bean') < 10:
             pool.append('Magic Bean Pack')
@@ -814,13 +731,33 @@ def get_pool_core(world):
     else:
         placed_items['GC Medigoron'] = 'Giants Knife'
 
+    remain_shop_items = []
     for location in world.get_locations():
+        if location.type == "Shop":
+            if world.settings.shopsanity == 'off':
+                if world.settings.bombchus_in_logic and location.name in ['KF Shop Item 8', 'Market Bazaar Item 4', 'Kak Bazaar Item 4']:
+                    placed_items[location.name] = 'Buy Bombchu (5)'
+                else:
+                    placed_items[location.name] = location.vanilla_item
+            else:
+                remain_shop_items.append(location.vanilla_item)
+            continue
+
         if location.vanilla_item == 'Gold Skulltula Token':
             if world.settings.tokensanity == 'off' or (world.settings.tokensanity == 'dungeons' and location.scene >= 0x0A) \
                     or (world.settings.tokensanity == 'overworld' and location.scene < 0x0A):
                 placed_items[location.name] = 'Gold Skulltula Token'
             else:
                 pool.append('Gold Skulltula Token')
+            continue
+
+        if location.vanilla_item == 'Milk':
+            if world.settings.shuffle_cows:
+                pool.extend(get_junk_item())
+            else:
+                placed_items[location.name] = 'Milk'
+            continue
+
 
     if world.settings.bombchus_in_logic:
         pool.extend(['Bombchus'] * 4)
@@ -968,15 +905,8 @@ def get_pool_core(world):
         pending_junk_pool.append('Boss Key (Ganons Castle)')
 
     if world.settings.shopsanity == 'off':
-        placed_items.update(vanilla_shop_items)
-        if world.settings.bombchus_in_logic:
-            placed_items['KF Shop Item 8'] = 'Buy Bombchu (5)'
-            placed_items['Market Bazaar Item 4'] = 'Buy Bombchu (5)'
-            placed_items['Kak Bazaar Item 4'] = 'Buy Bombchu (5)'
         pool.extend(normal_rupees)
-
     else:
-        remain_shop_items = list(vanilla_shop_items.values())
         pool.extend(min_shop_items)
         for item in min_shop_items:
             remain_shop_items.remove(item)
