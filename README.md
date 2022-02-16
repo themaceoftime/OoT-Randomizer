@@ -131,6 +131,7 @@ do that.
   * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
   * Improve some error messages when running the generator.
   * Fix logic parser shortcuts not working right in newer Python versions.
+  * `Goron Bracelet` is no longer greyed out as adult on the Equipment subscreen of the pause menu.
 
 ### 6.2
 

@@ -10,6 +10,7 @@
 00BAF754 .byt:0044
 00BB05FC .dbl:0004
 00BB0600 .dbl:0004
+00BC780C .byt:0001
 00BDA354 @@after_chest_speed_check
 00C0796E .wrd:0002
 00C6FF64 .byt:0018
