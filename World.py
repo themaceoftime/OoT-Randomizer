@@ -966,10 +966,11 @@ class World(object):
         if self.settings.shuffle_bosses == 'off':
             return map
 
-        for entrance in self.get_shuffled_entrances('Boss', True):
-            if 'boss' not in entrance.data:
-                continue
-            map[entrance.data['boss']] = entrance.replaces.data['boss']
+        for type in ('ChildBoss', 'AdultBoss'):
+            for entrance in self.get_shuffled_entrances(type, True):
+                if 'boss' not in entrance.data:
+                    continue
+                map[entrance.data['boss']] = entrance.replaces.data['boss']
         return map
 
     def reverse_boss_map(self):

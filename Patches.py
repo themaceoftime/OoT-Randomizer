@@ -852,7 +852,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             # We'll need to iterate more than once, so make a copy so we can iterate more than once.
             entrances = list(entrances)
             for entrance in entrances:
-                if entrance.type != 'Boss' or not entrance.replaces or 'patch_addresses' not in entrance.data:
+                if entrance.type not in('ChildBoss', 'AdultBoss') or not entrance.replaces or 'patch_addresses' not in entrance.data:
                     continue
                 if entrance == entrance.replaces:
                     # This can happen if something is plando'd vanilla.
