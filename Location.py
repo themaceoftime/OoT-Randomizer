@@ -54,6 +54,11 @@ class Location(object):
         return new_location
 
 
+    @property
+    def dungeon(self):
+        return self.parent_region.dungeon if self.parent_region is not None else None
+
+
     def add_rule(self, lambda_rule):
         if self.always:
             self.set_rule(lambda_rule)
