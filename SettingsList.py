@@ -3261,15 +3261,15 @@ setting_infos = [
         gui_text       = 'Key Rings',
         gui_type       = "MultipleSelect",
         choices        = {
-            'thieves_hideout': 'Thieves\' Hideout',
-            'forest_temple': 'Forest Temple',
-            'fire_temple': 'Fire Temple',
-            'water_temple': 'Water Temple',
-            'shadow_temple': 'Shadow Temple',
-            'spirit_temple': 'Spirit Temple',
-            'bottom_of_the_well': 'Bottom of the Well',
-            'gerudo_training_ground': 'Gerudo Training Ground',
-            'ganons_castle': 'Ganon\'s Castle'
+            'Thieves Hideout':        "Thieves' Hideout",
+            'Forest Temple':          "Forest Temple",
+            'Fire Temple':            "Fire Temple",
+            'Water Temple':           "Water Temple",
+            'Shadow Temple':          "Shadow Temple",
+            'Spirit Temple':          "Spirit Temple",
+            'Bottom of the Well':     "Bottom of the Well",
+            'Gerudo Training Ground': "Gerudo Training Ground",
+            'Ganons Castle':          "Ganon's Castle"
         },
         default        = [],
         gui_tooltip    = '''\

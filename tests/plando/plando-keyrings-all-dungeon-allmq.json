@@ -3,15 +3,15 @@
     "shuffle_smallkeys":                       "dungeon",
     "shuffle_hideoutkeys":                     "vanilla",
     "key_rings":                               [
-      "forest_temple",
-      "water_temple",
-      "ganons_castle",
-      "spirit_temple",
-      "thieves_hideout",
-      "fire_temple",
-      "shadow_temple",
-      "gerudo_training_ground",
-      "bottom_of_the_well"
+      "Forest Temple",
+      "Water Temple",
+      "Ganons Castle",
+      "Spirit Temple",
+      "Thieves Hideout",
+      "Fire Temple",
+      "Shadow Temple",
+      "Gerudo Training Ground",
+      "Bottom of the Well"
     ],
     "mq_dungeons":                             12
   }

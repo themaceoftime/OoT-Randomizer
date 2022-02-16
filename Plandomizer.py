@@ -307,40 +307,40 @@ class WorldDistribution(object):
                     if self.distribution.settings.tokensanity == 'all' and major_tokens:
                         self.major_group.append('Gold Skulltula Token')
                     if self.distribution.settings.shuffle_smallkeys == 'keysanity':
-                        if 'bottom_of_the_well' in self.distribution.settings.key_rings:
+                        if 'Bottom of the Well' in self.distribution.settings.key_rings:
                             self.major_group.append('Small Key Ring (Bottom of the Well)')
                         else:
                             self.major_group.append('Small Key (Bottom of the Well)')
-                        if 'forest_temple' in self.distribution.settings.key_rings:
+                        if 'Forest Temple' in self.distribution.settings.key_rings:
                             self.major_group.append('Small Key Ring (Forest Temple)')
                         else:
                             self.major_group.append('Small Key (Forest Temple)')
-                        if 'fire_temple' in self.distribution.settings.key_rings:
+                        if 'Fire Temple' in self.distribution.settings.key_rings:
                             self.major_group.append('Small Key Ring (Fire Temple)')
                         else:
                             self.major_group.append('Small Key (Fire Temple)')
-                        if 'water_temple' in self.distribution.settings.key_rings:
+                        if 'Water Temple' in self.distribution.settings.key_rings:
                             self.major_group.append('Small Key Ring (Water Temple)')
                         else:
                             self.major_group.append('Small Key (Water Temple)')
-                        if 'shadow_temple' in self.distribution.settings.key_rings:
+                        if 'Shadow Temple' in self.distribution.settings.key_rings:
                             self.major_group.append('Small Key Ring (Shadow Temple)')
                         else:
                             self.major_group.append('Small Key (Shadow Temple)')
-                        if 'spirit_temple' in self.distribution.settings.key_rings:
+                        if 'Spirit Temple' in self.distribution.settings.key_rings:
                             self.major_group.append('Small Key Ring (Spirit Temple)')
                         else:
                             self.major_group.append('Small Key (Spirit Temple)')
-                        if 'gerudo_training_ground' in self.distribution.settings.key_rings:
+                        if 'Gerudo Training Ground' in self.distribution.settings.key_rings:
                             self.major_group.append('Small Key Ring (Gerudo Training Ground)')
                         else:
                             self.major_group.append('Small Key (Gerudo Training Ground)')
-                        if 'ganons_castle' in self.distribution.settings.key_rings:
+                        if 'Ganons Castle' in self.distribution.settings.key_rings:
                             self.major_group.append('Small Key Ring (Ganons Castle)')
                         else:
                             self.major_group.append('Small Key (Ganons Castle)')
                     if self.distribution.settings.shuffle_hideoutkeys == 'keysanity':
-                        if 'thieves_hideout' in self.distribution.settings.key_rings:
+                        if 'Thieves Hideout' in self.distribution.settings.key_rings:
                             self.major_group.append('Small Key Ring (Thieves Hideout)')
                         else:
                             self.major_group.append('Small Key (Thieves Hideout)')

@@ -1071,13 +1071,13 @@ def get_pool_core(world):
             placed_items['Hideout Jail Guard (3 Torches)'] = 'Recovery Heart'
             placed_items['Hideout Jail Guard (4 Torches)'] = 'Recovery Heart'
         else:
-            if 'thieves_hideout' in world.settings.key_rings:
+            if 'Thieves Hideout' in world.settings.key_rings:
                 pool.extend(['Small Key Ring (Thieves Hideout)'])
                 pool.extend(get_junk_item(3))
             else:
                 pool.extend(['Small Key (Thieves Hideout)'] * 4)
         if world.settings.item_pool_value == 'plentiful':
-            if 'thieves_hideout' in world.settings.key_rings and world.settings.gerudo_fortress != "fast":
+            if 'Thieves Hideout' in world.settings.key_rings and world.settings.gerudo_fortress != "fast":
                 pending_junk_pool.extend(['Small Key Ring (Thieves Hideout)'])
             else:
                 pending_junk_pool.append('Small Key (Thieves Hideout)')
@@ -1104,53 +1104,53 @@ def get_pool_core(world):
         pending_junk_pool.append('Gerudo Membership Card')
 
     if world.settings.shuffle_smallkeys != "vanilla":
-        if 'bottom_of_the_well' in world.settings.key_rings:
+        if 'Bottom of the Well' in world.settings.key_rings:
             pool.extend(get_junk_item(1 if world.dungeon_mq['Bottom of the Well'] else 2))
-        if 'forest_temple' in world.settings.key_rings:
+        if 'Forest Temple' in world.settings.key_rings:
             pool.extend(get_junk_item(5 if world.dungeon_mq['Forest Temple'] else 4))
-        if 'fire_temple' in world.settings.key_rings:
+        if 'Fire Temple' in world.settings.key_rings:
             pool.extend(get_junk_item(4 if world.dungeon_mq['Fire Temple'] else 7))
-        if 'water_temple' in world.settings.key_rings:
+        if 'Water Temple' in world.settings.key_rings:
             pool.extend(get_junk_item(1 if world.dungeon_mq['Water Temple'] else 5))
-        if 'shadow_temple' in world.settings.key_rings:
+        if 'Shadow Temple' in world.settings.key_rings:
             pool.extend(get_junk_item(5 if world.dungeon_mq['Shadow Temple'] else 4))
-        if 'spirit_temple' in world.settings.key_rings:
+        if 'Spirit Temple' in world.settings.key_rings:
             pool.extend(get_junk_item(6 if world.dungeon_mq['Spirit Temple'] else 4))
-        if 'gerudo_training_ground' in world.settings.key_rings:
+        if 'Gerudo Training Ground' in world.settings.key_rings:
             pool.extend(get_junk_item(2 if world.dungeon_mq['Gerudo Training Ground'] else 8))
-        if 'ganons_castle' in world.settings.key_rings:
+        if 'Ganons Castle' in world.settings.key_rings:
             pool.extend(get_junk_item(2 if world.dungeon_mq['Ganons Castle'] else 1))
 
     if world.settings.item_pool_value == 'plentiful' and world.settings.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity']:
-        if 'bottom_of_the_well' in world.settings.key_rings:
+        if 'Bottom of the Well' in world.settings.key_rings:
             pending_junk_pool.append('Small Key Ring (Bottom of the Well)')
         else:
             pending_junk_pool.append('Small Key (Bottom of the Well)')
-        if 'forest_temple' in world.settings.key_rings:
+        if 'Forest Temple' in world.settings.key_rings:
             pending_junk_pool.append('Small Key Ring (Forest Temple)')
         else:
             pending_junk_pool.append('Small Key (Forest Temple)')
-        if 'fire_temple' in world.settings.key_rings:
+        if 'Fire Temple' in world.settings.key_rings:
             pending_junk_pool.append('Small Key Ring (Fire Temple)')
         else:
             pending_junk_pool.append('Small Key (Fire Temple)')
-        if 'water_temple' in world.settings.key_rings:
+        if 'Water Temple' in world.settings.key_rings:
             pending_junk_pool.append('Small Key Ring (Water Temple)')
         else:
             pending_junk_pool.append('Small Key (Water Temple)')
-        if 'shadow_temple' in world.settings.key_rings:
+        if 'Shadow Temple' in world.settings.key_rings:
             pending_junk_pool.append('Small Key Ring (Shadow Temple)')
         else:
             pending_junk_pool.append('Small Key (Shadow Temple)')
-        if 'spirit_temple' in world.settings.key_rings:
+        if 'Spirit Temple' in world.settings.key_rings:
             pending_junk_pool.append('Small Key Ring (Spirit Temple)')
         else:
             pending_junk_pool.append('Small Key (Spirit Temple)')
-        if 'gerudo_training_ground' in world.settings.key_rings:
+        if 'Gerudo Training Ground' in world.settings.key_rings:
             pending_junk_pool.append('Small Key Ring (Gerudo Training Ground)')
         else:
             pending_junk_pool.append('Small Key (Gerudo Training Ground)')
-        if 'ganons_castle' in world.settings.key_rings:
+        if 'Ganons Castle' in world.settings.key_rings:
             pending_junk_pool.append('Small Key Ring (Ganons Castle)')
         else:
             pending_junk_pool.append('Small Key (Ganons Castle)')
