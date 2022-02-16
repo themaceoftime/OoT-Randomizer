@@ -3,6 +3,7 @@
 import logging
 import random
 from TextBox import line_wrap
+from Utils import find_last
 
 TEXT_START = 0x92D000
 ENG_TEXT_SIZE_LIMIT = 0x39000
@@ -540,12 +541,14 @@ class Message:
         ending_codes = [0x02, 0x07, 0x0A, 0x0B, 0x0E, 0x10]
         box_breaks = [0x04, 0x0C]
         slows_text = [0x08, 0x09, 0x14]
+        slow_icons = [0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x04, 0x02]
 
         text_codes = []
+        instant_text_code = Text_Code(0x08, 0)
 
         # # speed the text
         if speed_up_text:
-            text_codes.append(Text_Code(0x08, 0)) # allow instant
+            text_codes.append(instant_text_code) # allow instant
 
         # write the message
         for code in self.text_codes:
@@ -566,10 +569,14 @@ class Message:
                     self.id == 0x7070
                 ):   # zelda ending text
                     text_codes.append(code)
-                    text_codes.append(Text_Code(0x08, 0))  # allow instant
+                    text_codes.append(instant_text_code)  # allow instant
                 else:
                     text_codes.append(Text_Code(0x04, 0))  # un-delayed break
-                    text_codes.append(Text_Code(0x08, 0))  # allow instant
+                    text_codes.append(instant_text_code)  # allow instant
+            elif speed_up_text and code.code == 0x13 and code.data in slow_icons:
+                text_codes.append(code)
+                text_codes.pop(find_last(text_codes, instant_text_code))  # remove last instance of instant text
+                text_codes.append(instant_text_code)  # allow instant
             else:
                 text_codes.append(code)
 

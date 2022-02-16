@@ -124,7 +124,8 @@ do that.
   * Fix MQ Shadow Temple making use of shared flags.
   * Fix MQ Fire Temple missing the Hammer chest from the map and minimap.
   * Add correct default Goals for Ganon's Boss Key when Light Arrow Cutscene is non-vanilla.
-  * Fixes a softlock caused by 8-note Sun's Songs when using `Randomize Ocarina Song Notes`.
+  * Fix a softlock caused by 8-note Sun's Songs when using `Randomize Ocarina Song Notes`.
+  * Fix slow text when acquiring certain items (Hookshot, Bombchus, etc.)
 
 #### Other changes
   * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
