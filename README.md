@@ -133,6 +133,7 @@ do that.
   * Improve some error messages when running the generator.
   * Fix logic parser shortcuts not working right in newer Python versions.
   * `Goron Bracelet` is no longer greyed out as adult on the Equipment subscreen of the pause menu.
+  * Plandomizer: You can now specify an arbitrary 4-character hexadecimal text ID as a "Gossip Stone" to overwrite text in the game.
 
 ### 6.2
 

@@ -302,7 +302,7 @@ class WorldDistribution(object):
                     if self.distribution.settings.triforce_hunt:
                         self.major_group.append('Triforce Piece')
                     major_tokens = ((self.distribution.settings.shuffle_ganon_bosskey == 'on_lacs' and
-                            self.distribution.settings.lacs_condition == 'tokens') or 
+                            self.distribution.settings.lacs_condition == 'tokens') or
                             self.distribution.settings.shuffle_ganon_bosskey == 'tokens' or self.distribution.settings.bridge == 'tokens')
                     if self.distribution.settings.tokensanity == 'all' and major_tokens:
                         self.major_group.append('Gold Skulltula Token')
@@ -953,7 +953,12 @@ class WorldDistribution(object):
             matcher = self.pattern_matcher(name)
             stoneID = pull_random_element([stoneIDs], lambda id: matcher(gossipLocations[id].name))
             if stoneID is None:
-                raise RuntimeError('Gossip stone unknown or already assigned in world %d: %r. %s' % (self.id + 1, name, build_close_match(name, 'stone')))
+                # Allow planning of explicit textids
+                match = re.match(r"^(?:\$|x|0x)?([0-9a-f]{4})$", name, flags=re.IGNORECASE)
+                if match:
+                    stoneID = int(match[1], base=16)
+                else:
+                    raise RuntimeError('Gossip stone unknown or already assigned in world %d: %r. %s' % (self.id + 1, name, build_close_match(name, 'stone')))
             spoiler.hints[self.id][stoneID] = GossipText(text=record.text, colors=record.colors, prefix='')
 
 
@@ -1220,7 +1225,13 @@ class Distribution(object):
                             else:
                                 world_dist.goal_locations[cat_name][goal_text]['from World ' + str(location_world + 1)] = {loc.name: LocationRecord.from_item(loc.item).to_json() for loc in locations}
             world_dist.barren_regions = [*world.empty_areas]
-            world_dist.gossip_stones = {gossipLocations[loc].name: GossipRecord(spoiler.hints[world.id][loc].to_json()) for loc in spoiler.hints[world.id]}
+            world_dist.gossip_stones = {}
+            for loc in spoiler.hints[world.id]:
+                hint = GossipRecord(spoiler.hints[world.id][loc].to_json())
+                if loc in gossipLocations:
+                    world_dist.gossip_stones[gossipLocations[loc].name] = hint
+                else:
+                    world_dist.gossip_stones["0x{:04X}".format(loc)] = hint
 
         self.playthrough = {}
         for (sphere_nr, sphere) in spoiler.playthrough.items():
