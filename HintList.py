@@ -1420,7 +1420,7 @@ dualTable = {
     'Spirit Temple Adult Lower':                                ('Spirit Temple Early Adult Right Chest', 'Spirit Temple Compass Chest'),
     'Spirit Temple MQ Child Top':                               ('Spirit Temple MQ Sun Block Room Chest', 'Spirit Temple MQ GS Sun Block Room'),
     'Spirit Temple MQ Symphony Room':                           ('Spirit Temple MQ Symphony Room Chest', 'Spirit Temple MQ GS Symphony Room'),
-    'Spirit Temple MQ Throne Room GS':                          ('Spirit Temple MQ GS Nine Thrones Room West', 'Spirit Temple MQ GS Nine Thrones Room North')
+    'Spirit Temple MQ Throne Room GS':                          ('Spirit Temple MQ GS Nine Thrones Room West', 'Spirit Temple MQ GS Nine Thrones Room North'),
     'Shadow Temple Upper Checks':                               ('Shadow Temple Map Chest', 'Shadow Temple Hover Boots Chest'),
     'Shadow Temple Invisible Blades Chests':                    ('Shadow Temple Invisible Blades Visible Chest', 'Shadow Temple Invisible Blades Invisible Chest'),
     'Shadow Temple Single Pot Room':                            ('Shadow Temple Freestanding Key', 'Shadow Temple GS Single Giant Pot'),
