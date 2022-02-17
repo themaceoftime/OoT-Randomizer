@@ -164,7 +164,7 @@ min_shop_items = (
     ['Buy Green Potion'] +
     ['Buy Red Potion [30]'] +
     ['Buy Blue Fire'] +
-    ['Buy Fairy\'s Spirit'] +
+    ["Buy Fairy's Spirit"] +
     ['Buy Bottle Bug'] +
     ['Buy Fish'])
 
@@ -229,22 +229,12 @@ junk_pool_base = [
 pending_junk_pool = []
 junk_pool = []
 
-remove_junk_items = [
-    'Bombs (5)',
-    'Deku Nuts (5)',
-    'Deku Stick (1)',
+remove_junk_items = [junk[0] for junk in junk_pool_base] + [
     'Recovery Heart',
-    'Arrows (5)',
-    'Arrows (10)',
     'Arrows (30)',
-    'Rupees (5)',
-    'Rupees (20)',
-    'Rupees (50)',
     'Rupees (200)',
     'Deku Nuts (10)',
-    'Bombs (10)',
     'Bombs (20)',
-    'Deku Seeds (30)',
     'Ice Trap',
 ]
 remove_junk_set = set(remove_junk_items)
@@ -481,15 +471,42 @@ def get_pool_core(world):
                 item = random.choice(normal_bottles)
             shuffle_item = True
 
+        # Thieves' Hideout
+        elif location.vanilla_item == 'Small Key (Thieves Hideout)':
+            shuffle_item = world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']
+            if world.settings.gerudo_fortress == 'open' \
+                    or world.settings.gerudo_fortress == 'fast' and location.name != 'Hideout Jail Guard (1 Torch)':
+                item = 'Recovery Heart'
+                shuffle_item = False
+            if shuffle_item and world.settings.gerudo_fortress == 'normal' and 'Thieves Hideout' in world.settings.key_rings:
+                item = get_junk_item()[0] if 'Small Key Ring (Thieves Hideout)' in pool else 'Small Key Ring (Thieves Hideout)'
+
         # Dungeon Items
         elif location.dungeon is not None:
             dungeon = location.dungeon
-            if (world.settings.shuffle_bosskeys == 'vanilla' and dungeon.name != 'Ganons Castle' and location.vanilla_item == f"Boss Key ({dungeon.name})") \
-                    or (world.settings.shuffle_mapcompass == 'vanilla' and location.vanilla_item in [f"Map ({dungeon.name})", f"Compass ({dungeon.name})"]) \
-                    or (world.settings.shuffle_smallkeys == 'vanilla' and location.vanilla_item == f"Small Key ({dungeon.name})"):
-                shuffle_item = False
-            elif location.type in ["Chest", "Collectable", "BossHeart"] \
-                    and location.vanilla_item not in [f"Boss Key ({dungeon.name})", f"Map ({dungeon.name})", f"Compass ({dungeon.name})", f"Small Key ({dungeon.name})"]:
+            if location.vanilla_item == dungeon.item_name("Boss Key"):
+                shuffle_bosskeys = world.settings.shuffle_bosskeys if dungeon.name != 'Ganons Castle' \
+                    else world.settings.shuffle_ganon_bosskey
+                if shuffle_bosskeys == 'vanilla':
+                    shuffle_item = False
+                dungeon.boss_key.append(ItemFactory(item))
+            elif location.vanilla_item in [dungeon.item_name("Map"), dungeon.item_name("Compass")]:
+                if world.settings.shuffle_mapcompass == 'vanilla':
+                    shuffle_item = False
+                dungeon.dungeon_items.append(ItemFactory(item))
+                if world.settings.shuffle_mapcompass in ['any_dungeon', 'overworld']:
+                    dungeon.dungeon_items[-1].priority = True
+            elif location.vanilla_item == dungeon.item_name("Small Key"):
+                if world.settings.shuffle_smallkeys == 'vanilla':
+                    shuffle_item = False
+                elif dungeon.name in world.settings.key_rings and not dungeon.small_keys:
+                    item = dungeon.item_name("Small Key Ring")
+                elif dungeon.name in world.settings.key_rings:
+                    item = get_junk_item()[0]
+                    shuffle_item = True
+                if not shuffle_item:
+                    dungeon.small_keys.append(ItemFactory(item))
+            elif location.type in ["Chest", "Collectable", "BossHeart"]:
                 shuffle_item = True
 
         # Now, handle the item as necessary.
@@ -501,60 +518,15 @@ def get_pool_core(world):
             continue
     # End of Locations loop.
 
-    if world.settings.gerudo_fortress == 'open':
-        placed_items['Hideout Jail Guard (1 Torch)'] = 'Recovery Heart'
-        placed_items['Hideout Jail Guard (2 Torches)'] = 'Recovery Heart'
-        placed_items['Hideout Jail Guard (3 Torches)'] = 'Recovery Heart'
-        placed_items['Hideout Jail Guard (4 Torches)'] = 'Recovery Heart'
-    elif world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']:
-        if world.settings.gerudo_fortress == 'fast':
-            pool.append('Small Key (Thieves Hideout)')
-            placed_items['Hideout Jail Guard (2 Torches)'] = 'Recovery Heart'
-            placed_items['Hideout Jail Guard (3 Torches)'] = 'Recovery Heart'
-            placed_items['Hideout Jail Guard (4 Torches)'] = 'Recovery Heart'
+    if world.settings.item_pool_value == 'plentiful' and world.settings.gerudo_fortress != "open" \
+            and world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']:
+        if 'Thieves Hideout' in world.settings.key_rings and world.settings.gerudo_fortress != "fast":
+            pending_junk_pool.extend(['Small Key Ring (Thieves Hideout)'])
         else:
-            if 'Thieves Hideout' in world.settings.key_rings:
-                pool.extend(['Small Key Ring (Thieves Hideout)'])
-                pool.extend(get_junk_item(3))
-            else:
-                pool.extend(['Small Key (Thieves Hideout)'] * 4)
-        if world.settings.item_pool_value == 'plentiful':
-            if 'Thieves Hideout' in world.settings.key_rings and world.settings.gerudo_fortress != "fast":
-                pending_junk_pool.extend(['Small Key Ring (Thieves Hideout)'])
-            else:
-                pending_junk_pool.append('Small Key (Thieves Hideout)')
-    else:
-        if world.settings.gerudo_fortress == 'fast':
-            placed_items['Hideout Jail Guard (1 Torch)'] = 'Small Key (Thieves Hideout)'
-            placed_items['Hideout Jail Guard (2 Torches)'] = 'Recovery Heart'
-            placed_items['Hideout Jail Guard (3 Torches)'] = 'Recovery Heart'
-            placed_items['Hideout Jail Guard (4 Torches)'] = 'Recovery Heart'
-        else:
-            placed_items['Hideout Jail Guard (1 Torch)'] = 'Small Key (Thieves Hideout)'
-            placed_items['Hideout Jail Guard (2 Torches)'] = 'Small Key (Thieves Hideout)'
-            placed_items['Hideout Jail Guard (3 Torches)'] = 'Small Key (Thieves Hideout)'
-            placed_items['Hideout Jail Guard (4 Torches)'] = 'Small Key (Thieves Hideout)'
+            pending_junk_pool.append('Small Key (Thieves Hideout)')
 
     if world.settings.shuffle_gerudo_card and world.settings.item_pool_value == 'plentiful':
         pending_junk_pool.append('Gerudo Membership Card')
-
-    if world.settings.shuffle_smallkeys != "vanilla":
-        if 'Bottom of the Well' in world.settings.key_rings:
-            pool.extend(get_junk_item(1 if world.dungeon_mq['Bottom of the Well'] else 2))
-        if 'Forest Temple' in world.settings.key_rings:
-            pool.extend(get_junk_item(5 if world.dungeon_mq['Forest Temple'] else 4))
-        if 'Fire Temple' in world.settings.key_rings:
-            pool.extend(get_junk_item(4 if world.dungeon_mq['Fire Temple'] else 7))
-        if 'Water Temple' in world.settings.key_rings:
-            pool.extend(get_junk_item(1 if world.dungeon_mq['Water Temple'] else 5))
-        if 'Shadow Temple' in world.settings.key_rings:
-            pool.extend(get_junk_item(5 if world.dungeon_mq['Shadow Temple'] else 4))
-        if 'Spirit Temple' in world.settings.key_rings:
-            pool.extend(get_junk_item(6 if world.dungeon_mq['Spirit Temple'] else 4))
-        if 'Gerudo Training Ground' in world.settings.key_rings:
-            pool.extend(get_junk_item(2 if world.dungeon_mq['Gerudo Training Ground'] else 8))
-        if 'Ganons Castle' in world.settings.key_rings:
-            pool.extend(get_junk_item(2 if world.dungeon_mq['Ganons Castle'] else 1))
 
     if world.settings.item_pool_value == 'plentiful' and world.settings.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity']:
         if 'Bottom of the Well' in world.settings.key_rings:
