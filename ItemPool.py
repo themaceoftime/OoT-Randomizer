@@ -126,9 +126,6 @@ normal_bottles = [
     'Bottle with Big Poe',
     'Bottle with Blue Fire']
 
-bottle_count = 4
-
-
 dungeon_rewards = [
     'Kokiri Emerald',
     'Goron Ruby',
@@ -141,7 +138,6 @@ dungeon_rewards = [
     'Light Medallion'
 ]
 
-
 normal_rupees = (
     ['Rupees (5)'] * 5 +
     ['Rupees (20)'] * 4 +
@@ -153,7 +149,6 @@ shopsanity_rupees = (
     ['Rupees (50)'] * 6 +
     ['Rupees (200)'] * 5 +
     ['Progressive Wallet'])
-
 
 min_shop_items = (
     ['Buy Deku Shield'] +
@@ -173,14 +168,12 @@ min_shop_items = (
     ['Buy Bottle Bug'] +
     ['Buy Fish'])
 
-
 deku_scrubs_items = (
     ['Deku Nuts (5)'] * 5 +
     ['Deku Stick (1)'] +
     ['Bombs (5)'] * 5 +
     ['Recovery Heart'] * 4 +
     ['Rupees (5)'] * 4) # ['Green Potion']
-
 
 songlist = [
     'Zeldas Lullaby',
@@ -195,7 +188,6 @@ songlist = [
     'Serenade of Water',
     'Nocturne of Shadow',
     'Requiem of Spirit']
-
 
 tradeitems = (
     'Pocket Egg',
@@ -221,37 +213,6 @@ tradeitemoptions = (
     'eyedrops',
     'claim_check')
 
-
-fixedlocations = {
-    'Ganon': 'Triforce',
-    'Pierre': 'Scarecrow Song',
-    'Deliver Rutos Letter': 'Deliver Letter',
-    'Master Sword Pedestal': 'Time Travel',
-    'Market Bombchu Bowling Bombchus': 'Bombchu Drop',
-}
-
-droplocations = {
-    'Deku Baba Sticks': 'Deku Stick Drop',
-    'Deku Baba Nuts': 'Deku Nut Drop',
-    'Stick Pot': 'Deku Stick Drop',
-    'Nut Pot': 'Deku Nut Drop',
-    'Nut Crate': 'Deku Nut Drop',
-    'Blue Fire': 'Blue Fire',
-    'Lone Fish': 'Fish',
-    'Fish Group': 'Fish',
-    'Bug Rock': 'Bugs',
-    'Bug Shrub': 'Bugs',
-    'Wandering Bugs': 'Bugs',
-    'Fairy Pot': 'Fairy',
-    'Free Fairies': 'Fairy',
-    'Wall Fairy': 'Fairy',
-    'Butterfly Fairy': 'Fairy',
-    'Gossip Stone Fairy': 'Fairy',
-    'Bean Plant Fairy': 'Fairy',
-    'Fairy Pond': 'Fairy',
-    'Big Poe Kill': 'Big Poe',
-}
-
 junk_pool_base = [
     ('Bombs (5)',       8),
     ('Bombs (10)',      2),
@@ -267,7 +228,6 @@ junk_pool_base = [
 
 pending_junk_pool = []
 junk_pool = []
-
 
 remove_junk_items = [
     'Bombs (5)',
@@ -361,23 +321,12 @@ def generate_itempool(world):
     elif world.settings.junk_ice_traps in ['mayhem', 'onslaught']:
         junk_pool[:] = [('Ice Trap', 1)]
 
-    fixed_locations = list(filter(lambda loc: loc.name in fixedlocations, world.get_locations()))
-    for location in fixed_locations:
-        item = fixedlocations[location.name]
-        world.push_item(location, ItemFactory(item, world))
-        location.locked = True
-
-    drop_locations = list(filter(lambda loc: loc.type == 'Drop', world.get_locations()))
-    for drop_location in drop_locations:
-        item = droplocations[drop_location.name]
-        world.push_item(drop_location, ItemFactory(item, world))
-        drop_location.locked = True
-
     # set up item pool
     (pool, placed_items) = get_pool_core(world)
     world.itempool = ItemFactory(pool, world)
-    for (location, item) in placed_items.items():
-        world.push_item(location, ItemFactory(item, world))
+    placed_locations = list(filter(lambda loc: loc.name in placed_items, world.get_locations()))
+    for location in placed_locations:
+        world.push_item(location, ItemFactory(placed_items[location.name], world))
         world.get_location(location).locked = True
 
     world.initialize_items()
@@ -422,14 +371,7 @@ def collect_heart_container(world, pool):
 
 def get_pool_core(world):
     pool = []
-    placed_items = {
-        'HC Zeldas Letter': 'Zeldas Letter',
-    }
-
-    if world.settings.shuffle_kokiri_sword:
-        pool.append('Kokiri Sword')
-    else:
-        placed_items['KF Kokiri Sword Chest'] = 'Kokiri Sword'
+    placed_items = {}
 
     ruto_bottles = 1
     if world.settings.zora_fountain == 'open':
@@ -437,20 +379,8 @@ def get_pool_core(world):
     elif world.settings.item_pool_value == 'plentiful':
         pending_junk_pool.append('Rutos Letter')
 
-    if world.settings.skip_child_zelda:
-        placed_items['HC Malon Egg'] = 'Recovery Heart'
-    elif world.settings.shuffle_weird_egg:
-        pool.append('Weird Egg')
-    else:
-        placed_items['HC Malon Egg'] = 'Weird Egg'
-
-    if world.settings.shuffle_ocarinas:
-        pool.extend(['Ocarina'] * 2)
-        if world.settings.item_pool_value == 'plentiful':
-            pending_junk_pool.append('Ocarina')
-    else:
-        placed_items['LW Gift from Saria'] = 'Ocarina'
-        placed_items['HF Ocarina of Time Item'] = 'Ocarina'
+    if world.settings.shuffle_ocarinas and world.settings.item_pool_value == 'plentiful':
+        pending_junk_pool.append('Ocarina')
 
     if world.settings.shuffle_beans:
         if world.distribution.get_starting_item('Magic Bean') < 10:
@@ -462,76 +392,114 @@ def get_pool_core(world):
     else:
         placed_items['ZR Magic Bean Salesman'] = 'Magic Bean'
 
-    if world.settings.shuffle_medigoron_carpet_salesman:
-        pool.append('Giants Knife')
-    else:
-        placed_items['GC Medigoron'] = 'Giants Knife'
-
-    remain_shop_items = []
     # Use the vanilla items in the world's locations when appropriate.
+    remain_shop_items = []
     for location in world.get_locations():
         if location.vanilla_item is None:
             continue
 
-        if location.type == "Shop":
+        item = location.vanilla_item
+        shuffle_item = None  # None for don't handle, False for place item, True for add to pool.
+
+        # Always Placed Items
+        if location.vanilla_item in ['Zeldas Letter', 'Triforce', 'Scarecrow Song',
+                                     'Deliver Letter', 'Time Travel', 'Bombchu Drop'] \
+                or location.type == 'Drop':
+            shuffle_item = False
+
+        # Gold Skulltula Tokens
+        elif location.vanilla_item == 'Gold Skulltula Token':
+            shuffle_item = world.settings.tokensanity == 'all' \
+                           or (world.settings.tokensanity == 'dungeons' and location.dungeon) \
+                           or (world.settings.tokensanity == 'overworld' and not location.dungeon)
+
+        # Shops
+        elif location.type == "Shop":
             if world.settings.shopsanity == 'off':
                 if world.settings.bombchus_in_logic and location.name in ['KF Shop Item 8', 'Market Bazaar Item 4', 'Kak Bazaar Item 4']:
-                    placed_items[location.name] = 'Buy Bombchu (5)'
-                else:
-                    placed_items[location.name] = location.vanilla_item
+                    item = 'Buy Bombchu (5)'
+                shuffle_item = False
             else:
-                remain_shop_items.append(location.vanilla_item)
-            continue
+                remain_shop_items.append(item)
 
-        if location.vanilla_item == 'Gold Skulltula Token':
-            if world.settings.tokensanity == 'off' or (world.settings.tokensanity == 'dungeons' and location.dungeon) \
-                    or (world.settings.tokensanity == 'overworld' and not location.dungeon):
-                placed_items[location.name] = 'Gold Skulltula Token'
+        # Business Scrubs
+        elif location.type in ["Scrub", "GrottoNPC"]:
+            if location.vanilla_item in ['Piece of Heart', 'Deku Stick Capacity', 'Deku Nut Capacity']:
+                shuffle_item = True
+            elif world.settings.shuffle_scrubs == 'off':
+                shuffle_item = False
             else:
-                pool.append('Gold Skulltula Token')
-            continue
+                continue  # TODO: Move "junk" added to pool when scrub shuffle is on here.
 
-        if location.dungeon is not None:
+        # Kokiri Sword
+        elif location.vanilla_item == 'Kokiri Sword':
+            shuffle_item = world.settings.shuffle_kokiri_sword
+
+        # Weird Egg
+        elif location.vanilla_item == 'Weird Egg':
+            if world.settings.skip_child_zelda:
+                item = 'Recovery Heart'
+                shuffle_item = False
+            else:
+                shuffle_item = world.settings.shuffle_weird_egg
+
+        # Ocarinas
+        elif location.vanilla_item == 'Ocarina':
+            shuffle_item = world.settings.shuffle_ocarinas
+
+        # Giant's Knife
+        elif location.vanilla_item == 'Giants Knife':
+            shuffle_item = world.settings.shuffle_medigoron_carpet_salesman
+
+        # Bombchus
+        elif location.vanilla_item in ['Bombchus', 'Bombchus (5)', 'Bombchus (10)', 'Bombchus (20)']:
+            if world.settings.bombchus_in_logic:
+                item = 'Bombchus'
+            shuffle_item = True
+            if location.name == 'Wasteland Bombchu Salesman':
+                shuffle_item = world.settings.shuffle_medigoron_carpet_salesman
+
+        # Cows
+        elif location.vanilla_item == 'Milk':
+            if world.settings.shuffle_cows:
+                item = get_junk_item()[0]
+            shuffle_item = world.settings.shuffle_cows
+
+        # Gerudo Card
+        elif location.vanilla_item == 'Gerudo Membership Card':
+            shuffle_item = world.settings.shuffle_gerudo_card and world.settings.gerudo_fortress != 'open'
+            if world.settings.shuffle_gerudo_card and world.settings.gerudo_fortress == 'open':
+                pending_junk_pool.append('Gerudo Membership Card')
+                item = 'Recovery Heart'
+
+        # Bottles
+        elif location.vanilla_item in ['Bottle', 'Bottle with Milk', 'Rutos Letter']:
+            if ruto_bottles:
+                item = 'Rutos Letter'
+                ruto_bottles -= 1
+            else:
+                item = random.choice(normal_bottles)
+            shuffle_item = True
+
+        # Dungeon Items
+        elif location.dungeon is not None:
             dungeon = location.dungeon
             if (world.settings.shuffle_bosskeys == 'vanilla' and dungeon.name != 'Ganons Castle' and location.vanilla_item == f"Boss Key ({dungeon.name})") \
                     or (world.settings.shuffle_mapcompass == 'vanilla' and location.vanilla_item in [f"Map ({dungeon.name})", f"Compass ({dungeon.name})"]) \
                     or (world.settings.shuffle_smallkeys == 'vanilla' and location.vanilla_item == f"Small Key ({dungeon.name})"):
-                placed_items[location.name] = location.vanilla_item
-                continue
-            if location.type in ["Chest", "Collectable", "BossHeart"] \
+                shuffle_item = False
+            elif location.type in ["Chest", "Collectable", "BossHeart"] \
                     and location.vanilla_item not in [f"Boss Key ({dungeon.name})", f"Map ({dungeon.name})", f"Compass ({dungeon.name})", f"Small Key ({dungeon.name})"]:
-                item = location.vanilla_item
-                if world.settings.bombchus_in_logic and item.startswith('Bombchus'):
-                    item = 'Bombchus'
-                pool.append(item)
-                continue
+                shuffle_item = True
 
-        if location.type in ["Scrub", "GrottoNPC"]:
-            if location.vanilla_item in ['Piece of Heart', 'Deku Stick Capacity', 'Deku Nut Capacity']:
-                pool.append(location.vanilla_item)
-            elif world.settings.shuffle_scrubs == 'off':
-                placed_items[location.name] = location.vanilla_item
+        # Now, handle the item as necessary.
+        if shuffle_item:
+            pool.append(item)
             continue
-
-        if location.vanilla_item == 'Milk':
-            if world.settings.shuffle_cows:
-                pool.extend(get_junk_item())
-            else:
-                placed_items[location.name] = 'Milk'
+        elif shuffle_item is not None:
+            placed_items[location.name] = item
             continue
     # End of Locations loop.
-
-    if world.settings.bombchus_in_logic:
-        pool.extend(['Bombchus'])
-        if world.settings.shuffle_medigoron_carpet_salesman:
-            pool.append('Bombchus')
-    else:
-        pool.extend(['Bombchus (10)'])
-        if world.settings.shuffle_medigoron_carpet_salesman:
-            pool.append('Bombchus (10)')
-
-    if not world.settings.shuffle_medigoron_carpet_salesman:
-        placed_items['Wasteland Bombchu Salesman'] = 'Bombchus (10)'
 
     if world.settings.gerudo_fortress == 'open':
         placed_items['Hideout Jail Guard (1 Torch)'] = 'Recovery Heart'
@@ -567,13 +535,6 @@ def get_pool_core(world):
             placed_items['Hideout Jail Guard (3 Torches)'] = 'Small Key (Thieves Hideout)'
             placed_items['Hideout Jail Guard (4 Torches)'] = 'Small Key (Thieves Hideout)'
 
-    if world.settings.shuffle_gerudo_card and world.settings.gerudo_fortress != 'open':
-        pool.append('Gerudo Membership Card')
-    elif world.settings.shuffle_gerudo_card:
-        pending_junk_pool.append('Gerudo Membership Card')
-        placed_items['Hideout Gerudo Membership Card'] = 'Ice Trap'
-    else:
-        placed_items['Hideout Gerudo Membership Card'] = 'Gerudo Membership Card'
     if world.settings.shuffle_gerudo_card and world.settings.item_pool_value == 'plentiful':
         pending_junk_pool.append('Gerudo Membership Card')
 
@@ -676,13 +637,6 @@ def get_pool_core(world):
             pool.append('Arrows (30)' if random.randint(0,3) > 0 else 'Deku Seeds (30)')
 
     pool.extend(overworld_always_items)
-
-    for i in range(bottle_count):
-        if i >= ruto_bottles:
-            bottle = random.choice(normal_bottles)
-            pool.append(bottle)
-        else:
-            pool.append('Rutos Letter')
 
     earliest_trade = tradeitemoptions.index(world.settings.logic_earliest_adult_trade)
     latest_trade = tradeitemoptions.index(world.settings.logic_latest_adult_trade)
