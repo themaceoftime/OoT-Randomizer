@@ -362,28 +362,46 @@ def collect_heart_container(world, pool):
 def get_pool_core(world):
     pool = []
     placed_items = {}
-
+    remain_shop_items = []
     ruto_bottles = 1
+
     if world.settings.zora_fountain == 'open':
         ruto_bottles = 0
-    elif world.settings.item_pool_value == 'plentiful':
-        pending_junk_pool.append('Rutos Letter')
 
-    if world.settings.shuffle_ocarinas and world.settings.item_pool_value == 'plentiful':
-        pending_junk_pool.append('Ocarina')
-
-    if world.settings.shuffle_beans:
+    if world.settings.item_pool_value == 'plentiful':
+        if world.settings.zora_fountain != 'open':
+            ruto_bottles += 1
+        if world.settings.shuffle_ocarinas:
+            pending_junk_pool.append('Ocarina')
         if world.distribution.get_starting_item('Magic Bean') < 10:
-            pool.append('Magic Bean Pack')
-            if world.settings.item_pool_value == 'plentiful':
-                pending_junk_pool.append('Magic Bean Pack')
-        else:
-            pool.extend(get_junk_item())
-    else:
-        placed_items['ZR Magic Bean Salesman'] = 'Magic Bean'
+            pending_junk_pool.append('Magic Bean Pack')
+        if world.settings.gerudo_fortress != "open" \
+                and world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']:
+            if 'Thieves Hideout' in world.settings.key_rings and world.settings.gerudo_fortress != "fast":
+                pending_junk_pool.extend(['Small Key Ring (Thieves Hideout)'])
+            else:
+                pending_junk_pool.append('Small Key (Thieves Hideout)')
+        if world.settings.shuffle_gerudo_card:
+            pending_junk_pool.append('Gerudo Membership Card')
+        if world.settings.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity']:
+            for dungeon in ['Forest Temple', 'Fire Temple', 'Water Temple', 'Shadow Temple', 'Spirit Temple', 'Ganons Castle']:
+                if dungeon in world.settings.key_rings:
+                    pending_junk_pool.append(f"Small Key Ring ({dungeon})")
+                else:
+                    pending_junk_pool.append(f"Small Key ({dungeon})")
+        if world.settings.shuffle_bosskeys in ['any_dungeon', 'overworld', 'keysanity']:
+            for dungeon in ['Forest Temple', 'Fire Temple', 'Water Temple', 'Shadow Temple', 'Spirit Temple']:
+                pending_junk_pool.append(f"Boss Key ({dungeon})")
+        if world.settings.shuffle_ganon_bosskey in ['any_dungeon', 'overworld', 'keysanity']:
+            pending_junk_pool.append('Boss Key (Ganons Castle)')
+        if world.settings.shuffle_song_items == 'any':
+            pending_junk_pool.extend(songlist)
+
+    if world.settings.triforce_hunt:
+        triforce_count = int((TriforceCounts[world.settings.item_pool_value] * world.settings.triforce_goal_per_world).to_integral_value(rounding=ROUND_HALF_UP))
+        pending_junk_pool.extend(['Triforce Piece'] * triforce_count)
 
     # Use the vanilla items in the world's locations when appropriate.
-    remain_shop_items = []
     for location in world.get_locations():
         if location.vanilla_item is None:
             continue
@@ -471,6 +489,14 @@ def get_pool_core(world):
                 item = random.choice(normal_bottles)
             shuffle_item = True
 
+        # Magic Beans
+        elif location.vanilla_item == 'Magic Bean':
+            if world.settings.shuffle_beans:
+                item = 'Magic Bean Pack' if world.distribution.get_starting_item('Magic Bean') < 10 else get_junk_item()[0]
+                shuffle_item = True
+            else:
+                shuffle_item = False
+
         # Thieves' Hideout
         elif location.vanilla_item == 'Small Key (Thieves Hideout)':
             shuffle_item = world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']
@@ -517,60 +543,6 @@ def get_pool_core(world):
             placed_items[location.name] = item
             continue
     # End of Locations loop.
-
-    if world.settings.item_pool_value == 'plentiful' and world.settings.gerudo_fortress != "open" \
-            and world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']:
-        if 'Thieves Hideout' in world.settings.key_rings and world.settings.gerudo_fortress != "fast":
-            pending_junk_pool.extend(['Small Key Ring (Thieves Hideout)'])
-        else:
-            pending_junk_pool.append('Small Key (Thieves Hideout)')
-
-    if world.settings.shuffle_gerudo_card and world.settings.item_pool_value == 'plentiful':
-        pending_junk_pool.append('Gerudo Membership Card')
-
-    if world.settings.item_pool_value == 'plentiful' and world.settings.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity']:
-        if 'Bottom of the Well' in world.settings.key_rings:
-            pending_junk_pool.append('Small Key Ring (Bottom of the Well)')
-        else:
-            pending_junk_pool.append('Small Key (Bottom of the Well)')
-        if 'Forest Temple' in world.settings.key_rings:
-            pending_junk_pool.append('Small Key Ring (Forest Temple)')
-        else:
-            pending_junk_pool.append('Small Key (Forest Temple)')
-        if 'Fire Temple' in world.settings.key_rings:
-            pending_junk_pool.append('Small Key Ring (Fire Temple)')
-        else:
-            pending_junk_pool.append('Small Key (Fire Temple)')
-        if 'Water Temple' in world.settings.key_rings:
-            pending_junk_pool.append('Small Key Ring (Water Temple)')
-        else:
-            pending_junk_pool.append('Small Key (Water Temple)')
-        if 'Shadow Temple' in world.settings.key_rings:
-            pending_junk_pool.append('Small Key Ring (Shadow Temple)')
-        else:
-            pending_junk_pool.append('Small Key (Shadow Temple)')
-        if 'Spirit Temple' in world.settings.key_rings:
-            pending_junk_pool.append('Small Key Ring (Spirit Temple)')
-        else:
-            pending_junk_pool.append('Small Key (Spirit Temple)')
-        if 'Gerudo Training Ground' in world.settings.key_rings:
-            pending_junk_pool.append('Small Key Ring (Gerudo Training Ground)')
-        else:
-            pending_junk_pool.append('Small Key (Gerudo Training Ground)')
-        if 'Ganons Castle' in world.settings.key_rings:
-            pending_junk_pool.append('Small Key Ring (Ganons Castle)')
-        else:
-            pending_junk_pool.append('Small Key (Ganons Castle)')
-
-    if world.settings.item_pool_value == 'plentiful' and world.settings.shuffle_bosskeys in ['any_dungeon', 'overworld', 'keysanity']:
-        pending_junk_pool.append('Boss Key (Forest Temple)')
-        pending_junk_pool.append('Boss Key (Fire Temple)')
-        pending_junk_pool.append('Boss Key (Water Temple)')
-        pending_junk_pool.append('Boss Key (Shadow Temple)')
-        pending_junk_pool.append('Boss Key (Spirit Temple)')
-
-    if world.settings.item_pool_value == 'plentiful' and world.settings.shuffle_ganon_bosskey in ['any_dungeon', 'overworld', 'keysanity']:
-        pending_junk_pool.append('Boss Key (Ganons Castle)')
 
     if world.settings.shopsanity == 'off':
         pool.extend(normal_rupees)
@@ -619,8 +591,6 @@ def get_pool_core(world):
     pool.append(tradeitem)
 
     pool.extend(songlist)
-    if world.settings.shuffle_song_items == 'any' and world.settings.item_pool_value == 'plentiful':
-        pending_junk_pool.extend(songlist)
 
     if world.settings.free_scarecrow:
         world.state.collect(ItemFactory('Scarecrow Song'))
@@ -662,10 +632,6 @@ def get_pool_core(world):
 
     if not world.keysanity and not world.dungeon_mq['Fire Temple']:
         world.state.collect(ItemFactory('Small Key (Fire Temple)'))
-
-    if world.settings.triforce_hunt:
-        triforce_count = int((TriforceCounts[world.settings.item_pool_value] * world.settings.triforce_goal_per_world).to_integral_value(rounding=ROUND_HALF_UP))
-        pending_junk_pool.extend(['Triforce Piece'] * triforce_count)
 
     if world.settings.shuffle_ganon_bosskey == 'on_lacs':
         placed_items['ToT Light Arrows Cutscene'] = 'Boss Key (Ganons Castle)'
