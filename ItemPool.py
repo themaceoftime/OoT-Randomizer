@@ -11,36 +11,7 @@ from decimal import Decimal, ROUND_HALF_UP
 
 # Generates itempools and places fixed items based on settings.
 
-overworld_always_items = ([
-    'Biggoron Sword',
-    'Goron Tunic',
-    'Zora Tunic',
-    'Stone of Agony',
-    'Fire Arrows',
-    'Light Arrows',
-    'Dins Fire',
-    'Farores Wind',
-    'Nayrus Love',
-    'Rupee (1)']
-    + ['Progressive Hookshot']
-    + ['Hylian Shield']
-    + ['Progressive Strength Upgrade']
-    + ['Progressive Scale'] * 2
-    + ['Recovery Heart']
-    + ['Bow'] * 2
-    + ['Slingshot'] * 2
-    + ['Bomb Bag'] * 2
-    + ['Bombs (5)']
-    + ['Bombs (20)']
-    + ['Progressive Wallet'] * 2
-    + ['Magic Meter'] * 2
-    + ['Double Defense']
-    + ['Deku Stick Capacity']
-    + ['Deku Nut Capacity']
-    + ['Piece of Heart (Treasure Chest Game)'])
-
-
-easy_items = ([
+plentiful_items = ([
     'Biggoron Sword',
     'Kokiri Sword',
     'Boomerang',
@@ -65,14 +36,12 @@ easy_items = ([
     'Slingshot', 
     'Bomb Bag',
     'Double Defense'] +
-    ['Heart Container'] * 8 +
-    ['Piece of Heart'])
-
-normal_items = (['Piece of Heart'] * 33)
-
+    ['Heart Container'] * 8)
 
 item_difficulty_max = {
-    'plentiful': {},
+    'plentiful': {
+        'Piece of Heart': 3,
+    },
     'balanced': {},
     'scarce': {
         'Bombchus': 3,
@@ -138,17 +107,10 @@ dungeon_rewards = [
     'Light Medallion'
 ]
 
-normal_rupees = (
-    ['Rupees (5)'] * 5 +
-    ['Rupees (20)'] * 4 +
-    ['Rupees (50)'] * 6 +
-    ['Rupees (200)'] * 3)
-
 shopsanity_rupees = (
-    ['Rupees (20)'] * 6 +
-    ['Rupees (50)'] * 6 +
-    ['Rupees (200)'] * 5 +
-    ['Progressive Wallet'])
+    ['Rupees (20)'] * 5 +
+    ['Rupees (50)'] * 3 +
+    ['Rupees (200)'] * 2)
 
 min_shop_items = (
     ['Buy Deku Shield'] +
@@ -168,12 +130,16 @@ min_shop_items = (
     ['Buy Bottle Bug'] +
     ['Buy Fish'])
 
-deku_scrubs_items = (
-    ['Deku Nuts (5)'] * 5 +
-    ['Deku Stick (1)'] +
-    ['Bombs (5)'] * 5 +
-    ['Recovery Heart'] * 4 +
-    ['Rupees (5)'] * 4) # ['Green Potion']
+deku_scrubs_items = {
+    'Buy Deku Shield': 'Deku Shield',
+    'Buy Deku Nut (5)': 'Deku Nuts (5)',
+    'Buy Deku Stick (1)': 'Deku Stick (1)',
+    'Buy Bombs (5) [35]': 'Bombs (5)',
+    'Buy Red Potion [30]': 'Recovery Heart',
+    'Buy Green Potion': 'Rupees (5)',
+    'Buy Arrows (30)': [('Arrows (30)', 3), ('Deku Seeds (30)', 1)],
+    'Buy Deku Seeds (30)': [('Arrows (30)', 3), ('Deku Seeds (30)', 1)],
+}
 
 songlist = [
     'Zeldas Lullaby',
@@ -368,12 +334,16 @@ def get_pool_core(world):
     if world.settings.zora_fountain == 'open':
         ruto_bottles = 0
 
+    if world.settings.shopsanity not in ['off', '0']:
+        pending_junk_pool.append('Progressive Wallet')
+
     if world.settings.item_pool_value == 'plentiful':
+        pending_junk_pool.extend(plentiful_items)
         if world.settings.zora_fountain != 'open':
             ruto_bottles += 1
         if world.settings.shuffle_ocarinas:
             pending_junk_pool.append('Ocarina')
-        if world.distribution.get_starting_item('Magic Bean') < 10:
+        if world.settings.shuffle_beans and world.distribution.get_starting_item('Magic Bean') < 10:
             pending_junk_pool.append('Magic Bean Pack')
         if world.settings.gerudo_fortress != "open" \
                 and world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']:
@@ -437,7 +407,10 @@ def get_pool_core(world):
             elif world.settings.shuffle_scrubs == 'off':
                 shuffle_item = False
             else:
-                continue  # TODO: Move "junk" added to pool when scrub shuffle is on here.
+                item = deku_scrubs_items[location.vanilla_item]
+                if isinstance(item, list):
+                    item = random.choices([i[0] for i in item], weights=[i[1] for i in item], k=1)[0]
+                shuffle_item = True
 
         # Kokiri Sword
         elif location.vanilla_item == 'Kokiri Sword':
@@ -497,6 +470,16 @@ def get_pool_core(world):
             else:
                 shuffle_item = False
 
+        # Adult Trade Item
+        elif location.vanilla_item == 'Pocket Egg':
+            earliest_trade = tradeitemoptions.index(world.settings.logic_earliest_adult_trade)
+            latest_trade = tradeitemoptions.index(world.settings.logic_latest_adult_trade)
+            if earliest_trade > latest_trade:
+                earliest_trade, latest_trade = latest_trade, earliest_trade
+            item = random.choice(tradeitems[earliest_trade:latest_trade + 1])
+            world.selected_adult_trade_item = item
+            shuffle_item = True
+
         # Thieves' Hideout
         elif location.vanilla_item == 'Small Key (Thieves Hideout)':
             shuffle_item = world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']
@@ -532,21 +515,21 @@ def get_pool_core(world):
                     shuffle_item = True
                 if not shuffle_item:
                     dungeon.small_keys.append(ItemFactory(item))
-            elif location.type in ["Chest", "Collectable", "BossHeart"]:
+            elif location.type in ["Chest", "NPC", "Song", "Collectable", "Cutscene", "BossHeart"]:
                 shuffle_item = True
+
+        # The rest of the overworld items.
+        elif location.type in ["Chest", "NPC", "Song", "Collectable", "Cutscene", "BossHeart"]:
+            shuffle_item = True
 
         # Now, handle the item as necessary.
         if shuffle_item:
             pool.append(item)
-            continue
         elif shuffle_item is not None:
             placed_items[location.name] = item
-            continue
     # End of Locations loop.
 
-    if world.settings.shopsanity == 'off':
-        pool.extend(normal_rupees)
-    else:
+    if world.settings.shopsanity != 'off':
         pool.extend(min_shop_items)
         for item in min_shop_items:
             remain_shop_items.remove(item)
@@ -558,39 +541,14 @@ def get_pool_core(world):
         pool.extend(random.sample(remain_shop_items, shop_item_count))
         if shop_nonitem_count:
             pool.extend(get_junk_item(shop_nonitem_count))
-        if world.settings.shopsanity == '0':
-            pool.extend(normal_rupees)
-        else:
-            pool.extend(shopsanity_rupees)
 
-    if world.settings.shuffle_scrubs != 'off':
-        if world.dungeon_mq['Deku Tree']:
-            pool.append('Deku Shield')
-        if world.dungeon_mq['Dodongos Cavern']:
-            pool.extend(['Deku Stick (1)', 'Deku Shield', 'Recovery Heart'])
-        else:
-            pool.extend(['Deku Nuts (5)', 'Deku Stick (1)', 'Deku Shield'])
-        if not world.dungeon_mq['Jabu Jabus Belly']:
-            pool.append('Deku Nuts (5)')
-        if world.dungeon_mq['Ganons Castle']:
-            pool.extend(['Bombs (5)', 'Recovery Heart', 'Rupees (5)', 'Deku Nuts (5)'])
-        else:
-            pool.extend(['Bombs (5)', 'Recovery Heart', 'Rupees (5)'])
-        pool.extend(deku_scrubs_items)
-        for _ in range(7):
-            pool.append('Arrows (30)' if random.randint(0,3) > 0 else 'Deku Seeds (30)')
-
-    pool.extend(overworld_always_items)
-
-    earliest_trade = tradeitemoptions.index(world.settings.logic_earliest_adult_trade)
-    latest_trade = tradeitemoptions.index(world.settings.logic_latest_adult_trade)
-    if earliest_trade > latest_trade:
-        earliest_trade, latest_trade = latest_trade, earliest_trade
-    tradeitem = random.choice(tradeitems[earliest_trade:latest_trade+1])
-    world.selected_adult_trade_item = tradeitem
-    pool.append(tradeitem)
-
-    pool.extend(songlist)
+    # Extra rupees for shopsanity.
+    if world.settings.shopsanity not in ['off', '0']:
+        for rupee in shopsanity_rupees:
+            if 'Rupees (5)' in pool:
+                pool[pool.index('Rupees (5)')] = rupee
+            else:
+                pending_junk_pool.append(rupee)
 
     if world.settings.free_scarecrow:
         world.state.collect(ItemFactory('Scarecrow Song'))
@@ -643,11 +601,6 @@ def get_pool_core(world):
         pool.extend(get_junk_item())
     else:
         placed_items['Gift from Sages'] = 'Ice Trap'
-
-    if world.settings.item_pool_value == 'plentiful':
-        pool.extend(easy_items)
-    else:
-        pool.extend(normal_items)
 
     if not world.settings.shuffle_kokiri_sword:
         replace_max_item(pool, 'Kokiri Sword', 0)
