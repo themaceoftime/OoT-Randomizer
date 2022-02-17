@@ -113,10 +113,12 @@ class World(object):
             self.settings.hint_dist = 'custom'
             self.hint_dist_user = self.settings.hint_dist_user
 
-        # Hack for legacy hint distributions from before the goal hint
-        # type was created. Keeps validation happy.
+        # Hack for legacy hint distributions from before the goal and dual hint
+        # type were created. Keeps validation happy.
         if 'distribution' in self.hint_dist_user and 'goal' not in self.hint_dist_user['distribution']:
             self.hint_dist_user['distribution']['goal'] = {"order": 0, "weight": 0.0, "fixed": 0, "copies": 0}
+        if 'distribution' in self.hint_dist_user and 'dual' not in self.hint_dist_user['distribution']:
+            self.hint_dist_user['distribution']['dual'] = {"order": 0, "weight": 0.0, "fixed": 0, "copies": 0}
         if 'use_default_goals' not in self.hint_dist_user:
             self.hint_dist_user['use_default_goals'] = True
 
@@ -133,7 +135,7 @@ class World(object):
         if not hint_dist_valid:
             raise InvalidFileException("""Hint distributions require all hint types be present in the distro 
                                           (trial, always, woth, barren, item, song, overworld, dungeon, entrance,
-                                          sometimes, random, junk, named-item, goal). If a hint type should not be
+                                          sometimes, dual, random, junk, named-item, goal). If a hint type should not be
                                           shuffled, set its order to 0. Hint type format is \"type\": { 
                                           \"order\": 0, \"weight\": 0.0, \"fixed\": 0, \"copies\": 0 }""")
         
