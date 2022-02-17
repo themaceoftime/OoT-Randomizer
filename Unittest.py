@@ -262,6 +262,9 @@ class TestPlandomizer(unittest.TestCase):
             "plando-keyrings-all-dungeon-allmq",
             "plando-keyrings-all-dungeon-halfmq",
             "plando-keyrings-all-dungeon-nomq",
+            "plando-boss-shuffle-nomq",
+            "plando-boss-shuffle-allmq",
+            "plando-boss-shuffle-limited-dungeon-shuffle",
         ]
         for filename in filenames:
             with self.subTest(filename):
