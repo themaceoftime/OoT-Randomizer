@@ -827,8 +827,9 @@ def get_junk_hint(spoiler, world, checked):
 
 
 hint_func = {
-    'trial':      lambda spoiler, world, checked: None,
-    'always':     lambda spoiler, world, checked: None,
+    'trial':        lambda spoiler, world, checked: None,
+    'always':       lambda spoiler, world, checked: None,
+    'dual_always':  lambda spoiler, world, checked: None,
     'woth':             get_woth_hint,
     'goal':             get_goal_hint,
     'barren':           get_barren_hint,
@@ -847,6 +848,7 @@ hint_func = {
 hint_dist_keys = {
     'trial',
     'always',
+    'dual_always',
     'woth',
     'goal',
     'barren',
@@ -1058,10 +1060,41 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
 
     hint_types, hint_prob = zip(*hint_dist.items())
     hint_prob, _ = zip(*hint_prob)
+    
+    # Add required dual location hints, only if hint copies > 0
+    if hint_dist['dual_always'][1] > 0:
+        alwaysDuals = getHintGroup('dual_always', world)
+        for hint in alwaysDuals:
+            dual = getDual(hint.name)
+            location = world.get_location(dual.firstLocation)
+            secondLocation = world.get_location(dual.secondLocation)
+            checkedAlwaysLocations.add(location.name)
+            checkedAlwaysLocations.add(secondLocation.name)
+            
+            if location.item.name in bingoBottlesForHints and world.settings.hint_dist == 'bingo':
+                always_item = 'Bottle'
+            else:
+                always_item = location.item.name
+            if always_item in world.named_item_pool and world.settings.world_count == 1:
+                world.named_item_pool.remove(always_item)
+            if secondLocation.item.name in bingoBottlesForHints and world.settings.hint_dist == 'bingo':
+                always_item = 'Bottle'
+            else:
+                always_item = secondLocation.item.name
+            if always_item in world.named_item_pool and world.settings.world_count == 1:
+                world.named_item_pool.remove(always_item)
+            
+            location_text = getHint(hint.name, world.settings.clearer_hints).text
+            if '#' not in location_text:
+                location_text = '#%s#' % location_text
+            first_item_text = getHint(getItemGenericName(location.item), world.settings.clearer_hints).text
+            second_item_text = getHint(getItemGenericName(secondLocation.item), world.settings.clearer_hints).text
+            add_hint(spoiler, world, stoneGroups, GossipText('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), hint_dist['dual_always'][1], location, secondLocation, force_reachable=True)
+            logging.getLogger('').debug('Placed dual_always hint for %s.', hint.name)
 
     # Add required location hints, only if hint copies > 0
     if hint_dist['always'][1] > 0:
-        alwaysLocations = getHintGroup('always', world)
+        alwaysLocations = list(filter(lambda hint: is_not_checked(world.get_location(hint.name), checkedAlwaysLocations), getHintGroup('always', world)))
         for hint in alwaysLocations:
             location = world.get_location(hint.name)
             checkedAlwaysLocations.add(hint.name)

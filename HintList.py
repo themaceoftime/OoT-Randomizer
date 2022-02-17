@@ -67,11 +67,14 @@ def getHintGroup(group, world):
         if hint.name in world.always_hints and group == 'always':
             hint.type = 'always'
 
+        if group == 'dual_always' and hint.name in conditional_dual_always and conditional_dual_always[hint.name](world):
+            hint.type = 'dual_always'
+
         conditional_keep = True
         type_append = False
         if group in ['overworld', 'dungeon', 'sometimes'] and hint.name in conditional_sometimes.keys():
             conditional_keep = conditional_sometimes[hint.name](world)
-            
+
         if group == 'dual' and hint.name in conditional_dual.keys():
             conditional_keep = conditional_dual[hint.name](world)
 
@@ -173,6 +176,11 @@ conditional_always = {
     'Kak 30 Gold Skulltula Reward': lambda world: tokens_required_by_settings(world) < 30,
     'Kak 40 Gold Skulltula Reward': lambda world: tokens_required_by_settings(world) < 40,
     'Kak 50 Gold Skulltula Reward': lambda world: tokens_required_by_settings(world) < 50,
+}
+
+# Dual hints required under certain settings
+conditional_dual_always = {
+    'HF Ocarina of Time Retrieval': lambda world: stones_required_by_settings(world) < 2,
 }
 
 # Some sometimes hints should only be enabled under certain settings
@@ -355,6 +363,8 @@ hintTable = {
 
     'ZR Frogs Ocarina Game':                                       (["an #amphibian feast# yields", "the #croaking choir's magnum opus# awards", "the #froggy finale# yields"], "the final reward from the #Frogs of Zora's River# is", 'always'),
     'KF Links House Cow':                                          ("the #bovine bounty of a horseback hustle# gifts", "#Malon's obstacle course# leads to", 'always'),
+
+    'ZR Frogs Rewards':                                            ("the #Frogs of Zora River#, for giving them rain and a great performance, will reward you with...", None, 'dual_always'),
 
     'Song from Ocarina of Time':                                   ("the #Ocarina of Time# teaches", None, ['song', 'sometimes']),
     'Song from Royal Familys Tomb':                                (["#ReDead in the royal tomb# guard", "the #Composer Brothers wrote#"], None, ['song', 'sometimes']),
@@ -1389,6 +1399,8 @@ hintTable = {
 # Table containing the pairs of locations for the dual hint
 # The is used in order to add the locations to the checked list
 dualTable = {
+    'ZR Frogs Rewards':                                         ('ZR Frogs in the Rain', 'ZR Frogs Ocarina Game'),
+
     'Deku Theater Rewards':                                     ('Deku Theater Skull Mask', 'Deku Theater Mask of Truth'),
     'HF Ocarina of Time Retrieval':                             ('HF Ocarina of Time Item', 'Song from Ocarina of Time'),
     'HF Valley Grotto':                                         ('HF Cow Grotto Cow', 'HF GS Cow Grotto'),
@@ -1473,6 +1485,7 @@ def hintExclusions(world, clear_cache=False):
         hint = getHint(name, world.settings.clearer_hints)
         if any(item in hint.type for item in 
                 ['always',
+                 'dual_always',
                  'sometimes',
                  'overworld',
                  'dungeon',
@@ -1485,6 +1498,7 @@ def hintExclusions(world, clear_cache=False):
     for hint in location_hints:
         if any(item in hint.type for item in 
                 ['dual',
+                 'dual_always',
                  'dual_exclude']):
             dual = getDual(hint.name)
             if dual.firstLocation not in world_location_names or dual.secondLocation not in world_location_names:
