@@ -114,7 +114,7 @@ class World(object):
             self.hint_dist_user = self.settings.hint_dist_user
 
         # Hack for legacy hint distributions from before the goal hint
-        # type were created. Keeps validation happy.
+        # type was created. Keeps validation happy.
         if 'distribution' in self.hint_dist_user and 'goal' not in self.hint_dist_user['distribution']:
             self.hint_dist_user['distribution']['goal'] = {"order": 0, "weight": 0.0, "fixed": 0, "copies": 0}
         if 'use_default_goals' not in self.hint_dist_user:
