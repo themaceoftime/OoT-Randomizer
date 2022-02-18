@@ -2432,7 +2432,7 @@ setting_infos = [
     ),
     Combobox(
         name           = 'dungeon_shortcuts_choice',
-        gui_text       = 'Dungeon Boss Shortcuts Choice',
+        gui_text       = 'Dungeon Boss Shortcuts Mode',
         default        = 'off',
         choices        = {
             'off':       'Off',
@@ -2476,7 +2476,7 @@ setting_infos = [
     Setting_Info(
         name           = 'dungeon_shortcuts',
         type           = list,
-        gui_text       = 'Dungeon Boss Shortcuts List',
+        gui_text       = 'Dungeon Boss Shortcuts',
         gui_type       = "MultipleSelect",
         choices        = {
             'deku_tree': 'Deku Tree',
