@@ -400,7 +400,7 @@ def get_pool_core(world):
                 remain_shop_items.append(item)
 
         # Business Scrubs
-        elif location.type in ["Scrub", "GrottoNPC"]:
+        elif location.type in ["Scrub", "GrottoScrub"]:
             if location.vanilla_item in ['Piece of Heart', 'Deku Stick Capacity', 'Deku Nut Capacity']:
                 shuffle_item = True
             elif world.settings.shuffle_scrubs == 'off':

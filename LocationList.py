@@ -28,7 +28,7 @@ def shop_address(shop_id, shelf_id):
 # The order of this table is reflected in the spoiler's list of locations (except Hints aren't included).
 # Within a section, the order of types is: gifts/freestanding/chests, Deku Scrubs, Cows, Gold Skulltulas, Shops.
 
-# Scrubs are on the overworld, while GrottoNPC is a special handler for Grottos
+# Scrubs are on the overworld, while GrottoScrub is a special handler for Grottos
 # Grottos scrubs are the same scene and actor, so we use a unique grotto ID for the scene
 
 # Note that the scene for skulltulas is not the actual scene the token appears in
@@ -96,16 +96,16 @@ location_table = OrderedDict([
     ("LW Deku Scrub Near Bridge",                                    ("Scrub",        0x5B,  0x77, None,                        'Deku Stick Capacity',                   ("the Lost Woods", "Forest", "Deku Scrub", "Deku Scrub Upgrades"))),
     ("LW Deku Scrub Near Deku Theater Left",                         ("Scrub",        0x5B,  0x31, None,                        'Buy Deku Stick (1)',                    ("the Lost Woods", "Forest", "Deku Scrub"))),
     ("LW Deku Scrub Near Deku Theater Right",                        ("Scrub",        0x5B,  0x30, None,                        'Buy Deku Nut (5)',                      ("the Lost Woods", "Forest", "Deku Scrub"))),
-    ("LW Deku Scrub Grotto Front",                                   ("GrottoNPC",    0xF5,  0x79, None,                        'Deku Nut Capacity',                     ("the Lost Woods", "Forest", "Deku Scrub", "Deku Scrub Upgrades", "Grottos"))),
-    ("LW Deku Scrub Grotto Rear",                                    ("GrottoNPC",    0xF5,  0x33, None,                        'Buy Deku Seeds (30)',                   ("the Lost Woods", "Forest", "Deku Scrub", "Grottos"))),
+    ("LW Deku Scrub Grotto Front",                                   ("GrottoScrub",  0xF5,  0x79, None,                        'Deku Nut Capacity',                     ("the Lost Woods", "Forest", "Deku Scrub", "Deku Scrub Upgrades", "Grottos"))),
+    ("LW Deku Scrub Grotto Rear",                                    ("GrottoScrub",  0xF5,  0x33, None,                        'Buy Deku Seeds (30)',                   ("the Lost Woods", "Forest", "Deku Scrub", "Grottos"))),
     ("LW GS Bean Patch Near Bridge",                                 ("GS Token",     0x0D,  0x01, None,                        'Gold Skulltula Token',                  ("the Lost Woods", "Skulltulas",))),
     ("LW GS Bean Patch Near Theater",                                ("GS Token",     0x0D,  0x02, None,                        'Gold Skulltula Token',                  ("the Lost Woods", "Skulltulas",))),
     ("LW GS Above Theater",                                          ("GS Token",     0x0D,  0x04, None,                        'Gold Skulltula Token',                  ("the Lost Woods", "Skulltulas",))),
 
     # Sacred Forest Meadow
     ("SFM Wolfos Grotto Chest",                                      ("Chest",        0x3E,  0x11, None,                        'Rupees (50)',                           ("Sacred Forest Meadow", "Forest", "Grottos"))),
-    ("SFM Deku Scrub Grotto Front",                                  ("GrottoNPC",    0xEE,  0x3A, None,                        'Buy Green Potion',                      ("Sacred Forest Meadow", "Forest", "Deku Scrub", "Grottos"))),
-    ("SFM Deku Scrub Grotto Rear",                                   ("GrottoNPC",    0xEE,  0x39, None,                        'Buy Red Potion [30]',                   ("Sacred Forest Meadow", "Forest", "Deku Scrub", "Grottos"))),
+    ("SFM Deku Scrub Grotto Front",                                  ("GrottoScrub",  0xEE,  0x3A, None,                        'Buy Green Potion',                      ("Sacred Forest Meadow", "Forest", "Deku Scrub", "Grottos"))),
+    ("SFM Deku Scrub Grotto Rear",                                   ("GrottoScrub",  0xEE,  0x39, None,                        'Buy Red Potion [30]',                   ("Sacred Forest Meadow", "Forest", "Deku Scrub", "Grottos"))),
     ("SFM GS",                                                       ("GS Token",     0x0D,  0x08, None,                        'Gold Skulltula Token',                  ("Sacred Forest Meadow", "Skulltulas",))),
 
     # Hyrule Field
@@ -114,7 +114,7 @@ location_table = OrderedDict([
     ("HF Tektite Grotto Freestanding PoH",                           ("Collectable",  0x3E,  0x01, None,                        'Piece of Heart',                        ("Hyrule Field", "Grottos",))),
     ("HF Southeast Grotto Chest",                                    ("Chest",        0x3E,  0x02, None,                        'Rupees (20)',                           ("Hyrule Field", "Grottos",))),
     ("HF Open Grotto Chest",                                         ("Chest",        0x3E,  0x03, None,                        'Rupees (5)',                            ("Hyrule Field", "Grottos",))),
-    ("HF Deku Scrub Grotto",                                         ("GrottoNPC",    0xE6,  0x3E, None,                        'Piece of Heart',                        ("Hyrule Field", "Deku Scrub", "Deku Scrub Upgrades", "Grottos"))),
+    ("HF Deku Scrub Grotto",                                         ("GrottoScrub",  0xE6,  0x3E, None,                        'Piece of Heart',                        ("Hyrule Field", "Deku Scrub", "Deku Scrub Upgrades", "Grottos"))),
     ("HF Cow Grotto Cow",                                            ("NPC",          0x3E,  0x16, None,                        'Milk',                                  ("Hyrule Field", "Cow", "Grottos"))),
     ("HF GS Cow Grotto",                                             ("GS Token",     0x0A,  0x01, None,                        'Gold Skulltula Token',                  ("Hyrule Field", "Skulltulas", "Grottos"))),
     ("HF GS Near Kak Grotto",                                        ("GS Token",     0x0A,  0x02, None,                        'Gold Skulltula Token',                  ("Hyrule Field", "Skulltulas", "Grottos"))),
@@ -167,9 +167,9 @@ location_table = OrderedDict([
     # Lon Lon Ranch
     ("LLR Talons Chickens",                                          ("NPC",          0x4C,  0x14, None,                        'Bottle with Milk',                      ("Lon Lon Ranch", "Minigames"))),
     ("LLR Freestanding PoH",                                         ("Collectable",  0x4C,  0x01, None,                        'Piece of Heart',                        ("Lon Lon Ranch",))),
-    ("LLR Deku Scrub Grotto Left",                                   ("GrottoNPC",    0xFC,  0x30, None,                        'Buy Deku Nut (5)',                      ("Lon Lon Ranch", "Deku Scrub", "Grottos"))),
-    ("LLR Deku Scrub Grotto Center",                                 ("GrottoNPC",    0xFC,  0x33, None,                        'Buy Deku Seeds (30)',                   ("Lon Lon Ranch", "Deku Scrub", "Grottos"))),
-    ("LLR Deku Scrub Grotto Right",                                  ("GrottoNPC",    0xFC,  0x37, None,                        'Buy Bombs (5) [35]',                    ("Lon Lon Ranch", "Deku Scrub", "Grottos"))),
+    ("LLR Deku Scrub Grotto Left",                                   ("GrottoScrub",  0xFC,  0x30, None,                        'Buy Deku Nut (5)',                      ("Lon Lon Ranch", "Deku Scrub", "Grottos"))),
+    ("LLR Deku Scrub Grotto Center",                                 ("GrottoScrub",  0xFC,  0x33, None,                        'Buy Deku Seeds (30)',                   ("Lon Lon Ranch", "Deku Scrub", "Grottos"))),
+    ("LLR Deku Scrub Grotto Right",                                  ("GrottoScrub",  0xFC,  0x37, None,                        'Buy Bombs (5) [35]',                    ("Lon Lon Ranch", "Deku Scrub", "Grottos"))),
     ("LLR Stables Left Cow",                                         ("NPC",          0x36,  0x15, None,                        'Milk',                                  ("Lon Lon Ranch", "Cow",))),
     ("LLR Stables Right Cow",                                        ("NPC",          0x36,  0x16, None,                        'Milk',                                  ("Lon Lon Ranch", "Cow",))),
     ("LLR Tower Left Cow",                                           ("NPC",          0x4C,  0x16, None,                        'Milk',                                  ("Lon Lon Ranch", "Cow",))),
@@ -249,9 +249,9 @@ location_table = OrderedDict([
     ("GC Maze Left Chest",                                           ("Chest",        0x62,  0x00, None,                        'Rupees (200)',                          ("Goron City",))),
     ("GC Maze Right Chest",                                          ("Chest",        0x62,  0x01, None,                        'Rupees (50)',                           ("Goron City",))),
     ("GC Maze Center Chest",                                         ("Chest",        0x62,  0x02, None,                        'Rupees (50)',                           ("Goron City",))),
-    ("GC Deku Scrub Grotto Left",                                    ("GrottoNPC",    0xFB,  0x30, None,                        'Buy Deku Nut (5)',                      ("Goron City", "Deku Scrub", "Grottos"))),
-    ("GC Deku Scrub Grotto Center",                                  ("GrottoNPC",    0xFB,  0x33, None,                        'Buy Arrows (30)',                       ("Goron City", "Deku Scrub", "Grottos"))),
-    ("GC Deku Scrub Grotto Right",                                   ("GrottoNPC",    0xFB,  0x37, None,                        'Buy Bombs (5) [35]',                    ("Goron City", "Deku Scrub", "Grottos"))),
+    ("GC Deku Scrub Grotto Left",                                    ("GrottoScrub",  0xFB,  0x30, None,                        'Buy Deku Nut (5)',                      ("Goron City", "Deku Scrub", "Grottos"))),
+    ("GC Deku Scrub Grotto Center",                                  ("GrottoScrub",  0xFB,  0x33, None,                        'Buy Arrows (30)',                       ("Goron City", "Deku Scrub", "Grottos"))),
+    ("GC Deku Scrub Grotto Right",                                   ("GrottoScrub",  0xFB,  0x37, None,                        'Buy Bombs (5) [35]',                    ("Goron City", "Deku Scrub", "Grottos"))),
     ("GC GS Center Platform",                                        ("GS Token",     0x0F,  0x20, None,                        'Gold Skulltula Token',                  ("Goron City", "Skulltulas",))),
     ("GC GS Boulder Maze",                                           ("GS Token",     0x0F,  0x40, None,                        'Gold Skulltula Token',                  ("Goron City", "Skulltulas",))),
     ("GC Shop Item 1",                                               ("Shop",         0x2E,  0x30, (shop_address(8, 0), None),  'Buy Bombs (5) [25]',                    ("Goron City", "Shops",))),
@@ -269,9 +269,9 @@ location_table = OrderedDict([
     ("DMC Upper Grotto Chest",                                       ("Chest",        0x3E,  0x1A, None,                        'Bombs (20)',                            ("Death Mountain Crater", "Death Mountain", "Grottos"))),
     ("DMC Great Fairy Reward",                                       ("Cutscene",     0xFF,  0x14, None,                        'Magic Meter',                           ("Death Mountain Crater", "Death Mountain", "Fairies",))),
     ("DMC Deku Scrub",                                               ("Scrub",        0x61,  0x37, None,                        'Buy Bombs (5) [35]',                    ("Death Mountain Crater", "Death Mountain", "Deku Scrub"))),
-    ("DMC Deku Scrub Grotto Left",                                   ("GrottoNPC",    0xF9,  0x30, None,                        'Buy Deku Nut (5)',                      ("Death Mountain Crater", "Death Mountain", "Deku Scrub", "Grottos"))),
-    ("DMC Deku Scrub Grotto Center",                                 ("GrottoNPC",    0xF9,  0x33, None,                        'Buy Arrows (30)',                       ("Death Mountain Crater", "Death Mountain", "Deku Scrub", "Grottos"))),
-    ("DMC Deku Scrub Grotto Right",                                  ("GrottoNPC",    0xF9,  0x37, None,                        'Buy Bombs (5) [35]',                    ("Death Mountain Crater", "Death Mountain", "Deku Scrub", "Grottos"))),
+    ("DMC Deku Scrub Grotto Left",                                   ("GrottoScrub",  0xF9,  0x30, None,                        'Buy Deku Nut (5)',                      ("Death Mountain Crater", "Death Mountain", "Deku Scrub", "Grottos"))),
+    ("DMC Deku Scrub Grotto Center",                                 ("GrottoScrub",  0xF9,  0x33, None,                        'Buy Arrows (30)',                       ("Death Mountain Crater", "Death Mountain", "Deku Scrub", "Grottos"))),
+    ("DMC Deku Scrub Grotto Right",                                  ("GrottoScrub",  0xF9,  0x37, None,                        'Buy Bombs (5) [35]',                    ("Death Mountain Crater", "Death Mountain", "Deku Scrub", "Grottos"))),
     ("DMC GS Crate",                                                 ("GS Token",     0x0F,  0x80, None,                        'Gold Skulltula Token',                  ("Death Mountain Crater", "Skulltulas",))),
     ("DMC GS Bean Patch",                                            ("GS Token",     0x0F,  0x01, None,                        'Gold Skulltula Token',                  ("Death Mountain Crater", "Skulltulas",))),
 
@@ -282,8 +282,8 @@ location_table = OrderedDict([
     ("ZR Frogs Ocarina Game",                                        ("NPC",          0x54,  0x76, None,                        'Piece of Heart',                        ("Zora's River",))),
     ("ZR Near Open Grotto Freestanding PoH",                         ("Collectable",  0x54,  0x04, None,                        'Piece of Heart',                        ("Zora's River",))),
     ("ZR Near Domain Freestanding PoH",                              ("Collectable",  0x54,  0x0B, None,                        'Piece of Heart',                        ("Zora's River",))),
-    ("ZR Deku Scrub Grotto Front",                                   ("GrottoNPC",    0xEB,  0x3A, None,                        'Buy Green Potion',                      ("Zora's River", "Deku Scrub", "Grottos"))),
-    ("ZR Deku Scrub Grotto Rear",                                    ("GrottoNPC",    0xEB,  0x39, None,                        'Buy Red Potion [30]',                   ("Zora's River", "Deku Scrub", "Grottos"))),
+    ("ZR Deku Scrub Grotto Front",                                   ("GrottoScrub",  0xEB,  0x3A, None,                        'Buy Green Potion',                      ("Zora's River", "Deku Scrub", "Grottos"))),
+    ("ZR Deku Scrub Grotto Rear",                                    ("GrottoScrub",  0xEB,  0x39, None,                        'Buy Red Potion [30]',                   ("Zora's River", "Deku Scrub", "Grottos"))),
     ("ZR GS Tree",                                                   ("GS Token",     0x11,  0x02, None,                        'Gold Skulltula Token',                  ("Zora's River", "Skulltulas",))),
     ("ZR GS Ladder",                                                 ("GS Token",     0x11,  0x01, None,                        'Gold Skulltula Token',                  ("Zora's River", "Skulltulas",))),
     ("ZR GS Near Raised Grottos",                                    ("GS Token",     0x11,  0x10, None,                        'Gold Skulltula Token',                  ("Zora's River", "Skulltulas",))),
@@ -318,9 +318,9 @@ location_table = OrderedDict([
     ("LH Lab Dive",                                                  ("NPC",          0x38,  0x3E, None,                        'Piece of Heart',                        ("Lake Hylia",))),
     ("LH Freestanding PoH",                                          ("Collectable",  0x57,  0x1E, None,                        'Piece of Heart',                        ("Lake Hylia",))),
     ("LH Sun",                                                       ("NPC",          0x57,  0x58, None,                        'Fire Arrows',                           ("Lake Hylia",))),
-    ("LH Deku Scrub Grotto Left",                                    ("GrottoNPC",    0xEF,  0x30, None,                        'Buy Deku Nut (5)',                      ("Lake Hylia", "Deku Scrub", "Grottos"))),
-    ("LH Deku Scrub Grotto Center",                                  ("GrottoNPC",    0xEF,  0x33, None,                        'Buy Deku Seeds (30)',                   ("Lake Hylia", "Deku Scrub", "Grottos"))),
-    ("LH Deku Scrub Grotto Right",                                   ("GrottoNPC",    0xEF,  0x37, None,                        'Buy Bombs (5) [35]',                    ("Lake Hylia", "Deku Scrub", "Grottos"))),
+    ("LH Deku Scrub Grotto Left",                                    ("GrottoScrub",  0xEF,  0x30, None,                        'Buy Deku Nut (5)',                      ("Lake Hylia", "Deku Scrub", "Grottos"))),
+    ("LH Deku Scrub Grotto Center",                                  ("GrottoScrub",  0xEF,  0x33, None,                        'Buy Deku Seeds (30)',                   ("Lake Hylia", "Deku Scrub", "Grottos"))),
+    ("LH Deku Scrub Grotto Right",                                   ("GrottoScrub",  0xEF,  0x37, None,                        'Buy Bombs (5) [35]',                    ("Lake Hylia", "Deku Scrub", "Grottos"))),
     ("LH GS Bean Patch",                                             ("GS Token",     0x12,  0x01, None,                        'Gold Skulltula Token',                  ("Lake Hylia", "Skulltulas",))),
     ("LH GS Lab Wall",                                               ("GS Token",     0x12,  0x04, None,                        'Gold Skulltula Token',                  ("Lake Hylia", "Skulltulas",))),
     ("LH GS Small Island",                                           ("GS Token",     0x12,  0x02, None,                        'Gold Skulltula Token',                  ("Lake Hylia", "Skulltulas",))),
@@ -331,8 +331,8 @@ location_table = OrderedDict([
     ("GV Crate Freestanding PoH",                                    ("Collectable",  0x5A,  0x02, None,                        'Piece of Heart',                        ("Gerudo Valley", "Gerudo",))),
     ("GV Waterfall Freestanding PoH",                                ("Collectable",  0x5A,  0x01, None,                        'Piece of Heart',                        ("Gerudo Valley", "Gerudo",))),
     ("GV Chest",                                                     ("Chest",        0x5A,  0x00, None,                        'Rupees (50)',                           ("Gerudo Valley", "Gerudo",))),
-    ("GV Deku Scrub Grotto Front",                                   ("GrottoNPC",    0xF0,  0x3A, None,                        'Buy Green Potion',                      ("Gerudo Valley", "Gerudo", "Deku Scrub", "Grottos"))),
-    ("GV Deku Scrub Grotto Rear",                                    ("GrottoNPC",    0xF0,  0x39, None,                        'Buy Red Potion [30]',                   ("Gerudo Valley", "Gerudo", "Deku Scrub", "Grottos"))),
+    ("GV Deku Scrub Grotto Front",                                   ("GrottoScrub",  0xF0,  0x3A, None,                        'Buy Green Potion',                      ("Gerudo Valley", "Gerudo", "Deku Scrub", "Grottos"))),
+    ("GV Deku Scrub Grotto Rear",                                    ("GrottoScrub",  0xF0,  0x39, None,                        'Buy Red Potion [30]',                   ("Gerudo Valley", "Gerudo", "Deku Scrub", "Grottos"))),
     ("GV Cow",                                                       ("NPC",          0x5A,  0x15, None,                        'Milk',                                  ("Gerudo Valley", "Gerudo", "Cow"))),
     ("GV GS Small Bridge",                                           ("GS Token",     0x13,  0x02, None,                        'Gold Skulltula Token',                  ("Gerudo Valley", "Skulltulas",))),
     ("GV GS Bean Patch",                                             ("GS Token",     0x13,  0x01, None,                        'Gold Skulltula Token',                  ("Gerudo Valley", "Skulltulas",))),
@@ -361,8 +361,8 @@ location_table = OrderedDict([
     # Colossus
     ("Colossus Great Fairy Reward",                                  ("Cutscene",     0xFF,  0x12, None,                        'Nayrus Love',                           ("Desert Colossus", "Fairies",))),
     ("Colossus Freestanding PoH",                                    ("Collectable",  0x5C,  0x0D, None,                        'Piece of Heart',                        ("Desert Colossus",))),
-    ("Colossus Deku Scrub Grotto Front",                             ("GrottoNPC",    0xFD,  0x3A, None,                        'Buy Green Potion',                      ("Desert Colossus", "Deku Scrub", "Grottos"))),
-    ("Colossus Deku Scrub Grotto Rear",                              ("GrottoNPC",    0xFD,  0x39, None,                        'Buy Red Potion [30]',                   ("Desert Colossus", "Deku Scrub", "Grottos"))),
+    ("Colossus Deku Scrub Grotto Front",                             ("GrottoScrub",  0xFD,  0x3A, None,                        'Buy Green Potion',                      ("Desert Colossus", "Deku Scrub", "Grottos"))),
+    ("Colossus Deku Scrub Grotto Rear",                              ("GrottoScrub",  0xFD,  0x39, None,                        'Buy Red Potion [30]',                   ("Desert Colossus", "Deku Scrub", "Grottos"))),
     ("Colossus GS Bean Patch",                                       ("GS Token",     0x15,  0x01, None,                        'Gold Skulltula Token',                  ("Desert Colossus", "Skulltulas",))),
     ("Colossus GS Tree",                                             ("GS Token",     0x15,  0x08, None,                        'Gold Skulltula Token',                  ("Desert Colossus", "Skulltulas",))),
     ("Colossus GS Hill",                                             ("GS Token",     0x15,  0x04, None,                        'Gold Skulltula Token',                  ("Desert Colossus", "Skulltulas",))),
