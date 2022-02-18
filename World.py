@@ -505,7 +505,7 @@ class World(object):
 
     def set_scrub_prices(self):
         # Get Deku Scrub Locations
-        scrub_locations = [location for location in self.get_locations() if 'Deku Scrub' in location.name]
+        scrub_locations = [location for location in self.get_locations() if location.type in ['Scrub', 'GrottoNPC']]
         scrub_dictionary = {}
         for location in scrub_locations:
             if location.default not in scrub_dictionary:

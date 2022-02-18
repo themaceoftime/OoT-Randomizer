@@ -1,14 +1,6 @@
 class Dungeon(object):
 
     def __init__(self, world, name, hint, font_color, boss_key=None, small_keys=None, dungeon_items=None):
-        def to_array(obj):
-            if obj == None:
-                return []
-            if isinstance(obj, list):
-                return obj
-            else:
-                return [obj]
-
         self.world = world
         self.name = name
         self.hint = hint

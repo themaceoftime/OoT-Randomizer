@@ -1,19 +1,15 @@
-from collections import namedtuple
 import logging
 import random
-from itertools import chain
 from Utils import random_choices
 from Item import ItemFactory
 from ItemList import item_table
-from LocationList import location_groups
 from decimal import Decimal, ROUND_HALF_UP
 
 
-# Generates itempools and places fixed items based on settings.
+# Generates item pools and places fixed items based on settings.
 
 plentiful_items = ([
     'Biggoron Sword',
-    'Kokiri Sword',
     'Boomerang',
     'Lens of Truth',
     'Megaton Hammer',
@@ -141,7 +137,7 @@ deku_scrubs_items = {
     'Buy Deku Seeds (30)': [('Arrows (30)', 3), ('Deku Seeds (30)', 1)],
 }
 
-songlist = [
+song_list = [
     'Zeldas Lullaby',
     'Eponas Song',
     'Suns Song',
@@ -155,7 +151,7 @@ songlist = [
     'Nocturne of Shadow',
     'Requiem of Spirit']
 
-tradeitems = (
+trade_items = (
     'Pocket Egg',
     'Pocket Cucco',
     'Cojiro',
@@ -167,7 +163,7 @@ tradeitems = (
     'Eyedrops',
     'Claim Check')
 
-tradeitemoptions = (
+trade_item_options = (
     'pocket_egg',
     'pocket_cucco',
     'cojiro',
@@ -220,13 +216,13 @@ exclude_from_major = [
 item_groups = {
     'Junk': remove_junk_items,
     'JunkSong': ('Prelude of Light', 'Serenade of Water'),
-    'AdultTrade': tradeitems,
+    'AdultTrade': trade_items,
     'Bottle': normal_bottles,
     'Spell': ('Dins Fire', 'Farores Wind', 'Nayrus Love'),
     'Shield': ('Deku Shield', 'Hylian Shield'),
-    'Song': songlist,
-    'NonWarpSong': songlist[0:6],
-    'WarpSong': songlist[6:],
+    'Song': song_list,
+    'NonWarpSong': song_list[0:6],
+    'WarpSong': song_list[6:],
     'HealthUpgrade': ('Heart Container', 'Piece of Heart'),
     'ProgressItem': [name for (name, data) in item_table.items() if data[0] == 'Item' and data[1]],
     'MajorItem': [name for (name, data) in item_table.items() if (data[0] == 'Item' or data[0] == 'Song') and data[1] and name not in exclude_from_major],
@@ -341,12 +337,14 @@ def get_pool_core(world):
         pending_junk_pool.extend(plentiful_items)
         if world.settings.zora_fountain != 'open':
             ruto_bottles += 1
+        if world.settings.shuffle_kokiri_sword:
+            pending_junk_pool.append('Kokiri Sword')
         if world.settings.shuffle_ocarinas:
             pending_junk_pool.append('Ocarina')
         if world.settings.shuffle_beans and world.distribution.get_starting_item('Magic Bean') < 10:
             pending_junk_pool.append('Magic Bean Pack')
-        if world.settings.gerudo_fortress != "open" \
-                and world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']:
+        if (world.settings.gerudo_fortress != "open"
+                and world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']):
             if 'Thieves Hideout' in world.settings.key_rings and world.settings.gerudo_fortress != "fast":
                 pending_junk_pool.extend(['Small Key Ring (Thieves Hideout)'])
             else:
@@ -354,7 +352,8 @@ def get_pool_core(world):
         if world.settings.shuffle_gerudo_card:
             pending_junk_pool.append('Gerudo Membership Card')
         if world.settings.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity']:
-            for dungeon in ['Forest Temple', 'Fire Temple', 'Water Temple', 'Shadow Temple', 'Spirit Temple', 'Ganons Castle']:
+            for dungeon in ['Forest Temple', 'Fire Temple', 'Water Temple', 'Shadow Temple', 'Spirit Temple',
+                            'Bottom of the Well', 'Gerudo Training Ground', 'Ganons Castle']:
                 if dungeon in world.settings.key_rings:
                     pending_junk_pool.append(f"Small Key Ring ({dungeon})")
                 else:
@@ -365,7 +364,7 @@ def get_pool_core(world):
         if world.settings.shuffle_ganon_bosskey in ['any_dungeon', 'overworld', 'keysanity']:
             pending_junk_pool.append('Boss Key (Ganons Castle)')
         if world.settings.shuffle_song_items == 'any':
-            pending_junk_pool.extend(songlist)
+            pending_junk_pool.extend(song_list)
 
     if world.settings.triforce_hunt:
         triforce_count = int((TriforceCounts[world.settings.item_pool_value] * world.settings.triforce_goal_per_world).to_integral_value(rounding=ROUND_HALF_UP))
@@ -380,16 +379,16 @@ def get_pool_core(world):
         shuffle_item = None  # None for don't handle, False for place item, True for add to pool.
 
         # Always Placed Items
-        if location.vanilla_item in ['Zeldas Letter', 'Triforce', 'Scarecrow Song',
-                                     'Deliver Letter', 'Time Travel', 'Bombchu Drop'] \
-                or location.type == 'Drop':
+        if (location.vanilla_item in ['Zeldas Letter', 'Triforce', 'Scarecrow Song',
+                                      'Deliver Letter', 'Time Travel', 'Bombchu Drop']
+                or location.type == 'Drop'):
             shuffle_item = False
 
         # Gold Skulltula Tokens
         elif location.vanilla_item == 'Gold Skulltula Token':
-            shuffle_item = world.settings.tokensanity == 'all' \
-                           or (world.settings.tokensanity == 'dungeons' and location.dungeon) \
-                           or (world.settings.tokensanity == 'overworld' and not location.dungeon)
+            shuffle_item = (world.settings.tokensanity == 'all'
+                            or (world.settings.tokensanity == 'dungeons' and location.dungeon)
+                            or (world.settings.tokensanity == 'overworld' and not location.dungeon))
 
         # Shops
         elif location.type == "Shop":
@@ -472,19 +471,19 @@ def get_pool_core(world):
 
         # Adult Trade Item
         elif location.vanilla_item == 'Pocket Egg':
-            earliest_trade = tradeitemoptions.index(world.settings.logic_earliest_adult_trade)
-            latest_trade = tradeitemoptions.index(world.settings.logic_latest_adult_trade)
+            earliest_trade = trade_item_options.index(world.settings.logic_earliest_adult_trade)
+            latest_trade = trade_item_options.index(world.settings.logic_latest_adult_trade)
             if earliest_trade > latest_trade:
                 earliest_trade, latest_trade = latest_trade, earliest_trade
-            item = random.choice(tradeitems[earliest_trade:latest_trade + 1])
+            item = random.choice(trade_items[earliest_trade:latest_trade + 1])
             world.selected_adult_trade_item = item
             shuffle_item = True
 
         # Thieves' Hideout
         elif location.vanilla_item == 'Small Key (Thieves Hideout)':
             shuffle_item = world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']
-            if world.settings.gerudo_fortress == 'open' \
-                    or world.settings.gerudo_fortress == 'fast' and location.name != 'Hideout Jail Guard (1 Torch)':
+            if (world.settings.gerudo_fortress == 'open'
+                    or world.settings.gerudo_fortress == 'fast' and location.name != 'Hideout Jail Guard (1 Torch)'):
                 item = 'Recovery Heart'
                 shuffle_item = False
             if shuffle_item and world.settings.gerudo_fortress == 'normal' and 'Thieves Hideout' in world.settings.key_rings:
@@ -493,30 +492,45 @@ def get_pool_core(world):
         # Dungeon Items
         elif location.dungeon is not None:
             dungeon = location.dungeon
+            shuffle_setting = None
+            dungeon_collection = None
+
+            # Boss Key
             if location.vanilla_item == dungeon.item_name("Boss Key"):
-                shuffle_bosskeys = world.settings.shuffle_bosskeys if dungeon.name != 'Ganons Castle' \
-                    else world.settings.shuffle_ganon_bosskey
-                if shuffle_bosskeys == 'vanilla':
+                shuffle_setting = world.settings.shuffle_bosskeys if dungeon.name != 'Ganons Castle' else world.settings.shuffle_ganon_bosskey
+                dungeon_collection = dungeon.boss_key
+                if shuffle_setting == 'vanilla':
                     shuffle_item = False
-                dungeon.boss_key.append(ItemFactory(item))
+            # Map or Compass
             elif location.vanilla_item in [dungeon.item_name("Map"), dungeon.item_name("Compass")]:
-                if world.settings.shuffle_mapcompass == 'vanilla':
+                shuffle_setting = world.settings.shuffle_mapcompass
+                dungeon_collection = dungeon.dungeon_items
+                if shuffle_setting == 'vanilla':
                     shuffle_item = False
-                dungeon.dungeon_items.append(ItemFactory(item))
-                if world.settings.shuffle_mapcompass in ['any_dungeon', 'overworld']:
-                    dungeon.dungeon_items[-1].priority = True
+            # Small Key
             elif location.vanilla_item == dungeon.item_name("Small Key"):
-                if world.settings.shuffle_smallkeys == 'vanilla':
+                shuffle_setting = world.settings.shuffle_smallkeys
+                dungeon_collection = dungeon.small_keys
+                if shuffle_setting == 'vanilla':
                     shuffle_item = False
                 elif dungeon.name in world.settings.key_rings and not dungeon.small_keys:
                     item = dungeon.item_name("Small Key Ring")
                 elif dungeon.name in world.settings.key_rings:
                     item = get_junk_item()[0]
                     shuffle_item = True
-                if not shuffle_item:
-                    dungeon.small_keys.append(ItemFactory(item))
+            # Any other item in a dungeon.
             elif location.type in ["Chest", "NPC", "Song", "Collectable", "Cutscene", "BossHeart"]:
                 shuffle_item = True
+
+            # Handle dungeon item.
+            if shuffle_setting is not None and not shuffle_item:
+                dungeon_collection.append(ItemFactory(item))
+                if shuffle_setting in ['remove', 'startwith', 'triforce']:
+                    world.state.collect(dungeon_collection[-1])
+                    item = get_junk_item()[0]
+                    shuffle_item = True
+                elif shuffle_setting in ['any_dungeon', 'overworld']:
+                    dungeon_collection[-1].priority = True
 
         # The rest of the overworld items.
         elif location.type in ["Chest", "NPC", "Song", "Collectable", "Cutscene", "BossHeart"]:
@@ -535,12 +549,12 @@ def get_pool_core(world):
             remain_shop_items.remove(item)
 
         shop_slots_count = len(remain_shop_items)
-        shop_nonitem_count = len(world.shop_prices)
-        shop_item_count = shop_slots_count - shop_nonitem_count
+        shop_non_item_count = len(world.shop_prices)
+        shop_item_count = shop_slots_count - shop_non_item_count
 
         pool.extend(random.sample(remain_shop_items, shop_item_count))
-        if shop_nonitem_count:
-            pool.extend(get_junk_item(shop_nonitem_count))
+        if shop_non_item_count:
+            pool.extend(get_junk_item(shop_non_item_count))
 
     # Extra rupees for shopsanity.
     if world.settings.shopsanity not in ['off', '0']:
@@ -555,23 +569,6 @@ def get_pool_core(world):
     
     if world.settings.no_epona_race:
         world.state.collect(ItemFactory('Epona', event=True))
-
-    if world.settings.shuffle_mapcompass == 'remove' or world.settings.shuffle_mapcompass == 'startwith':
-        for item in [item for dungeon in world.dungeons for item in dungeon.dungeon_items]:
-            world.state.collect(item)
-            pool.extend(get_junk_item())
-    if world.settings.shuffle_smallkeys == 'remove':
-        for item in [item for dungeon in world.dungeons for item in dungeon.small_keys]:
-            world.state.collect(item)
-            pool.extend(get_junk_item())
-    if world.settings.shuffle_bosskeys == 'remove':
-        for item in [item for dungeon in world.dungeons if dungeon.name != 'Ganons Castle' for item in dungeon.boss_key]:
-            world.state.collect(item)
-            pool.extend(get_junk_item())
-    if world.settings.shuffle_ganon_bosskey in ['remove', 'triforce']:
-        for item in [item for dungeon in world.dungeons if dungeon.name == 'Ganons Castle' for item in dungeon.boss_key]:
-            world.state.collect(item)
-            pool.extend(get_junk_item())
 
     if world.settings.shuffle_smallkeys == 'vanilla':
         # Logic cannot handle vanilla key layout in some dungeons
@@ -593,8 +590,6 @@ def get_pool_core(world):
 
     if world.settings.shuffle_ganon_bosskey == 'on_lacs':
         placed_items['ToT Light Arrows Cutscene'] = 'Boss Key (Ganons Castle)'
-    elif world.settings.shuffle_ganon_bosskey == 'vanilla':
-        placed_items['Ganons Tower Boss Key Chest'] = 'Boss Key (Ganons Castle)'
 
     if world.settings.shuffle_ganon_bosskey in ['stones', 'medallions', 'dungeons', 'tokens']:
         placed_items['Gift from Sages'] = 'Boss Key (Ganons Castle)'
@@ -602,17 +597,14 @@ def get_pool_core(world):
     else:
         placed_items['Gift from Sages'] = 'Ice Trap'
 
-    if not world.settings.shuffle_kokiri_sword:
-        replace_max_item(pool, 'Kokiri Sword', 0)
-
     if world.settings.junk_ice_traps == 'off':
         replace_max_item(pool, 'Ice Trap', 0)
     elif world.settings.junk_ice_traps == 'onslaught':
         for item in [item for item, weight in junk_pool_base] + ['Recovery Heart', 'Bombs (20)', 'Arrows (30)']:
             replace_max_item(pool, item, 0)
 
-    for item,max in item_difficulty_max[world.settings.item_pool_value].items():
-        replace_max_item(pool, item, max)
+    for item, maximum in item_difficulty_max[world.settings.item_pool_value].items():
+        replace_max_item(pool, item, maximum)
 
     world.distribution.alter_pool(world, pool)
 
@@ -646,4 +638,4 @@ def get_pool_core(world):
     world.distribution.configure_starting_items_settings(world)
     world.distribution.collect_starters(world.state)
 
-    return (pool, placed_items)
+    return pool, placed_items
