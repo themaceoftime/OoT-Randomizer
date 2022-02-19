@@ -1213,12 +1213,9 @@ hintTable = {
     #'1015':                                                     ("They say that Lon Lon Ranch prospered under Ingo.", None, 'junk'),
     #'1017':                                                     ("Without the Lens of Truth, the Treasure Chest Mini-Game is a 1 out of 32 chance.^Good luck!", None, 'junk'),
     #'1018':                                                     ("Use bombs wisely.", None, 'junk'),
-    #'1021':                                                     ("I found you, faker!", None, 'junk'), # SA2
     #'1022':                                                     ("You're comparing yourself to me?^Ha! You're not even good enough to be my fake.", None, 'junk'), # SA2
-    #'1023':                                                     ("I'll make you eat those words.", None, 'junk'),# SA2
     #'1024':                                                     ("What happened to Sheik?", None, 'junk'),
     #'1026':                                                     ("I've heard Sploosh Kaboom is a tricky game.", None, 'junk'), # Windwaker
-    #'1027':                                                     ("I'm Lonk from Pennsylvania.", None, 'junk'),
     #'1028':                                                     ("I bet you'd like to have more bombs.", None, 'junk'),
     #'1029':                                                     ("When all else fails, use Fire.", None, 'junk'),
     #'1030':                                                     ("Here's a hint, @. Don't be bad.", None, 'junk'),
@@ -1228,10 +1225,8 @@ hintTable = {
     #'1034':                                                     ("They say this game has just a few glitches.", None, 'junk'),
     #'1035':                                                     ("BRRING BRRING This is Ulrira. Wrong number?", None, 'junk'), # Link's Awakening
     #'1036':                                                     ("Tingle Tingle Kooloo Limpah", None, 'junk'),
-    #'1037':                                                     ("L is real 2041", None, 'junk'),
     #'1038':                                                     ("They say that Ganondorf will appear in the next Mario Tennis.", None, 'junk'),
     #'1039':                                                     ("Medigoron sells the earliest Breath of the Wild demo.", None, 'junk'),
-    #'1040':                                                     ("There's a reason why I am special inquisitor!", None, 'junk'), # Xenoblade Chronicles 2
     #'1041':                                                     ("You were almost a @ sandwich.", None, 'junk'),
     #'1042':                                                     ("I'm a helpful hint Gossip Stone!^See, I'm helping.", None, 'junk'),
     #'1043':                                                     ("Dear @, please come to the castle. I've baked a cake for you.&Yours truly, princess Zelda.", None, 'junk'), # Super Mario 64
@@ -1289,13 +1284,13 @@ hintTable = {
     #'1094':                                                     ("Did you know that the Boomerang instantly stuns Phantom Ganon's second form?", None, 'junk'),
     #'1095':                                                     ("I came here to chew bubblegum and play rando. And I'm all out of bubblegum.", None, 'junk'), # They Live
     #'1096':                                                     ("Did you know that Stalchildren leave you alone when wearing the Bunny Hood?", None, 'junk'),
-    '1097':                                                     ("This Gossip Stone Dedicated to Those&Who Perished Before Killing Ganondorf.", None, 'junk'),
+    #'1097':                                                     ("This Gossip Stone Is Dedicated to Those Who Perished Before Ganon Was Defeated.", None, 'junk'),
     #'1098':                                                     ("Did you know that Blue Fire destroys mud walls and detonates Bomb Flowers?", None, 'junk'),
     #'1099':                                                     ("Are you sure you want to play this? Wanna go get some tacos or something?", None, 'junk'),
     #'1100':                                                     ("What did Zelda suggest that Link do when diplomacy didn't work?^${12 39 c7}Triforce.", None, 'junk'),
     #'1101':                                                     ("They say that bombing the hole Volvagia last flew into can be rewarding.", None, 'junk'),
     #'1102':                                                     ("Hi @, we've been trying to reach you about your car's extended warranty.", None, 'junk'),
-    #'1103':                                                     ("Grunty brushes her rotten teeth with salted slug flavoured tooth paste!", None, 'junk'),
+    #'1103':                                                     ("Ganondorf brushes his rotten teeth with salted slug flavoured tooth paste!", None, 'junk'), # Banjo Kazooie
     #'1104':                                                     ("I'm Commander Shepard, and this is my favorite Gossip Stone in Hyrule!", None, 'junk'), # Mass Effect
     #'1105':                                                     ("They say that tossing a bomb will cause a Blue Bubble to go after it.", None, 'junk'),
     #'1106':                                                     ("They say that the Lizalfos in Dodongo's Cavern like to play in lava.", None, 'junk'),
@@ -1327,7 +1322,6 @@ hintTable = {
     #'1132':                                                     ("I've heard Ganon dislikes lemon-flavored popsicles.", None, 'junk'),
     #'1133':                                                     ("If Gorons eat rocks, does that mean I'm in danger?", None, 'junk'),
     #'1134':                                                     ("They say Ingo is not very good at planning ahead.", None, 'junk'),
-    #'1135':                                                     ("Wubbadubbadub is that true?^Woah, you go big guy!", None, 'junk'), # Rhythm Heaven Fever
     #'1136':                                                     ("They say that Anju needs to stop losing her chickens.", None, 'junk'),
     #'1137':                                                     ("Can you move me? I don't get great service here.", None, 'junk'),
     #'1138':                                                     ("Have you embraced the power of the Deku Nut yet?", None, 'junk'),
@@ -1335,19 +1329,17 @@ hintTable = {
     #'1140':                                                     ("They say that the path to Termina is a one-way trip.", None, 'junk'),
     #'1141':                                                     ("They say that @ deserves a hug. Everyone does!", None, 'junk'),
     #'1142':                                                     ("I hear Termina is a great spot for a vacation!", None, 'junk'),
-    #'1143':                                                     ("What's this icky paint-like goop? It's moving!", None, 'junk'), # Mario Sunshine
     #'1144':                                                     ("You've met with a terrible fate, haven't you?", None, 'junk'),
     #'1145':                                                     ("Try using various items and weapons on me :)", None, 'junk'),
-    #'1146':                                                     ("On second thought, let's not go to Camelot. 'Tis a silly place.", None, 'junk'), # Monty Python
+    #'1146':                                                     ("On second thought, let's not go to Hyrule Castle. 'Tis a silly place.", None, 'junk'), # Monty Python
     #'1147':                                                     ("If you see something suspicious, bomb it!", None, 'junk'),
     #'1148':                                                     ("Don't forget to write down your hints :)", None, 'junk'),
     #'1149':                                                     ("Would you kindly...close this textbox?", None, 'junk'), # Bioshock
     #'1150':                                                     ("They say that King Dodongo dislikes smoke.", None, 'junk'),
-    #'1151':                                                     ("Never give up. Trust your instincts!", None, 'junk'),
+    #'1151':                                                     ("Never give up. Trust your instincts!", None, 'junk'), # Starfox?
     #'1152':                                                     ("I love to gossip! Wanna be friends?", None, 'junk'),
     #'1153':                                                     ("This isn't where I parked my horse!", None, 'junk'),
     #'1154':                                                     ("Hello! My name is @! What's yours?", None, 'junk'),
-    #'1155':                                                     ("Mario go fast ….wait wrong game.", None, 'junk'),
     #'1156':                                                     ("Anything not saved will be lost.", None, 'junk'),
     #'1157':                                                     ("Watch out for the banana peel.", None, 'junk'),
     #'1158':                                                     ("They say that the Groose is loose.", None, 'junk'),
@@ -1355,12 +1347,8 @@ hintTable = {
     #'1160':                                                     ("Ya ha ha! You found me!", None, 'junk'),
     #'1161':                                                     ("Do you like Like Likes?", None, 'junk'),
     #'1162':                                                     ("Kept you waitin', huh?", None, 'junk'), # Metal Gear Solid
-    #'1163':                                                     ("WELCOME TO BONUS STAGE!", None, 'junk'), # Donkey Kong 64
-    #'1164':                                                     ("That's showbiz, baby.", None, 'junk'),
     #'1165':                                                     ("You're a cool cat, @.", None, 'junk'),
-    #'1166':                                                     ("@, I am your father.", None, 'junk'),
     #'1167':                                                     ("OOOOOOOH BA-NA-NA!", None, 'junk'), # Donkey Kong 64
-    #'1168':                                                     ("Objection!", None, 'junk'), # Ace Attorney
     #'1169':                                                     ("Hydrate!", None, 'junk'),
     #'1170':                                                     ("They say that there is an alcove with a Recovery Heart behind the lava wall in Dodongo's Cavern.", None, 'junk'),
     #'1171':                                                     ("Having regrets? Reset without saving!", None, 'junk'),
@@ -1369,7 +1357,6 @@ hintTable = {
     #'1174':                                                     ("${12 28 df}Moo!", None, 'junk'),
     #'1175':                                                     ("${12 28 d8}Woof!", None, 'junk'),
     #'1176':                                                     ("${12 68 08}Aah! You startled me!", None, 'junk'),
-    #'1177':                                                     ("Praise the sun!", None, 'junk'),
     '1178':                                                     ("${12 68 23}OwO", None, 'junk'), # requires debugging still
     #'1179':                                                     ("${12 68 51}What in tarnation!", None, 'junk'),
     #'1180':                                                     ("Press \u00A5\u00A5\u00A6\u00A6\u00A7\u00A8\u00A7\u00A8\u00A0\u009F to warp to&the credits.", None, 'junk'), # Konami Code
@@ -1393,12 +1380,12 @@ hintTable = {
     #'1198':                                                     ("Did you know that Barinade, Volvagia and Twinrova hard require the Boomerang, Megaton Hammer and Mirror Shield respectively?", None, 'junk'),
     #'1199':                                                     ("Did you know that Dark Link's max health is proportional to your own max health?", None, 'junk'),
     #'1200':                                                     ("Did you know that you can reach the invisible Hookshot target before the fans room in Shadow Temple with just the Hookshot if you backflip onto the chest?", None, 'junk'),
-    '1201':                                                     (".", None, 'junk'),
-    '1202':                                                     (".", None, 'junk'),
-    '1203':                                                     (".", None, 'junk'),
-    '1204':                                                     (".", None, 'junk'),
-    '1205':                                                     (".", None, 'junk'),
-    '1206':                                                     (".", None, 'junk'),
+    '1201':                                                     ("${12 68 54}Objection!", None, 'junk'), # Ace Attorney
+    #'1202':                                                     ("They say that in the castle courtyard you can see a portrait of a young Talon.", None, 'junk'), # Mario = Talon joke
+    #'1203':                                                     ("They say that Phantom Ganon is a big Louisa May Alcott fan.", None, 'junk'), The Poe Sisters are named after characters from one of her novels.
+    '1204':                                                     ("They say&the price of my love's not a price that you're willing to pay.", None, 'junk'), # Hamilton (Musical)
+    #'1205':                                                     ("It's time for you to look inward and begin asking yourself the big questions:^How did Medigoron get inside that hole, and how does he get out for the credits?", None, 'junk'), # Avatar: The Last Airbender
+    #'1206':                                                     ("They say that Jabu Jabu is no longer a pescetarian in Master Quest.", None, 'junk'),
     '1207':                                                     (".", None, 'junk'),
     '1208':                                                     (".", None, 'junk'),
     '1209':                                                     (".", None, 'junk'),
