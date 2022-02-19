@@ -173,7 +173,10 @@ conditional_sometimes = {
 # & is a new line
 # @ will print the player name
 # # sets color to white (currently only used for dungeon reward hints).
+# 
 # sfx IDs (see junk hint 1174 for an example of how to use them): https://wiki.cloudmodding.com/oot/Sound_Effect_Ids
+# Some sound effects loop infinitely, like child link drinking from a bottle, so make sure you test them.
+# 
 # How to use button icons in hints (see junk hint 1180 for an example):
 #   \u009F      A
 #   \u00A0      B
@@ -1196,6 +1199,7 @@ hintTable = {
     'ZD Storms Grotto':                                         ("a small #Fairy Fountain#", None, 'region'),
     'GF Storms Grotto':                                         ("a small #Fairy Fountain#", None, 'region'),
 
+    # First generation junk hints
     #'1002':                                                     ("They say that monarchy is a terrible system of governance.", None, 'junk'),
     #'1003':                                                     ("They say that Zelda is a poor leader.", None, 'junk'),
     #'1004':                                                     ("These hints can be quite useful. This is an exception.", None, 'junk'),
@@ -1235,7 +1239,7 @@ hintTable = {
     #'1045':                                                     ("They say that Okami is the best Zelda game.", None, 'junk'),
     #'1046':                                                     ("They say that quest guidance can be found at a talking rock.", None, 'junk'),
     #'1047':                                                     ("They say that the final item you're looking for can be found somewhere in Hyrule.", None, 'junk'),
-    '1048':                                                     ("${12 68 7a}Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.", None, 'junk'), # Mweep
+    #'1048':                                                     ("${12 68 7a}Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.", None, 'junk'), # Mweep
     #'1049':                                                     ("They say that Barinade fears Deku Nuts.", None, 'junk'),
     #'1050':                                                     ("They say that Flare Dancers do not fear Goron-crafted blades.", None, 'junk'),
     #'1051':                                                     ("They say that Morpha is easily trapped in a corner.", None, 'junk'),
@@ -1253,13 +1257,14 @@ hintTable = {
     #'1063':                                                     ("They say that arbitrary code execution leads to the credits sequence.", None, 'junk'),
     #'1064':                                                     ("They say that Twinrova always casts the same spell the first three times.", None, 'junk'),
     #'1065':                                                     ("They say that the Development branch may be unstable.", None, 'junk'),
-    #'1066':                                                     ("You're playing a Randomizer. I'm randomized!^Here's a random number:  #4#.&Enjoy your Randomizer!", None, 'junk'),
+    #'1066':                                                     ("You're playing a Randomizer. I'm randomized!^${12 48 31}Here's a random number:  #4#.&Enjoy your Randomizer!", None, 'junk'),
     #'1067':                                                     ("They say Ganondorf's bolts can be reflected with glass or steel.", None, 'junk'),
     #'1068':                                                     ("They say Ganon's tail is vulnerable to nuts, arrows, swords, explosives, hammers...^...sticks, seeds, boomerangs...^...rods, shovels, iron balls, angry bees...", None, 'junk'),
     #'1069':                                                     ("They say that you're wasting time reading this hint, but I disagree. Talk to me again!", None, 'junk'),
     #'1070':                                                     ("They say Ganondorf knows where to find the instrument of his doom.", None, 'junk'),
     #'1071':                                                     ("I heard @ is pretty good at Zelda.", None, 'junk'),
 
+    # Second generation junk hints
     #'1072':                                                     ("Fingers-Mazda, the first thief in the world, stole fire from the gods.^But he was unable to fence it.&It was too hot.&He got really burned on that deal.", None, 'junk'), # Discworld
     #'1073':                                                     ("Boing-oing!^There are times in life when one should seek the help of others...^Thus, when standing alone fails to help, stand together.", None, 'junk'),
     #'1074':                                                     ("They say that if you don't use your slingshot at all when you play the slingshot minigame, the owner gets upset with you.", None, 'junk'),
@@ -1277,7 +1282,7 @@ hintTable = {
     #'1087':                                                     ("They say only one heart piece in all of Hyrule will declare the holder a winner.", None, 'junk'),
     #'1088':                                                     ("Are you stuck? Try asking for help in our Discord server or check out our Wiki!", None, 'junk'),
     #'1089':                                                     ("You would be surprised at all the things you can Hookshot in the Spirit Temple!", None, 'junk'),
-    #'1090':                                                     ("I once glued a set of false teeth to the Boomerang^That came back to bite me.", None, 'junk'),
+    #'1090':                                                     ("I once glued a set of false teeth to the Boomerang^${12 39 c7}That came back to bite me.", None, 'junk'),
     #'1091':                                                     ("They say that all of the water in Hyrule flows through King Zora's buttocks.", None, 'junk'),
     #'1092':                                                     ("Space, space, wanna go to space, yes, please space. Space space. Go to space.", None, 'junk'), # Portal
     #'1093':                                                     ("They say that you must read the names of \"Special Deal\" items in shops carefully.", None, 'junk'),
@@ -1287,7 +1292,7 @@ hintTable = {
     '1097':                                                     ("This Gossip Stone Dedicated to Those&Who Perished Before Killing Ganondorf.", None, 'junk'),
     #'1098':                                                     ("Did you know that Blue Fire destroys mud walls and detonates Bomb Flowers?", None, 'junk'),
     #'1099':                                                     ("Are you sure you want to play this? Wanna go get some tacos or something?", None, 'junk'),
-    #'1100':                                                     ("What did Zelda suggest that Link do when diplomacy didn't work?^Triforce.", None, 'junk'),
+    #'1100':                                                     ("What did Zelda suggest that Link do when diplomacy didn't work?^${12 39 c7}Triforce.", None, 'junk'),
     #'1101':                                                     ("They say that bombing the hole Volvagia last flew into can be rewarding.", None, 'junk'),
     #'1102':                                                     ("Hi @, we've been trying to reach you about your car's extended warranty.", None, 'junk'),
     #'1103':                                                     ("Grunty brushes her rotten teeth with salted slug flavoured tooth paste!", None, 'junk'),
@@ -1316,7 +1321,7 @@ hintTable = {
     #'1126':                                                     ("They say Goron fabrics protect against more than fire.", None, 'junk'),
     #'1127':                                                     ("Did you know that Redead mourn their defeated friends?", None, 'junk'),
     #'1128':                                                     ("What is a Hylian? A miserable little pile of secrets!", None, 'junk'), # Castlevania
-    '1129':                                                     ("The hint stone you have dialed&has been disconnected.", None, 'junk'),
+    #'1129':                                                     ("The hint stone you have dialed&has been disconnected.", None, 'junk'),
     #'1130':                                                     ("We don't make mistakes, we have happy accidents.", None, 'junk'), # Bob Ross
     #'1131':                                                     ("Did you know that Redead eat their defeated friends?", None, 'junk'),
     #'1132':                                                     ("I've heard Ganon dislikes lemon-flavored popsicles.", None, 'junk'),
@@ -1371,12 +1376,36 @@ hintTable = {
     #'1181':                                                     ("Oh!^Oh-oh!^C'mon!^Come on! Come on! Come on!^HOT!!^What a hot beat!^WHOOOOAH!^YEEEEAH!^YAHOOO!!", None, 'junk'),
     #'1182':                                                     ("${12 68 5F}Hey! Listen!", None, 'junk'),
     #'1183':                                                     ("I am the King of Gossip Stones, but fear not - I have the common touch! That means I can make conversation with everyone^from foreign dignitaries to the lowliest bumpkin - such as yourself!", None, 'junk'), # Dragon Quest
-    '1184':                                                     (".", None, 'junk'),
-    '1185':                                                     (".", None, 'junk'),
-    '1186':                                                     (".", None, 'junk'),
-    '1187':                                                     (".", None, 'junk'),
-    '1188':                                                     (".", None, 'junk'),
-    '1189':                                                     (".", None, 'junk'),
+    #'1184':                                                     ("I am @, hero of the Gossip Stones! Hear my name and tremble!", None, 'junk'),
+    '1185':                                                     ("Did you know that an easy way to kill Dark Link is to look away from him while holding Z-Target. When Dark Link walks up behind you, strafe sideways and slash your sword.", None, 'junk'),
+    #'1186':                                                     ("They say that if Link could say a few words, he'd be a better public speaker.", None, 'junk'),
+    #'1187':                                                     ("Did you know that you only need to play the Song of Time to open the Door of Time? The Spiritual Stones are not needed.", None, 'junk'),
+    #'1188':                                                     ("Do you reckon Anju met her lover at a Kafei?", None, 'junk'),
+    #'1189':                                                     ("Did you know that you can access the Fire Temple boss door without dropping the pillar by using the Hover boots?", None, 'junk'),
+    #'1190':                                                     ("Key-locked in Fire Temple? Maybe Volvagia has your Small Key.", None, 'junk'),
+    #'1191':                                                     ("Expired Spoiler Log? Don't worry! The OoTR Discord staff can help you out.", None, 'junk'),
+    #'1192':                                                     ("Try holding A on the item screen.", None, 'junk'),
+    #'1193':                                                     ("Did you know that in the Forest Temple you can reach the alcove in the block push room with Hover Boots?", None, 'junk'),
+    #'1194':                                                     ("Dodongo's Cavern is much easier and faster to clear as Adult.", None, 'junk'),
+    #'1195':                                                     ("Did you know that the solution to the Truth Spinner in Shadow Temple is never one of the two positions closest to the initial position?", None, 'junk'),
+    #'1196':                                                     ("Did you know that the Kokiri Sword is as effective as Deku Sticks against Dead Hand?", None, 'junk'),
+    #'1197':                                                     ("Did you know that Ruto is strong enough to defeat enemies and activate ceiling switches inside Jabu Jabu's Belly?", None, 'junk'),
+    #'1198':                                                     ("Did you know that Barinade, Volvagia and Twinrova hard require the Boomerang, Megaton Hammer and Mirror Shield respectively?", None, 'junk'),
+    #'1199':                                                     ("Did you know that Dark Link's max health is proportional to your own max health?", None, 'junk'),
+    #'1200':                                                     ("Did you know that you can reach the invisible Hookshot target before the fans room in Shadow Temple with just the Hookshot if you backflip onto the chest?", None, 'junk'),
+    '1201':                                                     (".", None, 'junk'),
+    '1202':                                                     (".", None, 'junk'),
+    '1203':                                                     (".", None, 'junk'),
+    '1204':                                                     (".", None, 'junk'),
+    '1205':                                                     (".", None, 'junk'),
+    '1206':                                                     (".", None, 'junk'),
+    '1207':                                                     (".", None, 'junk'),
+    '1208':                                                     (".", None, 'junk'),
+    '1209':                                                     (".", None, 'junk'),
+    '1210':                                                     (".", None, 'junk'),
+    '1211':                                                     (".", None, 'junk'),
+    '1212':                                                     (".", None, 'junk'),
+    '1213':                                                     (".", None, 'junk'),
 
     'Deku Tree':                                                ("an ancient tree", "Deku Tree", 'dungeonName'),
     'Dodongos Cavern':                                          ("an immense cavern", "Dodongo's Cavern", 'dungeonName'),
