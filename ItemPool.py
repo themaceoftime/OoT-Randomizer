@@ -1,9 +1,11 @@
 import logging
 import random
-from Utils import random_choices
+from collections import OrderedDict
+from decimal import Decimal, ROUND_HALF_UP
+
 from Item import ItemFactory
 from ItemList import item_table
-from decimal import Decimal, ROUND_HALF_UP
+from Utils import random_choices
 
 
 # Generates item pools and places fixed items based on settings.
@@ -127,13 +129,13 @@ min_shop_items = (
     ['Buy Fish'])
 
 deku_scrubs_items = {
-    'Buy Deku Shield': 'Deku Shield',
-    'Buy Deku Nut (5)': 'Deku Nuts (5)',
-    'Buy Deku Stick (1)': 'Deku Stick (1)',
-    'Buy Bombs (5) [35]': 'Bombs (5)',
+    'Buy Deku Shield':     'Deku Shield',
+    'Buy Deku Nut (5)':    'Deku Nuts (5)',
+    'Buy Deku Stick (1)':  'Deku Stick (1)',
+    'Buy Bombs (5) [35]':  'Bombs (5)',
     'Buy Red Potion [30]': 'Recovery Heart',
-    'Buy Green Potion': 'Rupees (5)',
-    'Buy Arrows (30)': [('Arrows (30)', 3), ('Deku Seeds (30)', 1)],
+    'Buy Green Potion':    'Rupees (5)',
+    'Buy Arrows (30)':     [('Arrows (30)', 3), ('Deku Seeds (30)', 1)],
     'Buy Deku Seeds (30)': [('Arrows (30)', 3), ('Deku Seeds (30)', 1)],
 }
 
@@ -151,29 +153,18 @@ song_list = [
     'Nocturne of Shadow',
     'Requiem of Spirit']
 
-trade_items = (
-    'Pocket Egg',
-    'Pocket Cucco',
-    'Cojiro',
-    'Odd Mushroom',
-    'Poachers Saw',
-    'Broken Sword',
-    'Prescription',
-    'Eyeball Frog',
-    'Eyedrops',
-    'Claim Check')
-
-trade_item_options = (
-    'pocket_egg',
-    'pocket_cucco',
-    'cojiro',
-    'odd_mushroom',
-    'poachers_saw',
-    'broken_sword',
-    'prescription',
-    'eyeball_frog',
-    'eyedrops',
-    'claim_check')
+trade_items = OrderedDict([
+    ("pocket_egg",   "Pocket Egg"),
+    ("pocket_cucco", "Pocket Cucco"),
+    ("cojiro",       "Cojiro"),
+    ("odd_mushroom", "Odd Mushroom"),
+    ("poachers_saw", "Poachers Saw"),
+    ("broken_sword", "Broken Sword"),
+    ("prescription", "Prescription"),
+    ("eyeball_frog", "Eyeball Frog"),
+    ("eyedrops",     "Eyedrops"),
+    ("claim_check",  "Claim Check"),
+])
 
 junk_pool_base = [
     ('Bombs (5)',       8),
@@ -216,7 +207,7 @@ exclude_from_major = [
 item_groups = {
     'Junk': remove_junk_items,
     'JunkSong': ('Prelude of Light', 'Serenade of Water'),
-    'AdultTrade': trade_items,
+    'AdultTrade': list(trade_items.values()),
     'Bottle': normal_bottles,
     'Spell': ('Dins Fire', 'Farores Wind', 'Nayrus Love'),
     'Shield': ('Deku Shield', 'Hylian Shield'),
@@ -435,9 +426,7 @@ def get_pool_core(world):
         elif location.vanilla_item in ['Bombchus', 'Bombchus (5)', 'Bombchus (10)', 'Bombchus (20)']:
             if world.settings.bombchus_in_logic:
                 item = 'Bombchus'
-            shuffle_item = True
-            if location.name == 'Wasteland Bombchu Salesman':
-                shuffle_item = world.settings.shuffle_medigoron_carpet_salesman
+            shuffle_item = location.name != 'Wasteland Bombchu Salesman' or world.settings.shuffle_medigoron_carpet_salesman
 
         # Cows
         elif location.vanilla_item == 'Milk':
@@ -449,7 +438,7 @@ def get_pool_core(world):
         elif location.vanilla_item == 'Gerudo Membership Card':
             shuffle_item = world.settings.shuffle_gerudo_card and world.settings.gerudo_fortress != 'open'
             if world.settings.shuffle_gerudo_card and world.settings.gerudo_fortress == 'open':
-                pending_junk_pool.append('Gerudo Membership Card')
+                pending_junk_pool.append(item)
                 item = 'Recovery Heart'
 
         # Bottles
@@ -465,17 +454,16 @@ def get_pool_core(world):
         elif location.vanilla_item == 'Magic Bean':
             if world.settings.shuffle_beans:
                 item = 'Magic Bean Pack' if world.distribution.get_starting_item('Magic Bean') < 10 else get_junk_item()[0]
-                shuffle_item = True
-            else:
-                shuffle_item = False
+            shuffle_item = world.settings.shuffle_beans
 
         # Adult Trade Item
         elif location.vanilla_item == 'Pocket Egg':
+            trade_item_options = list(trade_items.keys())
             earliest_trade = trade_item_options.index(world.settings.logic_earliest_adult_trade)
             latest_trade = trade_item_options.index(world.settings.logic_latest_adult_trade)
             if earliest_trade > latest_trade:
                 earliest_trade, latest_trade = latest_trade, earliest_trade
-            item = random.choice(trade_items[earliest_trade:latest_trade + 1])
+            item = trade_items[random.choice(trade_item_options[earliest_trade:latest_trade + 1])]
             world.selected_adult_trade_item = item
             shuffle_item = True
 
@@ -487,7 +475,7 @@ def get_pool_core(world):
                 item = 'Recovery Heart'
                 shuffle_item = False
             if shuffle_item and world.settings.gerudo_fortress == 'normal' and 'Thieves Hideout' in world.settings.key_rings:
-                item = get_junk_item()[0] if 'Small Key Ring (Thieves Hideout)' in pool else 'Small Key Ring (Thieves Hideout)'
+                item = get_junk_item()[0] if location.name != 'Hideout Jail Guard (1 Torch)' else 'Small Key Ring (Thieves Hideout)'
 
         # Dungeon Items
         elif location.dungeon is not None:
