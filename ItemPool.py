@@ -3,8 +3,7 @@ import random
 from collections import OrderedDict
 from decimal import Decimal, ROUND_HALF_UP
 
-from Item import ItemFactory
-from ItemList import item_table
+from Item import ItemFactory, ItemInfo
 from Utils import random_choices
 
 
@@ -34,7 +33,8 @@ plentiful_items = ([
     'Slingshot', 
     'Bomb Bag',
     'Double Defense'] +
-    ['Heart Container'] * 8)
+    ['Heart Container'] * 8
+)
 
 item_difficulty_max = {
     'plentiful': {
@@ -91,7 +91,8 @@ normal_bottles = [
     'Bottle with Bugs',
     'Bottle with Poe',
     'Bottle with Big Poe',
-    'Bottle with Blue Fire']
+    'Bottle with Blue Fire'
+]
 
 dungeon_rewards = [
     'Kokiri Emerald',
@@ -108,7 +109,8 @@ dungeon_rewards = [
 shopsanity_rupees = (
     ['Rupees (20)'] * 5 +
     ['Rupees (50)'] * 3 +
-    ['Rupees (200)'] * 2)
+    ['Rupees (200)'] * 2
+)
 
 min_shop_items = (
     ['Buy Deku Shield'] +
@@ -126,7 +128,8 @@ min_shop_items = (
     ['Buy Blue Fire'] +
     ["Buy Fairy's Spirit"] +
     ['Buy Bottle Bug'] +
-    ['Buy Fish'])
+    ['Buy Fish']
+)
 
 deku_scrubs_items = {
     'Buy Deku Shield':     'Deku Shield',
@@ -166,31 +169,11 @@ trade_items = OrderedDict([
     ("claim_check",  "Claim Check"),
 ])
 
-junk_pool_base = [
-    ('Bombs (5)',       8),
-    ('Bombs (10)',      2),
-    ('Arrows (5)',      8),
-    ('Arrows (10)',     2),
-    ('Deku Stick (1)',  5),
-    ('Deku Nuts (5)',   5),
-    ('Deku Seeds (30)', 5),
-    ('Rupees (5)',      10),
-    ('Rupees (20)',     4),
-    ('Rupees (50)',     1),
-]
+junk_pool_base = [(item, weight) for (item, weight) in ItemInfo.junk.items() if weight > 0]
+remove_junk_items = [item for (item, weight) in ItemInfo.junk.items() if weight >= 0]
 
 pending_junk_pool = []
 junk_pool = []
-
-remove_junk_items = [junk[0] for junk in junk_pool_base] + [
-    'Recovery Heart',
-    'Arrows (30)',
-    'Rupees (200)',
-    'Deku Nuts (10)',
-    'Bombs (20)',
-    'Ice Trap',
-]
-remove_junk_set = set(remove_junk_items)
 
 exclude_from_major = [ 
     'Deliver Letter',
@@ -215,8 +198,8 @@ item_groups = {
     'NonWarpSong': song_list[0:6],
     'WarpSong': song_list[6:],
     'HealthUpgrade': ('Heart Container', 'Piece of Heart'),
-    'ProgressItem': [name for (name, data) in item_table.items() if data[0] == 'Item' and data[1]],
-    'MajorItem': [name for (name, data) in item_table.items() if (data[0] == 'Item' or data[0] == 'Song') and data[1] and name not in exclude_from_major],
+    'ProgressItem': [name for name, item in ItemInfo.items.items() if item.type == 'Item' and item.advancement],
+    'MajorItem': [name for name, item in ItemInfo.items.items() if item.type in ['Item', 'Song'] and item.advancement and name not in exclude_from_major],
     'DungeonReward': dungeon_rewards,
 
     'ForestFireWater': ('Forest Medallion', 'Fire Medallion', 'Water Medallion'),
