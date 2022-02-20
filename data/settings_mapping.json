@@ -374,6 +374,7 @@
             "default_targeting",
             "display_dpad",
             "correct_model_colors",
+            "model",
             "randomize_all_cosmetics"
           ]
         },

@@ -18,7 +18,7 @@ from World import World
 from Spoiler import Spoiler
 from Rom import Rom
 from Patches import patch_rom
-from Cosmetics import patch_cosmetics
+from Cosmetics import patch_cosmetics, patch_model
 from DungeonList import create_dungeons
 from Fill import distribute_items_restrictive, ShuffleError
 from Item import Item
@@ -271,6 +271,8 @@ def patch_and_output(settings, window, spoiler, rom):
         window.update_status('Patching ROM')
         patch_rom(spoiler, worlds[settings.player_num - 1], rom)
         cosmetics_log = patch_cosmetics(settings, rom)
+        if settings.model != "None":
+            patch_model(rom, settings, cosmetics_log)
         window.update_progress(65)
 
         window.update_status('Saving Uncompressed ROM')

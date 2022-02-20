@@ -20,6 +20,8 @@ ARCHIVE.bin
 *.spec
 .*.sw*
 
+data/Models/*.zpf
+
 tests/Output
 !tests/*.sav
 !tests/plando/*.json
