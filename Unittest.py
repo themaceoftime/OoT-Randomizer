@@ -9,7 +9,7 @@ import re
 import unittest
 
 from EntranceShuffle import EntranceShuffleError
-from ItemList import item_table
+from Item import ItemInfo
 from ItemPool import remove_junk_items, item_groups
 from LocationList import location_groups, location_is_viewable
 from Main import main, resolve_settings, build_world_graphs, place_items
@@ -29,8 +29,8 @@ never_suffix = ['Capacity']
 never = {
     'Bunny Hood', 'Recovery Heart', 'Milk', 'Ice Arrows', 'Ice Trap',
     'Double Defense', 'Biggoron Sword', 'Giants Knife',
-} | {item for item, (t, adv, _, special) in item_table.items() if adv is False
-     or any(map(item.startswith, never_prefix)) or any(map(item.endswith, never_suffix))}
+} | {name for name, item in ItemInfo.items.items() if item.priority
+     or any(map(name.startswith, never_prefix)) or any(map(name.endswith, never_suffix))}
 
 # items required at most once, specifically things with multiple possible names
 # (except bottles)
@@ -38,16 +38,8 @@ once = {
     'Goron Tunic', 'Zora Tunic',
 }
 
-progressive = {
-    item for item, (_, _, _, special) in item_table.items()
-    if special and 'progressive' in special
-}
-
-bottles = {
-    item for item, (_, _, _, special) in item_table.items()
-    if special and 'bottle' in special and item != 'Deliver Letter'
-}
-
+progressive = {name for name, item in ItemInfo.items.items() if item.special.get('progressive', None)}
+bottles = {name for name, item in ItemInfo.items.items() if item.special.get('bottle', None) and name != 'Deliver Letter'}
 junk = set(remove_junk_items)
 
 

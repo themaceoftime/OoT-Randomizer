@@ -10,8 +10,7 @@ from collections import defaultdict
 from Fill import FillError
 from EntranceShuffle import EntranceShuffleError, change_connections, confirm_replacement, validate_world, check_entrances_compatibility
 from Hints import gossipLocations, GossipText
-from Item import ItemFactory, ItemIterator, IsItem
-from ItemList import item_table
+from Item import ItemFactory, ItemInfo, ItemIterator, IsItem
 from ItemPool import item_groups, get_junk_item
 from Location import LocationIterator, LocationFactory, IsLocation
 from LocationList import location_groups, location_table
@@ -345,10 +344,10 @@ class WorldDistribution(object):
                         else:
                             self.major_group.append('Small Key (Thieves Hideout)')
                     if self.distribution.settings.shuffle_bosskeys == 'keysanity':
-                        keys = [name for (name, data) in item_table.items() if data[0] == 'BossKey' and name != 'Boss Key']
+                        keys = [name for name, item in ItemInfo.items.items() if item.type == 'BossKey' and name != 'Boss Key']
                         self.major_group.extend(keys)
                     if self.distribution.settings.shuffle_ganon_bosskey == 'keysanity':
-                        keys = [name for (name, data) in item_table.items() if data[0] == 'GanonBossKey']
+                        keys = [name for name, item in ItemInfo.items.items() if item.type == 'GanonBossKey']
                         self.major_group.extend(keys)
                 group = self.major_group
             return lambda s: invert != (s in group)
