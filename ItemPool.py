@@ -80,32 +80,6 @@ TriforceCounts = {
     'minimal':   Decimal(1.00),
 }
 
-normal_bottles = [
-    'Bottle',
-    'Bottle with Milk',
-    'Bottle with Red Potion',
-    'Bottle with Green Potion',
-    'Bottle with Blue Potion',
-    'Bottle with Fairy',
-    'Bottle with Fish',
-    'Bottle with Bugs',
-    'Bottle with Poe',
-    'Bottle with Big Poe',
-    'Bottle with Blue Fire'
-]
-
-dungeon_rewards = [
-    'Kokiri Emerald',
-    'Goron Ruby',
-    'Zora Sapphire',
-    'Forest Medallion',
-    'Fire Medallion',
-    'Water Medallion',
-    'Shadow Medallion',
-    'Spirit Medallion',
-    'Light Medallion'
-]
-
 shopsanity_rupees = (
     ['Rupees (20)'] * 5 +
     ['Rupees (50)'] * 3 +
@@ -142,20 +116,6 @@ deku_scrubs_items = {
     'Buy Deku Seeds (30)': [('Arrows (30)', 3), ('Deku Seeds (30)', 1)],
 }
 
-song_list = [
-    'Zeldas Lullaby',
-    'Eponas Song',
-    'Suns Song',
-    'Sarias Song',
-    'Song of Time',
-    'Song of Storms',
-    'Minuet of Forest',
-    'Prelude of Light',
-    'Bolero of Fire',
-    'Serenade of Water',
-    'Nocturne of Shadow',
-    'Requiem of Spirit']
-
 trade_items = OrderedDict([
     ("pocket_egg",   "Pocket Egg"),
     ("pocket_cucco", "Pocket Cucco"),
@@ -169,8 +129,10 @@ trade_items = OrderedDict([
     ("claim_check",  "Claim Check"),
 ])
 
-junk_pool_base = [(item, weight) for (item, weight) in ItemInfo.junk.items() if weight > 0]
-remove_junk_items = [item for (item, weight) in ItemInfo.junk.items() if weight >= 0]
+normal_bottles = [bottle for bottle in sorted(ItemInfo.bottles) if bottle not in ['Deliver Letter', 'Sell Big Poe']] + ['Bottle with Big Poe']
+song_list = [item.name for item in sorted([i for n, i in ItemInfo.items.items() if i.type == 'Song'], key=lambda x: x.index)]
+junk_pool_base = [(item, weight) for (item, weight) in sorted(ItemInfo.junk.items()) if weight > 0]
+remove_junk_items = [item for (item, weight) in sorted(ItemInfo.junk.items()) if weight >= 0]
 
 pending_junk_pool = []
 junk_pool = []
@@ -195,12 +157,12 @@ item_groups = {
     'Spell': ('Dins Fire', 'Farores Wind', 'Nayrus Love'),
     'Shield': ('Deku Shield', 'Hylian Shield'),
     'Song': song_list,
-    'NonWarpSong': song_list[0:6],
-    'WarpSong': song_list[6:],
+    'NonWarpSong': song_list[6:],
+    'WarpSong': song_list[0:6],
     'HealthUpgrade': ('Heart Container', 'Piece of Heart'),
-    'ProgressItem': [name for name, item in ItemInfo.items.items() if item.type == 'Item' and item.advancement],
-    'MajorItem': [name for name, item in ItemInfo.items.items() if item.type in ['Item', 'Song'] and item.advancement and name not in exclude_from_major],
-    'DungeonReward': dungeon_rewards,
+    'ProgressItem': sorted([name for name, item in ItemInfo.items.items() if item.type == 'Item' and item.advancement]),
+    'MajorItem': sorted([name for name, item in ItemInfo.items.items() if item.type in ['Item', 'Song'] and item.advancement and name not in exclude_from_major]),
+    'DungeonReward': [item.name for item in sorted([i for n, i in ItemInfo.items.items() if i.type == 'DungeonReward'], key=lambda x: x.special['item_id'])],
 
     'ForestFireWater': ('Forest Medallion', 'Fire Medallion', 'Water Medallion'),
     'FireWater': ('Fire Medallion', 'Water Medallion'),
