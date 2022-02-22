@@ -56,11 +56,6 @@ class ModelDataWriter:
         self.rom.write_bytes(self.GetAddress(), data.to_bytes(2, 'big'))
         self.offset += 2
 
-    def WriteModelDataFloat(self, data):
-        bytes = bytearray(struct.pack("f", data))
-        self.rom.write_bytes(self.GetAddress(), bytes)
-        self.offset += 4
-
     def WriteModelDataHi(self, data):
         bytes = data.to_bytes(4, 'big')
         for i in range(2):
@@ -84,6 +79,7 @@ def patch_model(rom, settings, log):
     # Write adult Link data
     writer.GoTo(0xE6718)
     writer.SetAdvance(8)
+    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
@@ -172,8 +168,8 @@ def patch_model(rom, settings, log):
     writer.GoTo(0xE6B64)
     writer.SetAdvance(4)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_BOW_STRING)
-    writer.WriteModelDataFloat(0.0)
-    writer.WriteModelDataFloat(-360.4)
+    writer.WriteModelData(0x00000000)
+    writer.WriteModelData(0xC3B43333) # -360.4
 
     writer.GoTo(0x69112)
     writer.WriteModelDataHi(Offsets.ADULT_LINK_LUT_DL_UPGRADE_LFOREARM)
@@ -315,8 +311,8 @@ def patch_model(rom, settings, log):
     writer.GoTo(0xE6B74)
     writer.SetAdvance(4)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SLINGSHOT_STRING)
-    writer.WriteModelData(0x44178000)
-    writer.WriteModelData(0x436C0000)
+    writer.WriteModelData(0x44178000) # 606.0
+    writer.WriteModelData(0x436C0000) # 236.0
 
     writer.GoTo(0x6922E)
     writer.WriteModelDataHi(Offsets.CHILD_LINK_LUT_DL_GORON_BRACELET)
