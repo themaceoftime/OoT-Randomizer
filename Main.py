@@ -18,7 +18,7 @@ from World import World
 from Spoiler import Spoiler
 from Rom import Rom
 from Patches import patch_rom
-from Cosmetics import patch_cosmetics, patch_model
+from Cosmetics import patch_cosmetics
 from DungeonList import create_dungeons
 from Fill import distribute_items_restrictive, ShuffleError
 from Item import Item
@@ -26,6 +26,7 @@ from ItemPool import generate_itempool
 from Hints import buildGossipHints
 from HintList import clearHintExclusionCache
 from Utils import default_output_path, is_bundled, subprocess_args, data_path
+from Models import patch_model
 from N64Patch import create_patch_file, apply_patch_file
 from SettingsList import setting_infos, logic_tricks
 from Rules import set_rules, set_shop_rules

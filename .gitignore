@@ -21,6 +21,7 @@ ARCHIVE.bin
 .*.sw*
 
 data/Models/*.zpf
+data/Models/*.zobj
 
 tests/Output
 !tests/*.sav

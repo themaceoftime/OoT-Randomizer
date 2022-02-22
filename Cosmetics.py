@@ -11,14 +11,6 @@ from SettingsList import setting_infos
 from Plandomizer import InvalidFileException
 from N64Patch import apply_patch_file
 import json
-import os
-
-
-def patch_model(rom, settings, log):
-    model = settings.model + ".zpf"
-    if settings.model == "Random": 
-        model = random.choice([x for x in os.listdir('data/Models')])
-    apply_patch_file(rom, 'data/Models/' + model)
 
 
 def patch_targeting(rom, settings, log, symbols):

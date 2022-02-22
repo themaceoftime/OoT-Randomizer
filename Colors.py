@@ -1,7 +1,6 @@
 from collections import namedtuple
 import random
 import re
-import os
 
 Color = namedtuple('Color', '  R     G     B')
 
@@ -248,19 +247,6 @@ start_button_colors = {
 
 meta_color_choices = ["Random Choice", "Completely Random", "Custom Color"]
 
-# This function doesn't exactly make sense in Colors.py but adding it to
-# Cosmetics caused a whole bunch of circular import issues.
-def get_model_choices():
-    names = ["None", "Random"]
-    try:
-        for file in os.listdir('data/Models'):
-            names.append(file.split('.')[0])
-    except FileNotFoundError:
-        # The above stanza is run once on startup. The GUI runs this function subsequent times from 
-        # within the GUI directory, so if that folder isn't found this is necessary.
-        for file in os.listdir('../data/Models'):
-            names.append(file.split('.')[0])
-    return names
 
 def get_tunic_colors():
     return list(tunic_colors.keys())
