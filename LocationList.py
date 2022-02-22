@@ -278,6 +278,11 @@ location_table = OrderedDict([
     # Zora's River
     ("ZR Magic Bean Salesman",                                       ("NPC",          0x54,  0x16, None,                        'Magic Bean',                            ("Zora's River",))),
     ("ZR Open Grotto Chest",                                         ("Chest",        0x3E,  0x09, None,                        'Rupees (20)',                           ("Zora's River", "Grottos",))),
+    ("ZR Frogs Zeldas Lullaby",                                      ("NPC",          0x54,  0x65, None,                        'Rupees (50)',                           ("Zora's River", "Minigames",))),
+    ("ZR Frogs Eponas Song",                                         ("NPC",          0x54,  0x66, None,                        'Rupees (50)',                           ("Zora's River", "Minigames",))),
+    ("ZR Frogs Sarias Song",                                         ("NPC",          0x54,  0x67, None,                        'Rupees (50)',                           ("Zora's River", "Minigames",))),
+    ("ZR Frogs Suns Song",                                           ("NPC",          0x54,  0x68, None,                        'Rupees (50)',                           ("Zora's River", "Minigames",))),
+    ("ZR Frogs Song of Time",                                        ("NPC",          0x54,  0x69, None,                        'Rupees (50)',                           ("Zora's River", "Minigames",))),
     ("ZR Frogs in the Rain",                                         ("NPC",          0x54,  0x3E, None,                        'Piece of Heart',                        ("Zora's River", "Minigames",))),
     ("ZR Frogs Ocarina Game",                                        ("NPC",          0x54,  0x76, None,                        'Piece of Heart',                        ("Zora's River",))),
     ("ZR Near Open Grotto Freestanding PoH",                         ("Collectable",  0x54,  0x04, None,                        'Piece of Heart',                        ("Zora's River",))),
