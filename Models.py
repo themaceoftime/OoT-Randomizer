@@ -9,11 +9,6 @@ def get_model_choices():
     if os.path.exists('data/Models'):
         for file in os.listdir('data/Models'):
             names.append(file.split('.')[0])
-    elif os.path.exists('data/Models'):
-        # The above stanza is run once on startup. The GUI runs this function subsequent times from 
-        # within the GUI directory, so if that folder isn't found this is necessary.
-        for file in os.listdir('../data/Models'):
-            names.append(file.split('.')[0])
     return names
 
 
@@ -29,7 +24,7 @@ class ModelDataWriter:
     def __init__(self, rom):
         self.rom = rom
         self.offset = 0
-        self.advance = 0
+        self.advance = 4
         self.SetBase('Code')
     
     def SetBase(self, base):
@@ -90,16 +85,16 @@ def patch_model(rom, settings, log):
     writer.GoTo(0xE6718)
     writer.SetAdvance(8)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST)
-    writer.WriteModelData(0xDF) # 0xDF = Render nothing
-    writer.WriteModelData(0xDF)
+    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
+    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST_SHIELD_MIRROR)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST_SHIELD_MIRROR)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATHED)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATHED)
-    writer.WriteModelData(0xDF)
-    writer.WriteModelData(0xDF)
+    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
+    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHIELD_MIRROR)
@@ -110,8 +105,8 @@ def patch_model(rom, settings, log):
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATH)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATH)
-    writer.WriteModelData(0xDF)
-    writer.WriteModelData(0xDF)
+    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
+    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHEATH0_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHEATH0_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHEATH0_MIRROR)
@@ -128,8 +123,8 @@ def patch_model(rom, settings, log):
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LHAND)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST)
-    writer.WriteModelData(0xDF)
-    writer.WriteModelData(0xDF)
+    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
+    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST_SWORD)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST_SWORD)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RHAND)
@@ -154,8 +149,8 @@ def patch_model(rom, settings, log):
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST_HOOKSHOT)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST_HAMMER)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST_HAMMER)
-    writer.WriteModelData(0xDF)
-    writer.WriteModelData(0xDF)
+    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
+    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LHAND_BOTTLE)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LHAND_BOTTLE)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_FPS_LFOREARM)
@@ -242,18 +237,18 @@ def patch_model(rom, settings, log):
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_RFIST)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_RFIST_SHIELD_DEKU)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_RFIST_SHIELD_DEKU)
-    writer.WriteModelData(0xDF)
-    writer.WriteModelData(0xDF)
-    writer.WriteModelData(0xDF)
-    writer.WriteModelData(0xDF)
+    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
+    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
+    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
+    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHEATHED)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHEATHED)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHIELD_DEKU)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHIELD_DEKU)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHIELD_HYLIAN)
-    writer.WriteModelData(0xDF)
-    writer.WriteModelData(0xDF)
+    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
+    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU_BACK)
@@ -264,8 +259,8 @@ def patch_model(rom, settings, log):
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHEATH0_DEKU)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHEATH0_HYLIAN)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHEATH0_HYLIAN)
-    writer.WriteModelData(0xDF)
-    writer.WriteModelData(0xDF)
+    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
+    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU_BACK)
@@ -356,6 +351,10 @@ def patch_model(rom, settings, log):
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_MASK_GERUDO)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_MASK_TRUTH)
 
+    writer.SetBase('Code')
+    writer.GoTo(0xE65A4)
+    writer.WriteModelData(0x06005830)
+
     # Write zobj to adult object (will separate child and adult later)
     file = open('data/Models/' + model, "rb")
     byte = file.read(1)
@@ -364,7 +363,7 @@ def patch_model(rom, settings, log):
         rom.write_byte(0x00F86000 + offset, byte[0])
         offset += 1
         byte = file.read(1)
-    # adult is 0x00FBE000
+    # child is 0x00FBE000
 
 
 class Offsets(IntEnum):
