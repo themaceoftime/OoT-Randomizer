@@ -1,22 +1,27 @@
 import os
 import random
-import struct
 from enum import IntEnum
-from N64Patch import apply_patch_file
 
-def get_model_choices():
-    names = ["None", "Random"]
-    if os.path.exists('data/Models'):
-        for file in os.listdir('data/Models'):
+def get_model_choices_adult():
+    names = ["Default"]
+    if os.path.exists('data/Models/adult'):
+        for file in os.listdir('data/Models/adult'):
             names.append(file.split('.')[0])
+    if len(names) > 2:
+        # If more than 2 non-default model choices, add random option
+        names.insert(1, "Random")
     return names
 
 
-def patch_model_zpf(rom, settings, log):
-    model = settings.model + ".zpf"
-    if settings.model == "Random": 
-        model = random.choice([x for x in os.listdir('data/Models')])
-    apply_patch_file(rom, 'data/Models/' + model)
+def get_model_choices_child():
+    names = ["Default"]
+    if os.path.exists('data/Models/child'):
+        for file in os.listdir('data/Models/child'):
+            names.append(file.split('.')[0])
+    if len(names) > 2:
+        # If more than 2 non-default model choices, add random option
+        names.insert(1, "Random")
+    return names
 
 
 class ModelDataWriter:
@@ -69,14 +74,14 @@ class ModelDataWriter:
             self.offset += 1
 
 
-def patch_model(rom, settings, log):
-    model = settings.model + ".zobj"
-    if settings.model == "Random": 
-        model = random.choice([x for x in os.listdir('data/Models')])
+def patch_model_adult(rom, settings, log):
+    model = settings.model_adult + ".zobj"
+    if settings.model_adult == "Random": 
+        model = random.choice([x for x in os.listdir('data/Models/adult')])
     log.model = model.split('.')[0]
     writer = ModelDataWriter(rom)
 
-    # Write adult Link data
+    # Write adult Link pointer data
     writer.GoTo(0xE6718)
     writer.SetAdvance(8)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST)
@@ -224,9 +229,26 @@ def patch_model(rom, settings, log):
 
     writer.SetBase('Code')
     writer.GoTo(0xE65A0)
-    writer.WriteModelData(0x06005380)
+    writer.WriteModelData(0x06005380) # Hierarchy pointer
 
-    # Write child Link data
+    # Write zobj to adult object
+    file = open('data/Models/adult/' + model, "rb")
+    byte = file.read(1)
+    offset = 0
+    while byte:
+        rom.write_byte(0x00F86000 + offset, byte[0])
+        offset += 1
+        byte = file.read(1)
+
+
+def patch_model_child(rom, settings, log):
+    model = settings.model_child + ".zobj"
+    if settings.model_child == "Random": 
+        model = random.choice([x for x in os.listdir('data/Models/child')])
+    log.model = model.split('.')[0]
+    writer = ModelDataWriter(rom)
+
+    # Write child Link pointer data
     writer.GoTo(0xE671C)
     writer.SetAdvance(8)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_RFIST)
@@ -349,17 +371,16 @@ def patch_model(rom, settings, log):
 
     writer.SetBase('Code')
     writer.GoTo(0xE65A4)
-    writer.WriteModelData(0x060053A8)
+    writer.WriteModelData(0x060053A8) # Hierarchy pointer
 
-    # Write zobj to adult object (will separate child and adult later)
-    file = open('data/Models/' + model, "rb")
+    # Write zobj to child object
+    file = open('data/Models/child/' + model, "rb")
     byte = file.read(1)
     offset = 0
     while byte:
-        rom.write_byte(0x00F86000 + offset, byte[0])
+        rom.write_byte(0x00FBE000 + offset, byte[0])
         offset += 1
         byte = file.read(1)
-    # child is 0x00FBE000
 
 
 class Offsets(IntEnum):

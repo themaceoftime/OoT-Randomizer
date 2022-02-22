@@ -26,7 +26,7 @@ from ItemPool import generate_itempool
 from Hints import buildGossipHints
 from HintList import clearHintExclusionCache
 from Utils import default_output_path, is_bundled, subprocess_args, data_path
-from Models import patch_model
+from Models import patch_model_adult, patch_model_child
 from N64Patch import create_patch_file, apply_patch_file
 from SettingsList import setting_infos, logic_tricks
 from Rules import set_rules, set_shop_rules
@@ -272,8 +272,10 @@ def patch_and_output(settings, window, spoiler, rom):
         window.update_status('Patching ROM')
         patch_rom(spoiler, worlds[settings.player_num - 1], rom)
         cosmetics_log = patch_cosmetics(settings, rom)
-        if settings.model != "None":
-            patch_model(rom, settings, cosmetics_log)
+        if settings.model_adult != "Default":
+            patch_model_adult(rom, settings, cosmetics_log)
+        if settings.model_child != "Default":
+            patch_model_child(rom, settings, cosmetics_log)
         window.update_progress(65)
 
         window.update_status('Saving Uncompressed ROM')

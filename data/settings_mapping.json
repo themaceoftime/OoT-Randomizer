@@ -374,7 +374,8 @@
             "default_targeting",
             "display_dpad",
             "correct_model_colors",
-            "model",
+            "model_adult",
+            "model_child",
             "randomize_all_cosmetics"
           ]
         },

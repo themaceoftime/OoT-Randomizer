@@ -20,8 +20,8 @@ ARCHIVE.bin
 *.spec
 .*.sw*
 
-data/Models/*.zpf
-data/Models/*.zobj
+data/Models/adult/*.zobj
+data/Models/child/*.zobj
 
 tests/Output
 !tests/*.sav
