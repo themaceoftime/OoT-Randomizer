@@ -2170,6 +2170,12 @@ setting_infos = [
         gui_tooltip    = '''\
             Select the amount of Triforce Pieces placed in each world.
             Each world will have the same number of triforces.
+
+            A good number to choose is 1.5 times the amount of
+            Triforce Pieces required per world, for example 30
+            Triforces placed with a goal of 20. Higher ratios will
+            result in easier and shorter seeds, while a ratio closer
+            to 1 will generally be longer and more difficult.
         ''',
         gui_params     = {
             "hide_when_disabled": True,
