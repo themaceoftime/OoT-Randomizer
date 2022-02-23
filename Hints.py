@@ -142,7 +142,7 @@ def isRestrictedDungeonItem(dungeon, item):
     return False
 
 
-def add_hint(spoiler, world, groups, gossip_text, count, location=None, secondLocation=None, force_reachable=False):
+def add_hint(spoiler, world, groups, gossip_text, count, locations=[], force_reachable=False):
     random.shuffle(groups)
     skipped_groups = []
     duplicates = []
@@ -160,8 +160,15 @@ def add_hint(spoiler, world, groups, gossip_text, count, location=None, secondLo
             if any(map(lambda id: gossipLocations[id].reachable, group)):
                 stone_names = [gossipLocations[id].location for id in group]
                 stone_locations = [world.get_location(stone_name) for stone_name in stone_names]
-                if not first or any(map(lambda stone_location: can_reach_hint(spoiler.worlds, stone_location, location) and can_reach_hint(spoiler.worlds, stone_location, secondLocation), stone_locations)):
-                    if first and location:
+                
+                reachable = True
+                if locations:
+                    for location in locations:
+                        if not any(map(lambda stone_location: can_reach_hint(spoiler.worlds, stone_location, location), stone_locations)):
+                            reachable = False
+                
+                if not first or reachable:
+                    if first and locations:
                         # just name the event item after the gossip stone directly
                         event_item = None
                         for i, stone_name in enumerate(stone_names):
@@ -173,7 +180,8 @@ def add_hint(spoiler, world, groups, gossip_text, count, location=None, secondLo
 
                         # This mostly guarantees that we don't lock the player out of an item hint
                         # by establishing a (hint -> item) -> hint -> item -> (first hint) loop
-                        location.add_rule(world.parser.parse_rule(repr(event_item.name)))
+                        for location in locations:
+                            location.add_rule(world.parser.parse_rule(repr(event_item.name)))
 
                     total -= 1
                     first = False
@@ -348,7 +356,7 @@ def get_woth_hint(spoiler, world, checked):
     else:
         location_text, _ = get_hint_area(location)
 
-    return (GossipText('#%s# is on the way of the hero.' % location_text, ['Light Blue']), location)
+    return (GossipText('#%s# is on the way of the hero.' % location_text, ['Light Blue']), [location])
 
 def get_checked_areas(world, checked):
     def get_area_from_name(check):
@@ -454,7 +462,7 @@ def get_goal_hint(spoiler, world, checked):
         player_text = "Player %s's" % (world_id + 1)
         goal_text = spoiler.goal_categories[world_id][goal_category.name].get_goal(goal.name).hint_text
 
-    return (GossipText('#%s# is on %s %s.' % (location_text, player_text, goal_text), [goal.color, 'Light Blue']), location)
+    return (GossipText('#%s# is on %s %s.' % (location_text, player_text, goal_text), [goal.color, 'Light Blue']), [location])
 
 
 def get_barren_hint(spoiler, world, checked):
@@ -509,23 +517,19 @@ def get_barren_hint(spoiler, world, checked):
     return (GossipText("plundering #%s# is a foolish choice." % area, ['Pink']), None)
 
 
-def is_not_checked(location, checked):
-    return not (location.name in checked or get_hint_area(location)[0] in checked)
-    
-def is_not_checked_dual(world, dual, checked):
+def is_not_checked(locations, checked):
     not_checked = True
     
-    firstLocation = world.get_location(dual.firstLocation)
-    secondLocation = world.get_location(dual.secondLocation)
-    if firstLocation.name in checked or secondLocation.name in checked or get_hint_area(firstLocation)[0] in checked or get_hint_area(secondLocation)[0] in checked:
-        not_checked = False  
+    for location in locations:
+        if location.name in checked or get_hint_area(location)[0] in checked:
+            not_checked = False
         
     return not_checked
 
 
 def get_good_item_hint(spoiler, world, checked):
     locations = list(filter(lambda location:
-        is_not_checked(location, checked)
+        is_not_checked([location], checked)
         and (location.item.majoritem
             or location.name in world.added_hint_types['item']
             or location.item.name in world.item_added_hint_types['item'])
@@ -543,10 +547,10 @@ def get_good_item_hint(spoiler, world, checked):
     item_text = getHint(getItemGenericName(location.item), world.settings.clearer_hints).text
     if location.parent_region.dungeon:
         location_text = getHint(location.parent_region.dungeon.name, world.settings.clearer_hints).text
-        return (GossipText('#%s# hoards #%s#.' % (location_text, item_text), ['Green', 'Red']), location)
+        return (GossipText('#%s# hoards #%s#.' % (location_text, item_text), ['Green', 'Red']), [location])
     else:
         location_text, _ = get_hint_area(location)
-        return (GossipText('#%s# can be found at #%s#.' % (item_text, location_text), ['Red', 'Green']), location)
+        return (GossipText('#%s# can be found at #%s#.' % (item_text, location_text), ['Red', 'Green']), [location])
 
 
 def get_specific_item_hint(spoiler, world, checked):
@@ -560,7 +564,7 @@ def get_specific_item_hint(spoiler, world, checked):
             if itemname == "Bottle" and world.settings.hint_dist == "bingo":
                 locations = [
                     location for location in world.get_filled_locations()
-                    if (is_not_checked(location, checked)
+                    if (is_not_checked([location], checked)
                         and location.name not in world.hint_exclusions
                         and location.item.name in bingoBottlesForHints
                         and not location.locked
@@ -570,7 +574,7 @@ def get_specific_item_hint(spoiler, world, checked):
             else:
                 locations = [
                     location for location in world.get_filled_locations()
-                    if (is_not_checked(location, checked)
+                    if (is_not_checked([location], checked)
                         and location.name not in world.hint_exclusions
                         and location.item.name == itemname
                         and not location.locked
@@ -598,15 +602,15 @@ def get_specific_item_hint(spoiler, world, checked):
         if location.parent_region.dungeon:
             location_text = getHint(location.parent_region.dungeon.name, world.settings.clearer_hints).text
             if world.hint_dist_user.get('vague_named_items', False):
-                return (GossipText('#%s# may be on the hero\'s path.' % (location_text), ['Green']), location)
+                return (GossipText('#%s# may be on the hero\'s path.' % (location_text), ['Green']), [location])
             else:
-                return (GossipText('#%s# hoards #%s#.' % (location_text, item_text), ['Green', 'Red']), location)
+                return (GossipText('#%s# hoards #%s#.' % (location_text, item_text), ['Green', 'Red']), [location])
         else:
             location_text, _ = get_hint_area(location)
             if world.hint_dist_user.get('vague_named_items', False):
-                return (GossipText('#%s# may be on the hero\'s path.' % (location_text), ['Green']), location)
+                return (GossipText('#%s# may be on the hero\'s path.' % (location_text), ['Green']), [location])
             else:
-                return (GossipText('#%s# can be found at #%s#.' % (item_text, location_text), ['Red', 'Green']), location)
+                return (GossipText('#%s# can be found at #%s#.' % (item_text, location_text), ['Red', 'Green']), [location])
 
     else:
         while True:
@@ -639,7 +643,7 @@ def get_specific_item_hint(spoiler, world, checked):
             if itemname == "Bottle" and world.settings.hint_dist == "bingo":
                 locations = [
                     location for location in named_item_locations
-                    if (is_not_checked(location, checked)
+                    if (is_not_checked([location], checked)
                         and location.item.world.id == world.id
                         and location.name not in world.hint_exclusions
                         and location.item.name in bingoBottlesForHints
@@ -650,7 +654,7 @@ def get_specific_item_hint(spoiler, world, checked):
             else:
                 locations = [
                     location for location in named_item_locations
-                    if (is_not_checked(location, checked)
+                    if (is_not_checked([location], checked)
                         and location.item.world.id == world.id
                         and location.name not in world.hint_exclusions
                         and location.item.name == itemname
@@ -682,20 +686,20 @@ def get_specific_item_hint(spoiler, world, checked):
         if location.parent_region.dungeon:
             location_text = getHint(location.parent_region.dungeon.name, world.settings.clearer_hints).text
             if world.hint_dist_user.get('vague_named_items', False):
-                return (GossipText('#Player %d\'s %s# may be on the hero\'s path.' % (location.world.id+1, location_text), ['Green']), location)
+                return (GossipText('#Player %d\'s %s# may be on the hero\'s path.' % (location.world.id+1, location_text), ['Green']), [location])
             else:
-                return (GossipText('#Player %d\'s %s# hoards #%s#.' % (location.world.id+1, location_text, item_text), ['Green', 'Red']), location)
+                return (GossipText('#Player %d\'s %s# hoards #%s#.' % (location.world.id+1, location_text, item_text), ['Green', 'Red']), [location])
         else:
             location_text, _ = get_hint_area(location)
             if world.hint_dist_user.get('vague_named_items', False):
-                return (GossipText('#Player %d\'s %s# may be on the hero\'s path.' % (location.world.id+1 , location_text), ['Green']), location)
+                return (GossipText('#Player %d\'s %s# may be on the hero\'s path.' % (location.world.id+1 , location_text), ['Green']), [location])
             else:
-                return (GossipText('#%s# can be found in #Player %d\'s %s#.' % (item_text, location.world.id+1, location_text), ['Red', 'Green']), location)
+                return (GossipText('#%s# can be found in #Player %d\'s %s#.' % (item_text, location.world.id+1, location_text), ['Red', 'Green']), [location])
 
 
 def get_random_location_hint(spoiler, world, checked):
     locations = list(filter(lambda location:
-        is_not_checked(location, checked)
+        is_not_checked([location], checked)
         and location.item.type not in ('Drop', 'Event', 'Shop', 'DungeonReward')
         and not (location.parent_region.dungeon and isRestrictedDungeonItem(location.parent_region.dungeon, location.item))
         and not location.locked
@@ -713,15 +717,15 @@ def get_random_location_hint(spoiler, world, checked):
     item_text = getHint(getItemGenericName(location.item), world.settings.clearer_hints).text
     if dungeon:
         location_text = getHint(dungeon.name, world.settings.clearer_hints).text
-        return (GossipText('#%s# hoards #%s#.' % (location_text, item_text), ['Green', 'Red']), location)
+        return (GossipText('#%s# hoards #%s#.' % (location_text, item_text), ['Green', 'Red']), [location])
     else:
         location_text, _ = get_hint_area(location)
-        return (GossipText('#%s# can be found at #%s#.' % (item_text, location_text), ['Red', 'Green']), location)
+        return (GossipText('#%s# can be found at #%s#.' % (item_text, location_text), ['Red', 'Green']), [location])
 
 
 def get_specific_hint(spoiler, world, checked, type):
     hintGroup = getHintGroup(type, world)
-    hintGroup = list(filter(lambda hint: is_not_checked(world.get_location(hint.name), checked), hintGroup))
+    hintGroup = list(filter(lambda hint: is_not_checked([world.get_location(hint.name)], checked), hintGroup))
     if not hintGroup:
         return None
 
@@ -737,7 +741,7 @@ def get_specific_hint(spoiler, world, checked, type):
         location_text = '#%s#' % location_text
     item_text = getHint(getItemGenericName(location.item), world.settings.clearer_hints).text
 
-    return (GossipText('%s #%s#.' % (location_text, item_text), ['Green', 'Red']), location)
+    return (GossipText('%s #%s#.' % (location_text, item_text), ['Green', 'Red']), [location])
 
 
 def get_sometimes_hint(spoiler, world, checked):
@@ -757,15 +761,15 @@ def get_dungeon_hint(spoiler, world, checked):
 
 def get_dual_hint(spoiler, world, checked):
     hint_group = getHintGroup('dual', world)
-    dual_hints = list(filter(lambda hint: is_not_checked_dual(world, getDual(hint.name), checked), hint_group))
+    dual_hints = list(filter(lambda hint: is_not_checked([world.get_location(getDual(hint.name).locations[0]), world.get_location(getDual(hint.name).locations[1])], checked), hint_group))
     
     if not dual_hints:
         return None
     
     hint = random.choice(dual_hints)
     dual = getDual(hint.name)
-    firstLocation = world.get_location(dual.firstLocation)
-    secondLocation = world.get_location(dual.secondLocation)
+    firstLocation = world.get_location(dual.locations[0])
+    secondLocation = world.get_location(dual.locations[1])
 
     checked.add(firstLocation.name)
     checked.add(secondLocation.name)
@@ -776,7 +780,7 @@ def get_dual_hint(spoiler, world, checked):
     first_item_text = getHint(getItemGenericName(firstLocation.item), world.settings.clearer_hints).text
     second_item_text = getHint(getItemGenericName(secondLocation.item), world.settings.clearer_hints).text
     
-    return (GossipText('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), firstLocation, secondLocation)
+    return (GossipText('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), [firstLocation, secondLocation])
 
 def get_entrance_hint(spoiler, world, checked):
     if not world.entrance_shuffle:
@@ -1066,15 +1070,15 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
         alwaysDuals = getHintGroup('dual_always', world)
         for hint in alwaysDuals:
             dual = getDual(hint.name)
-            location = world.get_location(dual.firstLocation)
-            secondLocation = world.get_location(dual.secondLocation)
-            checkedAlwaysLocations.add(location.name)
+            firstLocation = world.get_location(dual.locations[0])
+            secondLocation = world.get_location(dual.locations[1])
+            checkedAlwaysLocations.add(firstLocation.name)
             checkedAlwaysLocations.add(secondLocation.name)
             
-            if location.item.name in bingoBottlesForHints and world.settings.hint_dist == 'bingo':
+            if firstLocation.item.name in bingoBottlesForHints and world.settings.hint_dist == 'bingo':
                 always_item = 'Bottle'
             else:
-                always_item = location.item.name
+                always_item = firstLocation.item.name
             if always_item in world.named_item_pool and world.settings.world_count == 1:
                 world.named_item_pool.remove(always_item)
             if secondLocation.item.name in bingoBottlesForHints and world.settings.hint_dist == 'bingo':
@@ -1087,14 +1091,14 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
             location_text = getHint(hint.name, world.settings.clearer_hints).text
             if '#' not in location_text:
                 location_text = '#%s#' % location_text
-            first_item_text = getHint(getItemGenericName(location.item), world.settings.clearer_hints).text
+            first_item_text = getHint(getItemGenericName(firstLocation.item), world.settings.clearer_hints).text
             second_item_text = getHint(getItemGenericName(secondLocation.item), world.settings.clearer_hints).text
-            add_hint(spoiler, world, stoneGroups, GossipText('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), hint_dist['dual_always'][1], location, secondLocation, force_reachable=True)
+            add_hint(spoiler, world, stoneGroups, GossipText('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red']), hint_dist['dual_always'][1], [firstLocation, secondLocation], force_reachable=True)
             logging.getLogger('').debug('Placed dual_always hint for %s.', hint.name)
 
     # Add required location hints, only if hint copies > 0
     if hint_dist['always'][1] > 0:
-        alwaysLocations = list(filter(lambda hint: is_not_checked(world.get_location(hint.name), checkedAlwaysLocations), getHintGroup('always', world)))
+        alwaysLocations = list(filter(lambda hint: is_not_checked([world.get_location(hint.name)], checkedAlwaysLocations), getHintGroup('always', world)))
         for hint in alwaysLocations:
             location = world.get_location(hint.name)
             checkedAlwaysLocations.add(hint.name)
@@ -1111,7 +1115,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
             if '#' not in location_text:
                 location_text = '#%s#' % location_text
             item_text = getHint(getItemGenericName(location.item), world.settings.clearer_hints).text
-            add_hint(spoiler, world, stoneGroups, GossipText('%s #%s#.' % (location_text, item_text), ['Green', 'Red']), hint_dist['always'][1], location, force_reachable=True)
+            add_hint(spoiler, world, stoneGroups, GossipText('%s #%s#.' % (location_text, item_text), ['Green', 'Red']), hint_dist['always'][1], [location], force_reachable=True)
             logging.getLogger('').debug('Placed always hint for %s.', location.name)
 
     # Add trial hints, only if hint copies > 0
@@ -1136,10 +1140,10 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
             raise Exception('User-provided item hints were requested, but copies per named-item hint is zero')
         else:
             for i in range(0, len(world.named_item_pool)):
-                hint = get_specific_item_hint(spoiler, world, checkedLocations | checkedAlwaysLocations)
+                hint = (spoiler, world, checkedLocations | checkedAlwaysLocations)
                 if hint:
                     gossip_text, location = hint
-                    place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, hint_dist['named-item'][1], location)
+                    place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, hint_dist['named-item'][1], [location])
                     if not place_ok:
                         raise Exception('Not enough gossip stones for user-provided item hints')
     
@@ -1207,20 +1211,16 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
             # to fit hint types in remaining gossip stones
             hint_dist[hint_type] = (0.0, copies)
         else:
-            if hint_type == 'dual':
-                gossip_text, location, secondLocation = hint
-                place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, copies, location, secondLocation)
-            else:
-                gossip_text, location = hint
-                place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, copies, location)
+            gossip_text, locations = hint
+            place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, copies, locations)
             if place_ok:
                 hint_counts[hint_type] = hint_counts.get(hint_type, 0) + 1
-                if location is None:
+                if locations is None:
                     logging.getLogger('').debug('Placed %s hint.', hint_type)
                 else:
-                    logging.getLogger('').debug('Placed %s hint for %s.', hint_type, location.name)
+                    logging.getLogger('').debug('Placed %s hint for %s.', hint_type, locations[0].name)
             if not place_ok and custom_fixed:
-                logging.getLogger('').debug('Failed to place %s fixed hint for %s.', hint_type, location.name)
+                logging.getLogger('').debug('Failed to place %s fixed hint for %s.', hint_type, locations[0].name)
                 fixed_hint_types.insert(0, hint_type)
 
 

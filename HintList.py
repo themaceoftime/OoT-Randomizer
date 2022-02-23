@@ -38,12 +38,10 @@ class Hint(object):
                 self.text = text[choice]
 
 class Dual(object):
-    firstLocation = ""
-    secondLocation = ""
+    locations = []
     
-    def __init__(self, firstLocation, secondLocation):
-        self.firstLocation = firstLocation
-        self.secondLocation = secondLocation
+    def __init__(self, locations):
+        self.locations = locations
 
 def getHint(name, clearer_hint=False):
     textOptions, clearText, type = hintTable[name]
@@ -55,8 +53,8 @@ def getHint(name, clearer_hint=False):
         return Hint(name, textOptions, type)
 
 def getDual(name):
-    firstLocation, secondLocation = dualTable[name]
-    return Dual(firstLocation, secondLocation)
+    locations = dualTable[name]
+    return Dual(locations)
 
 def getHintGroup(group, world):
     ret = []
@@ -1399,54 +1397,54 @@ hintTable = {
 # Table containing the pairs of locations for the dual hint
 # The is used in order to add the locations to the checked list
 dualTable = {
-    'ZR Frogs Rewards':                                         ('ZR Frogs in the Rain', 'ZR Frogs Ocarina Game'),
+    'ZR Frogs Rewards':                                         ['ZR Frogs in the Rain', 'ZR Frogs Ocarina Game'],
 
-    'Deku Theater Rewards':                                     ('Deku Theater Skull Mask', 'Deku Theater Mask of Truth'),
-    'HF Ocarina of Time Retrieval':                             ('HF Ocarina of Time Item', 'Song from Ocarina of Time'),
-    'HF Valley Grotto':                                         ('HF Cow Grotto Cow', 'HF GS Cow Grotto'),
-    'Market Bombchu Bowling Rewards':                           ('Market Bombchu Bowling First Prize', 'Market Bombchu Bowling Second Prize'),
-    'LH Lake Lab Pool':                                         ('LH Lab Dive', 'LH GS Lab Crate'),
-    'LH Adult Bean Destination Checks':                         ('LH Freestanding PoH', 'LH Adult Fishing'),
-    'GV Pieces of Heart Ledges':                                ('GV Crate Freestanding PoH', 'GV Waterfall Freestanding PoH'),
-    'GF Horseback Archery Rewards':                             ('GF HBA 1000 Points', 'GF HBA 1500 Points'),
-    'Colossus Nighttime GS':                                    ('Colossus GS Tree', 'Colossus GS Hill'),
-    'Graveyard Dampe Race Rewards':                             ('Graveyard Hookshot Chest', 'Graveyard Dampe Race Freestanding PoH'),
-    'Graveyard Royal Family Tomb Contents':                     ('Graveyard Royal Familys Tomb Chest', 'Song from Royal Familys Tomb'),
-    'DMC Child Upper Checks':                                   ('DMC GS Crate', 'DMC Deku Scrub'),
-    'Sarias Song Checks':                                       ('LW Skull Kid', 'GC Darunias Joy'),
-    'Haunted Wasteland Checks':                                 ('Wasteland Chest', 'Wasteland GS'),
+    'Deku Theater Rewards':                                     ['Deku Theater Skull Mask', 'Deku Theater Mask of Truth'],
+    'HF Ocarina of Time Retrieval':                             ['HF Ocarina of Time Item', 'Song from Ocarina of Time'],
+    'HF Valley Grotto':                                         ['HF Cow Grotto Cow', 'HF GS Cow Grotto'],
+    'Market Bombchu Bowling Rewards':                           ['Market Bombchu Bowling First Prize', 'Market Bombchu Bowling Second Prize'],
+    'LH Lake Lab Pool':                                         ['LH Lab Dive', 'LH GS Lab Crate'],
+    'LH Adult Bean Destination Checks':                         ['LH Freestanding PoH', 'LH Adult Fishing'],
+    'GV Pieces of Heart Ledges':                                ['GV Crate Freestanding PoH', 'GV Waterfall Freestanding PoH'],
+    'GF Horseback Archery Rewards':                             ['GF HBA 1000 Points', 'GF HBA 1500 Points'],
+    'Colossus Nighttime GS':                                    ['Colossus GS Tree', 'Colossus GS Hill'],
+    'Graveyard Dampe Race Rewards':                             ['Graveyard Hookshot Chest', 'Graveyard Dampe Race Freestanding PoH'],
+    'Graveyard Royal Family Tomb Contents':                     ['Graveyard Royal Familys Tomb Chest', 'Song from Royal Familys Tomb'],
+    'DMC Child Upper Checks':                                   ['DMC GS Crate', 'DMC Deku Scrub'],
+    'Sarias Song Checks':                                       ['LW Skull Kid', 'GC Darunias Joy'],
+    'Haunted Wasteland Checks':                                 ['Wasteland Chest', 'Wasteland GS'],
 
-    'Deku Tree MQ Basement GS':                                 ('Deku Tree MQ GS Basement Graves Room','Deku Tree MQ GS Basement Back Room'),
-    'Dodongos Cavern Upper Business Scrubs':                    ('Dodongos Cavern Deku Scrub Near Bomb Bag Left', 'Dodongos Cavern Deku Scrub Near Bomb Bag Right'),
-    'Dodongos Cavern MQ Larvae Room':                           ('Dodongos Cavern MQ Larvae Room Chest', 'Dodongos Cavern MQ GS Larvae Room'),
-    'Fire Temple Lower Loop':                                   ('Fire Temple Flare Dancer Chest', 'Fire Temple Boss Key Chest'),
-    'Fire Temple MQ Lower Loop':                                ('Fire Temple MQ Megaton Hammer Chest', 'Fire Temple MQ Map Chest'),
-    'Water Temple River Loop Chests':                           ('Water Temple Longshot Chest', 'Water Temple River Chest'),
-    'Water Temple River Checks':                                ('Water Temple GS River', 'Water Temple River Chest'),
-    'Water Temple North Basement Checks':                       ('Water Temple GS Near Boss Key Chest', 'Water Temple Boss Key Chest'),
-    'Water Temple MQ North Basement Checks':                    ('Water Temple MQ Freestanding Key', 'Water Temple MQ GS Freestanding Key Area'),
-    'Water Temple MQ Lower Checks':                             ('Water Temple MQ Boss Key Chest', 'Water Temple MQ Freestanding Key'),
-    'Spirit Temple Colossus Hands':                             ('Spirit Temple Silver Gauntlets Chest', 'Spirit Temple Mirror Shield Chest'),
-    'Spirit Temple Child Lower':                                ('Spirit Temple Child Bridge Chest', 'Spirit Temple Child Early Torches Chest'),
-    'Spirit Temple Child Top':                                  ('Spirit Temple Sun Block Room Chest', 'Spirit Temple GS Hall After Sun Block Room'),
-    'Spirit Temple Adult Lower':                                ('Spirit Temple Early Adult Right Chest', 'Spirit Temple Compass Chest'),
-    'Spirit Temple MQ Child Top':                               ('Spirit Temple MQ Sun Block Room Chest', 'Spirit Temple MQ GS Sun Block Room'),
-    'Spirit Temple MQ Symphony Room':                           ('Spirit Temple MQ Symphony Room Chest', 'Spirit Temple MQ GS Symphony Room'),
-    'Spirit Temple MQ Throne Room GS':                          ('Spirit Temple MQ GS Nine Thrones Room West', 'Spirit Temple MQ GS Nine Thrones Room North'),
-    'Shadow Temple Upper Checks':                               ('Shadow Temple Map Chest', 'Shadow Temple Hover Boots Chest'),
-    'Shadow Temple Invisible Blades Chests':                    ('Shadow Temple Invisible Blades Visible Chest', 'Shadow Temple Invisible Blades Invisible Chest'),
-    'Shadow Temple Single Pot Room':                            ('Shadow Temple Freestanding Key', 'Shadow Temple GS Single Giant Pot'),
-    'Shadow Temple Spike Walls Room':                           ('Shadow Temple Spike Walls Left Chest', 'Shadow Temple Boss Key Chest'),
-    'Shadow Temple MQ Upper Checks':                            ('Shadow Temple MQ Compass Chest', 'Shadow Temple MQ Hover Boots Chest'),
-    'Shadow Temple MQ Invisible Blades Chests':                 ('Shadow Temple MQ Invisible Blades Visible Chest', 'Shadow Temple MQ Invisible Blades Invisible Chest'),
-    'Shadow Temple MQ Spike Walls Room':                        ('Shadow Temple MQ Spike Walls Left Chest', 'Shadow Temple MQ Boss Key Chest'),
-    'Bottom of the Well Inner Rooms GS':                        ('Bottom of the Well GS West Inner Room', 'Bottom of the Well GS East Inner Room'),
-    'Bottom of the Well Dead Hand Room':                        ('Bottom of the Well Lens of Truth Chest', 'Bottom of the Well Invisible Chest'),
-    'Bottom of the Well MQ Dead Hand Room':                     ('Bottom of the Well MQ Compass Chest', 'Bottom of the Well MQ Dead Hand Freestanding Key'),
-    'Bottom of the Well MQ Basement':                           ('Bottom of the Well MQ GS Basement', 'Bottom of the Well MQ Lens of Truth Chest'),
-    'Ice Cavern Final Room':                                    ('Ice Cavern Iron Boots Chest', 'Sheik in Ice Cavern'),
-    'Ice Cavern MQ Final Room':                                 ('Ice Cavern MQ Iron Boots Chest', 'Sheik in Ice Cavern'),
-    'Ganons Castle Spirit Trial Chests':                        ('Ganons Castle Spirit Trial Crystal Switch Chest', 'Ganons Castle Spirit Trial Invisible Chest'),
+    'Deku Tree MQ Basement GS':                                 ['Deku Tree MQ GS Basement Graves Room','Deku Tree MQ GS Basement Back Room'],
+    'Dodongos Cavern Upper Business Scrubs':                    ['Dodongos Cavern Deku Scrub Near Bomb Bag Left', 'Dodongos Cavern Deku Scrub Near Bomb Bag Right'],
+    'Dodongos Cavern MQ Larvae Room':                           ['Dodongos Cavern MQ Larvae Room Chest', 'Dodongos Cavern MQ GS Larvae Room'],
+    'Fire Temple Lower Loop':                                   ['Fire Temple Flare Dancer Chest', 'Fire Temple Boss Key Chest'],
+    'Fire Temple MQ Lower Loop':                                ['Fire Temple MQ Megaton Hammer Chest', 'Fire Temple MQ Map Chest'],
+    'Water Temple River Loop Chests':                           ['Water Temple Longshot Chest', 'Water Temple River Chest'],
+    'Water Temple River Checks':                                ['Water Temple GS River', 'Water Temple River Chest'],
+    'Water Temple North Basement Checks':                       ['Water Temple GS Near Boss Key Chest', 'Water Temple Boss Key Chest'],
+    'Water Temple MQ North Basement Checks':                    ['Water Temple MQ Freestanding Key', 'Water Temple MQ GS Freestanding Key Area'],
+    'Water Temple MQ Lower Checks':                             ['Water Temple MQ Boss Key Chest', 'Water Temple MQ Freestanding Key'],
+    'Spirit Temple Colossus Hands':                             ['Spirit Temple Silver Gauntlets Chest', 'Spirit Temple Mirror Shield Chest'],
+    'Spirit Temple Child Lower':                                ['Spirit Temple Child Bridge Chest', 'Spirit Temple Child Early Torches Chest'],
+    'Spirit Temple Child Top':                                  ['Spirit Temple Sun Block Room Chest', 'Spirit Temple GS Hall After Sun Block Room'],
+    'Spirit Temple Adult Lower':                                ['Spirit Temple Early Adult Right Chest', 'Spirit Temple Compass Chest'],
+    'Spirit Temple MQ Child Top':                               ['Spirit Temple MQ Sun Block Room Chest', 'Spirit Temple MQ GS Sun Block Room'],
+    'Spirit Temple MQ Symphony Room':                           ['Spirit Temple MQ Symphony Room Chest', 'Spirit Temple MQ GS Symphony Room'],
+    'Spirit Temple MQ Throne Room GS':                          ['Spirit Temple MQ GS Nine Thrones Room West', 'Spirit Temple MQ GS Nine Thrones Room North'],
+    'Shadow Temple Upper Checks':                               ['Shadow Temple Map Chest', 'Shadow Temple Hover Boots Chest'],
+    'Shadow Temple Invisible Blades Chests':                    ['Shadow Temple Invisible Blades Visible Chest', 'Shadow Temple Invisible Blades Invisible Chest'],
+    'Shadow Temple Single Pot Room':                            ['Shadow Temple Freestanding Key', 'Shadow Temple GS Single Giant Pot'],
+    'Shadow Temple Spike Walls Room':                           ['Shadow Temple Spike Walls Left Chest', 'Shadow Temple Boss Key Chest'],
+    'Shadow Temple MQ Upper Checks':                            ['Shadow Temple MQ Compass Chest', 'Shadow Temple MQ Hover Boots Chest'],
+    'Shadow Temple MQ Invisible Blades Chests':                 ['Shadow Temple MQ Invisible Blades Visible Chest', 'Shadow Temple MQ Invisible Blades Invisible Chest'],
+    'Shadow Temple MQ Spike Walls Room':                        ['Shadow Temple MQ Spike Walls Left Chest', 'Shadow Temple MQ Boss Key Chest'],
+    'Bottom of the Well Inner Rooms GS':                        ['Bottom of the Well GS West Inner Room', 'Bottom of the Well GS East Inner Room'],
+    'Bottom of the Well Dead Hand Room':                        ['Bottom of the Well Lens of Truth Chest', 'Bottom of the Well Invisible Chest'],
+    'Bottom of the Well MQ Dead Hand Room':                     ['Bottom of the Well MQ Compass Chest', 'Bottom of the Well MQ Dead Hand Freestanding Key'],
+    'Bottom of the Well MQ Basement':                           ['Bottom of the Well MQ GS Basement', 'Bottom of the Well MQ Lens of Truth Chest'],
+    'Ice Cavern Final Room':                                    ['Ice Cavern Iron Boots Chest', 'Sheik in Ice Cavern'],
+    'Ice Cavern MQ Final Room':                                 ['Ice Cavern MQ Iron Boots Chest', 'Sheik in Ice Cavern'],
+    'Ganons Castle Spirit Trial Chests':                        ['Ganons Castle Spirit Trial Crystal Switch Chest', 'Ganons Castle Spirit Trial Invisible Chest'],
 }
 
 # Separate table for goal names to avoid duplicates in the hint table.
@@ -1501,9 +1499,11 @@ def hintExclusions(world, clear_cache=False):
                  'dual_always',
                  'dual_exclude']):
             dual = getDual(hint.name)
-            if dual.firstLocation not in world_location_names or dual.secondLocation not in world_location_names:
-                hintExclusions.exclusions[world.id].append(hint.name)
-            elif world.get_location(dual.firstLocation).locked or world.get_location(dual.secondLocation).locked:
+            exclude_hint = False
+            for location in dual.locations:
+                if location not in world_location_names or world.get_location(location).locked:
+                    exclude_hint = True
+            if exclude_hint:
                 hintExclusions.exclusions[world.id].append(hint.name)
         else:
             if hint.name not in world_location_names and hint.name not in hintExclusions.exclusions[world.id]:
