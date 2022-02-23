@@ -911,6 +911,15 @@ def buildBingoHintList(boardURL):
     return hints
 
 
+def alwaysNamedItem(world, locations):
+    for location in locations:
+        if location.item.name in bingoBottlesForHints and world.settings.hint_dist == 'bingo':
+            always_item = 'Bottle'
+        else:
+            always_item = location.item.name
+        if always_item in world.named_item_pool and world.settings.world_count == 1:
+            world.named_item_pool.remove(always_item)
+
 
 def buildGossipHints(spoiler, worlds):
     checkedLocations = dict()
@@ -1075,18 +1084,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
             checkedAlwaysLocations.add(firstLocation.name)
             checkedAlwaysLocations.add(secondLocation.name)
             
-            if firstLocation.item.name in bingoBottlesForHints and world.settings.hint_dist == 'bingo':
-                always_item = 'Bottle'
-            else:
-                always_item = firstLocation.item.name
-            if always_item in world.named_item_pool and world.settings.world_count == 1:
-                world.named_item_pool.remove(always_item)
-            if secondLocation.item.name in bingoBottlesForHints and world.settings.hint_dist == 'bingo':
-                always_item = 'Bottle'
-            else:
-                always_item = secondLocation.item.name
-            if always_item in world.named_item_pool and world.settings.world_count == 1:
-                world.named_item_pool.remove(always_item)
+            alwaysNamedItem(world, [firstLocation, secondLocation])
             
             location_text = getHint(hint.name, world.settings.clearer_hints).text
             if '#' not in location_text:
@@ -1102,12 +1100,9 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
         for hint in alwaysLocations:
             location = world.get_location(hint.name)
             checkedAlwaysLocations.add(hint.name)
-            if location.item.name in bingoBottlesForHints and world.settings.hint_dist == 'bingo':
-                always_item = 'Bottle'
-            else:
-                always_item = location.item.name
-            if always_item in world.named_item_pool and world.settings.world_count == 1:
-                world.named_item_pool.remove(always_item)
+            
+            alwaysNamedItem(world, [location])
+            
             if location.name in world.hint_text_overrides:
                 location_text = world.hint_text_overrides[location.name]
             else:
