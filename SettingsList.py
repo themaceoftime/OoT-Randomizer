@@ -4372,7 +4372,7 @@ setting_infos = [
     ),
     Checkbutton(
         name           = 'credits_autoscroll',
-        gui_text       = 'Automatically Advance Credits Test',
+        gui_text       = 'Automatically Advance Credits Text',
         gui_tooltip    = '''\
             Zelda's text boxes in the cutscene that plays
             after defeating Ganon will automatically fade
