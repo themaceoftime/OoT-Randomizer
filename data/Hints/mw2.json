@@ -148,13 +148,13 @@
             "copies": 1
         },
         "dual_always": {
-            "order": 15,
+            "order":  0,
             "weight": 0.0,
             "fixed":   0,
             "copies": 0
 		},
         "dual": {
-            "order": 16,
+            "order":  0,
             "weight": 0.0,
             "fixed":   0,
             "copies": 0}
