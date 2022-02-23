@@ -1062,7 +1062,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
     hint_prob, _ = zip(*hint_prob)
     
     # Add required dual location hints, only if hint copies > 0
-    if hint_dist['dual_always'][1] > 0:
+    if 'dual_always' in hint_dist and hint_dist['dual_always'][1] > 0:
         alwaysDuals = getHintGroup('dual_always', world)
         for hint in alwaysDuals:
             dual = getDual(hint.name)
