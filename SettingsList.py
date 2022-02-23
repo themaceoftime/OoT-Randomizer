@@ -2648,8 +2648,13 @@ setting_infos = [
             A Gerudo guard will spawn outside the Fortress
             gate near the Haunted Wasteland.  Talking to the guard 
             will open the gate if the Gerudo Card has been acquired.
+
+            The guard will be spawned regardless of this setting when 
+            Shuffle Gerudo Card, Shuffle Overworld Entrances, or
+            Randomize Overworld Spawns are enabled.
         ''',
         gui_params={
+            'optional': True,
             "hide_when_disabled": True,
         },
         default        = False,
