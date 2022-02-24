@@ -173,8 +173,8 @@ def patch_model_adult(rom, settings, log):
     writer.GoTo(0xE6B64)
     writer.SetAdvance(4)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_BOW_STRING)
-    writer.WriteModelData(0x00000000)
-    writer.WriteModelData(0xC3B43333) # -360.4
+    writer.WriteModelData(0x00000000) # string anchor x: 0.0
+    writer.WriteModelData(0xC3B43333) # string anchor y: -360.4
 
     writer.GoTo(0x69112)
     writer.WriteModelDataHi(Offsets.ADULT_LINK_LUT_DL_UPGRADE_LFOREARM)
@@ -325,7 +325,7 @@ def patch_model_child(rom, settings, log):
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_RSHOULDER)
     writer.WriteModelData(0x00000000)
-    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_FPS_RIGHT_ARM)
+    writer.WriteModelData(Offsets.CHILD_LINK_DL_FPS_RARM_SLINGSHOT)
 
     writer.GoTo(0xE6B2C)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_BOTTLE)
@@ -333,8 +333,8 @@ def patch_model_child(rom, settings, log):
     writer.GoTo(0xE6B74)
     writer.SetAdvance(4)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SLINGSHOT_STRING)
-    writer.WriteModelData(0x44178000) # 606.0
-    writer.WriteModelData(0x436C0000) # 236.0
+    writer.WriteModelData(0x44178000) # string anchor x: 606.0
+    writer.WriteModelData(0x436C0000) # string anchor y: 236.0
 
     writer.GoTo(0x6922E)
     writer.WriteModelDataHi(Offsets.CHILD_LINK_LUT_DL_GORON_BRACELET)
@@ -383,6 +383,107 @@ def patch_model_child(rom, settings, log):
         byte = file.read(1)
 
 
+AdultPieces = [
+    "Sheath",
+    "FPS.Hookshot",
+    "Hilt.2",
+    "Blade.2",
+    "Hookshot.Spike",
+    "Hookshot",
+    "Fist.L",
+    "Fist.R",
+    "FPS.Forearm.L",
+    "FPS.Forearm.R",
+    "Gauntlet.Fist.L",
+    "Gauntlet.Fist.R",
+    "Gauntlet.Forearm.L",
+    "Gauntlet.Forearm.R",
+    "Gauntlet.Hand.L",
+    "Gaunlet.Hand.R",
+    "Bottle.Hand.L",
+    "FPS.Hand.L",
+    "FPS.Hand.R",
+    "Bow.String",
+    "Bow",
+    "Blade.3.Break",
+    "Blade.3",
+    "Bottle",
+    "Broken.Blade.3",
+    "Foot.2.L",
+    "Foot.2.R",
+    "Foot.3.L",
+    "Foot.3.R",
+    "Hammer",
+    "Hilt.3",
+    "Hookshot.Aiming.Reticule",
+    "Hookshot.Chain",
+    "Ocarina.2",
+    "Shield.2",
+    "Shield.3",
+    "Limb 1",
+    "Limb 3",
+    "Limb 4",
+    "Limb 5",
+    "Limb 6",
+    "Limb 7",
+    "Limb 8",
+    "Limb 10",
+    "Limb 11",
+    "Limb 12",
+    "Limb 13",
+    "Limb 14",
+    "Limb 15",
+    "Limb 16",
+    "Limb 17",
+    "Limb 18",
+    "Limb 20",
+]
+
+ChildPieces = [
+    "Slingshot.String",
+    "Sheath",
+    "Blade.2", # Presumably for pulling the sword animation
+    "Blade.1",
+    "Boomerang",
+    "Fist.L",
+    "Fist.R",
+    "Hilt.1",
+    "Shield.1",
+    "Slingshot",
+    "Ocarina.1",
+    "Bottle",
+    "Ocarina.2",
+    "Bottle.Hand.L",
+    "GoronBracelet",
+    "Mask.Skull",
+    "Mask.Spooky",
+    "Mask.Gerudo",
+    "Mask.Goron",
+    "Mask.Keaton",
+    "Mask.Truth",
+    "Mask.Zora",
+    "FPS.Forearm.R",
+    "Deku Stick",
+    "Shield.2",
+    "Limb 1",
+    "Limb 3",
+    "Limb 4",
+    "Limb 5",
+    "Limb 6",
+    "Limb 7",
+    "Limb 8",
+    "Limb 10",
+    "Limb 11",
+    "Limb 12",
+    "Limb 13",
+    "Limb 14",
+    "Limb 15",
+    "Limb 16",
+    "Limb 17",
+    "Limb 18",
+    "Limb 20",
+]
+
 class Offsets(IntEnum):
     ADULT_LINK_LUT_DL_WAIST = 0x06005090
     ADULT_LINK_LUT_DL_RTHIGH = 0x06005098
@@ -419,7 +520,7 @@ class Offsets(IntEnum):
     ADULT_LINK_LUT_DL_HOOKSHOT = 0x06005190
     ADULT_LINK_LUT_DL_UPGRADE_LFOREARM = 0x06005198
     ADULT_LINK_LUT_DL_UPGRADE_LHAND = 0x060051A0
-    ADULT_LINK_LUT_DL_UPGRADE_LFIST = 0x506001A8
+    ADULT_LINK_LUT_DL_UPGRADE_LFIST = 0x060051A8
     ADULT_LINK_LUT_DL_UPGRADE_RFOREARM = 0x060051B0
     ADULT_LINK_LUT_DL_UPGRADE_RHAND = 0x060051B8
     ADULT_LINK_LUT_DL_UPGRADE_RFIST = 0x060051C0
