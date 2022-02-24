@@ -73,6 +73,77 @@ class ModelDataWriter:
             self.rom.write_byte(self.GetAddress(), bytes[i])
             self.offset += 1
 
+# Either return the starting index of the footer (when start == 0)
+# or if the element exists in the footer (start > 0)
+def findfooter(bytes, string, start=0):
+    stringbytes = string.encode()
+    stringindex = 0
+    for i in range(start, len(bytes)):
+        # Byte matches next byte in string
+        if bytes[i] == stringbytes[stringindex]:
+            stringindex += 1
+            # All bytes have been found, so a match
+            if stringindex == len(stringbytes):
+                # If start is 0 then looking for the footer, return the index
+                if start == 0:
+                    return i + 1
+                # Else we just want to know if it exists
+                else:
+                    return True
+        # Match has been broken, reset to start of string
+        else:
+            stringindex = 0
+    return False
+
+def unwrap(zobj, address):
+    # An entry in the LUT will look something like 0xDE 01 0000 06014050
+    # Only the last 3 bytes should be necessary.
+    data = int.from_bytes(zobj[address+5:address+8], 'big')
+    # If the data here points to another entry in the LUT, keep searching until
+    # an address outside the table is found.
+    while 0x5000 <= data and data <= 0x5800:
+        address = data
+        data = int.from_bytes(zobj[address+5:address+8], 'big')
+    return address
+
+def AddMissingPieces(rom, zobj, missing, start, age):
+    # age 0 = adult, 1 = child
+    agestart = ADULT_START
+    pieces = AdultPieces
+    if age == 1:
+        agestart = CHILD_START
+        pieces = ChildPieces
+    startaddr = start - len("!PlayAsManifest0")
+    for item in missing:
+        # Load missing model piece from rom 
+        # offset = pieces[item][1]
+        offset = 0x21F78 # Testing: Master sword offset
+        itembytes = []
+        while rom.buffer[agestart + offset] != 0xDF:
+            byte = rom.buffer[agestart + offset]
+            itembytes.append(byte)
+            offset += 1
+        # Add missing model piece to zobj
+        i = 0
+        for byte in itembytes:
+            zobj.insert(start + i, byte)
+            i += 1
+        # Pad to nearest multiple of 16
+        while i % 16 != 0:
+            zobj.insert(start + i, 0x00)
+            i += 1
+        # Overwrite entry in LUT
+        # lut = pieces[item][0]
+        lut = 0x52B8 # Testing: Master sword LUT entry
+        entry = unwrap(zobj, lut) + 5 
+        startaddrbytes = startaddr.to_bytes(3, 'big')
+        for byte in startaddrbytes:
+            zobj[entry] = byte
+            entry += 1
+        # Update start address to next multiple of 16
+        startaddr = i
+
+ADULT_START = 0x00F86000
 
 def patch_model_adult(rom, settings, log):
     model = settings.model_adult + ".zobj"
@@ -231,15 +302,25 @@ def patch_model_adult(rom, settings, log):
     writer.GoTo(0xE65A0)
     writer.WriteModelData(0x06005380) # Hierarchy pointer
 
-    # Write zobj to adult object
+    # Read model data from file
     file = open('data/Models/adult/' + model, "rb")
-    byte = file.read(1)
-    offset = 0
-    while byte:
-        rom.write_byte(0x00F86000 + offset, byte[0])
-        offset += 1
-        byte = file.read(1)
+    zobj = file.read()
+    file.close()
+    zobj = bytearray(zobj)
+    # Find which pieces are missing from this model
+    start = findfooter(zobj, "!PlayAsManifest0")
+    missing = []
+    for piece in AdultPieces:
+        if not findfooter(zobj, piece, start):
+            missing.append(piece)
+    missing.append("Blade.2") # Testing: Force pull master sword from vanilla data
+    # Add model pieces missing from the zobj
+    if len(missing) > 0:
+        AddMissingPieces(rom, zobj, missing, start, 0)
+    # Write model data to adult (object_link_boy)
+    rom.write_bytes(ADULT_START, zobj)
 
+CHILD_START = 0x00FBE000
 
 def patch_model_child(rom, settings, log):
     model = settings.model_child + ".zobj"
@@ -325,7 +406,7 @@ def patch_model_child(rom, settings, log):
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_RSHOULDER)
     writer.WriteModelData(0x00000000)
-    writer.WriteModelData(Offsets.CHILD_LINK_DL_FPS_RARM_SLINGSHOT)
+    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_FPS_RARM_SLINGSHOT)
 
     writer.GoTo(0xE6B2C)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_BOTTLE)
@@ -373,16 +454,24 @@ def patch_model_child(rom, settings, log):
     writer.GoTo(0xE65A4)
     writer.WriteModelData(0x060053A8) # Hierarchy pointer
 
-    # Write zobj to child object
+    # Read model data from file
     file = open('data/Models/child/' + model, "rb")
-    byte = file.read(1)
-    offset = 0
-    while byte:
-        rom.write_byte(0x00FBE000 + offset, byte[0])
-        offset += 1
-        byte = file.read(1)
+    zobj = file.read()
+    file.close()
+    zobj = bytearray(zobj)
+    # Find which pieces are missing from this model
+    start = findfooter(zobj, "!PlayAsManifest0")
+    missing = []
+    for piece in ChildPieces:
+        if not findfooter(zobj, piece, start):
+            missing.append(piece)
+    # Add model pieces missing from the zobj
+    if len(missing) > 0:
+        AddMissingPieces(rom, zobj, missing, start, 1)
+    # Write zobj to child object (object_link_child)
+    rom.write_bytes(CHILD_START, zobj)
 
-
+# Adult model pieces and their offsets
 AdultPieces = [
     "Sheath",
     "FPS.Hookshot",
@@ -399,7 +488,7 @@ AdultPieces = [
     "Gauntlet.Forearm.L",
     "Gauntlet.Forearm.R",
     "Gauntlet.Hand.L",
-    "Gaunlet.Hand.R",
+    "Gauntlet.Hand.R",
     "Bottle.Hand.L",
     "FPS.Hand.L",
     "FPS.Hand.R",
@@ -414,7 +503,6 @@ AdultPieces = [
     "Foot.3.L",
     "Foot.3.R",
     "Hammer",
-    "Hilt.3",
     "Hookshot.Aiming.Reticule",
     "Hookshot.Chain",
     "Ocarina.2",
@@ -629,3 +717,4 @@ class Offsets(IntEnum):
     CHILD_LINK_DL_RHAND_OCARINA_TIME = 0x06005378
     CHILD_LINK_LUT_DL_RHAND_OCARINA_TIME = 0x06005388
     CHILD_LINK_DL_FPS_RARM_SLINGSHOT = 0x06005390
+    CHILD_LINK_LUT_DL_FPS_RARM_SLINGSHOT = 0x060053A0
