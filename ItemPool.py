@@ -221,42 +221,6 @@ def generate_itempool(world):
     world.distribution.set_complete_itempool(world.itempool)
 
 
-def try_collect_heart_container(world, pool):
-    if 'Heart Container' in pool:
-        pool.remove('Heart Container')
-        pool.extend(get_junk_item())
-        world.state.collect(ItemFactory('Heart Container'))
-        return True
-    return False
-
-
-def try_collect_pieces_of_heart(world, pool):
-    n = pool.count('Piece of Heart') + pool.count('Piece of Heart (Treasure Chest Game)')
-    if n >= 4:
-        for i in range(4):
-            if 'Piece of Heart' in pool:
-                pool.remove('Piece of Heart')
-                world.state.collect(ItemFactory('Piece of Heart'))
-            else:
-                pool.remove('Piece of Heart (Treasure Chest Game)')
-                world.state.collect(ItemFactory('Piece of Heart (Treasure Chest Game)'))
-            pool.extend(get_junk_item())
-        return True
-    return False
-
-
-def collect_pieces_of_heart(world, pool):
-    success = try_collect_pieces_of_heart(world, pool)
-    if not success:
-        try_collect_heart_container(world, pool)
-
-
-def collect_heart_container(world, pool):
-    success = try_collect_heart_container(world, pool)
-    if not success:
-        try_collect_pieces_of_heart(world, pool)
-
-
 def get_pool_core(world):
     pool = []
     placed_items = {}
