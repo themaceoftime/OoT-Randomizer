@@ -234,6 +234,9 @@ class WorldDistribution(object):
 
 
     def update(self, src_dict, update_all=False):
+        if 'starting_items' in src_dict:
+            raise ValueError('"starting_items" at the top level is no longer supported, please move it into "settings"')
+
         update_dict = {
             'randomized_settings': {name: record for (name, record) in src_dict.get('randomized_settings', {}).items()},
             'dungeons': {name: DungeonRecord(record) for (name, record) in src_dict.get('dungeons', {}).items()},
