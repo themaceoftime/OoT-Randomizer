@@ -1303,7 +1303,7 @@ hintTable = {
     '1105':                                                     ("They say that tossing a bomb will cause a Blue Bubble to go after it.", None, 'junk'),
     '1106':                                                     ("They say that the Lizalfos in Dodongo's Cavern like to play in lava.", None, 'junk'),
     '1107':                                                     ("Why won't anyone acknowledge the housing crisis in Kakariko Village?", None, 'junk'),
-    '1108':                                                     ("Don't believe in yourself. Believe in the me that believes in you!", None, 'junk'), # Anime
+    '1108':                                                     ("Don't believe in yourself. Believe in the me that believes in you!", None, 'junk'), # ref: Anime
     '1109':                                                     ("This is a haiku&Five syllables then seven&Five more to finish", None, 'junk'),
     '1110':                                                     ("They say that beating Bongo Bongo quickly requires an even tempo.", None, 'junk'),
     '1111':                                                     ("Did you know that you can tune a piano but you can't tune a fish?", None, 'junk'),
