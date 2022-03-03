@@ -1199,52 +1199,52 @@ hintTable = {
     'ZD Storms Grotto':                                         ("a small #Fairy Fountain#", None, 'region'),
     'GF Storms Grotto':                                         ("a small #Fairy Fountain#", None, 'region'),
 
-    # Junk hints that satisfied one or more of the following conditions were discarded:
-    # - They were inappropriate.
-    # - They were absurdly long copy pastas.
-    # - They were quotes or references that were just not funny when out-of-context.
-    # To elaborate on this last point: we wanted the junk hints to be hints that 
-    # everyone can understand and not just those who get the obscure references.
-    # Zelda references were considered fair game.
+    # Junk hints must satisfy all of the following conditions:
+    # - They aren't inappropriate.
+    # - They aren't absurdly long copy pastas.
+    # - They aren't quotes or references that are simply not funny when out-of-context.
+    # To elaborate on this last point: junk hints need to be able to be understood 
+    # by everyone, and not just those who get the obscure references.
+    # Zelda references are considered fair game.
 
     # First generation junk hints
     '1002':                                                     ("${12 68 79}They say that monarchy is a terrible system of governance.", None, 'junk'), # sfx: Zelda gasp
     '1003':                                                     ("${12 68 79}They say that Zelda is a poor leader.", None, 'junk'), # sfx: Zelda gasp
     '1004':                                                     ("These hints can be quite useful. This is an exception.", None, 'junk'),
     '1006':                                                     ("They say that all the Zora drowned in Wind Waker.", None, 'junk'),
-    '1008':                                                     ("Remember when Ganon was a blue pig?^I remember.", None, 'junk'),
+    '1008':                                                     ("Remember when Ganon was a blue pig?^I remember.", None, 'junk'), # ref: A Link to the Past
     '1009':                                                     ("One who does not have Triforce can't go in.", None, 'junk'),
     '1010':                                                     ("Save your future, end the Happy Mask Salesman.", None, 'junk'),
     '1012':                                                     ("I'm stoned. Get it?", None, 'junk'),
-    '1013':                                                     ("Hoot! Hoot! Would you like me to repeat that?", None, 'junk'),
+    '1013':                                                     ("Hoot! Hoot! Would you like me to repeat that?", None, 'junk'), # ref: Kaepora Gaebora (the owl)
     '1014':                                                     ("Gorons are stupid. They eat rocks. Except, apparently, the big rock blocking Dodongo's Cavern.", None, 'junk'),
     '1015':                                                     ("They say that Lon Lon Ranch prospered under Ingo.", None, 'junk'),
     '1017':                                                     ("Without the Lens of Truth, the Treasure Chest Mini-Game is a 1 out of 32 chance.^Good luck!", None, 'junk'),
     '1018':                                                     ("Use bombs wisely.", None, 'junk'),
     '1022':                                                     ("You're comparing yourself to me?^Ha! You're not even good enough to be my fake.", None, 'junk'), # ref: SA2
     '1024':                                                     ("What happened to Sheik?", None, 'junk'),
-    '1026':                                                     ("I've heard Sploosh Kaboom is a tricky game.", None, 'junk'), # ref: Windwaker
+    '1026':                                                     ("I've heard Sploosh Kaboom is a tricky game.", None, 'junk'), # ref: Wind Waker
     '1028':                                                     ("I bet you'd like to have more bombs.", None, 'junk'),
     '1029':                                                     ("When all else fails, use Fire.", None, 'junk'),
     '1030':                                                     ("Here's a hint, @. Don't be bad.", None, 'junk'),
-    '1031':                                                     ("Game Over. Return of Ganon.", None, 'junk'),
+    '1031':                                                     ("Game Over. Return of Ganon.", None, 'junk'), # ref: Zelda II
     '1032':                                                     ("May the way of the Hero lead to the Triforce.", None, 'junk'),
     '1033':                                                     ("Can't find an item? Scan an Amiibo.", None, 'junk'),
     '1034':                                                     ("They say this game has just a few glitches.", None, 'junk'),
     '1035':                                                     ("BRRING BRRING This is Ulrira. Wrong number?", None, 'junk'), # ref: Link's Awakening
-    '1036':                                                     ("Tingle Tingle Kooloo Limpah", None, 'junk'),
+    '1036':                                                     ("Tingle Tingle Kooloo Limpah", None, 'junk'), # ref: Majora's Mask
     '1038':                                                     ("They say that Ganondorf will appear in the next Mario Tennis.", None, 'junk'),
     '1039':                                                     ("Medigoron sells the earliest Breath of the Wild demo.", None, 'junk'),
     '1041':                                                     ("You were almost a @ sandwich.", None, 'junk'),
     '1042':                                                     ("I'm a helpful hint Gossip Stone!^See, I'm helping.", None, 'junk'),
     '1043':                                                     ("Dear @, please come to the castle. I've baked a cake for you.&Yours truly, princess Zelda.", None, 'junk'), # ref: Super Mario 64
-    '1044':                                                     ("They say all toasters toast toast.", None, 'junk'),
-    '1045':                                                     ("They say that Okami is the best Zelda game.", None, 'junk'),
+    '1044':                                                     ("They say all toasters toast toast.", None, 'junk'), # ref: Hotel Mario
+    '1045':                                                     ("They say that Okami is the best Zelda game.", None, 'junk'), # ref: people often say that Okami feels and plays like a Zelda game
     '1046':                                                     ("They say that quest guidance can be found at a talking rock.", None, 'junk'),
     '1047':                                                     ("They say that the final item you're looking for can be found somewhere in Hyrule.", None, 'junk'),
     '1048':                                                     ("${12 68 7a}Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.^Mweep.", None, 'junk'), # Mweep
     '1049':                                                     ("They say that Barinade fears Deku Nuts.", None, 'junk'),
-    '1050':                                                     ("They say that Flare Dancers do not fear Goron-crafted blades.", None, 'junk'),
+    '1050':                                                     ("They say that Flare Dancers do not fear Goron-crafted blades.", None, 'junk'), 
     '1051':                                                     ("They say that Morpha is easily trapped in a corner.", None, 'junk'),
     '1052':                                                     ("They say that Bongo Bongo really hates the cold.", None, 'junk'),
     '1053':                                                     ("They say that crouch stabs mimic the effects of your last attack.", None, 'junk'),
@@ -1260,9 +1260,9 @@ hintTable = {
     '1063':                                                     ("They say that arbitrary code execution leads to the credits sequence.", None, 'junk'),
     '1064':                                                     ("They say that Twinrova always casts the same spell the first three times.", None, 'junk'),
     '1065':                                                     ("They say that the Development branch may be unstable.", None, 'junk'),
-    '1066':                                                     ("You're playing a Randomizer. I'm randomized!^${12 48 31}Here's a random number:  #4#.&Enjoy your Randomizer!", None, 'junk'), # sfx: get small item from chest
+    '1066':                                                     ("You're playing a Randomizer. I'm randomized!^${12 48 31}Here's a random number:  #4#.&Enjoy your Randomizer!", None, 'junk'), # ref: xkcd comic / sfx: get small item from chest
     '1067':                                                     ("They say Ganondorf's bolts can be reflected with glass or steel.", None, 'junk'),
-    '1068':                                                     ("They say Ganon's tail is vulnerable to nuts, arrows, swords, explosives, hammers...^...sticks, seeds, boomerangs...^...rods, shovels, iron balls, angry bees...", None, 'junk'),
+    '1068':                                                     ("They say Ganon's tail is vulnerable to nuts, arrows, swords, explosives, hammers...^...sticks, seeds, boomerangs...^...rods, shovels, iron balls, angry bees...", None, 'junk'), # ref: various Zelda games
     '1069':                                                     ("They say that you're wasting time reading this hint, but I disagree. Talk to me again!", None, 'junk'),
     '1070':                                                     ("They say Ganondorf knows where to find the instrument of his doom.", None, 'junk'),
     '1071':                                                     ("I heard @ is pretty good at Zelda.", None, 'junk'),
@@ -1276,16 +1276,16 @@ hintTable = {
     '1078':                                                     ("It would be a shame if something... unfortunate... were to happen to you.^Have you considered saving lately?", None, 'junk'),
     '1079':                                                     ("They say that something wonderful happens when playing the Song of Storms after planting a magic bean.", None, 'junk'),
     '1080':                                                     ("Long time watcher, first time player. Greetings from Termina. Incentive goes to Randobot's choice.", None, 'junk'), # ref: GDQ meme
-    '1081':                                                     ("No matter what happens...Do not give up, do not complain, and do NOT stay up all night playing!", None, 'junk'), # ref: Windwaker
+    '1081':                                                     ("No matter what happens...Do not give up, do not complain, and do NOT stay up all night playing!", None, 'junk'), # ref: Wind waker
     '1082':                                                     ("That's a nice wall you got there. Would be a shame if I just... clipped right through that.", None, 'junk'),
     '1083':                                                     ("Ganondorf used to be an adventurer like me, but then he took a light arrow to the knee.", None, 'junk'), # ref: Skyrim
     '1084':                                                     ("They say that the easiest way to kill Peahats is using Din's Fire while they're grounded.", None, 'junk'),
-    '1085':                                                     ("They say that the patrol paths of the castle guards have major security vulnerabilities.", None, 'junk'),
+    '1085':                                                     ("They say that the castle guards' routes have major security vulnerabilities.", None, 'junk'),
     '1086':                                                     ("They say that Epona is an exceptional horse. Able to clear canyons in a single bound.", None, 'junk'),
     '1087':                                                     ("They say only one heart piece in all of Hyrule will declare the holder a winner.", None, 'junk'),
     '1088':                                                     ("Are you stuck? Try asking for help in our Discord server or check out our Wiki!", None, 'junk'),
     '1089':                                                     ("You would be surprised at all the things you can Hookshot in the Spirit Temple!", None, 'junk'),
-    '1090':                                                     ("I once glued a set of false teeth to the Boomerang^${12 39 c7}That came back to bite me.", None, 'junk'), # sfx: Ganondorf laugh
+    '1090':                                                     ("I once glued a set of false teeth to the Boomerang.^${12 39 c7}That came back to bite me.", None, 'junk'), # sfx: Ganondorf laugh
     '1091':                                                     ("They say that most of the water in Hyrule flows through King Zora's buttocks.", None, 'junk'),
     '1092':                                                     ("Space, space, wanna go to space, yes, please space. Space space. Go to space.", None, 'junk'), # ref: Portal
     '1093':                                                     ("They say that you must read the names of \"Special Deal\" items in shops carefully.", None, 'junk'),
@@ -1306,12 +1306,12 @@ hintTable = {
     '1108':                                                     ("Don't believe in yourself. Believe in the me that believes in you!", None, 'junk'), # ref: Anime
     '1109':                                                     ("This is a haiku&Five syllables then seven&Five more to finish", None, 'junk'),
     '1110':                                                     ("They say that beating Bongo Bongo quickly requires an even tempo.", None, 'junk'),
-    '1111':                                                     ("Did you know that you can tune a piano but you can't tune a fish?", None, 'junk'),
+    '1111':                                                     ("Did you know that you can tune a piano but you can't tune a fish?", None, 'junk'), # Studio Album by REO Speedwagon
     '1112':                                                     ("You thought it would be a useful hint, but it was me, Junk Hint!", None, 'junk'), # ref: Jojo's Bizarre Adventure
     '1113':                                                     ("They say you can cut corners to get to your destination faster.", None, 'junk'),
-    '1114':                                                     ("Three things are certain: death, taxes, and forgetting a check.", None, 'junk'),
+    '1114':                                                     ("Three things are certain: death, taxes, and forgetting a check.", None, 'junk'), # ref: Benjamin Franklin, allegedly
     '1115':                                                     ("Have you thought about going where the items are?^Just saying.", None, 'junk'),
-    '1116':                                                     ("They say that the true reward is the friends we made along the way.", None, 'junk'),
+    '1116':                                                     ("They say that the true reward is the friends we made along the way.", None, 'junk'), # ref: common meme with unknown origins
     '1117':                                                     ("Gossip Stone Shuffle must be on. I'm normally in Zora's Domain!", None, 'junk'),
     '1118':                                                     ("When ASM is used to code a randomizer they should call it ASMR.", None, 'junk'),
     '1119':                                                     ("It's so lonely being stuck here with nobody else to talk to...", None, 'junk'),
@@ -1333,26 +1333,25 @@ hintTable = {
     '1136':                                                     ("They say that Anju needs to stop losing her chickens.", None, 'junk'),
     '1137':                                                     ("Can you move me? I don't get great service here.", None, 'junk'),
     '1138':                                                     ("Have you embraced the power of the Deku Nut yet?", None, 'junk'),
-    '1139':                                                     ("They say that Mido is easily confused by sick flips.", None, 'junk'),
-    '1140':                                                     ("They say that the path to Termina is a one-way trip.", None, 'junk'),
+    '1139':                                                     ("They say that Mido is easily confused by sick flips.", None, 'junk'), # ref: Mido Skip
+    '1140':                                                     ("They say that the path to Termina is a one-way trip.", None, 'junk'), # ref: Majora's Mask
     '1141':                                                     ("They say that @ deserves a hug. Everyone does!", None, 'junk'),
-    '1142':                                                     ("I hear Termina is a great spot for a vacation!", None, 'junk'),
-    '1144':                                                     ("You've met with a terrible fate, haven't you?", None, 'junk'),
+    '1142':                                                     ("I hear Termina is a great spot for a vacation!", None, 'junk'), # ref: Majora's Mask
+    '1144':                                                     ("You've met with a terrible fate, haven't you?", None, 'junk'), # ref: Majora's Mask
     '1145':                                                     ("Try using various items and weapons on me :)", None, 'junk'),
     '1146':                                                     ("On second thought, let's not go to Hyrule Castle. 'Tis a silly place.", None, 'junk'), # ref: Monty Python
     '1147':                                                     ("If you see something suspicious, bomb it!", None, 'junk'),
     '1148':                                                     ("Don't forget to write down your hints :)", None, 'junk'),
-    '1149':                                                     ("Would you kindly...close this textbox?", None, 'junk'), # ref: Bioshock
-    '1150':                                                     ("They say that King Dodongo dislikes smoke.", None, 'junk'),
+    '1149':                                                     ("Would you kindly...&close this textbox?", None, 'junk'), # ref: Bioshock
+    '1150':                                                     ("They say that King Dodongo dislikes smoke.", None, 'junk'), # ref: Zelda 1
     '1151':                                                     ("Never give up. Trust your instincts!", None, 'junk'), # ref: Starfox?
     '1152':                                                     ("I love to gossip! Wanna be friends?", None, 'junk'),
-    '1153':                                                     ("This isn't where I parked my horse!", None, 'junk'),
-    '1154':                                                     ("Hello! My name is @! What's yours?", None, 'junk'),
-    '1156':                                                     ("Anything not saved will be lost.", None, 'junk'),
+    '1153':                                                     ("This isn't where I parked my horse!", None, 'junk'), # ref: EuroTrip
+    '1156':                                                     ("Anything not saved will be lost.", None, 'junk'), # ref: Nintendo (various games and platforms)
     '1157':                                                     ("I was voted least helpful hint stone five years in a row!", None, 'junk'),
-    '1158':                                                     ("They say that the Groose is loose.", None, 'junk'),
-    '1159':                                                     ("Twenty-three is number one!^And thirty-one is number two!", None, 'junk'),
-    '1160':                                                     ("Ya ha ha! You found me!", None, 'junk'),
+    '1158':                                                     ("They say that the Groose is loose.", None, 'junk'), # ref: Skyward Sword
+    '1159':                                                     ("Twenty-three is number one!^And thirty-one is number two!", None, 'junk'), # ref: Deku Scrubs in Deku Tree
+    '1160':                                                     ("Ya ha ha! You found me!", None, 'junk'), # ref: Breath of the Wild
     '1161':                                                     ("Do you like Like Likes?", None, 'junk'),
     '1162':                                                     ("Next you'll say:^\"Why am I still reading these?\"", None, 'junk'), # ref: Jojo's Bizarre Adventure
     '1165':                                                     ("You're a cool cat, @.", None, 'junk'),
@@ -1368,14 +1367,14 @@ hintTable = {
     '1178':                                                     ("Use Multiworld to cross the gaps between worlds and engage in jolly co-operation!", None, 'junk'), # ref: Dark Souls
     '1179':                                                     ("${12 68 51}What in tarnation!", None, 'junk'), # sfx: Talon surprised at being woken
     '1180':                                                     ("Press \u00A5\u00A5\u00A6\u00A6\u00A7\u00A8\u00A7\u00A8\u00A0\u009F to warp to&the credits.", None, 'junk'), # ref: Konami Code
-    '1181':                                                     ("Oh!^Oh-oh!^C'mon!^Come on! Come on! Come on!^HOT!!^What a hot beat!^WHOOOOAH!^YEEEEAH!^YAHOOO!!", None, 'junk'),
+    '1181':                                                     ("Oh!^Oh-oh!^C'mon!^Come on! Come on! Come on!^HOT!!^What a hot beat!^WHOOOOAH!^YEEEEAH!^YAHOOO!!", None, 'junk'), # ref: Darunia dancing
     '1182':                                                     ("${12 68 5F}Hey! Listen!", None, 'junk'), # sfx: Navi: "Hey!"
     '1183':                                                     ("I am the King of Gossip Stones, but fear not - I have the common touch! That means I can make conversation with everyone^from foreign dignitaries to the lowliest bumpkin - such as yourself!", None, 'junk'), # ref: Dragon Quest XI
-    '1184':                                                     ("I am @, hero of the Gossip Stones! Hear my name and tremble!", None, 'junk'),
+    '1184':                                                     ("I am @, hero of the Gossip Stones! Hear my name and tremble!", None, 'junk'), # ref: Link the Goron
     '1185':                                                     ("Having trouble defeating Dark Link?^Look away from him while holding Z-Target and then when Dark Link walks up behind you, strafe sideways and slash your sword.", None, 'junk'),
     '1186':                                                     ("They say that if Link could say a few words, he'd be a better public speaker.", None, 'junk'),
     '1187':                                                     ("Did you know that you only need to play the Song of Time to open the Door of Time? The Spiritual Stones are not needed.", None, 'junk'),
-    '1188':                                                     ("Do you reckon Anju met her lover at a Kafei?", None, 'junk'),
+    '1188':                                                     ("Where did Anju meet her lover?^${12 39 C7}At a Kafei.", None, 'junk'), # ref: Majora's Mask
     '1189':                                                     ("Did you know that you can access the Fire Temple boss door without dropping the pillar by using the Hover boots?", None, 'junk'),
     '1190':                                                     ("Key-locked in Fire Temple? Maybe Volvagia has your Small Key.", None, 'junk'),
     '1191':                                                     ("Expired Spoiler Log? Don't worry! The OoTR Discord staff can help you out.", None, 'junk'),
@@ -1403,25 +1402,25 @@ hintTable = {
     '1213':                                                     ("${12 28 B1}\u009F \u00A7\u00A8\u00A6 \u00A7\u00A8\u00A6 \u009F\u00A6 \u009F\u00A6 \u00A8\u00A7\u009F", None, 'junk'), # ref: Frogs 2 / sfx: Frogs
     '1214':                                                     ("${12 28 A2}Help! I'm melting away!", None, 'junk'), # sfx: red ice melting
     '1215':                                                     ("${12 38 80}Eek!^I'm a little shy...", None, 'junk'), # sfx: Scrub hurt/stunned by Link
-    '1216':                                                     ("Master, there is a 0 percent chance that this hint is useful in any way.", None, 'junk'),
+    '1216':                                                     ("Master, there is a 0 percent chance that this hint is useful in any way.", None, 'junk'), # ref: Skyward Sword
     '1217':                                                     ("${12 48 0B}Here, have a heart <3", None, 'junk'), # sfx: get Recovery Heart
     '1218':                                                     ("${12 48 03}Here, have a Rupee.", None, 'junk'), # sfx: get Rupee
     '1219':                                                     ("${12 68 31}Don't forget to stand up and stretch regularly.", None, 'junk'), # sfx: child Link stretching and yawning
     '1220':                                                     ("Remember that time you did that really embarrassing thing?^${12 68 3A}Yikes.", None, 'junk'), # sfx: child Link fall damage
     '1221':                                                     ("@ tries to read the Gossip Stone...^${12 48 06}but he's standing on the wrong side of it!", None, 'junk'), # ref: Dragon Quest XI / sfx: error (e.g. trying to equip an item as the wrong age)
     '1222':                                                     ("Plandomizer is a pathway to many abilities some consider to be... unnatural.", None, 'junk'),
-    '1223':                                                     ("Did you know that you can have complete control over the item placement, item pool and more using Plandomizer?", None, 'junk'),
+    '1223':                                                     ("Did you know that you can have complete control over the item placement, item pool, and more, using Plandomizer?", None, 'junk'),
     '1224':                                                     ("They say that the earth is round.^Just like pizza.", None, 'junk'),
-    '1225':                                                     ("${12 68 62}Keeeyaaaah!^What is this?! A Hylian?!", None, 'junk'), # sfx: Ruto screaming
-    '1226':                                                     ("For you, the day you read this hint was the most important day of your life.^But for me, it was Tuesday.", None, 'junk'),
+    '1225':                                                     ("${12 68 62}Keeeyaaaah!^What is this?! A Hylian?!", None, 'junk'), # ref: Ruto meeting Big Octo / sfx: Ruto screaming
+    '1226':                                                     ("For you, the day you read this hint was the most important day of your life.^But for me, it was Tuesday.", None, 'junk'), # ref: Street Fighter (the movie)
     '1227':                                                     ("Did you know that Barinade is allergic to bananas?", None, 'junk'),
     '1228':                                                     ("Have you seen my dodongo? Very large, eats everything, responds to \"King\".^Call Darunia in Goron City if found. Huge rupee reward!", None, 'junk'),
     '1229':                                                     ("Having trouble breathing underwater?^Have you tried wearing more BLUE?", None, 'junk'),
-    '1230':                                                     ("Hi! I'm currently on an exchange program from Termina.^They say that East Clock Town is on the way of the hero.", None, 'junk'),
+    '1230':                                                     ("Hi! I'm currently on an exchange program from Termina.^They say that East Clock Town is on the way of the hero.", None, 'junk'), # ref: Majora's Mask
     '1231':                                                     ("Why are you asking me? I don't have any answers! I'm just as confused as you are!", None, 'junk'),
     '1232':                                                     ("What do you call a group of Gorons?^${12 39 C7}A rock band.", None, 'junk'), # sfx: Ganondorf laugh
-    '1233':                                                     ("When the moon hits Termina like a big pizza pie that's game over.", None, 'junk'),
-    '1234':                                                     ("Ganondorf doesn't specialize in hiding items, nor keeping secrets for that matter.", None, 'junk'),
+    '1233':                                                     ("When the moon hits Termina like a big pizza pie that's game over.", None, 'junk'), # ref: That's Amore by Dean Martin + Majora's Mask
+    '1234':                                                     ("Ganondorf doesn't specialize in hiding items, nor in keeping secrets for that matter.", None, 'junk'),
     '1235':                                                     ("While you're wasting time reading this hint, the others are playing the seed.", None, 'junk'),
 
     'Deku Tree':                                                ("an ancient tree", "Deku Tree", 'dungeonName'),
