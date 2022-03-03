@@ -2,6 +2,7 @@ import os
 import random
 from enum import IntEnum
 
+
 def get_model_choices_adult():
     names = ["Default"]
     if os.path.exists('data/Models/adult'):
@@ -113,6 +114,7 @@ def AddMissingPieces(rom, zobj, missing, start, age):
     if age == 1:
         agestart = CHILD_START
         pieces = ChildPieces
+    DLOffsets = [] # Keep track of the offsets of each added item within the zobj
     startaddr = start - len("!PlayAsManifest0")
     for item in missing:
         # Load missing model piece from rom 
@@ -123,14 +125,15 @@ def AddMissingPieces(rom, zobj, missing, start, age):
             byte = rom.buffer[agestart + offset]
             itembytes.append(byte)
             offset += 1
+        DLOffsets.append(startaddr)
         # Add missing model piece to zobj
         i = 0
         for byte in itembytes:
-            zobj.insert(start + i, byte)
+            zobj.insert(startaddr + i, byte)
             i += 1
         # Pad to nearest multiple of 16
         while i % 16 != 0:
-            zobj.insert(start + i, 0x00)
+            zobj.insert(startaddr + i, 0x00)
             i += 1
         # Overwrite entry in LUT
         # lut = pieces[item][0]
@@ -142,8 +145,87 @@ def AddMissingPieces(rom, zobj, missing, start, age):
             entry += 1
         # Update start address to next multiple of 16
         startaddr = i
+    return DLOffsets
 
-ADULT_START = 0x00F86000
+def Optimize(rom, zobj, DLOffsets):
+    segment = 0x06
+    vertices = {}
+    matrices = {}
+    textures = {}
+    displayLists = []
+    for offset in DLOffsets:
+        i = offset
+        while i < len(zobj):
+            op = zobj[i]
+            seg = zobj[i+4]
+            hello = zobj[i+4:i+8]
+            lo = int.from_bytes(zobj[i+4:i+8])
+            displayList = []
+            if op == 0xDF: # End of list
+                break
+            # Shouldn't have to deal with DE (branch to new display list)
+            elif op == 0x01 and seg == segment: # Vertex data
+                vtxStart = lo & 0x00FFFFFF
+                vtxLen = int.from_bytes(zobj[i+1:i+3])
+                if vtxStart not in vertices or len(vertices[vtxStart]) < vtxLen:
+                    vertices[vtxStart] = zobj[vtxStart:vtxStart+vtxLen]
+            elif op == 0xDA and seg == segment: # Push matrix
+                mtxStart = lo & 0x00FFFFFF
+                # error if start + 0x40 > zobjlen
+                if mtxStart not in matrices:
+                    matrices[mtxStart] = zobj[mtxStart:mtxStart+0x40] # Matrices always 0x40 long
+            elif op == 0xFD and seg == segment: # Texture
+                # Comment from original code: "Don't ask me how this works"
+                textureType = (zobj[i+1] >> 3) & 0x1F
+                numTexelBits = 4 * (2 ** (textureType & 0x3))
+                bytesPerTexel = numTexelBits / 8
+                texOffset = lo & 0x00FFFFFF
+                isPalette = zobj[i+8] == 0xE8
+                numTexels = -1
+                returnStack = []
+                j = i+8
+                while j < len(zobj) and numTexels == -1:
+                    opJ = zobj[j]
+                    segJ = zobj[j+4]
+                    loJ = int.from_bytes(zobj[j+4:j+8])
+                    if opJ == 0xDF:
+                        if len(returnStack) == 0:
+                            numTexels = 0
+                            break
+                        else:
+                            j = returnStack.pop()
+                    elif opJ == 0xFD:
+                        numTexels = 0
+                        break
+                    elif opJ == 0xDE:
+                        if segJ == segment:
+                            if zobj[j+1] == 0x0:
+                                returnStack.push(j)
+                            j = loJ & 0x00FFFFFF
+                    elif opJ == 0xF0:
+                        if isPalette:
+                            numTexels = ((loJ & 0x00FFF000) >> 14) + 1
+                        # Else error
+                        break
+                        # Also error if numTexels > 256
+                    elif opJ == 0xF3:
+                        if not isPalette:
+                            numTexels = ((loJ & 0x00FFF000) >> 12) + 1
+                        # Else error
+                        break
+                    j += 8
+                # Error if numTexels == -1
+                dataLen = bytesPerTexel * numTexels
+                # Error if texOffset + dataLen > len(zobj)
+                if texOffset not in textures or len(textures[texOffset]) < dataLen:
+                    textures[texOffset] = zobj[texOffset:texOffset+dataLen]
+            displayList.extend(zobj[i:i+8])
+            i += 8
+        displayLists.append((displayList, offset))
+
+
+
+
 
 def patch_model_adult(rom, settings, log):
     model = settings.model_adult + ".zobj"
@@ -314,13 +396,13 @@ def patch_model_adult(rom, settings, log):
         if not findfooter(zobj, piece, start):
             missing.append(piece)
     missing.append("Blade.2") # Testing: Force pull master sword from vanilla data
-    # Add model pieces missing from the zobj
     if len(missing) > 0:
-        AddMissingPieces(rom, zobj, missing, start, 0)
+        # Add model pieces missing from the zobj
+        DLOffsets = AddMissingPieces(rom, zobj, missing, start, 0)
+        # Update addresses within zobj to make them work
+        Optimize(rom, zobj, DLOffsets)
     # Write model data to adult (object_link_boy)
     rom.write_bytes(ADULT_START, zobj)
-
-CHILD_START = 0x00FBE000
 
 def patch_model_child(rom, settings, log):
     model = settings.model_child + ".zobj"
@@ -465,9 +547,11 @@ def patch_model_child(rom, settings, log):
     for piece in ChildPieces:
         if not findfooter(zobj, piece, start):
             missing.append(piece)
-    # Add model pieces missing from the zobj
     if len(missing) > 0:
-        AddMissingPieces(rom, zobj, missing, start, 1)
+        # Add model pieces missing from the zobj
+        DLOffsets = AddMissingPieces(rom, zobj, missing, start, 1)
+        # Update addresses within zobj to make them work
+        Optimize(rom, zobj, DLOffsets)
     # Write zobj to child object (object_link_child)
     rom.write_bytes(CHILD_START, zobj)
 
@@ -571,6 +655,9 @@ ChildPieces = [
     "Limb 18",
     "Limb 20",
 ]
+
+ADULT_START = 0x00F86000
+CHILD_START = 0x00FBE000
 
 class Offsets(IntEnum):
     ADULT_LINK_LUT_DL_WAIST = 0x06005090
