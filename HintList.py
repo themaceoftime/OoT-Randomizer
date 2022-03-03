@@ -1374,7 +1374,7 @@ hintTable = {
     '1185':                                                     ("Having trouble defeating Dark Link?^Look away from him while holding Z-Target and then when Dark Link walks up behind you, strafe sideways and slash your sword.", None, 'junk'),
     '1186':                                                     ("They say that if Link could say a few words, he'd be a better public speaker.", None, 'junk'),
     '1187':                                                     ("Did you know that you only need to play the Song of Time to open the Door of Time? The Spiritual Stones are not needed.", None, 'junk'),
-    '1188':                                                     ("Where did Anju meet her lover?^${12 39 C7}At a Kafei.", None, 'junk'), # ref: Majora's Mask
+    '1188':                                                     ("Where did Anju meet her lover?^${12 39 C7}At a Kafei.", None, 'junk'), # ref: Majora's Mask / sfx: Ganondorf laugh
     '1189':                                                     ("Did you know that you can access the Fire Temple boss door without dropping the pillar by using the Hover boots?", None, 'junk'),
     '1190':                                                     ("Key-locked in Fire Temple? Maybe Volvagia has your Small Key.", None, 'junk'),
     '1191':                                                     ("Expired Spoiler Log? Don't worry! The OoTR Discord staff can help you out.", None, 'junk'),
