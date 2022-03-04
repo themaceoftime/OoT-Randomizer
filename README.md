@@ -128,13 +128,16 @@ do that.
   * Fix a softlock caused by 8-note Sun's Songs when using `Randomize Ocarina Song Notes`.
   * Fix slow text when acquiring certain items (Hookshot, Bombchus, etc.)
   * Using Farore's Wind as both ages should no longer result in the wrong temporary flags being loaded.
+  * Fixed issues where `Skip Child Zelda` could give a weapon with no ammo or overwrite starting Triforce Pieces.
 
 #### Other changes
   * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
   * Improve some error messages when running the generator.
   * Fix logic parser shortcuts not working right in newer Python versions.
   * `Goron Bracelet` is no longer greyed out as adult on the Equipment subscreen of the pause menu.
-  * Plandomizer: You can now specify an arbitrary 4-character hexadecimal text ID as a "Gossip Stone" to overwrite text in the game.
+  * Plandomizer
+    * You can now specify an arbitrary 4-character hexadecimal text ID as a "Gossip Stone" to overwrite text in the game.
+    * Adjusted how `starting_items` works in order to remove some redundancy. Spoiler output now includes a section `:skipped_locations` instead which is not used by Plandomizer.
 
 ### 6.2
 

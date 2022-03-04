@@ -1107,11 +1107,6 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         rom.write_byte(rom.sym('COMPLETE_MASK_QUEST'), 1)
 
     if world.settings.skip_child_zelda:
-        save_context.give_item('Zeldas Letter')
-        for w in spoiler.worlds:
-            item = w.get_location('Song from Impa').item
-            if world.id == item.world.id:
-                save_context.give_raw_item(item.name)
         save_context.write_bits(0x0ED7, 0x04) # "Obtained Malon's Item"
         save_context.write_bits(0x0ED7, 0x08) # "Woke Talon in castle"
         save_context.write_bits(0x0ED7, 0x10) # "Talon has fled castle"
@@ -1533,20 +1528,17 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
                 rom.write_byte(0x2000FED, special['text_id']) #Fix text box
             elif location.name == 'Sheik at Colossus':
                 rom.write_byte(0x218C589, special['text_id']) #Fix text box
-        elif location.type == 'Boss':
-            if location.name == 'Links Pocket':
-                save_context.give_item(item.name)
-            else:
-                rom.write_byte(locationaddress, special['item_id'])
-                rom.write_byte(secondaryaddress, special['addr2_data'])
-                bit_mask_hi = special['bit_mask'] >> 16
-                bit_mask_lo = special['bit_mask'] & 0xFFFF
-                if location.name == 'Bongo Bongo':
-                    rom.write_int16(0xCA3F32, bit_mask_hi)
-                    rom.write_int16(0xCA3F36, bit_mask_lo)
-                elif location.name == 'Twinrova':
-                    rom.write_int16(0xCA3EA2, bit_mask_hi)
-                    rom.write_int16(0xCA3EA6, bit_mask_lo)
+        elif location.type == 'Boss' and location.name != 'Links Pocket':
+            rom.write_byte(locationaddress, special['item_id'])
+            rom.write_byte(secondaryaddress, special['addr2_data'])
+            bit_mask_hi = special['bit_mask'] >> 16
+            bit_mask_lo = special['bit_mask'] & 0xFFFF
+            if location.name == 'Bongo Bongo':
+                rom.write_int16(0xCA3F32, bit_mask_hi)
+                rom.write_int16(0xCA3F36, bit_mask_lo)
+            elif location.name == 'Twinrova':
+                rom.write_int16(0xCA3EA2, bit_mask_hi)
+                rom.write_int16(0xCA3EA6, bit_mask_lo)
 
     # add a cheaper bombchu pack to the bombchu shop
     # describe
