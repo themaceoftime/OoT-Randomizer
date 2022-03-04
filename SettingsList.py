@@ -1981,7 +1981,7 @@ setting_infos = [
                 'sections' : ['open_section', 'shuffle_section', 'shuffle_dungeon_section'],
                 'settings': ['starting_age', 'shuffle_interior_entrances', 'shuffle_grotto_entrances', 'shuffle_dungeon_entrances',
                              'shuffle_overworld_entrances', 'owl_drops', 'warp_songs', 'spawn_positions',
-                             'triforce_hunt', 'triforce_goal_per_world', 'bombchus_in_logic', 'one_item_per_dungeon'],
+                             'triforce_hunt', 'triforce_count_per_world', 'triforce_goal_per_world', 'bombchus_in_logic', 'one_item_per_dungeon'],
             }
         },
         shared         = True,
@@ -2253,7 +2253,28 @@ setting_infos = [
         },
         disable        = {
             True  : {'settings' : ['shuffle_ganon_bosskey', 'ganon_bosskey_stones', 'ganon_bosskey_medallions', 'ganon_bosskey_rewards', 'ganon_bosskey_tokens']},
-            False : {'settings' : ['triforce_goal_per_world']}
+            False : {'settings' : ['triforce_count_per_world', 'triforce_goal_per_world']}
+        },
+    ),
+    Scale(
+        name           = 'triforce_count_per_world',
+        gui_text       = 'Triforces Per World',
+        default        = 30,
+        min            = 1,
+        max            = 200,
+        shared         = True,
+        gui_tooltip    = '''\
+            Select the amount of Triforce Pieces placed in each world.
+            Each world will have the same number of triforces.
+
+            A good number to choose is 1.5 times the amount of
+            Triforce Pieces required per world, for example 30
+            Triforces placed with a goal of 20. Higher ratios will
+            result in easier and shorter seeds, while a ratio closer
+            to 1 will generally be longer and more difficult.
+        ''',
+        gui_params     = {
+            "hide_when_disabled": True,
         },
     ),
     Scale(
@@ -2266,16 +2287,9 @@ setting_infos = [
         gui_tooltip    = '''\
             Select the amount of Triforce Pieces required to beat the game.
 
-            In multiworld, each world will have the same number of triforces 
-            in them. The required amount will be per world collectively. 
+            In multiworld, the required amount will be per world collectively. 
             For example, if this is set to 20 in a 2 player multiworld, players 
             need 40 total, but one player could obtain 30 and the other 10. 
-
-            Extra pieces are determined by the the Item Pool setting:
-            'Plentiful': 100% Extra
-            'Balanced': 50% Extra
-            'Scarce': 25% Extra
-            'Minimal: No Extra
         ''',
         gui_params     = {
             "hide_when_disabled": True,
