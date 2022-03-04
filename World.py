@@ -10,8 +10,7 @@ from Entrance import Entrance
 from Goals import Goal, GoalCategory
 from HintList import getRequiredHints
 from Hints import get_hint_area, hint_dist_keys, HintDistFiles
-from Item import Item, ItemFactory, MakeEventItem
-from ItemList import item_table
+from Item import ItemFactory, ItemInfo, MakeEventItem
 from Location import Location, LocationFactory
 from LocationList import business_scrubs
 from Plandomizer import InvalidFileException
@@ -182,10 +181,7 @@ class World(object):
         self.state = State(self)
 
         # Allows us to cut down on checking whether some items are required
-        self.max_progressions = {
-                item: value[3].get('progressive', 1) if value[3] else 1
-                for item, value in item_table.items()
-        }
+        self.max_progressions = {name: item.special.get('progressive', 1) for name, item in ItemInfo.items.items()}
         max_tokens = 0
         if self.settings.bridge == 'tokens':
             max_tokens = max(max_tokens, self.settings.bridge_tokens)
@@ -524,7 +520,7 @@ class World(object):
 
     def set_scrub_prices(self):
         # Get Deku Scrub Locations
-        scrub_locations = [location for location in self.get_locations() if 'Deku Scrub' in location.name]
+        scrub_locations = [location for location in self.get_locations() if location.type in ['Scrub', 'GrottoScrub']]
         scrub_dictionary = {}
         for location in scrub_locations:
             if location.default not in scrub_dictionary:

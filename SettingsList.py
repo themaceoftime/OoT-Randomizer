@@ -11,13 +11,12 @@ from Colors import get_tunic_color_options, get_navi_color_options, get_sword_tr
     get_magic_color_options, get_heart_color_options, get_shield_frame_color_options, get_a_button_color_options,\
     get_b_button_color_options, get_c_button_color_options, get_start_button_color_options
 from Hints import HintDistList, HintDistTips, gossipLocations
-from Item import item_table
+from Item import ItemInfo
 from Location import LocationIterator
 from LocationList import location_table
 import Sounds as sfx
 import StartingItems
 from Utils import data_path
-from ItemList import item_table
 
 # holds the info for a single setting
 class Setting_Info():
@@ -4104,7 +4103,7 @@ setting_infos = [
         gui_type       = None,
         gui_text       = None,
         shared         = True,
-        choices        = [i for i in item_table if item_table[i][0] == 'Item']
+        choices        = [name for name, item in ItemInfo.items.items() if item.type == 'Item']
     ),
     Setting_Info('hint_dist_user',    dict, None, None, True, {}),
     Combobox(
@@ -5295,7 +5294,7 @@ def is_mapped(setting_name):
 def build_close_match(name, value_type, source_list=None):
     source = []
     if value_type == 'item':
-        source = item_table.keys()
+        source = ItemInfo.items.keys()
     elif value_type == 'location':
         source = location_table.keys()
     elif value_type == 'entrance':

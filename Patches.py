@@ -1975,7 +1975,7 @@ def get_override_entry(location):
     else:
         looks_like_item_id = 0
 
-    if location.type in ['NPC', 'BossHeart']:
+    if location.type in ['NPC', 'Scrub', 'BossHeart']:
         type = 0
     elif location.type == 'Chest':
         type = 1
@@ -1986,7 +1986,7 @@ def get_override_entry(location):
         type = 3
     elif location.type == 'Shop' and location.item.type != 'Shop':
         type = 0
-    elif location.type == 'GrottoNPC' and location.item.type != 'Shop':
+    elif location.type == 'GrottoScrub' and location.item.type != 'Shop':
         type = 4
     elif location.type in ['Song', 'Cutscene']:
         type = 5

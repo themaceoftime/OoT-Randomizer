@@ -10,8 +10,7 @@ from collections import defaultdict
 from Fill import FillError
 from EntranceShuffle import EntranceShuffleError, change_connections, confirm_replacement, validate_world, check_entrances_compatibility
 from Hints import gossipLocations, GossipText
-from Item import ItemFactory, ItemIterator, IsItem
-from ItemList import item_table
+from Item import ItemFactory, ItemInfo, ItemIterator, IsItem
 from ItemPool import item_groups, get_junk_item
 from Location import LocationIterator, LocationFactory, IsLocation
 from LocationList import location_groups, location_table
@@ -315,48 +314,22 @@ class WorldDistribution(object):
                     if self.distribution.settings.tokensanity == 'all' and major_tokens:
                         self.major_group.append('Gold Skulltula Token')
                     if self.distribution.settings.shuffle_smallkeys == 'keysanity':
-                        if 'Bottom of the Well' in self.distribution.settings.key_rings:
-                            self.major_group.append('Small Key Ring (Bottom of the Well)')
-                        else:
-                            self.major_group.append('Small Key (Bottom of the Well)')
-                        if 'Forest Temple' in self.distribution.settings.key_rings:
-                            self.major_group.append('Small Key Ring (Forest Temple)')
-                        else:
-                            self.major_group.append('Small Key (Forest Temple)')
-                        if 'Fire Temple' in self.distribution.settings.key_rings:
-                            self.major_group.append('Small Key Ring (Fire Temple)')
-                        else:
-                            self.major_group.append('Small Key (Fire Temple)')
-                        if 'Water Temple' in self.distribution.settings.key_rings:
-                            self.major_group.append('Small Key Ring (Water Temple)')
-                        else:
-                            self.major_group.append('Small Key (Water Temple)')
-                        if 'Shadow Temple' in self.distribution.settings.key_rings:
-                            self.major_group.append('Small Key Ring (Shadow Temple)')
-                        else:
-                            self.major_group.append('Small Key (Shadow Temple)')
-                        if 'Spirit Temple' in self.distribution.settings.key_rings:
-                            self.major_group.append('Small Key Ring (Spirit Temple)')
-                        else:
-                            self.major_group.append('Small Key (Spirit Temple)')
-                        if 'Gerudo Training Ground' in self.distribution.settings.key_rings:
-                            self.major_group.append('Small Key Ring (Gerudo Training Ground)')
-                        else:
-                            self.major_group.append('Small Key (Gerudo Training Ground)')
-                        if 'Ganons Castle' in self.distribution.settings.key_rings:
-                            self.major_group.append('Small Key Ring (Ganons Castle)')
-                        else:
-                            self.major_group.append('Small Key (Ganons Castle)')
+                        for dungeon in ['Bottom of the Well', 'Forest Temple', 'Fire Temple', 'Water Temple',
+                                        'Shadow Temple', 'Spirit Temple', 'Gerudo Training Ground', 'Ganons Castle']:
+                            if dungeon in self.distribution.settings.key_rings:
+                                self.major_group.append(f"Small Key Ring ({dungeon})")
+                            else:
+                                self.major_group.append(f"Small Key ({dungeon})")
                     if self.distribution.settings.shuffle_hideoutkeys == 'keysanity':
                         if 'Thieves Hideout' in self.distribution.settings.key_rings:
                             self.major_group.append('Small Key Ring (Thieves Hideout)')
                         else:
                             self.major_group.append('Small Key (Thieves Hideout)')
                     if self.distribution.settings.shuffle_bosskeys == 'keysanity':
-                        keys = [name for (name, data) in item_table.items() if data[0] == 'BossKey' and name != 'Boss Key']
+                        keys = [name for name, item in ItemInfo.items.items() if item.type == 'BossKey' and name != 'Boss Key']
                         self.major_group.extend(keys)
                     if self.distribution.settings.shuffle_ganon_bosskey == 'keysanity':
-                        keys = [name for (name, data) in item_table.items() if data[0] == 'GanonBossKey']
+                        keys = [name for name, item in ItemInfo.items.items() if item.type == 'GanonBossKey']
                         self.major_group.extend(keys)
                 group = self.major_group
             return lambda s: invert != (s in group)
