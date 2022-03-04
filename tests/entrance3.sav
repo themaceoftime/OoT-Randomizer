@@ -69,7 +69,6 @@
 ],
 "logic_earliest_adult_trade": "prescription",
 "logic_latest_adult_trade": "claim_check",
-"ocarina_songs": false,
 "clearer_hints": true,
 "hints": "always",
 "hint_dist": "tournament",
