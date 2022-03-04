@@ -108,47 +108,28 @@ def unwrap(zobj, address):
     return address
 
 
-def GetMissingPieces(rom, missing, age):
-    # age 0 = adult, 1 = child
-    agestart = ADULT_START
-    pieces = AdultPieces
-    if age == 1:
-        agestart = CHILD_START
-        pieces = ChildPieces
-    vanillaPieces = []
-    DLOffsets = {} # Keep track of the offsets of each added item in the vanilla pieces blob
-    for item in missing:
-        DLOffsets[item] = len(vanillaPieces)
-        # Load and write missing model piece from rom 
-        offset = pieces[item][1]
-        while True:
-            byte = rom.buffer[agestart + offset]
-            vanillaPieces.append(byte)
-            if byte == 0xDF:
-                break
-            offset += 1
-        # Pad to nearest multiple of 16
-        while len(vanillaPieces) % 0x10 != 0:
-            vanillaPieces.append(0x00)
-    return (vanillaPieces, DLOffsets)
-
-
 def WriteDL(dl, index, data):
     bytes = data.to_bytes(4, 'big')
     for i in range(4):
         dl[index + i] = bytes[i]
 
 
-def Optimize(vanillaData, DLOffsets, rebase):
+def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
+    # Get vanilla "zobj" of Link's model
+    vanillaData = []
+    for i in range(linksize):
+        vanillaData.append(rom.buffer[linkstart + i])
     segment = 0x06
     vertices = {}
     matrices = {}
     textures = {}
     displayLists = []
-    # Crawl displaylist bytecode and handle each command
-    for offset in DLOffsets.values():
+    # For each missing piece, grab data from its vanilla display list
+    for item in missing:
+        offset = pieces[item][1]
         i = offset
         displayList = []
+        # Crawl displaylist bytecode and handle each command
         while i < len(vanillaData):
             op = vanillaData[i]
             seg = vanillaData[i+4]
@@ -268,33 +249,55 @@ def Optimize(vanillaData, DLOffsets, rebase):
     while len(optimizedZobj) % 0x10 != 0:
         optimizedZobj.append(0x00)
     # Now find the relation of items to new offsets
-    DLOffsetsNew = {}
-    for (item, offset) in DLOffsets.items():
-        DLOffsetsNew[item] = oldDL2New[offset]
-    return (optimizedZobj, DLOffsetsNew)
-
-
-def AddOptimizedZobj(zobj, optimizedZobj, missing, NewDLOffsets, start, age):
-    startaddr = start - len("!PlayAsManifest0")
-    # Write optimized zobj data to end of zobj
-    i = 0
-    for byte in optimizedZobj:
-        zobj.insert(startaddr + i, byte)
-        i += 1
-    # age 0 = adult, 1 = child
-    pieces = AdultPieces
-    if age == 1:
-        pieces = ChildPieces
-    # Now we have to update the lookup table for each item
+    DLOffsets = {}
     for item in missing:
-        lut = pieces[item][0] - 0x06000000
-        entry = unwrap(zobj, lut) + 5
-        dladdress = NewDLOffsets[item] + len(zobj)
-        dladdressbytes = dladdress.to_bytes(3, 'big')
-        for byte in dladdressbytes:
-            zobj[entry] = byte
-            entry += 1
+        DLOffsets[item] = oldDL2New[pieces[item][1]]
+    return (optimizedZobj, DLOffsets)
 
+
+def LoadModel(rom, model, age):
+    # age 0 = adult, 1 = child
+    linkstart = ADULT_START
+    linksize = ADULT_SIZE
+    pieces = AdultPieces
+    path = 'data/Models/adult/'
+    if age == 1:
+        linkstart = CHILD_START
+        linksize = CHILD_SIZE
+        pieces = ChildPieces
+        path = 'data/Models/child/'
+    # Read model data from file
+    file = open(path + model, "rb")
+    zobj = file.read()
+    file.close()
+    zobj = bytearray(zobj)
+    # Find which pieces are missing from this model
+    start = findfooter(zobj, "!PlayAsManifest0")
+    missing = []
+    for piece in pieces:
+        if not findfooter(zobj, piece, start):
+            missing.append(piece)
+    #missing.append("Hookshot")
+    if len(missing) > 0:
+        # Optimize the missing pieces to make them work in the new zobj
+        (optimizedZobj, DLOffsets) = Optimize(rom, missing, len(zobj), linkstart, linksize, pieces)
+        startaddr = start - len("!PlayAsManifest0")
+        # Write optimized zobj data to end of model zobj
+        i = 0
+        for byte in optimizedZobj:
+            zobj.insert(startaddr + i, byte)
+            i += 1
+        # Now we have to update the lookup table for each item
+        for item in missing:
+            lut = pieces[item][0] - 0x06000000
+            entry = unwrap(zobj, lut) + 5
+            dladdress = DLOffsets[item] + len(zobj)
+            dladdressbytes = dladdress.to_bytes(3, 'big')
+            for byte in dladdressbytes:
+                zobj[entry] = byte
+                entry += 1
+    # Write zobj to vanilla object (object_link_boy or object_link_child)
+    rom.write_bytes(linkstart, zobj)
 
 def patch_model_adult(rom, settings, log):
     model = settings.model_adult + ".zobj"
@@ -453,26 +456,7 @@ def patch_model_adult(rom, settings, log):
     writer.GoTo(0xE65A0)
     writer.WriteModelData(0x06005380) # Hierarchy pointer
 
-    # Read model data from file
-    file = open('data/Models/adult/' + model, "rb")
-    zobj = file.read()
-    file.close()
-    zobj = bytearray(zobj)
-    # Find which pieces are missing from this model
-    start = findfooter(zobj, "!PlayAsManifest0")
-    missing = []
-    for piece in AdultPieces:
-        if not findfooter(zobj, piece, start):
-            missing.append(piece)
-    if len(missing) > 0:
-        # Load missing model pieces from rom
-        (vanillaPieces, DLOffsets) = GetMissingPieces(rom, missing, 0)
-        # Optimize them to make them work in the new zobj
-        (optimizedZobj, NewDLOffsets) = Optimize(vanillaPieces, DLOffsets, len(zobj))
-        # Add optimized data to zobj
-        AddOptimizedZobj(zobj, optimizedZobj, missing, NewDLOffsets, start, 0)
-    # Write model data to adult (object_link_boy)
-    rom.write_bytes(ADULT_START, zobj)
+    LoadModel(rom, model, 0)
 
 
 def patch_model_child(rom, settings, log):
@@ -607,26 +591,8 @@ def patch_model_child(rom, settings, log):
     writer.GoTo(0xE65A4)
     writer.WriteModelData(0x060053A8) # Hierarchy pointer
 
-    # Read model data from file
-    file = open('data/Models/child/' + model, "rb")
-    zobj = file.read()
-    file.close()
-    zobj = bytearray(zobj)
-    # Find which pieces are missing from this model
-    start = findfooter(zobj, "!PlayAsManifest0")
-    missing = []
-    for piece in ChildPieces:
-        if not findfooter(zobj, piece, start):
-            missing.append(piece)
-    if len(missing) > 0:
-        # Load missing model pieces from rom
-        (vanillaPieces, DLOffsets) = GetMissingPieces(rom, missing, 1)
-        # Optimize them to make them work in the new zobj
-        (optimizedZobj, NewDLOffsets) = Optimize(vanillaPieces, DLOffsets, len(zobj))
-        # Add optimized data to zobj
-        AddOptimizedZobj(zobj, optimizedZobj, missing, NewDLOffsets, start, 1)
-    # Write zobj to child object (object_link_child)
-    rom.write_bytes(CHILD_START, zobj)
+    LoadModel(rom, model, 1)
+
 
 class Offsets(IntEnum):
     ADULT_LINK_LUT_DL_WAIST = 0x06005090
@@ -783,8 +749,8 @@ AdultPieces = {
     "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x21F78),  # Need to remove fist and hilt
     "Hookshot.Spike": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_HOOK, 0x2B288),
     "Hookshot": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT, 0x24D70), # Need to remove fist
-    "Fist.L": (Offsets.ADULT_LINK_LUT_DL_LFIST, 0x21CE8),
-    "Fist.R": (Offsets.ADULT_LINK_LUT_DL_RFIST, 0x226E0),
+    "Fist.L": (Offsets.ADULT_LINK_LUT_DL_LFIST, 0x21CE8), # Length: 0x290
+    "Fist.R": (Offsets.ADULT_LINK_LUT_DL_RFIST, 0x226E0), # Length: 0x290
     "FPS.Forearm.L": (Offsets.ADULT_LINK_LUT_DL_FPS_LFOREARM, 0x29FA0),
     "FPS.Forearm.R": (Offsets.ADULT_LINK_LUT_DL_FPS_RFOREARM, 0x29918),
     # Maybe need to reverse gauntler order, decomp just calls them plate 1-3
@@ -795,8 +761,8 @@ AdultPieces = {
     "Gauntlet.Hand.L": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_LHAND, 0x25438),
     "Gauntlet.Hand.R": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_RHAND, 0x257B8),
     "Bottle.Hand.L": (Offsets.ADULT_LINK_LUT_DL_LHAND_BOTTLE, 0x29600),
-    "FPS.Hand.L": (Offsets.ADULT_LINK_LUT_DL_FPS_LHAND, 0x24B58),
-    "FPS.Hand.R": (Offsets.ADULT_LINK_LUT_DL_FPS_RHAND, 0x29C20),
+    "FPS.Hand.L": (Offsets.ADULT_LINK_LUT_DL_FPS_LHAND, 0x24B58), # Length: 0x220
+    "FPS.Hand.R": (Offsets.ADULT_LINK_LUT_DL_FPS_RHAND, 0x29C20), # Length: 0x380
     "Bow.String": (Offsets.ADULT_LINK_LUT_DL_BOW_STRING, 0x2B108),
     "Bow": (Offsets.ADULT_LINK_LUT_DL_BOW, 0x22DA8), # Need to remove fist
     "Blade.3.Break": (Offsets.ADULT_LINK_LUT_DL_BLADEBREAK, 0x2BA38),
@@ -878,4 +844,6 @@ ChildPieces = {
 }
 
 ADULT_START = 0x00F86000
+ADULT_SIZE  = 0x00037800
 CHILD_START = 0x00FBE000
+CHILD_SIZE  = 0x0002CF80
