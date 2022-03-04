@@ -1718,6 +1718,8 @@ setting_infos = [
     Checkbutton('cosmetics_only', None),
     Checkbutton('check_version', None),
     Checkbutton('output_settings', None),
+    Checkbutton('patch_without_output', None),
+    Checkbutton('disable_custom_music', None),
     Checkbutton(
         name           = 'generate_from_file',
         gui_text       = 'Generate From Patch File',
@@ -1726,7 +1728,7 @@ setting_infos = [
             True : {
                 'tabs' : ['main_tab', 'detailed_tab', 'starting_tab', 'other_tab'],
                 'sections' : ['preset_section'],
-                'settings' : ['count', 'create_spoiler', 'world_count', 'enable_distribution_file', 'distribution_file'],
+                'settings' : ['count', 'create_spoiler', 'world_count', 'enable_distribution_file', 'distribution_file', 'create_patch_file'],
             },
             False : {
                 'settings' : ['repatch_cosmetics'],
@@ -1930,38 +1932,125 @@ setting_infos = [
     Checkbutton(
         name           = 'create_cosmetics_log',
         gui_text       = 'Create Cosmetics Log',
+        gui_tooltip='''\
+                 Cosmetics Logs are only output if one of the output types below are enabled.
+                 ''',
         default        = True,
         disabled_default = False,
     ),
     Setting_Info(
-        name           = 'compress_rom',
+        name           = 'output_types',
         type           = str,
-        gui_text       = "Output Type",
-        gui_type       = "Radiobutton",
+        gui_text       = "Output Types",
+        gui_type       = "Textbox",
         shared         = False,
-        choices        = {
-            'True':  'Compressed [Stable]',
-            'False': 'Uncompressed [Crashes]',
-            'Patch': 'Patch File',
-            'None':  'No Output',
-        },
-        default        = 'True',
-        disable        = {
-            'None'  : {'settings' : ['player_num', 'create_cosmetics_log', 'enable_cosmetic_file', 'cosmetic_file', 'rom']},
-            'Patch' : {'settings' : ['player_num']}
-        },
-        gui_tooltip = '''\
-            The first time compressed generation will take a while,
-            but subsequent generations will be quick. It is highly
-            recommended to compress or the game will crash
-            frequently except on real N64 hardware.
-
+        choices        = {},
+    ),
+    Checkbutton(
+        name           = 'create_patch_file',
+        gui_text       = '.zpf (Patch File)',
+        gui_tooltip    = '''\
             Patch files are used to send the patched data to other
             people without sending the ROM file.
         ''',
-        gui_params={
-            'horizontal': True
+        shared         = False,
+        gui_params     = {
+            "no_line_break": True,
         },
+    ),
+    Checkbutton(
+        name           = 'create_compressed_rom',
+        gui_text       = '.z64 (N64/Emulator)',
+        default        = True,
+        gui_tooltip    = '''\
+            A "compressed" .z64 ROM file for use on
+            N64 emulators or with an N64 flash cart.
+        ''',
+        shared         = False,
+        gui_params     = {
+            "no_line_break": True,
+        },
+    ),
+    Checkbutton(
+        name           = 'create_wad_file',
+        gui_text       = '.wad (Wii VC)',
+        gui_tooltip    = '''\
+            .wad files are used to play on Wii Virtual Console or Dolphin Emulator.
+        ''',
+        shared         = False,
+        disable        = {
+            False: {'settings' : ['wad_file', 'wad_channel_title', 'wad_channel_id']},
+        },
+        gui_params     = {
+            "no_line_break": True,
+        },
+    ),
+    Checkbutton(
+        name           = 'create_uncompressed_rom',
+        gui_text       = 'Uncompressed ROM (Development)',
+        gui_tooltip    = '''\
+            Uncompressed ROMs may be helpful for developers
+            but should not be used to play through a seed
+            normally as it will very likely cause crashes.
+            Use a compressed ROM instead.
+        ''',
+        shared         = False,
+    ),
+    Setting_Info(
+        name        = 'wad_file',
+        type        = str,
+        gui_text    = "Base WAD File",
+        gui_type    = "Fileinput",
+        shared      = False,
+        choices     = {},
+        gui_tooltip = "Your original OoT 1.2 NTSC-U / NTSC-J WAD file (.wad)",
+        gui_params  = {
+            "file_types": [
+                {
+                  "name": "WAD Files",
+                  "extensions": [ "wad" ]
+                },
+                {
+                  "name": "All Files",
+                  "extensions": [ "*" ]
+                }
+            ],
+            "hide_when_disabled": True,
+        }
+    ),
+    Setting_Info(
+        name        = 'wad_channel_id',
+        type        = str,
+        gui_text    = "WAD Channel ID",
+        gui_type    = "Textinput",
+        shared      = False,
+        choices     = {},
+        default     = "NICE",
+        gui_tooltip = """\
+            4 characters, should end with E to ensure Dolphin compatibility.
+            Note: If you have multiple OoTR WAD files with different Channel IDs installed, the game can crash on a soft reset. Use a Title Deleter to remove old WADs.
+        """,
+        gui_params  = {
+            "size"               : "small",
+            "max_length"         : 4,
+            "no_line_break": True,
+            "hide_when_disabled" : True,
+        }
+    ),
+    Setting_Info(
+        name        = 'wad_channel_title',
+        type        = str,
+        gui_text    = "WAD Channel Title",
+        gui_type    = "Textinput",
+        shared      = False,
+        choices     = {},
+        default     = "OoTRandomizer",
+        gui_tooltip = "20 characters max",
+        gui_params  = {
+            "size"               : "medium",
+            "max_length"         : 20,
+            "hide_when_disabled" : True,
+        }
     ),
     Checkbutton(
         name           = 'randomize_settings',
@@ -5219,8 +5308,6 @@ def validate_settings(settings_dict):
             continue
         # Ensure that the given choice is a valid choice for the setting
         elif info.choice_list and choice not in info.choice_list:
-            if setting == 'compress_rom' and choice == 'Temp':
-                continue
             raise ValueError('%r is not a valid choice for setting %r. %s' % (choice, setting, build_close_match(choice, 'choice', info.choice_list)))
 
 class UnmappedSettingError(Exception):

@@ -143,6 +143,7 @@ do that.
   * Gold Skulltula Token requirements can be increased above 100 (the pool must also have at least that many).
 * Triforce Hunt changes
   * The number of Triforce pieces available per world, which was previously tied to the item pool setting, is now a separate setting.
+* Replaced old output option `compress_rom` with four separate options for outputting a patch file, compressed ROM, uncompressed ROM, and a WAD file.
 
 ### 6.2
 
