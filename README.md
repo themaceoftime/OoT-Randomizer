@@ -117,27 +117,27 @@ do that.
 
 
 #### Bug fixes
-  * Return the color of the "OK" and "No" options of the warp song prompts to their correct colors in Warp Song Shuffle.
-  * Horseback Archery will no longer delay ending based on the fanfare.
-  * Prevent Dead Hand from spawning outside the room collision.
-  * Magic arrows equipped as adult no longer revert to the Bow after traveling through time to child and back.
-  * Rainbow Bridge set to vanilla no longer spawns without Light Arrows.
-  * Fix MQ Shadow Temple making use of shared flags.
-  * Fix MQ Fire Temple missing the Hammer chest from the map and minimap.
-  * Add correct default Goals for Ganon's Boss Key when Light Arrow Cutscene is non-vanilla.
-  * Fix a softlock caused by 8-note Sun's Songs when using `Randomize Ocarina Song Notes`.
-  * Fix slow text when acquiring certain items (Hookshot, Bombchus, etc.)
-  * Using Farore's Wind as both ages should no longer result in the wrong temporary flags being loaded.
-  * Fixed issues where `Skip Child Zelda` could give a weapon with no ammo or overwrite starting Triforce Pieces.
+* Return the color of the "OK" and "No" options of the warp song prompts to their correct colors in Warp Song Shuffle.
+* Horseback Archery will no longer delay ending based on the fanfare.
+* Prevent Dead Hand from spawning outside the room collision.
+* Magic arrows equipped as adult no longer revert to the Bow after traveling through time to child and back.
+* Rainbow Bridge set to vanilla no longer spawns without Light Arrows.
+* Fix MQ Shadow Temple making use of shared flags.
+* Fix MQ Fire Temple missing the Hammer chest from the map and minimap.
+* Add correct default Goals for Ganon's Boss Key when Light Arrow Cutscene is non-vanilla.
+* Fix a softlock caused by 8-note Sun's Songs when using `Randomize Ocarina Song Notes`.
+* Fix slow text when acquiring certain items (Hookshot, Bombchus, etc.)
+* Using Farore's Wind as both ages should no longer result in the wrong temporary flags being loaded.
+* Fixed issues where `Skip Child Zelda` could give a weapon with no ammo or overwrite starting Triforce Pieces.
 
 #### Other changes
-  * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
-  * Improve some error messages when running the generator.
-  * Fix logic parser shortcuts not working right in newer Python versions.
-  * `Goron Bracelet` is no longer greyed out as adult on the Equipment subscreen of the pause menu.
-  * Plandomizer
-    * You can now specify an arbitrary 4-character hexadecimal text ID as a "Gossip Stone" to overwrite text in the game.
-    * Adjusted how `starting_items` works in order to remove some redundancy. Spoiler output now includes a section `:skipped_locations` instead which is not used by Plandomizer.
+* Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
+* Improve some error messages when running the generator.
+* Fix logic parser shortcuts not working right in newer Python versions.
+* `Goron Bracelet` is no longer greyed out as adult on the Equipment subscreen of the pause menu.
+* Plandomizer
+  * You can now specify an arbitrary 4-character hexadecimal text ID as a "Gossip Stone" to overwrite text in the game.
+  * Adjusted how `starting_items` works in order to remove some redundancy. Spoiler output now includes a section `:skipped_locations` instead which is not used by Plandomizer.
 * Triforce Hunt changes
   * The number of Triforce pieces available per world, which was previously tied to the item pool setting, is now a separate setting.
 
