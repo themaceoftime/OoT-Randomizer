@@ -120,8 +120,7 @@ def GetMissingPieces(rom, missing, age):
     for item in missing:
         DLOffsets[item] = len(vanillaPieces)
         # Load and write missing model piece from rom 
-        # offset = pieces[item][1]
-        offset = 0x21F78 # Testing: Master sword offset
+        offset = pieces[item][1]
         while True:
             byte = rom.buffer[agestart + offset]
             vanillaPieces.append(byte)
@@ -288,8 +287,7 @@ def AddOptimizedZobj(zobj, optimizedZobj, missing, NewDLOffsets, start, age):
         pieces = ChildPieces
     # Now we have to update the lookup table for each item
     for item in missing:
-        # lut = pieces[item][0]
-        lut = 0x52B8 # Testing: Master sword LUT entry
+        lut = pieces[item][0] - 0x06000000
         entry = unwrap(zobj, lut) + 5
         dladdress = NewDLOffsets[item] + len(zobj)
         dladdressbytes = dladdress.to_bytes(3, 'big')
@@ -466,7 +464,6 @@ def patch_model_adult(rom, settings, log):
     for piece in AdultPieces:
         if not findfooter(zobj, piece, start):
             missing.append(piece)
-    missing.append("Blade.2") # Testing: Force pull master sword from vanilla data
     if len(missing) > 0:
         # Load missing model pieces from rom
         (vanillaPieces, DLOffsets) = GetMissingPieces(rom, missing, 0)
@@ -476,6 +473,7 @@ def patch_model_adult(rom, settings, log):
         AddOptimizedZobj(zobj, optimizedZobj, missing, NewDLOffsets, start, 0)
     # Write model data to adult (object_link_boy)
     rom.write_bytes(ADULT_START, zobj)
+
 
 def patch_model_child(rom, settings, log):
     model = settings.model_child + ".zobj"
@@ -630,110 +628,6 @@ def patch_model_child(rom, settings, log):
     # Write zobj to child object (object_link_child)
     rom.write_bytes(CHILD_START, zobj)
 
-# Adult model pieces and their offsets
-AdultPieces = [
-    "Sheath",
-    "FPS.Hookshot",
-    "Hilt.2",
-    "Blade.2",
-    "Hookshot.Spike",
-    "Hookshot",
-    "Fist.L",
-    "Fist.R",
-    "FPS.Forearm.L",
-    "FPS.Forearm.R",
-    "Gauntlet.Fist.L",
-    "Gauntlet.Fist.R",
-    "Gauntlet.Forearm.L",
-    "Gauntlet.Forearm.R",
-    "Gauntlet.Hand.L",
-    "Gauntlet.Hand.R",
-    "Bottle.Hand.L",
-    "FPS.Hand.L",
-    "FPS.Hand.R",
-    "Bow.String",
-    "Bow",
-    "Blade.3.Break",
-    "Blade.3",
-    "Bottle",
-    "Broken.Blade.3",
-    "Foot.2.L",
-    "Foot.2.R",
-    "Foot.3.L",
-    "Foot.3.R",
-    "Hammer",
-    "Hookshot.Aiming.Reticule",
-    "Hookshot.Chain",
-    "Ocarina.2",
-    "Shield.2",
-    "Shield.3",
-    "Limb 1",
-    "Limb 3",
-    "Limb 4",
-    "Limb 5",
-    "Limb 6",
-    "Limb 7",
-    "Limb 8",
-    "Limb 10",
-    "Limb 11",
-    "Limb 12",
-    "Limb 13",
-    "Limb 14",
-    "Limb 15",
-    "Limb 16",
-    "Limb 17",
-    "Limb 18",
-    "Limb 20",
-]
-
-ChildPieces = [
-    "Slingshot.String",
-    "Sheath",
-    "Blade.2", # Presumably for pulling the sword animation
-    "Blade.1",
-    "Boomerang",
-    "Fist.L",
-    "Fist.R",
-    "Hilt.1",
-    "Shield.1",
-    "Slingshot",
-    "Ocarina.1",
-    "Bottle",
-    "Ocarina.2",
-    "Bottle.Hand.L",
-    "GoronBracelet",
-    "Mask.Skull",
-    "Mask.Spooky",
-    "Mask.Gerudo",
-    "Mask.Goron",
-    "Mask.Keaton",
-    "Mask.Truth",
-    "Mask.Zora",
-    "FPS.Forearm.R",
-    "Deku Stick",
-    "Shield.2",
-    "Limb 1",
-    "Limb 3",
-    "Limb 4",
-    "Limb 5",
-    "Limb 6",
-    "Limb 7",
-    "Limb 8",
-    "Limb 10",
-    "Limb 11",
-    "Limb 12",
-    "Limb 13",
-    "Limb 14",
-    "Limb 15",
-    "Limb 16",
-    "Limb 17",
-    "Limb 18",
-    "Limb 20",
-]
-
-ADULT_START = 0x00F86000
-CHILD_START = 0x00FBE000
-
 class Offsets(IntEnum):
     ADULT_LINK_LUT_DL_WAIST = 0x06005090
     ADULT_LINK_LUT_DL_RTHIGH = 0x06005098
@@ -880,3 +774,108 @@ class Offsets(IntEnum):
     CHILD_LINK_LUT_DL_RHAND_OCARINA_TIME = 0x06005388
     CHILD_LINK_DL_FPS_RARM_SLINGSHOT = 0x06005390
     CHILD_LINK_LUT_DL_FPS_RARM_SLINGSHOT = 0x060053A0
+
+# Adult model pieces and their offsets
+AdultPieces = {
+    "Sheath": (Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATH, 0x249D8),
+    "FPS.Hookshot": (Offsets.ADULT_LINK_LUT_DL_FPS_HOOKSHOT, 0x24D70), # Same as non-fps hookshot, couldn't find an address for fps specifically
+    "Hilt.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_HILT, 0x21F78), # Same as master sword, need to have it stop when end of hilt reached
+    "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x21F78),  # Need to remove fist and hilt
+    "Hookshot.Spike": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_HOOK, 0x2B288),
+    "Hookshot": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT, 0x24D70), # Need to remove fist
+    "Fist.L": (Offsets.ADULT_LINK_LUT_DL_LFIST, 0x21CE8),
+    "Fist.R": (Offsets.ADULT_LINK_LUT_DL_RFIST, 0x226E0),
+    "FPS.Forearm.L": (Offsets.ADULT_LINK_LUT_DL_FPS_LFOREARM, 0x29FA0),
+    "FPS.Forearm.R": (Offsets.ADULT_LINK_LUT_DL_FPS_RFOREARM, 0x29918),
+    # Maybe need to reverse gauntler order, decomp just calls them plate 1-3
+    "Gauntlet.Fist.L": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_LFIST, 0x25218),
+    "Gauntlet.Fist.R": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_RFIST, 0x25598),
+    "Gauntlet.Forearm.L": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_LFOREARM, 0x252D8),
+    "Gauntlet.Forearm.R": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_RFOREARM, 0x25658),
+    "Gauntlet.Hand.L": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_LHAND, 0x25438),
+    "Gauntlet.Hand.R": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_RHAND, 0x257B8),
+    "Bottle.Hand.L": (Offsets.ADULT_LINK_LUT_DL_LHAND_BOTTLE, 0x29600),
+    "FPS.Hand.L": (Offsets.ADULT_LINK_LUT_DL_FPS_LHAND, 0x24B58),
+    "FPS.Hand.R": (Offsets.ADULT_LINK_LUT_DL_FPS_RHAND, 0x29C20),
+    "Bow.String": (Offsets.ADULT_LINK_LUT_DL_BOW_STRING, 0x2B108),
+    "Bow": (Offsets.ADULT_LINK_LUT_DL_BOW, 0x22DA8), # Need to remove fist
+    "Blade.3.Break": (Offsets.ADULT_LINK_LUT_DL_BLADEBREAK, 0x2BA38),
+    "Blade.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_BLADE, 0x238C8), # Need to remove fist
+    "Bottle": (Offsets.ADULT_LINK_LUT_DL_BOTTLE, 0x2AD58), 
+    "Broken.Blade.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_BROKEN, 0x23D50), # Need to remove fist
+    "Foot.2.L": (Offsets.ADULT_LINK_LUT_DL_BOOT_LIRON, 0x25918),
+    "Foot.2.R": (Offsets.ADULT_LINK_LUT_DL_BOOT_RIRON, 0x25A60),
+    "Foot.3.L": (Offsets.ADULT_LINK_LUT_DL_BOOT_LHOVER, 0x25BA8),
+    "Foot.3.R": (Offsets.ADULT_LINK_LUT_DL_BOOT_RHOVER, 0x25DB0),
+    "Hammer": (Offsets.ADULT_LINK_LUT_DL_HAMMER, 0x233E0), # Need to remove fist
+    "Hookshot.Aiming.Reticule": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_AIM, 0x2CB48),
+    "Hookshot.Chain": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_CHAIN, 0x2AFF0),
+    "Ocarina.2": (Offsets.ADULT_LINK_LUT_DL_OCARINA_TIME, 0x24698), # Need to remove fist
+    "Shield.2": (Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN, 0x22970), # Need to remove fist
+    "Shield.3": (Offsets.ADULT_LINK_LUT_DL_SHIELD_MIRROR, 0x241C0), # Need to remove fist
+    "Limb 1": (Offsets.ADULT_LINK_LUT_DL_WAIST, 0x35330),
+    "Limb 3": (Offsets.ADULT_LINK_LUT_DL_RTHIGH, 0x35678),
+    "Limb 4": (Offsets.ADULT_LINK_LUT_DL_RSHIN, 0x358B0),
+    "Limb 5": (Offsets.ADULT_LINK_LUT_DL_RFOOT, 0x358B0),
+    "Limb 6": (Offsets.ADULT_LINK_LUT_DL_LTHIGH, 0x35CB8),
+    "Limb 7": (Offsets.ADULT_LINK_LUT_DL_LSHIN, 0x35EF0),
+    "Limb 8": (Offsets.ADULT_LINK_LUT_DL_LFOOT, 0x361A0),
+    "Limb 10": (Offsets.ADULT_LINK_LUT_DL_HEAD, 0x365E8),
+    "Limb 11": (Offsets.ADULT_LINK_LUT_DL_HAT, 0x36D30),
+    "Limb 12": (Offsets.ADULT_LINK_LUT_DL_COLLAR, 0x362F8),
+    "Limb 13": (Offsets.ADULT_LINK_LUT_DL_LSHOULDER, 0x37210),
+    "Limb 14": (Offsets.ADULT_LINK_LUT_DL_LFOREARM, 0x373D8),
+    "Limb 15": (Offsets.ADULT_LINK_LUT_DL_LHAND, 0x21AA8),
+    "Limb 16": (Offsets.ADULT_LINK_LUT_DL_RSHOULDER, 0x36E58),
+    "Limb 17": (Offsets.ADULT_LINK_LUT_DL_RFOREARM, 0x37018),
+    "Limb 18": (Offsets.ADULT_LINK_LUT_DL_RHAND, 0x22498),
+    "Limb 20": (Offsets.ADULT_LINK_LUT_DL_TORSO, 0x363B8),
+}
+
+ChildPieces = {
+    "Slingshot.String": (Offsets.CHILD_LINK_LUT_DL_SLINGSHOT_STRING, 0x221A8),
+    "Sheath": (Offsets.CHILD_LINK_LUT_DL_SWORD_HILT, 0x15408),
+    "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x15540), # Presumably for pulling the sword animation
+    "Blade.1": (Offsets.CHILD_LINK_LUT_DL_SWORD_BLADE, 0x13F38), # Need to remove fist and hilt
+    "Boomerang": (Offsets.CHILD_LINK_LUT_DL_BOOMERANG, 0x14660), # Need to remove fist
+    "Fist.L": (Offsets.CHILD_LINK_LUT_DL_LFIST, 0x13E18),
+    "Fist.R": (Offsets.CHILD_LINK_LUT_DL_RFIST, 0x14320),
+    "Hilt.1": (Offsets.CHILD_LINK_LUT_DL_SWORD_HILT, 0x13F38), # Same as kokiri sword, need to have it stop when end of hilt reached
+    "Shield.1": (Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU, 0x14440), # Need to remove fist
+    "Slingshot": (Offsets.CHILD_LINK_LUT_DL_SLINGSHOT, 0x15DF0), # Need to remove fist
+    "Ocarina.1": (Offsets.CHILD_LINK_LUT_DL_OCARINA_FAIRY, 0x15BA8), # Need to remove fist
+    "Bottle": (Offsets.CHILD_LINK_LUT_DL_BOTTLE, 0x18478),
+    "Ocarina.2": (Offsets.CHILD_LINK_LUT_DL_OCARINA_TIME, 0x15958), # Need to remove fist
+    "Bottle.Hand.L": (Offsets.CHILD_LINK_LUT_DL_LHAND_BOTTLE, 0x18478), # Just the bottle, couldn't find one with hand and bottle
+    "GoronBracelet": (Offsets.CHILD_LINK_LUT_DL_GORON_BRACELET, 0x16118),
+    "Mask.Skull": (Offsets.CHILD_LINK_LUT_DL_MASK_SKULL, 0x2AD40),
+    "Mask.Spooky": (Offsets.CHILD_LINK_LUT_DL_MASK_SPOOKY, 0x2AF70),
+    "Mask.Gerudo": (Offsets.CHILD_LINK_LUT_DL_MASK_GERUDO, 0x2B788),
+    "Mask.Goron": (Offsets.CHILD_LINK_LUT_DL_MASK_GORON, 0x2B350),
+    "Mask.Keaton": (Offsets.CHILD_LINK_LUT_DL_MASK_KEATON, 0x2B060),
+    "Mask.Truth": (Offsets.CHILD_LINK_LUT_DL_MASK_TRUTH, 0x2B1F0),
+    "Mask.Zora": (Offsets.CHILD_LINK_LUT_DL_MASK_ZORA, 0x2B580),
+    "FPS.Forearm.R": (Offsets.CHILD_LINK_LUT_DL_FPS_RIGHT_ARM, 0x18048), # Need to remove slingshot?
+    "Deku Stick": (Offsets.CHILD_LINK_LUT_DL_DEKU_STICK, 0x6CC0),
+    "Shield.2": (Offsets.CHILD_LINK_LUT_DL_SHIELD_HYLIAN_BACK, 0x14B40), # Need to remove sheath
+    "Limb 1": (Offsets.CHILD_LINK_LUT_DL_WAIST, 0x202A8),
+    "Limb 3": (Offsets.CHILD_LINK_LUT_DL_RTHIGH, 0x204F0),
+    "Limb 4": (Offsets.CHILD_LINK_LUT_DL_RSHIN, 0x206E8),
+    "Limb 5": (Offsets.CHILD_LINK_LUT_DL_RFOOT, 0x20978),
+    "Limb 6": (Offsets.CHILD_LINK_LUT_DL_LTHIGH, 0x20AD8),
+    "Limb 7": (Offsets.CHILD_LINK_LUT_DL_LSHIN, 0x20CD0),
+    "Limb 8": (Offsets.CHILD_LINK_LUT_DL_LFOOT, 0x20F60),
+    "Limb 10": (Offsets.CHILD_LINK_LUT_DL_HEAD, 0x21360),
+    "Limb 11": (Offsets.CHILD_LINK_LUT_DL_HAT, 0x219B0),
+    "Limb 12": (Offsets.CHILD_LINK_LUT_DL_COLLAR, 0x210C0),
+    "Limb 13": (Offsets.CHILD_LINK_LUT_DL_LSHOULDER, 0x21E18),
+    "Limb 14": (Offsets.CHILD_LINK_LUT_DL_LFOREARM, 0x21FE8),
+    "Limb 15": (Offsets.CHILD_LINK_LUT_DL_LHAND, 0x13CB0),
+    "Limb 16": (Offsets.CHILD_LINK_LUT_DL_RSHOULDER, 0x21AE8),
+    "Limb 17": (Offsets.CHILD_LINK_LUT_DL_RFOREARM, 0x21CB8),
+    "Limb 18": (Offsets.CHILD_LINK_LUT_DL_RHAND, 0x141C0),
+    "Limb 20": (Offsets.CHILD_LINK_LUT_DL_TORSO, 0x21130),
+}
+
+ADULT_START = 0x00F86000
+CHILD_START = 0x00FBE000
