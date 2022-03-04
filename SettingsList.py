@@ -108,10 +108,12 @@ class Checkbutton(Setting_Info):
 
 class Combobox(Setting_Info):
 
-    def __init__(self, name, gui_text, choices, default, gui_tooltip=None,
-            disable=None, disabled_default=None, shared=False, gui_params=None, cosmetic=False):
+    def __init__(self, name, gui_text, choices, default, gui_tooltip=None, disable=None,
+            disabled_default=None, shared=False, gui_params=None, cosmetic=False, multiple_select=False):
 
-        super().__init__(name, str, gui_text, 'Combobox', shared, choices, default, disabled_default, disable, gui_tooltip, gui_params, cosmetic)
+        gui_type = 'Combobox' if not multiple_select else 'MultipleSelect'
+        type = str if not multiple_select else list
+        super().__init__(name, type, gui_text, gui_type, shared, choices, default, disabled_default, disable, gui_tooltip, gui_params, cosmetic)
 
 
 class Scale(Setting_Info):
@@ -2324,8 +2326,8 @@ setting_infos = [
         disable        = {
             'glitchless': {'settings' : ['tricks_list_msg']},
             'glitched'  : {'settings' : ['allowed_tricks', 'shuffle_interior_entrances', 'shuffle_grotto_entrances',
-                                         'shuffle_dungeon_entrances', 'shuffle_overworld_entrances', 'owl_drops',
-                                         'warp_songs', 'spawn_positions', 'mq_dungeons_random', 'mq_dungeons', 'dungeon_shortcuts']},
+                                         'shuffle_dungeon_entrances', 'shuffle_overworld_entrances', 'owl_drops', 'warp_songs',
+                                         'spawn_positions', 'mq_dungeons_mode', 'mq_dungeons_specific', 'mq_dungeons_count', 'dungeon_shortcuts']},
             'none'      : {'settings' : ['allowed_tricks', 'logic_no_night_tokens_without_suns_song', 'reachable_locations']},
         },
         shared         = True,
@@ -2463,23 +2465,22 @@ setting_infos = [
             True: {'settings': ['shuffle_weird_egg']},
         },
     ),
-    Setting_Info(
-        name           = 'dungeon_shortcuts',
-        type           = list,
-        gui_text       = 'Dungeon Boss Shortcuts',
-        gui_type       = "MultipleSelect",
-        choices        = {
-            'deku_tree': 'Deku Tree',
-            'dodongos_cavern': 'Dodongo\'s Cavern',
-            'jabu_jabus_belly': 'Jabu Jabu\'s Belly',
-            'forest_temple': 'Forest Temple',
-            'fire_temple': 'Fire Temple',
-            'water_temple': 'Water Temple', # doesn't do anything, but added to prevent confusion
-            'shadow_temple': 'Shadow Temple',
-            'spirit_temple': 'Spirit Temple'
+    Combobox(
+        name            = 'dungeon_shortcuts',
+        multiple_select = True,
+        gui_text        = 'Dungeon Boss Shortcuts',
+        choices         = {
+            'deku_tree':        "Deku Tree",
+            'dodongos_cavern':  "Dodongo's Cavern",
+            'jabu_jabus_belly': "Jabu Jabu's Belly",
+            'forest_temple':    "Forest Temple",
+            'fire_temple':      "Fire Temple",
+            'water_temple':     "Water Temple",  # doesn't do anything, but added to prevent confusion
+            'shadow_temple':    "Shadow Temple",
+            'spirit_temple':    "Spirit Temple",
         },
-        default        = [],
-        gui_tooltip    = '''\
+        default         = [],
+        gui_tooltip     = '''\
             Shortcuts to dungeon bosses are available
             without any requirements.
             Incompatible with glitched logic.
@@ -2501,7 +2502,7 @@ setting_infos = [
             shortcut silver blocks moved, central room
             platform lowered, and statue face melted
         ''',
-        shared         = True,
+        shared          = True,
     ),
     Checkbutton(
         name           = 'no_escape_sequence',
@@ -3271,12 +3272,11 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
-    Setting_Info(
-        name           = 'key_rings',
-        type           = list,
-        gui_text       = 'Key Rings',
-        gui_type       = "MultipleSelect",
-        choices        = {
+    Combobox(
+        name            = 'key_rings',
+        multiple_select = True,
+        gui_text        = 'Key Rings',
+        choices         = {
             'Thieves Hideout':        "Thieves' Hideout",
             'Forest Temple':          "Forest Temple",
             'Fire Temple':            "Fire Temple",
@@ -3287,8 +3287,8 @@ setting_infos = [
             'Gerudo Training Ground': "Gerudo Training Ground",
             'Ganons Castle':          "Ganon's Castle"
         },
-        default        = [],
-        gui_tooltip    = '''\
+        default         = [],
+        gui_tooltip     = '''\
             Selected dungeons will have all of their keys found 
             at once in a ring rather than individually. 
 
@@ -3304,7 +3304,7 @@ setting_infos = [
             locations or Gerudo's Fortress is set to Rescue
             One Carpenter.
         ''',
-        shared         = True,
+        shared          = True,
     ),
     Combobox(
         name           = 'shuffle_bosskeys',
@@ -3625,20 +3625,70 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
-    Checkbutton(
-        name           = 'mq_dungeons_random',
-        gui_text       = 'Random Number of MQ Dungeons',
+    Combobox(
+        name           = 'mq_dungeons_mode',
+        gui_text       = 'MQ Dungeon Mode',
+        default        = 'vanilla',
+        choices        = {
+            'vanilla':    "Vanilla",
+            'mq':         "Master Quest",
+            'specific':   "Specific Dungeons",
+            'count':      "Count",
+            'random':     "Completely Random",
+        },
         gui_tooltip    = '''\
-            If set, a random number of dungeons
-            will have Master Quest designs.
+            'Vanilla': All dungeons will be the original versions.
+            'Master Quest': All dungeons will be the MQ versions.
+            'Specific Dungeons': Choose which specific dungeons will be MQ versions.
+            'Count': Choose how many MQ dungeons will be randomly chosen.
+            'Completely Random': Each dungeon will vanilla or MQ at random.
         ''',
         shared         = True,
         disable        = {
-            True : {'settings' : ['mq_dungeons']}
+            'vanilla':  {'settings': ['mq_dungeons_count', 'mq_dungeons_specific']},
+            'mq':       {'settings': ['mq_dungeons_count', 'mq_dungeons_specific']},
+            'specific': {'settings': ['mq_dungeons_count']},
+            'count':    {'settings': ['mq_dungeons_specific']},
+            'random':   {'settings': ['mq_dungeons_count', 'mq_dungeons_specific']},
+        },
+        gui_params     = {
+            'distribution': [
+                ('random', 1),
+            ],
+        },
+    ),
+    Combobox(
+        name            = 'mq_dungeons_specific',
+        multiple_select = True,
+        gui_text        = 'MQ Dungeons',
+        choices         = {
+            'Deku Tree':              "Deku Tree",
+            'Dodongos Cavern':        "Dodongo's Cavern",
+            'Jabu Jabus Belly':       "Jabu Jabu's Belly",
+            'Forest Temple':          "Forest Temple",
+            'Fire Temple':            "Fire Temple",
+            'Water Temple':           "Water Temple",
+            'Shadow Temple':          "Shadow Temple",
+            'Spirit Temple':          "Spirit Temple",
+            'Bottom of the Well':     "Bottom of the Well",
+            'Ice Cavern':             "Ice Cavern",
+            'Gerudo Training Ground': "Gerudo Training Ground",
+            'Ganons Castle':          "Ganon's Castle",
+        },
+        default         = [],
+        gui_tooltip     = '''\
+            Select the specific dungeons you would
+            like the Master Quest version of.
+            The unselected dungeons will be
+            the original version.
+        ''',
+        shared          = True,
+        gui_params     = {
+            "hide_when_disabled": True,
         },
     ),
     Scale(
-        name           = 'mq_dungeons',
+        name           = 'mq_dungeons_count',
         gui_text       = "MQ Dungeon Count",
         default        = 0,
         min            = 0,
@@ -3646,17 +3696,11 @@ setting_infos = [
         gui_tooltip    = '''\
             Specify the number of Master Quest
             dungeons to appear in the game.
-
-            0: All dungeon will have their
-            original designs. (default)
-
-            6: Half of all dungeons will
-            be from Master Quest.
-
-            12: All dungeons will have
-            Master Quest redesigns.
         ''',
         shared         = True,
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
     ),
     Setting_Info(
         name           = 'disabled_locations',

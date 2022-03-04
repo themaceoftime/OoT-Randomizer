@@ -3,7 +3,6 @@
   "spawn_positions":                         true,
   "shuffle_dungeon_entrances":               true,
   "open_forest":                             "open",
-  "mq_dungeons":                             0,
   "dungeon_shortcuts":                       ["spirit_temple"],
   "starting_age":                            "adult",
 "starting_items":            {

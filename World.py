@@ -378,18 +378,24 @@ class World(object):
         dungeon_pool = list(self.dungeon_mq)
         dist_num_mq = self.distribution.configure_dungeons(self, dungeon_pool)
 
-        if self.settings.mq_dungeons_random and 'mq_dungeons' not in dist_keys:
+        if self.settings.mq_dungeons_mode == 'random' and 'mq_dungeons_count' not in dist_keys:
             for dungeon in dungeon_pool:
                 self.dungeon_mq[dungeon] = random.choice([True, False])
-            self.settings.mq_dungeons = list(self.dungeon_mq.values()).count(True)
-            self.randomized_list.append('mq_dungeons')
+            self.randomized_list.append('mq_dungeons_count')
+        elif self.settings.mq_dungeons_mode in ['mq', 'vanilla']:
+            for dung in self.dungeon_mq.keys():
+                self.dungeon_mq[dung] = True if self.settings.mq_dungeons_mode == 'mq' else False
+        elif self.settings.mq_dungeons_mode == 'specific':
+            for dung in self.settings.mq_dungeons_specific:
+                self.dungeon_mq[dung] = True
         else:
-            if self.settings.mq_dungeons < dist_num_mq:
-                raise RuntimeError("%d dungeons are set to MQ on world %d, but only %d MQ dungeons allowed." % (dist_num_mq, self.id, self.settings.mq_dungeons))
-            mqd_picks = random.sample(dungeon_pool, self.settings.mq_dungeons - dist_num_mq)
+            if self.settings.mq_dungeons_count < dist_num_mq:
+                raise RuntimeError("%d dungeons are set to MQ on world %d, but only %d MQ dungeons allowed." % (dist_num_mq, self.id, self.settings.mq_dungeons_count))
+            mqd_picks = random.sample(dungeon_pool, self.settings.mq_dungeons_count - dist_num_mq)
             for dung in mqd_picks:
                 self.dungeon_mq[dung] = True
 
+        self.settings.mq_dungeons_count = list(self.dungeon_mq.values()).count(True)
         self.distribution.configure_randomized_settings(self)
 
 

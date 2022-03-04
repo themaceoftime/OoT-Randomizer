@@ -38,8 +38,7 @@
 "shuffle_bosskeys": "dungeon",
 "shuffle_ganon_bosskey": "remove",
 "enhance_map_compass": false,
-"mq_dungeons_random": false,
-"mq_dungeons": 12,
+"mq_dungeons_mode": "mq",
 "disabled_locations": [
   "Deku Theater Mask of Truth"
 ],
