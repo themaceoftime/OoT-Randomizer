@@ -3801,15 +3801,22 @@ setting_infos = [
             Begin the game with the selected songs already learnt.
         ''',
     ),
-    Checkbutton(
+    Combobox(
         name           = 'ocarina_songs',
         gui_text       = 'Randomize Ocarina Song Notes',
+        default        = 'off',
+        choices        = {
+            'off': 'Off',
+            'frog': 'Frog Songs Only',
+            'warp': 'Warp Songs Only',
+            'all':  'All Songs',
+        },
         gui_tooltip    = '''\
-                         Will need to memorize a new set of songs.
-                         Can be silly, but difficult. Songs are
-                         generally sensible, and warp songs are
-                         typically more difficult.
-                         ''',
+            Will need to memorize a new set of songs.
+            Can be silly, but difficult. All songs are
+            generally sensible, but warp songs are
+            typically more difficult than frog songs.
+            ''',
         shared         = True,
     ),
     Combobox(
