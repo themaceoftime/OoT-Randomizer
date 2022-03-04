@@ -1411,7 +1411,7 @@ def get_pool_core(world):
         while pending_junk_pool:
             pending_item = pending_junk_pool.pop()
             if not junk_candidates:
-                raise RuntimeError("Not enough junk exists in item pool for %s to be added." % pending_item)
+                raise RuntimeError("Not enough junk exists in item pool for %s (+%d others) to be added." % (pending_item, len(pending_junk_pool) - 1))
             junk_item = random.choice(junk_candidates)
             junk_candidates.remove(junk_item)
             pool.remove(junk_item)

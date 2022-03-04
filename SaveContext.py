@@ -1,5 +1,6 @@
 from itertools import chain
 from enum import IntEnum
+from ItemPool import IGNORE_LOCATION
 
 class Scenes(IntEnum):
     # Dungeons
@@ -276,7 +277,7 @@ class SaveContext():
             self.give_health(count)
         elif item == "Bombchu Item":
             self.give_bombchu_item()
-        elif item == "Recovery Heart": # ItemPool.IGNORE_LOCATION
+        elif item == IGNORE_LOCATION:
             pass # used to disable some skipped and inaccessible locations
         elif item in SaveContext.save_writes_table:
             for address, value in SaveContext.save_writes_table[item].items():
