@@ -4,6 +4,7 @@
   "shuffle_dungeon_entrances":               true,
   "open_forest":                             "open",
   "mq_dungeons_mode":                        "vanilla",
+  "dungeon_shortcuts_choice":                "choice",
   "dungeon_shortcuts":                       ["forest_temple"],
   "starting_age":                            "adult",
 "starting_items":            {

@@ -7,6 +7,7 @@
   "mq_dungeons_specific":                    [
     "Dodongos Cavern"
   ],
+  "dungeon_shortcuts_choice":                "choice",
   "dungeon_shortcuts":                       ["dodongos_cavern"],
   "starting_age":                            "adult",
 "starting_items":            {

@@ -2555,21 +2555,16 @@ setting_infos = [
         },
     ),
     Combobox(
-        name            = 'dungeon_shortcuts',
-        multiple_select = True,
-        gui_text        = 'Dungeon Boss Shortcuts',
-        choices         = {
-            'deku_tree':        "Deku Tree",
-            'dodongos_cavern':  "Dodongo's Cavern",
-            'jabu_jabus_belly': "Jabu Jabu's Belly",
-            'forest_temple':    "Forest Temple",
-            'fire_temple':      "Fire Temple",
-            'water_temple':     "Water Temple",  # doesn't do anything, but added to prevent confusion
-            'shadow_temple':    "Shadow Temple",
-            'spirit_temple':    "Spirit Temple",
+        name           = 'dungeon_shortcuts_choice',
+        gui_text       = 'Dungeon Boss Shortcuts Mode',
+        default        = 'off',
+        choices        = {
+            'off':       'Off',
+            'choice':    'Choose dungeons',
+            'all':       'All dungeons',
+            'random':    'Random dungeons'
         },
-        default         = [],
-        gui_tooltip     = '''\
+        gui_tooltip    = '''\
             Shortcuts to dungeon bosses are available
             without any requirements.
             Incompatible with glitched logic.
@@ -2590,6 +2585,38 @@ setting_infos = [
             <b>Spirit Temple</b>: lobby elevator activated,
             shortcut silver blocks moved, central room
             platform lowered, and statue face melted
+
+            Choose: Select dungeons with shortcuts
+            All: Enable all dungeons shortcuts
+            Random: Random dungeon shortcuts
+        ''',
+        shared         = True,
+        disable={
+            'off': {'settings' : ['dungeon_shortcuts']},
+            'all': {'settings' : ['dungeon_shortcuts']},
+            'random': {'settings' : ['dungeon_shortcuts']},
+        },
+    ),
+    Combobox(
+        name            = 'dungeon_shortcuts',
+        multiple_select = True,
+        gui_text        = 'Dungeon Boss Shortcuts',
+        choices         = {
+            'deku_tree':        "Deku Tree",
+            'dodongos_cavern':  "Dodongo's Cavern",
+            'jabu_jabus_belly': "Jabu Jabu's Belly",
+            'forest_temple':    "Forest Temple",
+            'fire_temple':      "Fire Temple",
+            'water_temple':     "Water Temple",  # doesn't do anything, but added to prevent confusion
+            'shadow_temple':    "Shadow Temple",
+            'spirit_temple':    "Spirit Temple",
+        },
+        default        = [],
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
+        gui_tooltip    = '''\
+            Select dungeons with shortcuts
         ''',
         shared          = True,
     ),

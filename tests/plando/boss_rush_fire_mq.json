@@ -7,6 +7,7 @@
   "mq_dungeons_specific":                    [
     "Fire Temple"
   ],
+  "dungeon_shortcuts_choice":                "choice",
   "dungeon_shortcuts":                       ["fire_temple"],
   "starting_age":                            "adult",
 "starting_items":            {

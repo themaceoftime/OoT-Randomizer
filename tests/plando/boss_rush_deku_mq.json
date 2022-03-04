@@ -7,6 +7,7 @@
   "mq_dungeons_specific":                    [
     "Deku Tree"
   ],
+  "dungeon_shortcuts_choice":                "choice",
   "dungeon_shortcuts":                       ["deku_tree"],
   "starting_age":                            "child",
 "starting_items":            {
