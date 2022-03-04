@@ -175,7 +175,7 @@ class TestPlandomizer(unittest.TestCase):
 
     def test_excess_starting_items(self):
         distribution_file, spoiler = generate_with_plandomizer("plando-excess-starting-items")
-        excess_item = list(distribution_file['starting_items'])[0]
+        excess_item = list(distribution_file['settings']['starting_items'])[0]
         for location, item in spoiler['locations'].items():
             if isinstance(item, dict):
                 test_item = spoiler['locations'][location]['item']
@@ -305,7 +305,7 @@ class TestPlandomizer(unittest.TestCase):
         with self.subTest("starting items not in actual_pool"):
             distribution_file, spoiler = generate_with_plandomizer(filename)
             actual_pool = get_actual_pool(spoiler)
-            for item in distribution_file['starting_items']:
+            for item in distribution_file['settings']['starting_items']:
                 self.assertNotIn(item, actual_pool)
 
     def test_weird_egg_in_pool(self):
