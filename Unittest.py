@@ -1,4 +1,6 @@
 # Run unittests with python -m unittest Unittest[.ClassName[.test_func]]
+# With python3.10, you can instead run pytest Unittest.py
+# See `python -m unittest -h` or `pytest -h` for more options.
 
 from collections import Counter, defaultdict
 import json
@@ -580,6 +582,8 @@ class TestValidSpoilers(unittest.TestCase):
                     self.verify_playthrough(spoiler)
                     self.verify_disables(spoiler)
 
+    # remove this to run the fuzzer
+    @unittest.skip("generally slow and failures can be ignored")
     def test_fuzzer(self):
         random.seed()
         fuzz_settings = [Settings({
