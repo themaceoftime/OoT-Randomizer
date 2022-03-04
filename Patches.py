@@ -1904,6 +1904,10 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         symbol = rom.sym('FAST_BUNNY_HOOD_ENABLED')
         rom.write_byte(symbol, 0x01)
 
+    # Have the Gold Skulltula Count in the pause menu turn red when equal to the
+    # available number of skulls in the world instead of 100.
+    rom.write_int16(0xBB340E, world.available_tokens)
+
     replace_songs(world, rom,
         frog=world.settings.ocarina_songs in ('frog', 'all'),
         warp=world.settings.ocarina_songs in ('warp', 'all'),

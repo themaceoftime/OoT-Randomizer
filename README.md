@@ -139,6 +139,7 @@ do that.
 * Plandomizer
   * You can now specify an arbitrary 4-character hexadecimal text ID as a "Gossip Stone" to overwrite text in the game.
   * Adjusted how `starting_items` works in order to remove some redundancy. Spoiler output now includes a section `:skipped_locations` instead which is not used by Plandomizer.
+  * Gold Skulltula Token requirements can be increased above 100 (the pool must also have at least that many).
 * Triforce Hunt changes
   * The number of Triforce pieces available per world, which was previously tied to the item pool setting, is now a separate setting.
 

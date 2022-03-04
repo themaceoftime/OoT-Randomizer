@@ -2227,14 +2227,16 @@ setting_infos = [
         gui_text       = "Skulltulas Required for Bridge",
         default        = 100,
         min            = 1,
-        max            = 100,
+        max            = 999,
         gui_tooltip    = '''\
             Select the amount of Gold Skulltula Tokens required to spawn the rainbow bridge.
         ''',
         shared         = True,
         disabled_default = 0,
         gui_params     = {
-            "hide_when_disabled": True,
+            'hide_when_disabled': True,
+            'web:max': 100,
+            'electron:max': 100,
         },
     ),
     Checkbutton(
@@ -3479,7 +3481,7 @@ setting_infos = [
         gui_text       = "Gold Skulltula Tokens Required for Ganon's BK",
         default        = 100,
         min            = 1,
-        max            = 100,
+        max            = 999,
         gui_tooltip    = '''\
             Select the amount of Gold Skulltula Tokens
             required to receive Ganon's Castle Boss Key.
@@ -3488,6 +3490,8 @@ setting_infos = [
         disabled_default = 0,
         gui_params     = {
             "hide_when_disabled": True,
+            'web:max': 100,
+            'electron:max': 100,
         },
     ),
     Combobox(
@@ -3585,7 +3589,7 @@ setting_infos = [
         gui_text       = "Gold Skulltula Tokens Required for LACS",
         default        = 100,
         min            = 1,
-        max            = 100,
+        max            = 999,
         gui_tooltip    = '''\
             Select the amount of Gold Skulltula Tokens
             required to trigger the Light Arrow Cutscene.
@@ -3595,6 +3599,8 @@ setting_infos = [
         gui_params     = {
             'optional': True,
             "hide_when_disabled": True,
+            'web:max': 100,
+            'electron:max': 100,
         },
     ),
     Checkbutton(
