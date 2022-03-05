@@ -262,7 +262,7 @@ class SaveContext():
         self.addresses['quest']['heart_pieces'].value = int((health % 1) * 4) * 0x10
 
 
-    def give_item(self, item, count=1):
+    def give_item(self, world, item, count=1):
         if item.endswith(')'):
             item_base, implicit_count = item[:-1].split(' (', 1)
             if implicit_count.isdigit():
@@ -276,11 +276,26 @@ class SaveContext():
         elif item == "Heart Container":
             self.give_health(count)
         elif item == "Bombchu Item":
-            self.give_bombchu_item()
+            self.give_bombchu_item(world)
         elif item == IGNORE_LOCATION:
             pass # used to disable some skipped and inaccessible locations
         elif item in SaveContext.save_writes_table:
-            for address, value in SaveContext.save_writes_table[item].items():
+            if item.startswith('Small Key Ring ('):
+                dungeon = item[:-1].split(' (', 1)[1]
+                save_writes = {
+                    "Forest Temple"          : {'keys.forest': 6 if world.dungeon_mq[dungeon] else 5},
+                    "Fire Temple"            : {'keys.fire': 5 if world.dungeon_mq[dungeon] else 8},
+                    "Water Temple"           : {'keys.water': 2 if world.dungeon_mq[dungeon] else 6},
+                    "Spirit Temple"          : {'keys.spirit': 7 if world.dungeon_mq[dungeon] else 5},
+                    "Shadow Temple"          : {'keys.shadow': 6 if world.dungeon_mq[dungeon] else 5},
+                    "Bottom of the Well"     : {'keys.botw': 2 if world.dungeon_mq[dungeon] else 3},
+                    "Gerudo Training Ground" : {'keys.gtg': 3 if world.dungeon_mq[dungeon] else 9},
+                    "Thieves Hideout"        : {'keys.fortress': 4},
+                    "Ganons Castle"          : {'keys.gc': 3 if world.dungeon_mq[dungeon] else 2},
+                }[dungeon]
+            else:
+                save_writes = SaveContext.save_writes_table[item]
+            for address, value in save_writes.items():
                 if value is None:
                     value = count
                 elif isinstance(value, list):
@@ -310,8 +325,8 @@ class SaveContext():
             raise ValueError("Cannot give unknown starting item %s" % item)
 
 
-    def give_bombchu_item(self):
-        self.give_item("Bombchus", 0)
+    def give_bombchu_item(self, world):
+        self.give_item(world, "Bombchus", 0)
 
 
     def equip_default_items(self, age):
@@ -1004,7 +1019,8 @@ class SaveContext():
         "Small Key (Gerudo Training Ground)"      : {'keys.gtg': None},
         "Small Key (Thieves Hideout)"             : {'keys.fortress': None},
         "Small Key (Ganons Castle)"               : {'keys.gc': None},
-        #HACK: we don't know whether the dungeon is MQ here so we give enough keys for either variant
+        #HACK: these counts aren't used since exact counts based on whether the dungeon is MQ are defined above,
+        # but the entries need to be there for key rings to be valid starting items
         "Small Key Ring (Forest Temple)"          : {'keys.forest': 6},
         "Small Key Ring (Fire Temple)"            : {'keys.fire': 8},
         "Small Key Ring (Water Temple)"           : {'keys.water': 6},
