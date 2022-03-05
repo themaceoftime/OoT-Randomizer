@@ -951,7 +951,7 @@ class WorldDistribution(object):
 
     @property
     def starting_items(self):
-        return self.distribution.starting_items_from_settings()
+        return self.distribution.starting_items_from_settings(self.id)
 
     def configure_effective_starting_items(self, worlds, world):
         items = {item_name: record.copy() for item_name, record in self.starting_items.items()}
@@ -1080,14 +1080,26 @@ class Distribution(object):
                         world.update({k: self.src_dict[k]})
 
 
-    def starting_items_from_settings(self):
+    def starting_items_from_settings(self, world_id):
         data = defaultdict(lambda: StarterRecord(0))
         if isinstance(self.settings.starting_items, dict):
             if self.settings.starting_equipment:
                 raise ValueError('Incompatible starting item settings. Either move starting_equipment into starting_items or make starting_items a list')
             if self.settings.starting_songs:
                 raise ValueError('Incompatible starting item settings. Either move starting_songs into starting_items or make starting_items a list')
-            data.update((item_name, StarterRecord(count)) for item_name, count in self.settings.starting_items.items())
+
+            world_names = ['World %d' % (i + 1) for i in range(len(self.world_dists))]
+
+            # For each entry here of the form 'World %d', apply that entry to that world.
+            # If there are any entries that aren't of this form,
+            # apply them all to each world.
+            if world_names[world_id] in self.settings.starting_items:
+                data.update((item_name, StarterRecord(count)) for item_name, count in self.settings.starting_items[world_names[world_id]].items())
+            data.update(
+                (item_name, StarterRecord(count))
+                for item_name, count in self.settings.starting_items.items()
+                if item_name not in world_names
+            )
         else:
             starting_items = list(itertools.chain(self.settings.starting_equipment, self.settings.starting_items, self.settings.starting_songs))
             for itemsetting in starting_items:
