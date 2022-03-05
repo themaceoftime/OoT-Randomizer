@@ -2563,9 +2563,9 @@ setting_infos = [
         default        = 'off',
         choices        = {
             'off':       'Off',
-            'choice':    'Choose dungeons',
-            'all':       'All dungeons',
-            'random':    'Random dungeons'
+            'choice':    'Specific Dungeons',
+            'all':       'All Dungeons',
+            'random':    'Random Dungeons'
         },
         gui_tooltip    = '''\
             Shortcuts to dungeon bosses are available
