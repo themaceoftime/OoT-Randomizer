@@ -262,18 +262,40 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
         DLOffsets[item] = oldDL2New[pieces[item][1]]
     return (optimizedZobj, DLOffsets)
 
+def FindHierarchy(zobj):
+    # I'm not going to pretend to understand what's happening here
+    for i in range(0, len(zobj), 4):
+        if zobj[i] == 0x06:
+            possible = int.from_bytes(zobj[i+1:i+4], 'big')
+            if possible < len(zobj):
+                possible2 = int.from_bytes(zobj[i-3:i], 'big')
+                diff = possible - possible2
+                if diff == 0x0C or diff == 0x10:
+                    pos = i + 4
+                    count = 1
+                    while zobj[pos] == 0x06:
+                        pos += 4
+                        count += 1
+                    pos -= 4
+                    a = zobj[pos+4]
+                    if a != count:
+                        continue
+                    return pos
+    # Error
 
 def LoadModel(rom, model, age):
     # age 0 = adult, 1 = child
     linkstart = ADULT_START
     linksize = ADULT_SIZE
+    hierarchy = ADULT_HIERARCHY
     pieces = AdultPieces
-    path = 'data/Models/adult/'
+    path = 'data/Models/Adult/'
     if age == 1:
         linkstart = CHILD_START
         linksize = CHILD_SIZE
+        hierarchy = CHILD_HIERARCHY
         pieces = ChildPieces
-        path = 'data/Models/child/'
+        path = 'data/Models/Child/'
     # Read model data from file
     file = open(path + model, "rb")
     zobj = file.read()
@@ -306,12 +328,25 @@ def LoadModel(rom, model, age):
     DLOffsets.update(present)
     for item in pieces:
         lut = pieces[item][0] - 0x06000000
-        entry = unwrap(zobj, lut) + 4
+        entry = unwrap(zobj, lut)
+        zobj[entry] = 0xDE
+        zobj[entry+1] = 0x01
+        entry += 4
         dladdress = DLOffsets[item] + 0x06000000
         dladdressbytes = dladdress.to_bytes(4, 'big')
         for byte in dladdressbytes:
             zobj[entry] = byte
             entry += 1
+    # Set up hierarchy pointer
+    hierarchyOffset = FindHierarchy(zobj) + 0x06000000
+    hierarchyBytes = int.to_bytes(hierarchyOffset, 4, 'big')
+    for i in range(4):
+        zobj[hierarchy - 0x06000000 + i] = hierarchyBytes[i]
+    zobj[hierarchy - 0x06000000 + 4] = 0x15 # Number of limbs
+    zobj[hierarchy - 0x06000000 + 8] = 0x12 # Number of limbs to draw
+    # Save zobj for testing
+    with open('data/Models/Adult/' + "Maple_Processed.zobj", "wb") as f:
+        f.write(zobj)
     # Write zobj to vanilla object (object_link_boy or object_link_child)
     rom.write_bytes(linkstart, zobj)
 
@@ -470,7 +505,7 @@ def patch_model_adult(rom, settings, log):
 
     writer.SetBase('Code')
     writer.GoTo(0xE65A0)
-    writer.WriteModelData(0x06005380) # Hierarchy pointer
+    writer.WriteModelData(ADULT_HIERARCHY) # Hierarchy pointer
 
     LoadModel(rom, model, 0)
 
@@ -605,7 +640,7 @@ def patch_model_child(rom, settings, log):
 
     writer.SetBase('Code')
     writer.GoTo(0xE65A4)
-    writer.WriteModelData(0x060053A8) # Hierarchy pointer
+    writer.WriteModelData(CHILD_HIERARCHY) # Hierarchy pointer
 
     LoadModel(rom, model, 1)
 
@@ -859,7 +894,9 @@ ChildPieces = {
     "Limb 20": (Offsets.CHILD_LINK_LUT_DL_TORSO, 0x21130),
 }
 
-ADULT_START = 0x00F86000
-ADULT_SIZE  = 0x00037800
-CHILD_START = 0x00FBE000
-CHILD_SIZE  = 0x0002CF80
+ADULT_START     = 0x00F86000
+ADULT_SIZE      = 0x00037800
+ADULT_HIERARCHY = 0x06005380
+CHILD_START     = 0x00FBE000
+CHILD_SIZE      = 0x0002CF80
+CHILD_HIERARCHY = 0x060053A8
