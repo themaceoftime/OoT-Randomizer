@@ -83,18 +83,26 @@ def findfooter(bytes, string, start=0):
         # Byte matches next byte in string
         if bytes[i] == stringbytes[stringindex]:
             stringindex += 1
+            # Special case: Bottle, Bow, and Slingshot are subsets of Bottle.Hand.L, Bow.String, and Slingshot.String respectively
+            # This leads to false positives. So if the next byte is . (0x2E) then reset the count.
+            if bytes[i+1] == 0x2E and string in ["Bottle", "Bow", "Slingshot"]:
+                stringindex = 0
             # All bytes have been found, so a match
             if stringindex == len(stringbytes):
                 # If start is 0 then looking for the footer, return the index
                 if start == 0:
                     return i + 1
-                # Else we just want to know if it exists
+                # Else, we want to know the offset, which will be after the footer and 1 padding byte
                 else:
-                    return True
+                    i += 2
+                    offsetbytes = []
+                    for j in range(4):
+                        offsetbytes.append(bytes[i + j])
+                    return int.from_bytes(offsetbytes, 'big')
         # Match has been broken, reset to start of string
         else:
             stringindex = 0
-    return False
+    return -1
 
 def unwrap(zobj, address):
     # An entry in the LUT will look something like 0xDE 01 0000 06014050
@@ -245,9 +253,9 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
                     dlEntry = oldDL2New[lo & 0x00FFFFFF]
                     WriteDL(dl, i + 4, 0x06000000 + dlEntry + rebase)
         optimizedZobj.extend(dl)
-    # Pad to nearest multiple of 16
-    while len(optimizedZobj) % 0x10 != 0:
-        optimizedZobj.append(0x00)
+        # Pad to nearest multiple of 16
+        while len(optimizedZobj) % 0x10 != 0:
+            optimizedZobj.append(0x00)
     # Now find the relation of items to new offsets
     DLOffsets = {}
     for item in missing:
@@ -272,30 +280,38 @@ def LoadModel(rom, model, age):
     file.close()
     zobj = bytearray(zobj)
     # Find which pieces are missing from this model
-    start = findfooter(zobj, "!PlayAsManifest0")
+    footerstart = findfooter(zobj, "!PlayAsManifest0")
+    startaddr = footerstart - len("!PlayAsManifest0")
     missing = []
+    present = {}
+    DLOffsets = {}
     for piece in pieces:
-        if not findfooter(zobj, piece, start):
+        offset = findfooter(zobj, piece, footerstart)
+        if offset == -1:
             missing.append(piece)
-    #missing.append("Hookshot")
+        else:
+            present[piece] = offset
     if len(missing) > 0:
         # Optimize the missing pieces to make them work in the new zobj
         (optimizedZobj, DLOffsets) = Optimize(rom, missing, len(zobj), linkstart, linksize, pieces)
-        startaddr = start - len("!PlayAsManifest0")
         # Write optimized zobj data to end of model zobj
         i = 0
         for byte in optimizedZobj:
             zobj.insert(startaddr + i, byte)
             i += 1
-        # Now we have to update the lookup table for each item
-        for item in missing:
-            lut = pieces[item][0] - 0x06000000
-            entry = unwrap(zobj, lut) + 5
-            dladdress = DLOffsets[item] + len(zobj)
-            dladdressbytes = dladdress.to_bytes(3, 'big')
-            for byte in dladdressbytes:
-                zobj[entry] = byte
-                entry += 1
+    # Now we have to set the lookup table for each item
+    for (piece, offset) in DLOffsets.items():
+        # Add the starting address to each offset so they're accurate to the updated zobj
+        DLOffsets[piece] = offset + startaddr
+    DLOffsets.update(present)
+    for item in pieces:
+        lut = pieces[item][0] - 0x06000000
+        entry = unwrap(zobj, lut) + 4
+        dladdress = DLOffsets[item] + 0x06000000
+        dladdressbytes = dladdress.to_bytes(4, 'big')
+        for byte in dladdressbytes:
+            zobj[entry] = byte
+            entry += 1
     # Write zobj to vanilla object (object_link_boy or object_link_child)
     rom.write_bytes(linkstart, zobj)
 
