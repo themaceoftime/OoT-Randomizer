@@ -276,11 +276,10 @@ def FindHierarchy(zobj):
                     while zobj[pos] == 0x06:
                         pos += 4
                         count += 1
-                    pos -= 4
-                    a = zobj[pos+4]
+                    a = zobj[pos]
                     if a != count:
                         continue
-                    return pos
+                    return pos - 4
     # Error
 
 def LoadModel(rom, model, age):
@@ -290,12 +289,14 @@ def LoadModel(rom, model, age):
     hierarchy = ADULT_HIERARCHY
     pieces = AdultPieces
     path = 'data/Models/Adult/'
+    constantstart = 0x5238
     if age == 1:
         linkstart = CHILD_START
         linksize = CHILD_SIZE
         hierarchy = CHILD_HIERARCHY
         pieces = ChildPieces
         path = 'data/Models/Child/'
+        constantstart = 0x5228
     # Read model data from file
     file = open(path + model, "rb")
     zobj = file.read()
@@ -337,9 +338,24 @@ def LoadModel(rom, model, age):
         for byte in dladdressbytes:
             zobj[entry] = byte
             entry += 1
+    # Set constants in the LUT
+    file = open(path + 'Constants/preconstants.zobj', "rb")
+    constants = file.read()
+    file.close()
+    i = 0
+    for byte in constants:
+        zobj[0x500C + i] = byte
+        i += 1
+    file = open(path + 'Constants/postconstants.zobj', "rb")
+    constants = file.read()
+    file.close()
+    i = 0
+    for byte in constants:
+        zobj[constantstart + i] = byte
+        i += 1
     # Set up hierarchy pointer
-    hierarchyOffset = FindHierarchy(zobj) + 0x06000000
-    hierarchyBytes = int.to_bytes(hierarchyOffset, 4, 'big')
+    hierarchyOffset = FindHierarchy(zobj)
+    hierarchyBytes = zobj[hierarchyOffset:hierarchyOffset+4] # Get the data the offset points to
     for i in range(4):
         zobj[hierarchy - 0x06000000 + i] = hierarchyBytes[i]
     zobj[hierarchy - 0x06000000 + 4] = 0x15 # Number of limbs
