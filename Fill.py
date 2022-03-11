@@ -4,7 +4,7 @@ from State import State
 from Rules import set_shop_rules
 from Location import DisableType
 from LocationList import location_groups
-from ItemPool import song_list, get_junk_item, item_groups, remove_junk_items
+from ItemPool import IGNORE_LOCATION, song_list, get_junk_item, item_groups, remove_junk_items
 from Item import ItemFactory, ItemInfo
 from Search import Search
 from functools import reduce
@@ -507,6 +507,9 @@ def fast_fill(window, locations, itempool):
     while itempool and locations:
         spot_to_fill = locations.pop()
         item_to_place = itempool.pop()
+        # Ice traps are currently unsupported as starting items, but forbidding them on Song from Impa would noticeably increase the chance of a major item there in Ice Trap Onslaught.
+        if spot_to_fill.world.settings.skip_child_zelda and spot_to_fill.name == 'Song from Impa' and item_to_place.name == 'Ice Trap':
+            item_to_place = ItemFactory(IGNORE_LOCATION, spot_to_fill.world)
         spot_to_fill.world.push_item(spot_to_fill, item_to_place)
         window.fillcount += 1
         window.update_progress(5 + ((window.fillcount / window.locationcount) * 30))
