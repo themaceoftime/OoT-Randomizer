@@ -3077,6 +3077,7 @@ setting_infos = [
             versa, while overworld entrances are shuffled in
             their own separate pool and indoors stay vanilla.
         ''',
+        default        = [],
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
