@@ -676,7 +676,12 @@ static void populate_child_trade(const z64_file_t* file, variable_tile_t* tile) 
         tile->enabled = 1;
     }
     else if (Z64_ITEM_WEIRD_EGG <= item_child && item_child <= Z64_ITEM_ZELDAS_LETTER) {
-        tile->tile_index = item_child;
+        if (item_child == Z64_ITEM_ZELDAS_LETTER && (file->event_chk_inf[0x05] & 0x0200) == 0) {
+            // haven't learned Song from Impa, letter will revert on load
+            tile->tile_index = Z64_ITEM_CHICKEN;
+        } else {
+            tile->tile_index = item_child;
+        }
         tile->enabled = 1;
     }
     else {
