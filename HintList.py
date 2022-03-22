@@ -1253,7 +1253,7 @@ hintTable = {
     '1056':                                                     ("They say that the real Phantom Ganon is bright and loud.", None, 'junk'),
     '1057':                                                     ("They say that the fastest way forward is walking backwards.", None, 'junk'),
     '1058':                                                     ("They say that leaping above the Market entrance enriches most children.", None, 'junk'),
-    '1059':                                                     ("They say that looking into darkness may find darkness looking back into you.", None, 'junk'),
+    '1059':                                                     ("They say that looking into darkness may find darkness looking back into you.", None, 'junk'), # ref: Nietzsche
     '1060':                                                     ("You found a spiritual Stone! By which I mean, I worship Nayru.", None, 'junk'),
     '1061':                                                     ("A broken stick is just as good as a Master Sword. Who knew?", None, 'junk'),
     '1062':                                                     ("Open your eyes.^Open your eyes.^Wake up, @.", None, 'junk'), # ref: Breath of the Wild
@@ -1269,14 +1269,14 @@ hintTable = {
 
     # Second generation junk hints
     '1072':                                                     ("Fingers-Mazda, the first thief in the world, stole fire from the gods.^But he was unable to fence it.&It was too hot.&He got really burned on that deal.", None, 'junk'), # ref: Discworld
-    '1073':                                                     ("Boing-oing!^There are times in life when one should seek the help of others...^Thus, when standing alone fails to help, stand together.", None, 'junk'),
+    '1073':                                                     ("Boing-oing!^There are times in life when one should seek the help of others...^Thus, when standing alone fails to help, stand together.", None, 'junk'), # ref: Gossip Stone in Phantom Hourglass
     '1074':                                                     ("They say that if you don't use your slingshot at all when you play the slingshot minigame, the owner gets upset with you.", None, 'junk'),
     '1075':                                                     ("Hey! Wait! Don't go out! It's unsafe!^Wild Pokémon live in tall grass!^You need your own Pokémon for your protection.", None, 'junk'), # ref: Pokémon
     '1076':                                                     ("They say it's 106 miles to Hyrule Castle, we have half a bar of magic, it's dark, and we're wearing sunglasses.", None, 'junk'), # ref: Blues Brothers
-    '1078':                                                     ("It would be a shame if something... unfortunate... were to happen to you.^Have you considered saving lately?", None, 'junk'),
+    '1078':                                                     ("It would be a shame if something... unfortunate... were to happen to you.^Have you considered saving lately?", None, 'junk'), # ref: meme
     '1079':                                                     ("They say that something wonderful happens when playing the Song of Storms after planting a magic bean.", None, 'junk'),
     '1080':                                                     ("Long time watcher, first time player. Greetings from Termina. Incentive goes to Randobot's choice.", None, 'junk'), # ref: GDQ meme
-    '1081':                                                     ("No matter what happens...Do not give up, do not complain, and do NOT stay up all night playing!", None, 'junk'), # ref: Wind waker
+    '1081':                                                     ("No matter what happens...Do not give up, do not complain, and do NOT stay up all night playing!", None, 'junk'), # ref: Wind Waker
     '1082':                                                     ("That's a nice wall you got there. Would be a shame if I just... clipped right through that.", None, 'junk'),
     '1083':                                                     ("Ganondorf used to be an adventurer like me, but then he took a light arrow to the knee.", None, 'junk'), # ref: Skyrim
     '1084':                                                     ("They say that the easiest way to kill Peahats is using Din's Fire while they're grounded.", None, 'junk'),
@@ -1287,7 +1287,7 @@ hintTable = {
     '1089':                                                     ("You would be surprised at all the things you can Hookshot in the Spirit Temple!", None, 'junk'),
     '1090':                                                     ("I once glued a set of false teeth to the Boomerang.^${12 39 c7}That came back to bite me.", None, 'junk'), # sfx: Ganondorf laugh
     '1091':                                                     ("They say that most of the water in Hyrule flows through King Zora's buttocks.", None, 'junk'),
-    '1092':                                                     ("Space, space, wanna go to space, yes, please space. Space space. Go to space.", None, 'junk'), # ref: Portal
+    '1092':                                                     ("Space, space, wanna go to space, yes, please space. Space space. Go to space.", None, 'junk'), # ref: Portal 2
     '1093':                                                     ("They say that you must read the names of \"Special Deal\" items in shops carefully.", None, 'junk'),
     '1094':                                                     ("Did you know that the Boomerang instantly stuns Phantom Ganon's second form?", None, 'junk'),
     '1095':                                                     ("I came here to chew bubblegum and play rando. And I'm all out of bubblegum.", None, 'junk'), # ref: They Live
@@ -1325,7 +1325,7 @@ hintTable = {
     '1127':                                                     ("Did you know that ReDead mourn their defeated friends?", None, 'junk'),
     '1128':                                                     ("Did you know that ReDead eat their defeated friends?", None, 'junk'),
     '1129':                                                     ("What is a Hylian? A miserable little pile of secrets!", None, 'junk'), # ref: Castlevania
-    '1130':                                                     ("The hint stone you have dialed&has been disconnected.", None, 'junk'),
+    '1130':                                                     ("The hint stone you have dialed&has been disconnected.", None, 'junk'), # ref: telephone error message
     '1131':                                                     ("We don't make mistakes, we have happy accidents.", None, 'junk'), # ref: Bob Ross
     '1132':                                                     ("I've heard Ganon dislikes lemon-flavored popsicles.", None, 'junk'),
     '1133':                                                     ("If Gorons eat rocks, does that mean I'm in danger?", None, 'junk'),
@@ -1344,7 +1344,7 @@ hintTable = {
     '1148':                                                     ("Don't forget to write down your hints :)", None, 'junk'),
     '1149':                                                     ("Would you kindly...&close this textbox?", None, 'junk'), # ref: Bioshock
     '1150':                                                     ("They say that King Dodongo dislikes smoke.", None, 'junk'), # ref: Zelda 1
-    '1151':                                                     ("Never give up. Trust your instincts!", None, 'junk'), # ref: Starfox?
+    '1151':                                                     ("Never give up. Trust your instincts!", None, 'junk'), # ref: Star Fox 64
     '1152':                                                     ("I love to gossip! Wanna be friends?", None, 'junk'),
     '1153':                                                     ("This isn't where I parked my horse!", None, 'junk'), # ref: EuroTrip
     '1156':                                                     ("Anything not saved will be lost.", None, 'junk'), # ref: Nintendo (various games and platforms)
@@ -1359,7 +1359,7 @@ hintTable = {
     '1169':                                                     ("Hydrate!", None, 'junk'),
     '1170':                                                     ("They say that there is an alcove with a Recovery Heart behind the lava wall in Dodongo's Cavern.", None, 'junk'),
     '1171':                                                     ("Having regrets? Reset without saving!", None, 'junk'),
-    '1172':                                                     ("Did you know that Gorons understood SRM long before speedrunners did?", None, 'junk'),
+    '1172':                                                     ("Did you know that Gorons understood SRM long before speedrunners did?", None, 'junk'), # ref: Goron City murals
     '1173':                                                     ("Did you know that the Discord server has a public Plandomizer library?", None, 'junk'),
     '1174':                                                     ("${12 28 DF}Moo!", None, 'junk'), # sfx: cow
     '1175':                                                     ("${12 28 D8}Woof!", None, 'junk'), # sfx: dog
@@ -1408,7 +1408,7 @@ hintTable = {
     '1219':                                                     ("${12 68 31}Don't forget to stand up and stretch regularly.", None, 'junk'), # sfx: child Link stretching and yawning
     '1220':                                                     ("Remember that time you did that really embarrassing thing?^${12 68 3A}Yikes.", None, 'junk'), # sfx: child Link fall damage
     '1221':                                                     ("@ tries to read the Gossip Stone...^${12 48 06}but he's standing on the wrong side of it!", None, 'junk'), # ref: Dragon Quest XI / sfx: error (e.g. trying to equip an item as the wrong age)
-    '1222':                                                     ("Plandomizer is a pathway to many abilities some consider to be... unnatural.", None, 'junk'),
+    '1222':                                                     ("Plandomizer is a pathway to many abilities some consider to be... unnatural.", None, 'junk'), # ref: Star Wars
     '1223':                                                     ("Did you know that you can have complete control over the item placement, item pool, and more, using Plandomizer?", None, 'junk'),
     '1224':                                                     ("They say that the earth is round.^Just like pizza.", None, 'junk'),
     '1225':                                                     ("${12 68 62}Keeeyaaaah!^What is this?! A Hylian?!", None, 'junk'), # ref: Ruto meeting Big Octo / sfx: Ruto screaming
