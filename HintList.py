@@ -1384,11 +1384,11 @@ hintTable = {
     '1195':                                                     ("Did you know that the solution to the Truth Spinner in Shadow Temple is never one of the two positions closest to the initial position?", None, 'junk'),
     '1196':                                                     ("Did you know that the Kokiri Sword is as effective as Deku Sticks against Dead Hand?", None, 'junk'),
     '1197':                                                     ("Did you know that Ruto is strong enough to defeat enemies and activate ceiling switches inside Jabu Jabu's Belly?", None, 'junk'),
-    '1198':                                                     ("Did you know that Barinade, Volvagia and Twinrova hard require the Boomerang, Megaton Hammer and Mirror Shield respectively?", None, 'junk'),
-    '1199':                                                     ("Did you know that Dark Link's max health is proportional to your own max health?", None, 'junk'),
+    '1198':                                                     ("Did you know that Barinade, Volvagia and Twinrova hard require the Boomerang, Megaton Hammer and Mirror Shield, respectively?", None, 'junk'),
+    '1199':                                                     ("Did you know that Dark Link's max health is equal to @'s max health?", None, 'junk'),
     '1200':                                                     ("Did you know that you can reach the invisible Hookshot target before the fans room in Shadow Temple with just the Hookshot if you backflip onto the chest?", None, 'junk'),
     '1201':                                                     ("${12 68 54}Objection!", None, 'junk'), # ref: Ace Attorney / sfx: Ingo's BWAAAAAH
-    '1202':                                                     ("They say that in the castle courtyard you can see a portrait of a young Talon.", None, 'junk'), # ref: Mario = Talon joke
+    '1202':                                                     ("They say that in the castle courtyard you can see a portrait of a young Talon.", None, 'junk'), # ref: Talon = Mario joke
     '1203':                                                     ("They say that Phantom Ganon is a big Louisa May Alcott fan.", None, 'junk'), # ref: The Poe Sisters are named after characters from one of her novels
     '1204':                                                     ("Have you found all 41 Gossip Stones?^Only 40 of us give hints.", None, 'junk'), # The 41th stone is the Lake Hylia water level stone
     '1205':                                                     ("It's time for you to look inward and begin asking yourself the big questions:^How did Medigoron get inside that hole, and how does he get out for the credits?", None, 'junk'), # ref: Avatar The Last Airbender
