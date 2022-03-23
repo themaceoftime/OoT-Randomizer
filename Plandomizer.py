@@ -1137,6 +1137,7 @@ class Distribution(object):
                 data['Heart Container'].count += 1
             if self.settings.starting_hearts >= 20:
                 data['Piece of Heart'].count -= 1
+                data['Piece of Heart (Treasure Chest Game)'].count += 1
             if self.settings.item_pool_value == 'plentiful':
                 data['Heart Container'].count += data['Piece of Heart'].count // 4
                 data['Piece of Heart'].count = data['Piece of Heart'].count % 4
