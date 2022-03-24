@@ -140,6 +140,9 @@ class Item(object):
         if self.name.startswith('Bombchus') and not self.world.settings.bombchus_in_logic:
             return False
 
+        if self.name.startswith('Magic Bean') and self.world.settings.plant_beans:
+            return False
+
         if self.map or self.compass:
             return False
         if self.type == 'SmallKey' and self.world.settings.shuffle_smallkeys in ['dungeon', 'vanilla']:
