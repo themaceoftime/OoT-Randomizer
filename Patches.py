@@ -1741,12 +1741,6 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             item = read_rom_item(rom, i)
             item['chest_type'] = GILDED_CHEST
             write_rom_item(rom, i, item)
-    if world.settings.plant_beans:
-        bean_ids = [0x16, 0xC9]
-        for i in bean_ids:
-            item = read_rom_item(rom, i)
-            item['chest_type'] = BROWN_CHEST
-            write_rom_item(rom, i, item)
     if world.settings.bridge == 'tokens' or world.settings.lacs_condition == 'tokens' or world.settings.shuffle_ganon_bosskey == 'tokens':
         item = read_rom_item(rom, 0x5B)
         item['chest_type'] = SKULL_CHEST_BIG

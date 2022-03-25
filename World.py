@@ -1042,6 +1042,10 @@ class World(object):
             # Both two-handed swords can be required in glitch logic, so only consider them foolish in glitchless
             exclude_item_list.append('Biggoron Sword')
             exclude_item_list.append('Giants Knife')
+        if self.settings.plant_beans:
+            # Magic Beans are useless if beans are already planted
+            exclude_item_list.append('Magic Bean')
+            exclude_item_list.append('Magic Bean Pack')
 
         for i in self.item_hint_type_overrides['barren']:
             if i in exclude_item_list:
