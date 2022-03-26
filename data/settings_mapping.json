@@ -198,8 +198,7 @@
             "triforce_count_per_world",
             "triforce_goal_per_world",
             "bombchus_in_logic",
-            "one_item_per_dungeon",
-            "blue_fire_arrows"
+            "one_item_per_dungeon"
           ]
         },
         {
@@ -369,6 +368,7 @@
             "deadly_bonks",
             "no_collectible_hearts",
             "starting_tod"
+            "blue_fire_arrows"
           ]
         },
         {
