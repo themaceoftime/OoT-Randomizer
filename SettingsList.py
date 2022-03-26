@@ -5545,6 +5545,18 @@ setting_infos = [
             "hide_when_disabled": True,
         }
     ),
+    Checkbutton(
+        name           = 'blue_fire_arrows',
+        gui_text       = 'Blue Fire Arrows',
+        gui_tooltip    = '''\
+            When enabled, Ice arrows can be used to melt red ice
+        ''',
+        default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
 ]
 
 

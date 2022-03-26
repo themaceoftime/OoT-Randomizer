@@ -198,7 +198,8 @@
             "triforce_count_per_world",
             "triforce_goal_per_world",
             "bombchus_in_logic",
-            "one_item_per_dungeon"
+            "one_item_per_dungeon",
+            "blue_fire_arrows"
           ]
         },
         {
