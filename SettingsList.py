@@ -5553,9 +5553,6 @@ setting_infos = [
         ''',
         default        = False,
         shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
     ),
 ]
 
