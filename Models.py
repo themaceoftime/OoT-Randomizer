@@ -242,16 +242,16 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
             if seg == segment:
                 if op == 0x01:
                     vertEntry = oldVer2New[lo & 0x00FFFFFF]
-                    WriteDL(dl, i + 4, 0x06000000 + vertEntry + rebase)
+                    WriteDL(dl, i + 4, BASE_OFFSET + vertEntry + rebase)
                 elif op == 0xDA:
                     mtxEntry = oldMtx2New[lo & 0x00FFFFFF]
-                    WriteDL(dl, i + 4, 0x06000000 + mtxEntry + rebase)
+                    WriteDL(dl, i + 4, BASE_OFFSET + mtxEntry + rebase)
                 elif op == 0xFD:
                     texEntry = oldTex2New[lo & 0x00FFFFFF]
-                    WriteDL(dl, i + 4, 0x06000000 + texEntry + rebase)
+                    WriteDL(dl, i + 4, BASE_OFFSET + texEntry + rebase)
                 elif op == 0xDE:
                     dlEntry = oldDL2New[lo & 0x00FFFFFF]
-                    WriteDL(dl, i + 4, 0x06000000 + dlEntry + rebase)
+                    WriteDL(dl, i + 4, BASE_OFFSET + dlEntry + rebase)
         optimizedZobj.extend(dl)
         # Pad to nearest multiple of 16
         while len(optimizedZobj) % 0x10 != 0:
@@ -302,67 +302,69 @@ def LoadModel(rom, model, age):
     zobj = file.read()
     file.close()
     zobj = bytearray(zobj)
-    # Find which pieces are missing from this model
-    footerstart = findfooter(zobj, "!PlayAsManifest0")
-    startaddr = footerstart - len("!PlayAsManifest0")
-    missing = []
-    present = {}
-    DLOffsets = {}
-    for piece in pieces:
-        offset = findfooter(zobj, piece, footerstart)
-        if offset == -1:
-            missing.append(piece)
-        else:
-            present[piece] = offset
-    if len(missing) > 0:
-        # Optimize the missing pieces to make them work in the new zobj
-        (optimizedZobj, DLOffsets) = Optimize(rom, missing, len(zobj), linkstart, linksize, pieces)
-        # Write optimized zobj data to end of model zobj
+    # See if the string MODLOADER64 appears before the LUT- if so this is a PlayAs model and needs no further processing
+    if findfooter(zobj, "MODLOADER64") == -1:
+        # Find which pieces are missing from this model
+        footerstart = findfooter(zobj, "!PlayAsManifest0")
+        startaddr = footerstart - len("!PlayAsManifest0")
+        missing = []
+        present = {}
+        DLOffsets = {}
+        for piece in pieces:
+            offset = findfooter(zobj, piece, footerstart)
+            if offset == -1:
+                missing.append(piece)
+            else:
+                present[piece] = offset
+        if len(missing) > 0:
+            # Optimize the missing pieces to make them work in the new zobj
+            (optimizedZobj, DLOffsets) = Optimize(rom, missing, len(zobj), linkstart, linksize, pieces)
+            # Write optimized zobj data to end of model zobj
+            i = 0
+            for byte in optimizedZobj:
+                zobj.insert(startaddr + i, byte)
+                i += 1
+        # Now we have to set the lookup table for each item
+        for (piece, offset) in DLOffsets.items():
+            # Add the starting address to each offset so they're accurate to the updated zobj
+            DLOffsets[piece] = offset + startaddr
+        DLOffsets.update(present)
+        for item in pieces:
+            lut = pieces[item][0] - BASE_OFFSET
+            entry = unwrap(zobj, lut)
+            zobj[entry] = 0xDE
+            zobj[entry+1] = 0x01
+            entry += 4
+            dladdress = DLOffsets[item] + BASE_OFFSET
+            dladdressbytes = dladdress.to_bytes(4, 'big')
+            for byte in dladdressbytes:
+                zobj[entry] = byte
+                entry += 1
+        # Set constants in the LUT
+        file = open(path + 'Constants/preconstants.zobj', "rb")
+        constants = file.read()
+        file.close()
         i = 0
-        for byte in optimizedZobj:
-            zobj.insert(startaddr + i, byte)
+        for byte in constants:
+            zobj[LUT_START + i] = byte
             i += 1
-    # Now we have to set the lookup table for each item
-    for (piece, offset) in DLOffsets.items():
-        # Add the starting address to each offset so they're accurate to the updated zobj
-        DLOffsets[piece] = offset + startaddr
-    DLOffsets.update(present)
-    for item in pieces:
-        lut = pieces[item][0] - 0x06000000
-        entry = unwrap(zobj, lut)
-        zobj[entry] = 0xDE
-        zobj[entry+1] = 0x01
-        entry += 4
-        dladdress = DLOffsets[item] + 0x06000000
-        dladdressbytes = dladdress.to_bytes(4, 'big')
-        for byte in dladdressbytes:
-            zobj[entry] = byte
-            entry += 1
-    # Set constants in the LUT
-    file = open(path + 'Constants/preconstants.zobj', "rb")
-    constants = file.read()
-    file.close()
-    i = 0
-    for byte in constants:
-        zobj[0x500C + i] = byte
-        i += 1
-    file = open(path + 'Constants/postconstants.zobj', "rb")
-    constants = file.read()
-    file.close()
-    i = 0
-    for byte in constants:
-        zobj[constantstart + i] = byte
-        i += 1
-    # Set up hierarchy pointer
-    hierarchyOffset = FindHierarchy(zobj)
-    hierarchyBytes = zobj[hierarchyOffset:hierarchyOffset+4] # Get the data the offset points to
-    for i in range(4):
-        zobj[hierarchy - 0x06000000 + i] = hierarchyBytes[i]
-    zobj[hierarchy - 0x06000000 + 4] = 0x15 # Number of limbs
-    zobj[hierarchy - 0x06000000 + 8] = 0x12 # Number of limbs to draw
-    # Save zobj for testing
-    with open('data/Models/Adult/' + "Maple_Processed.zobj", "wb") as f:
-        f.write(zobj)
+        file = open(path + 'Constants/postconstants.zobj', "rb")
+        constants = file.read()
+        file.close()
+        i = 0
+        for byte in constants:
+            zobj[constantstart + i] = byte
+            i += 1
+        # Set up hierarchy pointer
+        hierarchyOffset = FindHierarchy(zobj)
+        hierarchyBytes = zobj[hierarchyOffset:hierarchyOffset+4] # Get the data the offset points to
+        for i in range(4):
+            zobj[hierarchy - BASE_OFFSET + i] = hierarchyBytes[i]
+        zobj[hierarchy - BASE_OFFSET + 4] = 0x15 # Number of limbs
+        zobj[hierarchy - BASE_OFFSET + 8] = 0x12 # Number of limbs to draw
+        # Save zobj for testing
+        with open('data/Models/Adult/' + "Test_Processed.zobj", "wb") as f:
+            f.write(zobj)
     # Write zobj to vanilla object (object_link_boy or object_link_child)
     rom.write_bytes(linkstart, zobj)
 
@@ -813,6 +815,7 @@ AdultPieces = {
     "Sheath": (Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATH, 0x249D8),
     "FPS.Hookshot": (Offsets.ADULT_LINK_LUT_DL_FPS_HOOKSHOT, 0x24D70), # Same as non-fps hookshot, couldn't find an address for fps specifically
     "Hilt.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_HILT, 0x21F78), # Same as master sword, need to have it stop when end of hilt reached
+    "Hilt.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_HILT, 0x21F78), # Should include?? not sure, some playas have it and some don't. Same as above
     "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x21F78),  # Need to remove fist and hilt
     "Hookshot.Spike": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_HOOK, 0x2B288),
     "Hookshot": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT, 0x24D70), # Need to remove fist
@@ -910,6 +913,8 @@ ChildPieces = {
     "Limb 20": (Offsets.CHILD_LINK_LUT_DL_TORSO, 0x21130),
 }
 
+BASE_OFFSET     = 0x06000000
+LUT_START       = 0x0000500C
 ADULT_START     = 0x00F86000
 ADULT_SIZE      = 0x00037800
 ADULT_HIERARCHY = 0x06005380
