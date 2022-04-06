@@ -396,6 +396,10 @@ def LoadModel(rom, model, age):
             f.write(zobj)
     # Write zobj to vanilla object (object_link_boy or object_link_child)
     rom.write_bytes(linkstart, zobj)
+    # Finally, want to return an address with a DF instruction for use when writing the model data
+    dfBytes = bytearray(b'\xDF\x00\x00\x00\x00\x00\x00\x00')
+    return scan(zobj, dfBytes) - 8
+
 
 def patch_model_adult(rom, settings, log):
     model = settings.model_adult + ".zobj"
@@ -404,21 +408,23 @@ def patch_model_adult(rom, settings, log):
     log.model = model.split('.')[0]
     writer = ModelDataWriter(rom)
 
+    dfAddress = LoadModel(rom, model, 0)
+
     # Write adult Link pointer data
     writer.GoTo(0xE6718)
     writer.SetAdvance(8)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST)
-    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
-    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
+    writer.WriteModelData(dfAddress)
+    writer.WriteModelData(dfAddress)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST_SHIELD_MIRROR)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST_SHIELD_MIRROR)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATHED)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATHED)
-    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
-    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
+    writer.WriteModelData(dfAddress)
+    writer.WriteModelData(dfAddress)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHIELD_MIRROR)
@@ -429,8 +435,8 @@ def patch_model_adult(rom, settings, log):
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATH)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATH)
-    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
-    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
+    writer.WriteModelData(dfAddress)
+    writer.WriteModelData(dfAddress)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHEATH0_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHEATH0_HYLIAN)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHEATH0_MIRROR)
@@ -447,8 +453,8 @@ def patch_model_adult(rom, settings, log):
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LHAND)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST)
-    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
-    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
+    writer.WriteModelData(dfAddress)
+    writer.WriteModelData(dfAddress)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST_SWORD)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST_SWORD)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RHAND)
@@ -473,8 +479,8 @@ def patch_model_adult(rom, settings, log):
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST_HOOKSHOT)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST_HAMMER)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LFIST_HAMMER)
-    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
-    writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN)
+    writer.WriteModelData(dfAddress)
+    writer.WriteModelData(dfAddress)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LHAND_BOTTLE)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_LHAND_BOTTLE)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_FPS_LFOREARM)
@@ -554,8 +560,6 @@ def patch_model_adult(rom, settings, log):
     writer.GoTo(0xE65A0)
     writer.WriteModelData(ADULT_HIERARCHY) # Hierarchy pointer
 
-    LoadModel(rom, model, 0)
-
 
 def patch_model_child(rom, settings, log):
     model = settings.model_child + ".zobj"
@@ -564,6 +568,8 @@ def patch_model_child(rom, settings, log):
     log.model = model.split('.')[0]
     writer = ModelDataWriter(rom)
 
+    dfAddress = LoadModel(rom, model, 1)
+
     # Write child Link pointer data
     writer.GoTo(0xE671C)
     writer.SetAdvance(8)
@@ -571,18 +577,18 @@ def patch_model_child(rom, settings, log):
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_RFIST)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_RFIST_SHIELD_DEKU)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_RFIST_SHIELD_DEKU)
-    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
-    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
-    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
-    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
+    writer.WriteModelData(dfAddress)
+    writer.WriteModelData(dfAddress)
+    writer.WriteModelData(dfAddress)
+    writer.WriteModelData(dfAddress)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHEATHED)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHEATHED)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHIELD_DEKU)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHIELD_DEKU)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHIELD_HYLIAN)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SWORD_SHIELD_HYLIAN)
-    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
-    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
+    writer.WriteModelData(dfAddress)
+    writer.WriteModelData(dfAddress)
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU_BACK)
@@ -593,8 +599,8 @@ def patch_model_child(rom, settings, log):
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHEATH0_DEKU)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHEATH0_HYLIAN)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHEATH0_HYLIAN)
-    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
-    writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU)
+    writer.WriteModelData(dfAddress)
+    writer.WriteModelData(dfAddress)
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(0x00000000)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU_BACK)
@@ -688,8 +694,6 @@ def patch_model_child(rom, settings, log):
     writer.SetBase('Code')
     writer.GoTo(0xE65A4)
     writer.WriteModelData(CHILD_HIERARCHY) # Hierarchy pointer
-
-    LoadModel(rom, model, 1)
 
 
 class Offsets(IntEnum):
