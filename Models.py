@@ -125,7 +125,7 @@ def WriteDL(dl, index, data):
         dl[index + i] = bytes[i]
 
 
-def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
+def Optimize(rom, missing, rebase, linkstart, linksize, pieces, skips):
     # Get vanilla "zobj" of Link's model
     vanillaData = []
     for i in range(linksize):
@@ -134,7 +134,20 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
     vertices = {}
     matrices = {}
     textures = {}
-    displayLists = []
+    displayLists = {}
+    # # Testing code- save certain pieces down
+    # savepieces = ["Limb 15", "Limb 18"]
+    # for piece in savepieces:
+    #     pieceData = []
+    #     # Just go until we find a DF
+    #     offset = pieces[piece][1]
+    #     nextbyte = vanillaData[offset]
+    #     while nextbyte != 0xDF:
+    #         pieceData.append(nextbyte)
+    #         offset += 1
+    #         nextbyte = vanillaData[offset]
+    #     with open('data/Models/Adult/Pieces/' + piece + '.zobj', "wb") as f:
+    #         f.write(bytearray(pieceData))
     # For each missing piece, grab data from its vanilla display list
     for item in missing:
         offset = pieces[item][1]
@@ -142,6 +155,17 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
         displayList = []
         # Crawl displaylist bytecode and handle each command
         while i < len(vanillaData):
+            # Check if these bytes need to be skipped
+            if item in skips.keys():
+                skip = False
+                for skippedRanges in skips[item]:
+                    itemIndex = i - offset
+                    # Byte is in a range that must be skipped
+                    if skippedRanges[0] <= itemIndex and itemIndex < skippedRanges[1]:
+                        skip = True
+                if skip:
+                    i += 8
+                    continue
             op = vanillaData[i]
             seg = vanillaData[i+4]
             lo = int.from_bytes(vanillaData[i+4:i+8], 'big')
@@ -206,7 +230,7 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
                     textures[texOffset] = vanillaData[texOffset:texOffset+dataLen]
             displayList.extend(vanillaData[i:i+8])
             i += 8
-        displayLists.append((displayList, offset))
+        displayLists[item] = (displayList, offset)
     # Create optimized zobj from data collected during crawl
     optimizedZobj = []
     # Textures
@@ -229,7 +253,7 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
         optimizedZobj.extend(matrix)
     # Display lists
     oldDL2New = {}
-    for data in displayLists:
+    for data in displayLists.values():
         dl = data[0]
         offset = data[1]
         oldDL2New[offset] = len(optimizedZobj)
@@ -288,6 +312,7 @@ def LoadModel(rom, model, age):
     pieces = AdultPieces
     path = 'data/Models/Adult/'
     constantstart = 0x5238
+    skips = adultSkips
     if age == 1:
         linkstart = CHILD_START
         linksize = CHILD_SIZE
@@ -295,6 +320,7 @@ def LoadModel(rom, model, age):
         pieces = ChildPieces
         path = 'data/Models/Child/'
         constantstart = 0x5228
+        skips = childSkips
     # Read model data from file
     file = open(path + model, "rb")
     zobj = file.read()
@@ -316,7 +342,7 @@ def LoadModel(rom, model, age):
                 present[piece] = offset
         if len(missing) > 0:
             # Optimize the missing pieces to make them work in the new zobj
-            (optimizedZobj, DLOffsets) = Optimize(rom, missing, startaddr, linkstart, linksize, pieces)
+            (optimizedZobj, DLOffsets) = Optimize(rom, missing, startaddr, linkstart, linksize, pieces, skips)
             # Write optimized zobj data to end of model zobj
             i = 0
             for byte in optimizedZobj:
@@ -816,17 +842,16 @@ class Offsets(IntEnum):
 # Adult model pieces and their offsets
 AdultPieces = {
     "Sheath": (Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATH, 0x249D8),
-    "FPS.Hookshot": (Offsets.ADULT_LINK_LUT_DL_FPS_HOOKSHOT, 0x24D70), # Same as non-fps hookshot, couldn't find an address for fps specifically
-    "Hilt.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_HILT, 0x21F78), # Same as master sword, need to have it stop when end of hilt reached
-    "Hilt.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_HILT, 0x21F78), # Should include?? not sure, some playas have it and some don't. Same as above
-    "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x21F78),  # Need to remove fist and hilt
+    "FPS.Hookshot": (Offsets.ADULT_LINK_LUT_DL_FPS_HOOKSHOT, 0x24D70),
+    "Hilt.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_HILT, 0x22060),
+    "Hilt.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_HILT, 0x238C8),
+    "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x21F78),
     "Hookshot.Spike": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_HOOK, 0x2B288),
-    "Hookshot": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT, 0x24D70), # Need to remove fist
-    "Fist.L": (Offsets.ADULT_LINK_LUT_DL_LFIST, 0x21CE8), # Length: 0x290
-    "Fist.R": (Offsets.ADULT_LINK_LUT_DL_RFIST, 0x226E0), # Length: 0x290
+    "Hookshot": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT, 0x24D70),
+    "Fist.L": (Offsets.ADULT_LINK_LUT_DL_LFIST, 0x21CE8),
+    "Fist.R": (Offsets.ADULT_LINK_LUT_DL_RFIST, 0x226E0),
     "FPS.Forearm.L": (Offsets.ADULT_LINK_LUT_DL_FPS_LFOREARM, 0x29FA0),
     "FPS.Forearm.R": (Offsets.ADULT_LINK_LUT_DL_FPS_RFOREARM, 0x29918),
-    # Maybe need to reverse gauntler order, decomp just calls them plate 1-3
     "Gauntlet.Fist.L": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_LFIST, 0x25218),
     "Gauntlet.Fist.R": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_RFIST, 0x25598),
     "Gauntlet.Forearm.L": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_LFOREARM, 0x252D8),
@@ -834,24 +859,24 @@ AdultPieces = {
     "Gauntlet.Hand.L": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_LHAND, 0x25438),
     "Gauntlet.Hand.R": (Offsets.ADULT_LINK_LUT_DL_UPGRADE_RHAND, 0x257B8),
     "Bottle.Hand.L": (Offsets.ADULT_LINK_LUT_DL_LHAND_BOTTLE, 0x29600),
-    "FPS.Hand.L": (Offsets.ADULT_LINK_LUT_DL_FPS_LHAND, 0x24B58), # Length: 0x220
-    "FPS.Hand.R": (Offsets.ADULT_LINK_LUT_DL_FPS_RHAND, 0x29C20), # Length: 0x380
+    "FPS.Hand.L": (Offsets.ADULT_LINK_LUT_DL_FPS_LHAND, 0x24B58),
+    "FPS.Hand.R": (Offsets.ADULT_LINK_LUT_DL_FPS_RHAND, 0x29C20),
     "Bow.String": (Offsets.ADULT_LINK_LUT_DL_BOW_STRING, 0x2B108),
-    "Bow": (Offsets.ADULT_LINK_LUT_DL_BOW, 0x22DA8), # Need to remove fist
+    "Bow": (Offsets.ADULT_LINK_LUT_DL_BOW, 0x22DA8),
     "Blade.3.Break": (Offsets.ADULT_LINK_LUT_DL_BLADEBREAK, 0x2BA38),
-    "Blade.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_BLADE, 0x238C8), # Need to remove fist
+    "Blade.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_BLADE, 0x23A28),
     "Bottle": (Offsets.ADULT_LINK_LUT_DL_BOTTLE, 0x2AD58), 
-    "Broken.Blade.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_BROKEN, 0x23D50), # Need to remove fist
+    "Broken.Blade.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_BROKEN, 0x23D50),
     "Foot.2.L": (Offsets.ADULT_LINK_LUT_DL_BOOT_LIRON, 0x25918),
     "Foot.2.R": (Offsets.ADULT_LINK_LUT_DL_BOOT_RIRON, 0x25A60),
     "Foot.3.L": (Offsets.ADULT_LINK_LUT_DL_BOOT_LHOVER, 0x25BA8),
     "Foot.3.R": (Offsets.ADULT_LINK_LUT_DL_BOOT_RHOVER, 0x25DB0),
-    "Hammer": (Offsets.ADULT_LINK_LUT_DL_HAMMER, 0x233E0), # Need to remove fist
+    "Hammer": (Offsets.ADULT_LINK_LUT_DL_HAMMER, 0x233E0),
     "Hookshot.Aiming.Reticule": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_AIM, 0x2CB48),
     "Hookshot.Chain": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_CHAIN, 0x2AFF0),
-    "Ocarina.2": (Offsets.ADULT_LINK_LUT_DL_OCARINA_TIME, 0x24698), # Need to remove fist
-    "Shield.2": (Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN, 0x22970), # Need to remove fist
-    "Shield.3": (Offsets.ADULT_LINK_LUT_DL_SHIELD_MIRROR, 0x241C0), # Need to remove fist
+    "Ocarina.2": (Offsets.ADULT_LINK_LUT_DL_OCARINA_TIME, 0x24698),
+    "Shield.2": (Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN, 0x22970),
+    "Shield.3": (Offsets.ADULT_LINK_LUT_DL_SHIELD_MIRROR, 0x241C0),
     "Limb 1": (Offsets.ADULT_LINK_LUT_DL_WAIST, 0x35330),
     "Limb 3": (Offsets.ADULT_LINK_LUT_DL_RTHIGH, 0x35678),
     "Limb 4": (Offsets.ADULT_LINK_LUT_DL_RSHIN, 0x358B0),
@@ -869,6 +894,20 @@ AdultPieces = {
     "Limb 17": (Offsets.ADULT_LINK_LUT_DL_RFOREARM, 0x37018),
     "Limb 18": (Offsets.ADULT_LINK_LUT_DL_RHAND, 0x22498),
     "Limb 20": (Offsets.ADULT_LINK_LUT_DL_TORSO, 0x363B8),
+}
+
+adultSkips = {
+    "Hilt.2": [(0x1E8, 0x430)],
+    "Hilt.3": [(0x160, 0x480)],
+    "Blade.2": [(0x02D0, 0x518)],
+    "Hookshot": [(0x250, 0x4A0)],
+    "Bow": [(0x158, 0x3B0)],
+    "Blade.3": [(0xB8, 0x320)],
+    "Broken.Blade.3": [(0x200, 0x468)],
+    "Hammer": [(0x278, 0x4E0)],
+    "Ocarina.2": [(0x0, 0x240)],
+    "Shield.2": [(0x158, 0x2B8), (0x3A8, 0x430)],
+    "Shield.3": [(0x1B8, 0x3E8)],
 }
 
 ChildPieces = {
@@ -914,6 +953,10 @@ ChildPieces = {
     "Limb 17": (Offsets.CHILD_LINK_LUT_DL_RFOREARM, 0x21CB8),
     "Limb 18": (Offsets.CHILD_LINK_LUT_DL_RHAND, 0x141C0),
     "Limb 20": (Offsets.CHILD_LINK_LUT_DL_TORSO, 0x21130),
+}
+
+childSkips = {
+
 }
 
 BASE_OFFSET     = 0x06000000

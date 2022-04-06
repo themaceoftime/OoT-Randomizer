@@ -21,7 +21,9 @@ ARCHIVE.bin
 .*.sw*
 
 data/Models/Adult/*.zobj
+data/Models/Adult/Pieces
 data/Models/Child/*.zobj
+data/Models/Child/Pieces
 
 tests/Output
 !tests/*.sav
