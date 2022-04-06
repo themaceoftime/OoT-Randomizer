@@ -146,7 +146,7 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
             seg = vanillaData[i+4]
             lo = int.from_bytes(vanillaData[i+4:i+8], 'big')
             if op == 0xDF: # End of list
-                displayList.extend(vanillaData[i:i+8])
+                displayList.extend(vanillaData[i:i+8]) # Make sure to write the DF
                 break
             # Shouldn't have to deal with DE (branch to new display list)
             elif op == 0x01 and seg == segment: # Vertex data
@@ -211,27 +211,21 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
     optimizedZobj = []
     # Textures
     oldTex2New = {}
-    texLengths = {}
     for (offset, texture) in textures.items():
         newOffset = len(optimizedZobj)
         oldTex2New[offset] = newOffset
-        texLengths[offset] = len(texture)
         optimizedZobj.extend(texture)
     # Vertices
     oldVer2New = {}
-    vertLengths = {}
     for (offset, vertex) in vertices.items():
         newOffset = len(optimizedZobj)
         oldVer2New[offset] = newOffset
-        vertLengths[offset] = len(vertex)
         optimizedZobj.extend(vertex)
     # Matrices
     oldMtx2New = {}
-    mtxLengths = {}
     for (offset, matrix) in matrices.items():
         newOffset = len(optimizedZobj)
         oldMtx2New[offset] = newOffset
-        mtxLengths[offset] = len(matrix)
         optimizedZobj.extend(matrix)
     # Display lists
     oldDL2New = {}
@@ -322,7 +316,7 @@ def LoadModel(rom, model, age):
                 present[piece] = offset
         if len(missing) > 0:
             # Optimize the missing pieces to make them work in the new zobj
-            (optimizedZobj, DLOffsets) = Optimize(rom, missing, len(zobj), linkstart, linksize, pieces)
+            (optimizedZobj, DLOffsets) = Optimize(rom, missing, startaddr, linkstart, linksize, pieces)
             # Write optimized zobj data to end of model zobj
             i = 0
             for byte in optimizedZobj:
