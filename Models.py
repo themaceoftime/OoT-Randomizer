@@ -76,19 +76,22 @@ class ModelDataWriter:
 
 # Either return the starting index of the footer (when start == 0)
 # or if the element exists in the footer (start > 0)
-def findfooter(bytes, string, start=0):
-    stringbytes = string.encode()
-    stringindex = 0
+def scan(bytes, data, start=0):
+    databytes = data
+    # If a string was passed, encode string as bytes
+    if isinstance(data, str):
+        databytes = data.encode()
+    dataindex = 0
     for i in range(start, len(bytes)):
         # Byte matches next byte in string
-        if bytes[i] == stringbytes[stringindex]:
-            stringindex += 1
+        if bytes[i] == databytes[dataindex]:
+            dataindex += 1
             # Special case: Bottle, Bow, and Slingshot are subsets of Bottle.Hand.L, Bow.String, and Slingshot.String respectively
             # This leads to false positives. So if the next byte is . (0x2E) then reset the count.
-            if bytes[i+1] == 0x2E and string in ["Bottle", "Bow", "Slingshot"]:
-                stringindex = 0
+            if bytes[i+1] == 0x2E and isinstance(data, str) and data in ["Bottle", "Bow", "Slingshot"]:
+                dataindex = 0
             # All bytes have been found, so a match
-            if stringindex == len(stringbytes):
+            if dataindex == len(databytes):
                 # If start is 0 then looking for the footer, return the index
                 if start == 0:
                     return i + 1
@@ -101,7 +104,7 @@ def findfooter(bytes, string, start=0):
                     return int.from_bytes(offsetbytes, 'big')
         # Match has been broken, reset to start of string
         else:
-            stringindex = 0
+            dataindex = 0
     return -1
 
 def unwrap(zobj, address):
@@ -143,6 +146,7 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces):
             seg = vanillaData[i+4]
             lo = int.from_bytes(vanillaData[i+4:i+8], 'big')
             if op == 0xDF: # End of list
+                displayList.extend(vanillaData[i:i+8])
                 break
             # Shouldn't have to deal with DE (branch to new display list)
             elif op == 0x01 and seg == segment: # Vertex data
@@ -303,15 +307,15 @@ def LoadModel(rom, model, age):
     file.close()
     zobj = bytearray(zobj)
     # See if the string MODLOADER64 appears before the LUT- if so this is a PlayAs model and needs no further processing
-    if findfooter(zobj, "MODLOADER64") == -1:
+    if scan(zobj, "MODLOADER64") == -1:
         # Find which pieces are missing from this model
-        footerstart = findfooter(zobj, "!PlayAsManifest0")
+        footerstart = scan(zobj, "!PlayAsManifest0")
         startaddr = footerstart - len("!PlayAsManifest0")
         missing = []
         present = {}
         DLOffsets = {}
         for piece in pieces:
-            offset = findfooter(zobj, piece, footerstart)
+            offset = scan(zobj, piece, footerstart)
             if offset == -1:
                 missing.append(piece)
             else:
@@ -340,6 +344,11 @@ def LoadModel(rom, model, age):
             for byte in dladdressbytes:
                 zobj[entry] = byte
                 entry += 1
+        # Put prefix for easily finding LUT in RAM
+        i = 0
+        for byte in "HEYLOOKHERE".encode():
+            zobj[0x5000+i] = byte
+            i += 1 
         # Set constants in the LUT
         file = open(path + 'Constants/preconstants.zobj', "rb")
         constants = file.read()
