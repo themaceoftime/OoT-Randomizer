@@ -136,7 +136,7 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces, skips):
     textures = {}
     displayLists = {}
     # # Testing code- save certain pieces down
-    # savepieces = ["Limb 15", "Limb 18"]
+    # savepieces = ["Fist.L", "Fist.R", "Limb 15", "Limb 18"]
     # for piece in savepieces:
     #     pieceData = []
     #     # Just go until we find a DF
@@ -392,7 +392,7 @@ def LoadModel(rom, model, age):
         zobj[hierarchy - BASE_OFFSET + 4] = 0x15 # Number of limbs
         zobj[hierarchy - BASE_OFFSET + 8] = 0x12 # Number of limbs to draw
         # Save zobj for testing
-        with open('data/Models/Adult/' + "Test_Processed.zobj", "wb") as f:
+        with open(path + "Test_Processed.zobj", "wb") as f:
             f.write(zobj)
     # Write zobj to vanilla object (object_link_boy or object_link_child)
     rom.write_bytes(linkstart, zobj)
@@ -847,7 +847,7 @@ class Offsets(IntEnum):
 AdultPieces = {
     "Sheath": (Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATH, 0x249D8),
     "FPS.Hookshot": (Offsets.ADULT_LINK_LUT_DL_FPS_HOOKSHOT, 0x24D70),
-    "Hilt.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_HILT, 0x22060),
+    "Hilt.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_HILT, 0x22060), # 0x21F78 + 0xE8, skips blade
     "Hilt.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_HILT, 0x238C8),
     "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x21F78),
     "Hookshot.Spike": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_HOOK, 0x2B288),
@@ -868,9 +868,9 @@ AdultPieces = {
     "Bow.String": (Offsets.ADULT_LINK_LUT_DL_BOW_STRING, 0x2B108),
     "Bow": (Offsets.ADULT_LINK_LUT_DL_BOW, 0x22DA8),
     "Blade.3.Break": (Offsets.ADULT_LINK_LUT_DL_BLADEBREAK, 0x2BA38),
-    "Blade.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_BLADE, 0x23A28),
+    "Blade.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_BLADE, 0x23A28), # 0x238C8 + 0x160, skips hilt
     "Bottle": (Offsets.ADULT_LINK_LUT_DL_BOTTLE, 0x2AD58), 
-    "Broken.Blade.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_BROKEN, 0x23D50),
+    "Broken.Blade.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_BROKEN, 0x23EB0), # 0x23D50 + 0x160, skips hilt
     "Foot.2.L": (Offsets.ADULT_LINK_LUT_DL_BOOT_LIRON, 0x25918),
     "Foot.2.R": (Offsets.ADULT_LINK_LUT_DL_BOOT_RIRON, 0x25A60),
     "Foot.3.L": (Offsets.ADULT_LINK_LUT_DL_BOOT_LHOVER, 0x25BA8),
@@ -878,7 +878,7 @@ AdultPieces = {
     "Hammer": (Offsets.ADULT_LINK_LUT_DL_HAMMER, 0x233E0),
     "Hookshot.Aiming.Reticule": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_AIM, 0x2CB48),
     "Hookshot.Chain": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_CHAIN, 0x2AFF0),
-    "Ocarina.2": (Offsets.ADULT_LINK_LUT_DL_OCARINA_TIME, 0x24698),
+    "Ocarina.2": (Offsets.ADULT_LINK_LUT_DL_OCARINA_TIME, 0x248D8), # 0x24698 + 0x240, skips hand
     "Shield.2": (Offsets.ADULT_LINK_LUT_DL_SHIELD_HYLIAN, 0x22970),
     "Shield.3": (Offsets.ADULT_LINK_LUT_DL_SHIELD_MIRROR, 0x241C0),
     "Limb 1": (Offsets.ADULT_LINK_LUT_DL_WAIST, 0x35330),
@@ -900,34 +900,37 @@ AdultPieces = {
     "Limb 20": (Offsets.ADULT_LINK_LUT_DL_TORSO, 0x363B8),
 }
 
+# Note: Some skips which can be implemented by skipping the beginning portion of the model
+# rather than specifying those indices here, simply have their offset in the table above
+# increased by whatever amount of starting indices would be skipped.
 adultSkips = {
+    "FPS.Hookshot":  [(0x250, 0x4A0)],
     "Hilt.2": [(0x1E8, 0x430)],
     "Hilt.3": [(0x160, 0x480)],
-    "Blade.2": [(0x02D0, 0x518)],
+    "Blade.2": [(0xE8, 0x518)],
     "Hookshot": [(0x250, 0x4A0)],
     "Bow": [(0x158, 0x3B0)],
     "Blade.3": [(0xB8, 0x320)],
-    "Broken.Blade.3": [(0x200, 0x468)],
+    "Broken.Blade.3": [(0xA0, 0x308)],
     "Hammer": [(0x278, 0x4E0)],
-    "Ocarina.2": [(0x0, 0x240)],
-    "Shield.2": [(0x158, 0x2B8), (0x3A8, 0x430)],
+    "Shield.2": [(0x158, 0x2B8), (0x3A8, 0x430)], # Fist is in 2 pieces
     "Shield.3": [(0x1B8, 0x3E8)],
 }
 
 ChildPieces = {
     "Slingshot.String": (Offsets.CHILD_LINK_LUT_DL_SLINGSHOT_STRING, 0x221A8),
-    "Sheath": (Offsets.CHILD_LINK_LUT_DL_SWORD_HILT, 0x15408),
-    "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x15540), # Presumably for pulling the sword animation
-    "Blade.1": (Offsets.CHILD_LINK_LUT_DL_SWORD_BLADE, 0x13F38), # Need to remove fist and hilt
-    "Boomerang": (Offsets.CHILD_LINK_LUT_DL_BOOMERANG, 0x14660), # Need to remove fist
+    "Sheath": (Offsets.CHILD_LINK_LUT_DL_SWORD_HILT, 0x15408), 
+    "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x15690), # 0x15540 + 0x150, skips fist
+    "Blade.1": (Offsets.CHILD_LINK_LUT_DL_SWORD_BLADE, 0x14110), # 0x13F38 + 0x1D8, skips fist and hilt
+    "Boomerang": (Offsets.CHILD_LINK_LUT_DL_BOOMERANG, 0x14660),
     "Fist.L": (Offsets.CHILD_LINK_LUT_DL_LFIST, 0x13E18),
     "Fist.R": (Offsets.CHILD_LINK_LUT_DL_RFIST, 0x14320),
-    "Hilt.1": (Offsets.CHILD_LINK_LUT_DL_SWORD_HILT, 0x13F38), # Same as kokiri sword, need to have it stop when end of hilt reached
-    "Shield.1": (Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU, 0x14440), # Need to remove fist
-    "Slingshot": (Offsets.CHILD_LINK_LUT_DL_SLINGSHOT, 0x15DF0), # Need to remove fist
-    "Ocarina.1": (Offsets.CHILD_LINK_LUT_DL_OCARINA_FAIRY, 0x15BA8), # Need to remove fist
+    "Hilt.1": (Offsets.CHILD_LINK_LUT_DL_SWORD_HILT, 0x14048), # 0x13F38 + 0x110, skips fist
+    "Shield.1": (Offsets.CHILD_LINK_LUT_DL_SHIELD_DEKU, 0x14440),
+    "Slingshot": (Offsets.CHILD_LINK_LUT_DL_SLINGSHOT, 0x15F08), # 0x15DF0 + 0x118, skips fist
+    "Ocarina.1": (Offsets.CHILD_LINK_LUT_DL_OCARINA_FAIRY, 0x15BA8),
     "Bottle": (Offsets.CHILD_LINK_LUT_DL_BOTTLE, 0x18478),
-    "Ocarina.2": (Offsets.CHILD_LINK_LUT_DL_OCARINA_TIME, 0x15958), # Need to remove fist
+    "Ocarina.2": (Offsets.CHILD_LINK_LUT_DL_OCARINA_TIME, 0x15AB8), # 0x15958 + 0x160, skips hand
     "Bottle.Hand.L": (Offsets.CHILD_LINK_LUT_DL_LHAND_BOTTLE, 0x18478), # Just the bottle, couldn't find one with hand and bottle
     "GoronBracelet": (Offsets.CHILD_LINK_LUT_DL_GORON_BRACELET, 0x16118),
     "Mask.Skull": (Offsets.CHILD_LINK_LUT_DL_MASK_SKULL, 0x2AD40),
@@ -937,9 +940,9 @@ ChildPieces = {
     "Mask.Keaton": (Offsets.CHILD_LINK_LUT_DL_MASK_KEATON, 0x2B060),
     "Mask.Truth": (Offsets.CHILD_LINK_LUT_DL_MASK_TRUTH, 0x2B1F0),
     "Mask.Zora": (Offsets.CHILD_LINK_LUT_DL_MASK_ZORA, 0x2B580),
-    "FPS.Forearm.R": (Offsets.CHILD_LINK_LUT_DL_FPS_RIGHT_ARM, 0x18048), # Need to remove slingshot?
-    "Deku Stick": (Offsets.CHILD_LINK_LUT_DL_DEKU_STICK, 0x6CC0),
-    "Shield.2": (Offsets.CHILD_LINK_LUT_DL_SHIELD_HYLIAN_BACK, 0x14B40), # Need to remove sheath
+    "FPS.Forearm.R": (Offsets.CHILD_LINK_LUT_DL_FPS_RIGHT_ARM, 0x18048),
+    "DekuStick": (Offsets.CHILD_LINK_LUT_DL_DEKU_STICK, 0x6CC0),
+    "Shield.2": (Offsets.CHILD_LINK_LUT_DL_SHIELD_HYLIAN_BACK, 0x14CA0), # 0x14B40 + 0x160, skips sheath
     "Limb 1": (Offsets.CHILD_LINK_LUT_DL_WAIST, 0x202A8),
     "Limb 3": (Offsets.CHILD_LINK_LUT_DL_RTHIGH, 0x204F0),
     "Limb 4": (Offsets.CHILD_LINK_LUT_DL_RSHIN, 0x206E8),
@@ -960,7 +963,10 @@ ChildPieces = {
 }
 
 childSkips = {
-
+    "Boomerang": [(0x140, 0x240)],
+    "Hilt.1": [(0xC0, 0x170)],
+    "Shield.1": [(0x140, 0x218)],
+    "Ocarina.1": [(0x110, 0x240)],
 }
 
 BASE_OFFSET     = 0x06000000
