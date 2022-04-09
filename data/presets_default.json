@@ -168,6 +168,7 @@
       "logic_lens_gtg",
       "logic_lens_shadow",
       "logic_lens_shadow_platform",
+      "logic_lens_bongo",
       "logic_lens_spirit"
     ],
     "logic_earliest_adult_trade":              "prescription",
@@ -277,6 +278,7 @@
       "logic_lens_gtg",
       "logic_lens_shadow",
       "logic_lens_shadow_platform",
+      "logic_lens_bongo",
       "logic_lens_spirit"
     ],
     "logic_earliest_adult_trade":              "prescription",
@@ -606,6 +608,7 @@
       "logic_lens_gtg",
       "logic_lens_shadow",
       "logic_lens_shadow_platform",
+      "logic_lens_bongo",
       "logic_lens_spirit",
       "logic_dc_scarecrow_gs"
     ],
@@ -829,6 +832,7 @@
       "logic_lens_shadow_mq_platform",
       "logic_lens_shadow",
       "logic_lens_shadow_platform",
+      "logic_lens_bongo",
       "logic_lens_spirit_mq",
       "logic_lens_spirit"
     ],
@@ -934,6 +938,7 @@
       "logic_lens_gtg",
       "logic_lens_shadow",
       "logic_lens_shadow_platform",
+      "logic_lens_bongo",
       "logic_lens_spirit"
     ],
     "logic_earliest_adult_trade":              "prescription",
@@ -1034,6 +1039,7 @@
       "logic_lens_gtg",
       "logic_lens_shadow",
       "logic_lens_shadow_platform",
+      "logic_lens_bongo",
       "logic_lens_spirit"
     ],
     "logic_earliest_adult_trade":              "claim_check",
@@ -1143,6 +1149,7 @@
       "logic_lens_gtg",
       "logic_lens_shadow",
       "logic_lens_shadow_platform",
+      "logic_lens_bongo",
       "logic_lens_spirit"
     ],
     "logic_earliest_adult_trade":              "prescription",
