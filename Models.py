@@ -309,17 +309,17 @@ def LoadModel(rom, model, age):
     linkstart = ADULT_START
     linksize = ADULT_SIZE
     hierarchy = ADULT_HIERARCHY
+    postconstantstart = ADULT_POST_START
     pieces = AdultPieces
     path = 'data/Models/Adult/'
-    constantstart = 0x5238
     skips = adultSkips
     if age == 1:
         linkstart = CHILD_START
         linksize = CHILD_SIZE
         hierarchy = CHILD_HIERARCHY
+        postconstantstart = CHILD_POST_START
         pieces = ChildPieces
         path = 'data/Models/Child/'
-        constantstart = 0x5228
         skips = childSkips
     # Read model data from file
     file = open(path + model, "rb")
@@ -328,6 +328,9 @@ def LoadModel(rom, model, age):
     zobj = bytearray(zobj)
     # See if the string MODLOADER64 appears before the LUT- if so this is a PlayAs model and needs no further processing
     if scan(zobj, "MODLOADER64") == -1:
+        # First, make sure all important bytes are zeroed out
+        for i in range(LUT_START, LUT_END):
+            zobj[i] = 0x00
         # Find which pieces are missing from this model
         footerstart = scan(zobj, "!PlayAsManifest0")
         startaddr = footerstart - len("!PlayAsManifest0")
@@ -375,14 +378,14 @@ def LoadModel(rom, model, age):
         file.close()
         i = 0
         for byte in constants:
-            zobj[LUT_START + i] = byte
+            zobj[PRE_CONSTANT_START + i] = byte
             i += 1
         file = open(path + 'Constants/postconstants.zobj', "rb")
         constants = file.read()
         file.close()
         i = 0
         for byte in constants:
-            zobj[constantstart + i] = byte
+            zobj[postconstantstart + i] = byte
             i += 1
         # Set up hierarchy pointer
         hierarchyOffset = FindHierarchy(zobj)
@@ -933,6 +936,7 @@ ChildPieces = {
     "Ocarina.2": (Offsets.CHILD_LINK_LUT_DL_OCARINA_TIME, 0x15AB8), # 0x15958 + 0x160, skips hand
     "Bottle.Hand.L": (Offsets.CHILD_LINK_LUT_DL_LHAND_BOTTLE, 0x18478), # Just the bottle, couldn't find one with hand and bottle
     "GoronBracelet": (Offsets.CHILD_LINK_LUT_DL_GORON_BRACELET, 0x16118),
+    "Mask.Bunny": (Offsets.CHILD_LINK_LUT_DL_MASK_BUNNY, 0x2CA38),
     "Mask.Skull": (Offsets.CHILD_LINK_LUT_DL_MASK_SKULL, 0x2AD40),
     "Mask.Spooky": (Offsets.CHILD_LINK_LUT_DL_MASK_SPOOKY, 0x2AF70),
     "Mask.Gerudo": (Offsets.CHILD_LINK_LUT_DL_MASK_GERUDO, 0x2B788),
@@ -969,11 +973,17 @@ childSkips = {
     "Ocarina.1": [(0x110, 0x240)],
 }
 
-BASE_OFFSET     = 0x06000000
-LUT_START       = 0x0000500C
-ADULT_START     = 0x00F86000
-ADULT_SIZE      = 0x00037800
-ADULT_HIERARCHY = 0x06005380
-CHILD_START     = 0x00FBE000
-CHILD_SIZE      = 0x0002CF80
-CHILD_HIERARCHY = 0x060053A8
+BASE_OFFSET         = 0x06000000
+LUT_START           = 0x00005000
+LUT_END             = 0x00005800
+PRE_CONSTANT_START  = 0X0000500C
+
+ADULT_START         = 0x00F86000
+ADULT_SIZE          = 0x00037800
+ADULT_HIERARCHY     = 0x06005380
+ADULT_POST_START    = 0x00005238
+
+CHILD_START         = 0x00FBE000
+CHILD_SIZE          = 0x0002CF80
+CHILD_HIERARCHY     = 0x060053A8
+CHILD_POST_START    = 0x00005228
