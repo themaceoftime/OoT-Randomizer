@@ -4163,7 +4163,7 @@ setting_infos = [
             are vanilla, the vanilla text is used.)
         ''',
         shared         = True,
-        default        = True,
+        default        = ['altar', 'ganondorf', 'warp_songs'],
     ),
     Combobox(
         name           = 'ice_trap_appearance',
