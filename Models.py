@@ -915,7 +915,7 @@ adultSkips = {
 
 ChildPieces = {
     "Slingshot.String": (Offsets.CHILD_LINK_LUT_DL_SLINGSHOT_STRING, 0x221A8),
-    "Sheath": (Offsets.CHILD_LINK_LUT_DL_SWORD_HILT, 0x15408), 
+    "Sheath": (Offsets.CHILD_LINK_LUT_DL_SWORD_SHEATH, 0x15408), 
     "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x15690), # 0x15540 + 0x150, skips fist
     "Blade.1": (Offsets.CHILD_LINK_LUT_DL_SWORD_BLADE, 0x14110), # 0x13F38 + 0x1D8, skips fist and hilt
     "Boomerang": (Offsets.CHILD_LINK_LUT_DL_BOOMERANG, 0x14660),
@@ -939,7 +939,7 @@ ChildPieces = {
     "Mask.Zora": (Offsets.CHILD_LINK_LUT_DL_MASK_ZORA, 0x2B580),
     "FPS.Forearm.R": (Offsets.CHILD_LINK_LUT_DL_FPS_RIGHT_ARM, 0x18048),
     "DekuStick": (Offsets.CHILD_LINK_LUT_DL_DEKU_STICK, 0x6CC0),
-    "Shield.2": (Offsets.CHILD_LINK_LUT_DL_SHIELD_HYLIAN_BACK, 0x14CA0), # 0x14B40 + 0x160, skips sheath
+    "Shield.2": (Offsets.CHILD_LINK_LUT_DL_SHIELD_HYLIAN_BACK, 0x14C30), # 0x14B40 + 0xF0, skips sheath
     "Limb 1": (Offsets.CHILD_LINK_LUT_DL_WAIST, 0x202A8),
     "Limb 3": (Offsets.CHILD_LINK_LUT_DL_RTHIGH, 0x204F0),
     "Limb 4": (Offsets.CHILD_LINK_LUT_DL_RSHIN, 0x206E8),
