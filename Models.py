@@ -3,22 +3,15 @@ import random
 from enum import IntEnum
 
 
-def get_model_choices_adult():
+def get_model_choices(age):
     names = ["Default"]
-    if os.path.exists('data/Models/adult'):
-        for file in os.listdir('data/Models/adult'):
-            names.append(file.split('.')[0])
-    if len(names) > 2:
-        # If more than 2 non-default model choices, add random option
-        names.insert(1, "Random")
-    return names
-
-
-def get_model_choices_child():
-    names = ["Default"]
-    if os.path.exists('data/Models/child'):
-        for file in os.listdir('data/Models/child'):
-            names.append(file.split('.')[0])
+    path = "data/Models/Adult"
+    if age == 1:
+        path = "data/Models/Child"
+    if not os.path.exists(path): # GUI loaded, path different
+        path = "../" + path
+    for file in os.listdir(path):
+        names.append(file.split('.')[0])
     if len(names) > 2:
         # If more than 2 non-default model choices, add random option
         names.insert(1, "Random")

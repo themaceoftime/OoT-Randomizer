@@ -14,7 +14,7 @@ from Hints import HintDistList, HintDistTips, gossipLocations
 from Item import item_table
 from Location import LocationIterator
 from LocationList import location_table
-from Models import get_model_choices_adult, get_model_choices_child
+from Models import get_model_choices
 import Sounds as sfx
 import StartingItems
 from Utils import data_path
@@ -4254,7 +4254,7 @@ setting_infos = [
         gui_text       = 'Adult Link Model',
         shared         = False,
         cosmetic       = True,
-        choices        = get_model_choices_adult(),
+        choices        = get_model_choices(0),
         default        = 'Default',
     ),
     Combobox(
@@ -4262,7 +4262,7 @@ setting_infos = [
         gui_text       = 'Child Link Model',
         shared         = False,
         cosmetic       = True,
-        choices        = get_model_choices_child(),
+        choices        = get_model_choices(1),
         default        = 'Default',
     ),
     Checkbutton(
