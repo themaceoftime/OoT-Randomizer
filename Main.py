@@ -217,6 +217,10 @@ def prepare_rom(spoiler, world, rom, settings, rng_state=None, restore=True):
         random.setstate(rng_state)
     patch_rom(spoiler, world, rom)
     cosmetics_log = patch_cosmetics(settings, rom)
+    if settings.model_adult != "Default":
+        patch_model_adult(rom, settings, cosmetics_log)
+    if settings.model_child != "Default":
+        patch_model_child(rom, settings, cosmetics_log)
     rom.update_header()
     return cosmetics_log
 
@@ -403,18 +407,7 @@ def patch_and_output(settings, window, spoiler, rom):
                     patch_archive.write(file_path, file.replace(output_filename_base, '').replace('.zpf_Cosmetics', '_Cosmetics'), compress_type=zipfile.ZIP_DEFLATED)
             for file in file_list:
                 os.remove(os.path.join(output_dir, file))
-        logger.info("Created patch file archive at: %s" % patch_archive_path)
-        window.update_progress(95)
-
-    elif settings.compress_rom not in ['None', 'Temp']:
-        window.update_status('Patching ROM')
-        patch_rom(spoiler, worlds[settings.player_num - 1], rom)
-        cosmetics_log = patch_cosmetics(settings, rom)
-        if settings.model_adult != "Default":
-            patch_model_adult(rom, settings, cosmetics_log)
-        if settings.model_child != "Default":
-            patch_model_child(rom, settings, cosmetics_log)
-        window.update_progress(65)
+            logger.info("Created patch file archive at: %s" % patch_archive_path)
 
     window.update_progress(95)
 
