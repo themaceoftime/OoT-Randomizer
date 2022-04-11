@@ -67,8 +67,8 @@ class ModelDataWriter:
             self.rom.write_byte(self.GetAddress(), bytes[i])
             self.offset += 1
 
-# Either return the starting index of the footer (when start == 0)
-# or if the element exists in the footer (start > 0)
+# Either return the starting index of the requested data (when start == 0)
+# or if the element exists after the start (start > 0)
 def scan(bytes, data, start=0):
     databytes = data
     # If a string was passed, encode string as bytes
@@ -80,9 +80,35 @@ def scan(bytes, data, start=0):
         if bytes[i] == databytes[dataindex]:
             dataindex += 1
             # Special case: Bottle, Bow, and Slingshot are subsets of Bottle.Hand.L, Bow.String, and Slingshot.String respectively
+            # And Hookshot which is a subset of Hookshot.Spike, Hookshot.Chain, Hookshot.Aiming.Reticule
             # This leads to false positives. So if the next byte is . (0x2E) then reset the count.
-            if bytes[i+1] == 0x2E and isinstance(data, str) and data in ["Bottle", "Bow", "Slingshot"]:
-                dataindex = 0
+            if isinstance(data, str) and data in ["Bottle", "Bow", "Slingshot", "Hookshot", "Blade.3"] and i < len(bytes) - 1 and bytes[i+1] == 0x2E:
+                # Blade.3 is even wackier, as it is a subset of Blade.3.Break, 
+                # and also a forward subset of Broken.Blade.3, and has a period in it
+                if data == "Blade.3":
+                    resetCount = False
+                    # If current byte is the "e" in "Blade.3", the period detected is the expected one- Carry on
+                    # If it isn't, then reset the count
+                    if bytes[i] != 0x65:
+                        resetCount = True
+                    # Make sure i is large enough, "Broken.Blad" is 11 chars (remember we're currently at the e)
+                    if not resetCount and i > 10: 
+                        # Check if "Broken." immediately preceeds this string
+                        preceedingBytes = bytes[i-11:i-4]
+                        if preceedingBytes == bytearray(b'Broken.'):
+                            resetCount = True
+                    if resetCount:
+                        dataindex = 0
+                # Default case for Bottle, Bow, Slingshot, Hookshot, reset count
+                else:
+                    dataindex = 0
+            # Special case for Hookshot: Forward subset of FPS.Hookshot, "FPS." is 4 chars
+            # (Blade.3 can check for Broken.Blade.3 in the previous stanza since a . will be encountered at some point)
+            if isinstance(data, str) and data == "Hookshot" and dataindex == 1 and i > 3:
+                # Check if "FPS." immediately preceeds this string
+                preceedingBytes = bytes[i-4:i]
+                if preceedingBytes == bytearray(b'FPS.'):
+                    dataindex = 0
             # All bytes have been found, so a match
             if dataindex == len(databytes):
                 # If start is 0 then looking for the footer, return the index
