@@ -141,9 +141,9 @@ def set_shop_rules(world):
                                       'Buy Fish',
                                       'Buy Green Potion',
                                       'Buy Poe',
-                                      'Buy Red Potion [30]',
-                                      'Buy Red Potion [40]',
-                                      'Buy Red Potion [50]',
+                                      'Buy Red Potion for 30 Rupees',
+                                      'Buy Red Potion for 40 Rupees',
+                                      'Buy Red Potion for 50 Rupees',
                                       'Buy Fairy\'s Spirit']:
                 location.add_rule(State.has_bottle)
             if location.item.name in ['Buy Bombchu (10)', 'Buy Bombchu (20)', 'Buy Bombchu (5)']:
