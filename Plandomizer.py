@@ -389,8 +389,11 @@ class WorldDistribution(object):
 
     # Add randomized_settings defined in distribution to world's randomized settings list
     def configure_randomized_settings(self, world):
+        settings = world.settings
         for name, record in self.randomized_settings.items():
-            setattr(world, name, record)
+            if not hasattr(settings, name):
+                raise RuntimeError(f"Unknown random setting in world {self.id + 1}: '{name}'")
+            setattr(settings, name, record)
             if name not in world.randomized_list:
                 world.randomized_list.append(name)
 
