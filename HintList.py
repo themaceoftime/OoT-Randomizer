@@ -1456,7 +1456,7 @@ hintTable = {
     'ganonBK_vanilla':                                          ("kept in a big chest #inside its tower#", None, 'ganonBossKey'),
     'ganonBK_overworld':                                        ("hidden #outside of dungeons# in Hyrule", None, 'ganonBossKey'),
     'ganonBK_any_dungeon':                                      ("hidden #inside a dungeon# in Hyrule", None, 'ganonBossKey'),
-    'ganonBK_keysanity':                                        ("hidden somewhere #in Hyrule#", None, 'ganonBossKey'),
+    'ganonBK_keysanity':                                        ("hidden #anywhere in Hyrule#", None, 'ganonBossKey'),
     'ganonBK_triforce':                                         ("given to the Hero once the #Triforce# is completed", None, 'ganonBossKey'),
     'ganonBK_medallions':                                       ("Medallions", None, 'ganonBossKey'),
     'ganonBK_stones':                                           ("Spiritual Stones", None, 'ganonBossKey'),
