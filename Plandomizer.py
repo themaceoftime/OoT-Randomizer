@@ -938,7 +938,7 @@ class WorldDistribution(object):
             spoiler.hints[self.id][stoneID] = GossipText(text=record.text, colors=record.colors, prefix='')
 
 
-    def give_items(self, save_context):
+    def give_items(self, world, save_context):
         # copy Triforce pieces to all worlds
         triforce_count = sum(
             world_dist.effective_starting_items['Triforce Piece'].count
@@ -946,12 +946,12 @@ class WorldDistribution(object):
             if 'Triforce Piece' in world_dist.effective_starting_items
         )
         if triforce_count > 0:
-            save_context.give_item('Triforce Piece', triforce_count)
+            save_context.give_item(world, 'Triforce Piece', triforce_count)
 
         for (name, record) in self.effective_starting_items.items():
             if name == 'Triforce Piece' or record.count == 0:
                 continue
-            save_context.give_item(name, record.count)
+            save_context.give_item(world, name, record.count)
 
 
     def get_starting_item(self, item):
