@@ -114,6 +114,7 @@ do that.
   * Setting `Randomize Ocarina Song Notes` can now be set to either "row" of songs individually, i.e. "Frog Songs" or "Warp Songs", in additional to the "Off" and "All Songs" options.
   * MQ Dungeon settings have been replaced with `MQ Dungeons Mode` which allows finer selection of which dungeons are MQ, or how many are at random.
   * New setting `Shuffle Boss Entrances` allows boss rooms to be shuffled between dungeons. This is only available in glitchless logic.
+  * `Misc. Hints` has been expanded to a multiple select setting allowing you to fine-tune which set of misc hints to enable or disable.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
@@ -150,6 +151,11 @@ do that.
 * Patch files from the web version of OoT Randomizer version 3.0 can now be used in the offline build. A `.zpf` patch file will be output in addition to the selected output types.
 * On the randomizer dungeon info screen, a Gold Skulltula icon appears for dungeons where you have collected all the Gold Skulltulas.
 * Maximum heart containers is now capped at 20. Pieces of Heart and Heart Containers collected after 20 will still restore your health but will not add to your hearts.
+* Many more "Junk" hints have been added.
+* `Song from Impa` is no longer restricted to a smaller set of items when `Skip Child Zelda` is enabled.
+* On the File Select screen, trade items that will be reverted on load now show as the item they will revert to.
+* Ganondorf will now say that the Light Arrows are in your pocket if they are an effective starting item (e.g. the item given from `Skip Child Zelda`).
+* The "WINNER!" Piece of Heart will now show the proper player name in Multiworld.
 
 ### 6.2
 
