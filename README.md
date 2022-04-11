@@ -117,6 +117,7 @@ do that.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
+  * You can now use the child trade item (Zelda's Letter, masks, etc) as child using D-Pad Right.
 
 
 #### Bug fixes
