@@ -4051,10 +4051,13 @@ setting_infos = [
         choices        = {
             'off': 'Off',
             'textures': 'Texture',
-            'sizes': 'Size and Texture'
+            'both':  'Both Size and Texture',
+            'classic': 'Classic'
         },
         gui_tooltip    = '''\
-            If enabled, chest texture will reflect its contents
+            
+			
+            If "Texture" is enabled, chest texture will reflect its contents
             regardless of size.  Fancy chests will contain keys,
             Gilded chests will contain major items, shuffled
             tokens will be in Webbed chests, and Wooden chests
@@ -4062,9 +4065,15 @@ setting_infos = [
             This allows skipping chests if they are wooden. 
             However, skipping wooden chests will mean having 
             low health, ammo, and rupees, so doing so is a risk.
+            
             "Size and Texture" will change chests with major
             items and boss keys into big chests, and everything
             else into small chests.
+            
+            "Classic" is the behavior of CSMC in previous versions of the randomizer.
+            This will change chests with major items and boss keys into big chests.
+            Boss keys will remain in their fancy chest, while small key will be in a
+            smaller version of the fancy chest.
         ''',
         shared         = True,
     ),
