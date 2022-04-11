@@ -3,11 +3,9 @@ import logging
 from State import State
 from Rules import set_shop_rules
 from Location import DisableType
-from LocationList import location_groups
-from ItemPool import IGNORE_LOCATION, song_list, get_junk_item, item_groups, remove_junk_items
+from ItemPool import IGNORE_LOCATION, remove_junk_items
 from Item import ItemFactory, ItemInfo
 from Search import Search
-from functools import reduce
 
 logger = logging.getLogger('')
 
