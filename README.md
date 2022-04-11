@@ -135,6 +135,7 @@ do that.
 * Using Farore's Wind as both ages should no longer result in the wrong temporary flags being loaded.
 * Fixed issues where `Skip Child Zelda` could give a weapon with no ammo or overwrite starting Triforce Pieces.
 * Fixed an issue where `Plentiful` item pool combined with `Starting Hearts` would result in more Heart Containers being in the item pool than intended.
+* The Like Like in Master Quest Fire Temple will now return the player's shield when defeated.
 
 #### Other changes
 * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
