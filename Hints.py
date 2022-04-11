@@ -31,6 +31,8 @@ defaultHintDists = [
     'balanced.json', 'bingo.json', 'ddr.json', 'scrubs.json', 'strong.json', 'tournament.json', 'useless.json', 'very_strong.json'
 ]
 
+unHintableWothItems = ['Triforce Piece', 'Gold Skulltula Token']
+
 class RegionRestriction(Enum):
     NONE = 0,
     DUNGEON = 1,
@@ -333,7 +335,8 @@ def get_woth_hint(spoiler, world, checked):
         and not (world.woth_dungeon >= world.hint_dist_user['dungeons_woth_limit'] and location.parent_region.dungeon)
         and location.name not in world.hint_exclusions
         and location.name not in world.hint_type_overrides['woth']
-        and location.item.name not in world.item_hint_type_overrides['woth'],
+        and location.item.name not in world.item_hint_type_overrides['woth']
+        and location.item.name not in unHintableWothItems,
         locations))
 
     if not locations:
@@ -427,7 +430,8 @@ def get_goal_hint(spoiler, world, checked):
             location[0].name not in checked
             and location[0].name not in world.hint_exclusions
             and location[0].name not in world.hint_type_overrides['goal']
-            and location[0].item.name not in world.item_hint_type_overrides['goal'],
+            and location[0].item.name not in world.item_hint_type_overrides['goal']
+            and location[0].item.name not in unHintableWothItems,
             goal.required_locations))
 
         if not goal_locations:
@@ -516,9 +520,10 @@ def is_not_checked(location, checked):
 def get_good_item_hint(spoiler, world, checked):
     locations = list(filter(lambda location:
         is_not_checked(location, checked)
-        and (location.item.majoritem
-            or location.name in world.added_hint_types['item']
-            or location.item.name in world.item_added_hint_types['item'])
+        and ((location.item.majoritem
+            and location.item.name not in unHintableWothItems)
+                or location.name in world.added_hint_types['item']
+                or location.item.name in world.item_added_hint_types['item'])
         and not location.locked
         and location.name not in world.hint_exclusions
         and location.name not in world.hint_type_overrides['item']
