@@ -1508,7 +1508,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
 
     # build silly ganon lines
-    if world.settings.misc_hints:
+    if 'ganondorf' in world.settings.misc_hints:
         buildGanonText(world, messages)
 
     # Write item overrides
@@ -1907,7 +1907,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     # Set hints on the altar inside ToT
     rom.write_int16(0xE2ADB2, 0x707A)
     rom.write_int16(0xE2ADB6, 0x7057)
-    buildAltarHints(world, messages, include_rewards=world.settings.misc_hints and not world.settings.enhance_map_compass, include_wincons=world.settings.misc_hints)
+    buildAltarHints(world, messages, include_rewards='altar' in world.settings.misc_hints and not world.settings.enhance_map_compass, include_wincons='altar' in world.settings.misc_hints)
 
     # Set Dungeon Reward Actor in Jabu Jabu to be accurate
     # Vanilla and MQ Jabu Jabu addresses are the same for this object and actor
@@ -2406,7 +2406,7 @@ def configure_dungeon_info(rom, world):
     rom.write_int32(rom.sym('CFG_DUNGEON_INFO_ENABLE'), 1)
     rom.write_int32(rom.sym('CFG_DUNGEON_INFO_MQ_ENABLE'), int(mq_enable))
     rom.write_int32(rom.sym('CFG_DUNGEON_INFO_MQ_NEED_MAP'), int(enhance_map_compass))
-    rom.write_int32(rom.sym('CFG_DUNGEON_INFO_REWARD_ENABLE'), int(world.settings.misc_hints or enhance_map_compass))
+    rom.write_int32(rom.sym('CFG_DUNGEON_INFO_REWARD_ENABLE'), int('altar' in world.settings.misc_hints or enhance_map_compass))
     rom.write_int32(rom.sym('CFG_DUNGEON_INFO_REWARD_NEED_COMPASS'), int(enhance_map_compass))
     rom.write_int32(rom.sym('CFG_DUNGEON_INFO_REWARD_NEED_ALTAR'), int(not enhance_map_compass))
     rom.write_bytes(rom.sym('CFG_DUNGEON_REWARDS'), dungeon_rewards)

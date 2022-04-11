@@ -1012,9 +1012,13 @@ def update_warp_song_text(messages, world):
     }
 
     for id, entr in msg_list.items():
-        destination = world.get_entrance(entr).connected_region
-        destination_name, color = get_hint_area(destination)
-        color = COLOR_MAP[color]
+        if 'warp_songs' in world.settings.misc_hints:
+            destination = world.get_entrance(entr).connected_region
+            destination_name, color = get_hint_area(destination)
+            color = COLOR_MAP[color]
+        else:
+            destination_name = 'a mysterious place'
+            color = COLOR_MAP['White']
 
         new_msg = f"\x08\x05{color}Warp to {destination_name}?\x05\40\x09\x01\x01\x1b\x05\x42OK\x01No\x05\40"
         update_message_by_id(messages, id, new_msg)
