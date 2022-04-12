@@ -11,7 +11,10 @@ def get_model_choices(age):
     if not os.path.exists(path): # GUI loaded, path different
         path = "../" + path
     for file in os.listdir(path):
-        names.append(file.split('.')[0])
+        dotsplit = file.split('.')
+        # Make sure this is a file and a zobj
+        if len(dotsplit) > 1 and dotsplit[1] == "zobj":
+            names.append(dotsplit[0])
     if len(names) > 2:
         # If more than 2 non-default model choices, add random option
         names.insert(1, "Random")
@@ -505,8 +508,11 @@ def patch_model_adult(rom, settings, log):
     # Default to filepicker if non empty
     if len(model) == 0:
         model = settings.model_adult + ".zobj"
-        if settings.model_adult == "Random": 
-            model = random.choice([x for x in os.listdir('data/Models/adult')])
+        if settings.model_adult == "Random":
+            choices = get_model_choices(0)
+            choices.remove("Default")
+            choices.remove("Random")
+            model = random.choice(choices)
         model = 'data\\Models\\Adult\\' + model
     pathsplit = model.split('\\')
     log.settings.model_adult = pathsplit[len(pathsplit)-1].split('.')[0]
@@ -673,8 +679,11 @@ def patch_model_child(rom, settings, log):
     # Default to filepicker if non empty
     if len(model) == 0:
         model = settings.model_child + ".zobj"
-        if settings.model_child == "Random": 
-            model = random.choice([x for x in os.listdir('data/Models/child')])
+        if settings.model_child == "Random":
+            choices = get_model_choices(1)
+            choices.remove("Default")
+            choices.remove("Random")
+            model = random.choice(choices)
         model = 'data\\Models\\Child\\' + model
     pathsplit = model.split('\\')
     log.settings.model_child = pathsplit[len(pathsplit)-1].split('.')[0]
