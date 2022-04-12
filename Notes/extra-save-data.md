@@ -26,8 +26,9 @@ With `shuffle_cows`, the flags representing which cows have been talked to are s
 * LLR Tower Right Cow: scene 0x4c, bit 0100_0000
 * GV Cow: scene 0x5a, bit 0100_0000
 
-With `shuffle_medigoron_carpet_salesman`, flags for Medigoron and the carpet salesman are similarly stored in collectibles fields:
+With `shuffle_beans` or `shuffle_medigoron_carpet_salesman`, flags for the bean salesman or Medigoron and the carpet salesman, respectively, are similarly stored in collectibles fields:
 
+* ZR Magic Bean Salesman: scene 0x54, bit 0000_0002
 * Wasteland Bombchu Salesman: scene 0x5e, bit 0000_0002
 * GC Medigoron: scene 0x62, bit 0000_0002
 
