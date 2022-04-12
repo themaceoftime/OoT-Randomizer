@@ -30,3 +30,10 @@ With `shuffle_medigoron_carpet_salesman`, flags for Medigoron and the carpet sal
 
 * Wasteland Bombchu Salesman: scene 0x5e, bit 0000_0002
 * GC Medigoron: scene 0x62, bit 0000_0002
+
+# inf_table
+
+Additional flags stored in `inf_table` (an array of 16-bit integers at save context + 0x0ef8):
+
+* Entry 0x1b, bit 0002 is set when the Temple of Time altar is read as child. This allows the pause menu dungeon info to display stone locations depending on settings.
+* Entry 0x1b, bit 0001 is set when the Temple of Time altar is read as adult. This allows the pause menu dungeon info to display medallion locations depending on settings.
