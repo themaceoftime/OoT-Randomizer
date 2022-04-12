@@ -395,7 +395,9 @@
           "row_span": [2,2,2],
           "settings": [
             "model_adult",
-            "model_child"
+            "model_adult_filepicker",
+            "model_child",
+            "model_child_filepicker"
           ]
         },
         {

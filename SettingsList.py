@@ -1740,7 +1740,15 @@ setting_infos = [
                     'settings' : [
                         'rom','web_output_type','player_num',
                         'web_wad_file', 'web_common_key_file', 'web_common_key_string',
-                        'web_wad_channel_id','web_wad_channel_title'
+                        'web_wad_channel_id','web_wad_channel_title',
+                        'model_adult', 'model_child'
+                    ],
+                },
+            },
+            'electron:disable' : {
+                False : {
+                    'settings' : [
+                        'model_adult_filepicker', 'model_child_filepicker'
                     ],
                 },
             }
@@ -4447,6 +4455,20 @@ setting_infos = [
         choices        = get_model_choices(0),
         default        = 'Default',
     ),
+    Setting_Info('model_adult_filepicker', str, "Adult Link Model", "Fileinput", False, {},
+        gui_params = {
+            "file_types": [
+                {
+                  "name": "Z64 Model Files",
+                  "extensions": [ "zobj" ]
+                },
+                {
+                  "name": "All Files",
+                  "extensions": [ "*" ]
+                }
+            ],
+            "hide_when_disabled": True,
+    }),
     Combobox(
         name           = 'model_child',
         gui_text       = 'Child Link Model',
@@ -4455,6 +4477,20 @@ setting_infos = [
         choices        = get_model_choices(1),
         default        = 'Default',
     ),
+    Setting_Info('model_child_filepicker', str, "Child Link Model", "Fileinput", False, {},
+        gui_params = {
+            "file_types": [
+                {
+                  "name": "Z64 Model Files",
+                  "extensions": [ "zobj" ]
+                },
+                {
+                  "name": "All Files",
+                  "extensions": [ "*" ]
+                }
+            ],
+            "hide_when_disabled": True,
+    }),
     Checkbutton(
         name           = 'randomize_all_cosmetics',
         gui_text       = 'Randomize All Cosmetics',

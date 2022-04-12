@@ -400,7 +400,7 @@ def LoadModel(rom, model, age):
         skips = childSkips
         agestr = "child"
     # Read model data from file
-    file = open(path + model, "rb")
+    file = open(model, "rb")
     zobj = file.read()
     file.close()
     zobj = bytearray(zobj)
@@ -433,6 +433,9 @@ def LoadModel(rom, model, age):
             for byte in vanillaZobj:
                 zobj.insert(startaddr + i, byte)
                 i += 1
+            if len(zobj) > linksize:
+                raise ModelDefinitionError("After processing, model for " + agestr + " too large- It is " 
+                + str(len(zobj)) + " bytes, but must be at most " + str(linksize) + " bytes.")
         # Now we have to set the lookup table for each item
         for (piece, offset) in DLOffsets.items():
             # Add the starting address to each offset so they're accurate to the updated zobj
@@ -452,7 +455,7 @@ def LoadModel(rom, model, age):
         # Put prefix for easily finding LUT in RAM
         i = 0
         for byte in "HEYLOOKHERE".encode():
-            zobj[0x5000+i] = byte
+            zobj[LUT_START+i] = byte
             i += 1 
         # Set constants in the LUT
         file = open(path + 'Constants/preconstants.zobj', "rb")
@@ -487,15 +490,22 @@ def LoadModel(rom, model, age):
 
 
 def patch_model_adult(rom, settings, log):
-    model = settings.model_adult + ".zobj"
-    if settings.model_adult == "Random": 
-        model = random.choice([x for x in os.listdir('data/Models/adult')])
-    log.model = model.split('.')[0]
-    writer = ModelPointerWriter(rom)
+    # Get model filepath
+    model = settings.model_adult_filepicker
+    # Default to filepicker if non empty
+    if len(model) == 0:
+        model = settings.model_adult + ".zobj"
+        if settings.model_adult == "Random": 
+            model = random.choice([x for x in os.listdir('data/Models/adult')])
+        model = 'data\\Models\\Adult\\' + model
+    pathsplit = model.split('\\')
+    log.settings.model_adult = pathsplit[len(pathsplit)-1].split('.')[0]
 
+    # Load and process model
     dfAddress = LoadModel(rom, model, 0)
 
     # Write adult Link pointer data
+    writer = ModelPointerWriter(rom)
     writer.GoTo(0xE6718)
     writer.SetAdvance(8)
     writer.WriteModelData(Offsets.ADULT_LINK_LUT_DL_RFIST)
@@ -647,15 +657,22 @@ def patch_model_adult(rom, settings, log):
 
 
 def patch_model_child(rom, settings, log):
-    model = settings.model_child + ".zobj"
-    if settings.model_child == "Random": 
-        model = random.choice([x for x in os.listdir('data/Models/child')])
-    log.model = model.split('.')[0]
-    writer = ModelPointerWriter(rom)
+    # Get model filepath
+    model = settings.model_child_filepicker
+    # Default to filepicker if non empty
+    if len(model) == 0:
+        model = settings.model_child + ".zobj"
+        if settings.model_child == "Random": 
+            model = random.choice([x for x in os.listdir('data/Models/child')])
+        model = 'data\\Models\\Child\\' + model
+    pathsplit = model.split('\\')
+    log.settings.model_child = pathsplit[len(pathsplit)-1].split('.')[0]
 
+    # Load and process model
     dfAddress = LoadModel(rom, model, 1)
 
     # Write child Link pointer data
+    writer = ModelPointerWriter(rom)
     writer.GoTo(0xE671C)
     writer.SetAdvance(8)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_RFIST)

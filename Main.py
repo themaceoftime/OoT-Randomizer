@@ -217,9 +217,9 @@ def prepare_rom(spoiler, world, rom, settings, rng_state=None, restore=True):
         random.setstate(rng_state)
     patch_rom(spoiler, world, rom)
     cosmetics_log = patch_cosmetics(settings, rom)
-    if settings.model_adult != "Default":
+    if settings.model_adult != "Default" or len(settings.model_adult_filepicker) > 0:
         patch_model_adult(rom, settings, cosmetics_log)
-    if settings.model_child != "Default":
+    if settings.model_child != "Default" or len(settings.model_child_filepicker) > 0:
         patch_model_child(rom, settings, cosmetics_log)
     rom.update_header()
     return cosmetics_log
