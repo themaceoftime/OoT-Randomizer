@@ -1046,7 +1046,7 @@ adultSkips = {
 ChildPieces = {
     "Slingshot.String": (Offsets.CHILD_LINK_LUT_DL_SLINGSHOT_STRING, 0x221A8),
     "Sheath": (Offsets.CHILD_LINK_LUT_DL_SWORD_SHEATH, 0x15408), 
-    "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x15690), # 0x15540 + 0x150, skips fist
+    "Blade.2": (Offsets.CHILD_LINK_LUT_DL_MASTER_SWORD, 0x15698), # 0x15540 + 0x158, skips fist
     "Blade.1": (Offsets.CHILD_LINK_LUT_DL_SWORD_BLADE, 0x14110), # 0x13F38 + 0x1D8, skips fist and hilt
     "Boomerang": (Offsets.CHILD_LINK_LUT_DL_BOOMERANG, 0x14660),
     "Fist.L": (Offsets.CHILD_LINK_LUT_DL_LFIST, 0x13E18),
