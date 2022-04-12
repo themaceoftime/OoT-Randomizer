@@ -166,6 +166,7 @@ def WriteDLPointer(dl, index, data):
 
 
 # An extensive function which loads pieces from the vanilla Link model to add to the user-provided zobj
+# Based on https://github.com/hylian-modding/ML64-Z64Lib/blob/master/cores/Z64Lib/API/zzoptimize.ts function optimize()
 def LoadVanilla(rom, missing, rebase, linkstart, linksize, pieces, skips):
     # Get vanilla "zobj" of Link's model
     vanillaData = []
@@ -197,7 +198,7 @@ def LoadVanilla(rom, missing, rebase, linkstart, linksize, pieces, skips):
             op = vanillaData[i]
             seg = vanillaData[i+4]
             lo = int.from_bytes(vanillaData[i+4:i+8], 'big')
-            # Source for displaylist bytecode: https://hack64.net/wiki/doku.php?id=f3dex2#dfg_enddl
+            # Source for displaylist bytecode: https://hack64.net/wiki/doku.php?id=f3dex2
             if op == 0xDF: # End of list
                 # DF: G_ENDDL
                 # Terminates the current displaylist
@@ -250,7 +251,7 @@ def LoadVanilla(rom, missing, rebase, linkstart, linksize, pieces, skips):
                 j = i+8
                 # The point of this loop is just to find the number of texels
                 # so that it may be multiplied by the bytesPerTexel so we know 
-                # the length of the textrue.
+                # the length of the texture.
                 while j < len(vanillaData) and numTexels == -1:
                     opJ = vanillaData[j]
                     segJ = vanillaData[j+4]
@@ -307,6 +308,7 @@ def LoadVanilla(rom, missing, rebase, linkstart, linksize, pieces, skips):
         displayLists[item] = (displayList, offset)
     # Create vanilla zobj of the pieces from data collected during crawl
     vanillaZobj = []
+    # Add textures, vertices, and matrices to the beginning of the zobj
     # Textures
     oldTex2New = {}
     for (offset, texture) in textures.items():
@@ -325,6 +327,7 @@ def LoadVanilla(rom, missing, rebase, linkstart, linksize, pieces, skips):
         newOffset = len(vanillaZobj)
         oldMtx2New[offset] = newOffset
         vanillaZobj.extend(matrix)
+    # Now add display lists which will reference the data from the beginning of the zobj
     # Display lists
     oldDL2New = {}
     for data in displayLists.values():
@@ -336,6 +339,7 @@ def LoadVanilla(rom, missing, rebase, linkstart, linksize, pieces, skips):
             seg = dl[i+4]
             lo = int.from_bytes(dl[i+4:i+8], 'big')
             if seg == segment:
+                # If this instruction points to some data, it must be repointed
                 if op == 0x01:
                     vertEntry = oldVer2New[lo & 0x00FFFFFF]
                     WriteDLPointer(dl, i + 4, BASE_OFFSET + vertEntry + rebase)
@@ -359,8 +363,12 @@ def LoadVanilla(rom, missing, rebase, linkstart, linksize, pieces, skips):
     return (vanillaZobj, DLOffsets)
 
 
+# Finds the address of the model's hierarchy so we can write the hierarchy pointer
+# Based on https://github.com/hylian-modding/Z64Online/blob/master/src/Z64Online/common/cosmetics/UniversalAliasTable.ts function findHierarchy()
 def FindHierarchy(zobj, agestr):
-    # I'm not going to pretend to understand what's happening here
+    # Scan until we find a segmented pointer which is 0x0C or 0x10 more than
+    # the preceeding data and loop until something that's not a segmented pointer is found
+    # then return the position of the last segemented pointer.
     for i in range(0, len(zobj), 4):
         if zobj[i] == 0x06:
             possible = int.from_bytes(zobj[i+1:i+4], 'big')
@@ -380,6 +388,7 @@ def FindHierarchy(zobj, agestr):
     raise ModelDefinitionError("No hierarchy found in " + agestr + " model- Did you check \"Link hierarchy format\" in zzconvert?")
 
 
+# Loads model from file and processes it by adding vanilla pieces and setting up the LUT if necessary.
 def LoadModel(rom, model, age):
     # age 0 = adult, 1 = child
     linkstart = ADULT_START
@@ -489,6 +498,7 @@ def LoadModel(rom, model, age):
     return scan(zobj, dfBytes) - 8
 
 
+# Write in the adult model and repoint references to it
 def patch_model_adult(rom, settings, log):
     # Get model filepath
     model = settings.model_adult_filepicker
@@ -656,6 +666,7 @@ def patch_model_adult(rom, settings, log):
     writer.WriteModelData(ADULT_HIERARCHY) # Hierarchy pointer
 
 
+# Write in the child model and repoint references to it
 def patch_model_child(rom, settings, log):
     # Get model filepath
     model = settings.model_child_filepicker
@@ -798,6 +809,7 @@ def patch_model_child(rom, settings, log):
     writer.WriteModelData(CHILD_HIERARCHY) # Hierarchy pointer
 
 
+# LUT offsets for adult and child
 class Offsets(IntEnum):
     ADULT_LINK_LUT_DL_WAIST = 0x06005090
     ADULT_LINK_LUT_DL_RTHIGH = 0x06005098
@@ -946,7 +958,7 @@ class Offsets(IntEnum):
     CHILD_LINK_LUT_DL_FPS_RARM_SLINGSHOT = 0x060053A0
 
 
-# Adult model pieces and their offsets
+# Adult model pieces and their offsets, both in the LUT and in vanilla
 AdultPieces = {
     "Sheath": (Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATH, 0x249D8),
     "FPS.Hookshot": (Offsets.ADULT_LINK_LUT_DL_FPS_HOOKSHOT, 0x24D70),
@@ -1077,6 +1089,7 @@ childSkips = {
 }
 
 
+# Misc. constants 
 BASE_OFFSET         = 0x06000000
 LUT_START           = 0x00005000
 LUT_END             = 0x00005800

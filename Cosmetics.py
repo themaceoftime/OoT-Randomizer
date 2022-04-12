@@ -9,7 +9,6 @@ import IconManip as icon
 from JSONDump import dump_obj, CollapseList, CollapseDict, AlignedDict, SortedDict
 from SettingsList import setting_infos
 from Plandomizer import InvalidFileException
-from N64Patch import apply_patch_file
 import json
 
 
