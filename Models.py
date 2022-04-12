@@ -68,7 +68,7 @@ class ModelDataWriter:
             self.offset += 1
 
 # Either return the starting index of the requested data (when start == 0)
-# or if the element exists after the start (start > 0)
+# or the offset of the element in the footer, if it exists (start > 0)
 def scan(bytes, data, start=0):
     databytes = data
     # If a string was passed, encode string as bytes
@@ -79,10 +79,11 @@ def scan(bytes, data, start=0):
         # Byte matches next byte in string
         if bytes[i] == databytes[dataindex]:
             dataindex += 1
-            # Special case: Bottle, Bow, and Slingshot are subsets of Bottle.Hand.L, Bow.String, and Slingshot.String respectively
+            # Special case: Bottle, Bow, Slingshot, Fist.L, and Fist.R are subsets of 
+            # Bottle.Hand.L, Bow.String, Slingshot.String, Gauntlet.Fist.L, and Gauntlet.Fist.R respectively
             # And Hookshot which is a subset of Hookshot.Spike, Hookshot.Chain, Hookshot.Aiming.Reticule
             # This leads to false positives. So if the next byte is . (0x2E) then reset the count.
-            if isinstance(data, str) and data in ["Bottle", "Bow", "Slingshot", "Hookshot", "Blade.3"] and i < len(bytes) - 1 and bytes[i+1] == 0x2E:
+            if isinstance(data, str) and data in ["Bottle", "Bow", "Slingshot", "Hookshot", "Fist.L", "Fist.R", "Blade.3"] and i < len(bytes) - 1 and bytes[i+1] == 0x2E:
                 # Blade.3 is even wackier, as it is a subset of Blade.3.Break, 
                 # and also a forward subset of Broken.Blade.3, and has a period in it
                 if data == "Blade.3":
@@ -99,11 +100,18 @@ def scan(bytes, data, start=0):
                             resetCount = True
                     if resetCount:
                         dataindex = 0
+                # Fist.L and Fist.R are forward subsets of Gauntlet.Fist.x, check for "Gauntlet."
+                # "Gauntlet.Fis" is 12 chars (we are currently at the t)
+                elif data in ["Fist.L", "Fist.R"] and i > 11:
+                    # Check if "Gauntlet." immediately preceeds this string
+                    preceedingBytes = bytes[i-12:i-3]
+                    if preceedingBytes == bytearray(b'Gauntlet.'):
+                        dataindex = 0
                 # Default case for Bottle, Bow, Slingshot, Hookshot, reset count
                 else:
                     dataindex = 0
             # Special case for Hookshot: Forward subset of FPS.Hookshot, "FPS." is 4 chars
-            # (Blade.3 can check for Broken.Blade.3 in the previous stanza since a . will be encountered at some point)
+            # (Blade.3 and fists can check in the previous stanza since a . will be encountered at some point)
             if isinstance(data, str) and data == "Hookshot" and dataindex == 1 and i > 3:
                 # Check if "FPS." immediately preceeds this string
                 preceedingBytes = bytes[i-4:i]
@@ -154,19 +162,6 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces, skips):
     matrices = {}
     textures = {}
     displayLists = {}
-    # # Testing code- save certain pieces down
-    # savepieces = ["Fist.L", "Fist.R", "Limb 15", "Limb 18"]
-    # for piece in savepieces:
-    #     pieceData = []
-    #     # Just go until we find a DF
-    #     offset = pieces[piece][1]
-    #     nextbyte = vanillaData[offset]
-    #     while nextbyte != 0xDF:
-    #         pieceData.append(nextbyte)
-    #         offset += 1
-    #         nextbyte = vanillaData[offset]
-    #     with open('data/Models/Adult/Pieces/' + piece + '.zobj', "wb") as f:
-    #         f.write(bytearray(pieceData))
     # For each missing piece, grab data from its vanilla display list
     for item in missing:
         offset = pieces[item][1]
@@ -386,6 +381,19 @@ def LoadModel(rom, model, age):
             for byte in dladdressbytes:
                 zobj[entry] = byte
                 entry += 1
+            # # Testing code- Save model piece down
+            # savepieces = ["Fist.R", "Fist.L", "Limb 15", "Limb 18"]
+            # if item in savepieces:
+            #     pieceData = []
+            #     # Just go until we find a DF
+            #     offset = DLOffsets[item]
+            #     nextbyte = zobj[offset]
+            #     while nextbyte != 0xDF:
+            #         pieceData.append(nextbyte)
+            #         offset += 1
+            #         nextbyte = zobj[offset]
+            #     with open('data/Models/Adult/Pieces/' + item + '.zobj', "wb") as f:
+            #         f.write(bytearray(pieceData))
         # Put prefix for easily finding LUT in RAM
         i = 0
         for byte in "HEYLOOKHERE".encode():
@@ -873,7 +881,7 @@ AdultPieces = {
     "Hilt.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_HILT, 0x238C8),
     "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x21F78),
     "Hookshot.Spike": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_HOOK, 0x2B288),
-    "Hookshot": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT, 0x24D70),
+    "Hookshot": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT, 0x2A738),
     "Fist.L": (Offsets.ADULT_LINK_LUT_DL_LFIST, 0x21CE8),
     "Fist.R": (Offsets.ADULT_LINK_LUT_DL_RFIST, 0x226E0),
     "FPS.Forearm.L": (Offsets.ADULT_LINK_LUT_DL_FPS_LFOREARM, 0x29FA0),
@@ -930,7 +938,7 @@ adultSkips = {
     "Hilt.2": [(0x1E8, 0x430)],
     "Hilt.3": [(0x160, 0x480)],
     "Blade.2": [(0xE8, 0x518)],
-    "Hookshot": [(0x250, 0x4A0)],
+    "Hookshot": [(0x2F0, 0x618)],
     "Bow": [(0x158, 0x3B0)],
     "Blade.3": [(0xB8, 0x320)],
     "Broken.Blade.3": [(0xA0, 0x308)],
