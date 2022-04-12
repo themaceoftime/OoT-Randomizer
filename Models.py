@@ -18,7 +18,16 @@ def get_model_choices(age):
     return names
 
 
-class ModelDataWriter:
+class ModelError(RuntimeError):
+    pass
+
+
+class ModelDefinitionError(ModelError):
+    pass
+
+
+# Used for writer model pointers to the rom in place of the vanilla pointers
+class ModelPointerWriter:
 
     def __init__(self, rom):
         self.rom = rom
@@ -66,6 +75,7 @@ class ModelDataWriter:
         for i in range(2, 4):
             self.rom.write_byte(self.GetAddress(), bytes[i])
             self.offset += 1
+
 
 # Either return the starting index of the requested data (when start == 0)
 # or the offset of the element in the footer, if it exists (start > 0)
@@ -134,25 +144,29 @@ def scan(bytes, data, start=0):
             dataindex = 0
     return -1
 
+
+# Follows pointers from the LUT until finding the actual DList, and returns the offset of the DList
 def unwrap(zobj, address):
     # An entry in the LUT will look something like 0xDE 01 0000 06014050
     # Only the last 3 bytes should be necessary.
     data = int.from_bytes(zobj[address+5:address+8], 'big')
     # If the data here points to another entry in the LUT, keep searching until
     # an address outside the table is found.
-    while 0x5000 <= data and data <= 0x5800:
+    while LUT_START <= data and data <= LUT_END:
         address = data
         data = int.from_bytes(zobj[address+5:address+8], 'big')
     return address
 
 
-def WriteDL(dl, index, data):
+# Used to overwrite pointers in the displaylist with new ones
+def WriteDLPointer(dl, index, data):
     bytes = data.to_bytes(4, 'big')
     for i in range(4):
         dl[index + i] = bytes[i]
 
 
-def Optimize(rom, missing, rebase, linkstart, linksize, pieces, skips):
+# An extensive function which loads pieces from the vanilla Link model to add to the user-provided zobj
+def LoadVanilla(rom, missing, rebase, linkstart, linksize, pieces, skips):
     # Get vanilla "zobj" of Link's model
     vanillaData = []
     for i in range(linksize):
@@ -183,94 +197,140 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces, skips):
             op = vanillaData[i]
             seg = vanillaData[i+4]
             lo = int.from_bytes(vanillaData[i+4:i+8], 'big')
+            # Source for displaylist bytecode: https://hack64.net/wiki/doku.php?id=f3dex2#dfg_enddl
             if op == 0xDF: # End of list
+                # DF: G_ENDDL
+                # Terminates the current displaylist
+                # DF 00 00 00 00 00 00 00
                 displayList.extend(vanillaData[i:i+8]) # Make sure to write the DF
                 break
             # Shouldn't have to deal with DE (branch to new display list)
             elif op == 0x01 and seg == segment: # Vertex data
+                # 01: G_VTX
+                # Fills the vertex buffer with vertex information
+                # 01 0[N N]0 [II] [SS SS SS SS]
+                # N: Number of vertices
+                # I: Where to start writing vertices inside the vertex buffer (start = II - N*2)
+                # S: Segmented address to load vertices from
+                # Grab the address from the low byte without teh base offset
                 vtxStart = lo & 0x00FFFFFF
+                # Grab the length of vertices from the instruction
+                # (Number of vertices will be from the 4th and 5th nibble as shown above, but each length 16)
                 vtxLen = int.from_bytes(vanillaData[i+1:i+3], 'big')
                 if vtxStart not in vertices or len(vertices[vtxStart]) < vtxLen:
                     vertices[vtxStart] = vanillaData[vtxStart:vtxStart+vtxLen]
             elif op == 0xDA and seg == segment: # Push matrix
+                # DA: G_MTX
+                # Apply transformation matrix
+                # DA 38 00 [PP] [AA AA AA AA]
+                # P: Parameters for matrix
+                # A: Segmented address of vectors of matrix
+                # Grab the address from the low byte without the base offset
                 mtxStart = lo & 0x00FFFFFF
-                # error if start + 0x40 > vanillaData len
                 if mtxStart not in matrices:
                     matrices[mtxStart] = vanillaData[mtxStart:mtxStart+0x40] # Matrices always 0x40 long
             elif op == 0xFD and seg == segment: # Texture
-                # Comment from original code: "Don't ask me how this works"
+                # G_SETTIMG
+                # Sets the texture image offset
+                # FD [fi] 00 00 [bb bb bb bb]
+                # [fi] -> fffi i000
+                # f: Texture format
+                # i: Texture bitsize
+                # b: Segmented address of texture
+                # Use 3rd nibble to get the texture type
                 textureType = (vanillaData[i+1] >> 3) & 0x1F
+                # Find the number of texel bits from the type
                 numTexelBits = 4 * (2 ** (textureType & 0x3))
+                # Get how many bytes there are per texel
                 bytesPerTexel = int(numTexelBits / 8)
+                # Grab the address from the low byte without the base offset
                 texOffset = lo & 0x00FFFFFF
-                isPalette = vanillaData[i+8] == 0xE8
                 numTexels = -1
                 returnStack = []
                 j = i+8
+                # The point of this loop is just to find the number of texels
+                # so that it may be multiplied by the bytesPerTexel so we know 
+                # the length of the textrue.
                 while j < len(vanillaData) and numTexels == -1:
                     opJ = vanillaData[j]
                     segJ = vanillaData[j+4]
                     loJ = int.from_bytes(vanillaData[j+4:j+8], 'big')
                     if opJ == 0xDF:
+                        # End of branched texture, or something wrong
                         if len(returnStack) == 0:
                             numTexels = 0
                             break
                         else:
                             j = returnStack.pop()
                     elif opJ == 0xFD:
+                        # Another texture command encountered, something wrong
                         numTexels = 0
                         break
                     elif opJ == 0xDE:
+                        # Branch to another texture
                         if segJ == segment:
                             if vanillaData[j+1] == 0x0:
                                 returnStack.push(j)
                             j = loJ & 0x00FFFFFF
                     elif opJ == 0xF0:
-                        if isPalette:
-                            numTexels = ((loJ & 0x00FFF000) >> 14) + 1
-                        # Else error
+                        # F0: G_LOADTLUT
+                        # Loads a number of colors for a pallette
+                        # F0 00 00 00 0[t] [cc c]0 00
+                        # t: Tile descriptor to load from
+                        # c: ((colour count-1) & 0x3FF) << 2
+                        # Just grab c from the instruction above
+                        # Shift right 12 to get past the first 3 0s, then
+                        # 2 more since c is shifted left twice, then add 1
+                        # to get the color count of this pallette.
+                        numTexels = ((loJ & 0x00FFF000) >> 14) + 1
                         break
                         # Also error if numTexels > 256
                     elif opJ == 0xF3:
-                        if not isPalette:
-                            numTexels = ((loJ & 0x00FFF000) >> 12) + 1
-                        # Else error
+                        # F3: G_LOADBLOCK
+                        # Determines how much data to load after SETTIMG
+                        # F3 [SS S][T TT] 0[I] [XX X][D DD]
+                        # S: Upper left corner of texture's S-axis
+                        # T: Upper left corner of texture's T-axis
+                        # I: Tile descriptor
+                        # X: Number of texels to load, minus one
+                        # D: dxt (?)
+                        # Just grab X from the instruction, shift
+                        # right 12 times to get past 0s
+                        numTexels = ((loJ & 0x00FFF000) >> 12) + 1
                         break
                     j += 8
-                # Error if numTexels == -1
                 dataLen = bytesPerTexel * numTexels
-                # Error if texOffset + dataLen > len(zobj)
                 if texOffset not in textures or len(textures[texOffset]) < dataLen:
                     textures[texOffset] = vanillaData[texOffset:texOffset+dataLen]
             displayList.extend(vanillaData[i:i+8])
             i += 8
         displayLists[item] = (displayList, offset)
-    # Create optimized zobj from data collected during crawl
-    optimizedZobj = []
+    # Create vanilla zobj of the pieces from data collected during crawl
+    vanillaZobj = []
     # Textures
     oldTex2New = {}
     for (offset, texture) in textures.items():
-        newOffset = len(optimizedZobj)
+        newOffset = len(vanillaZobj)
         oldTex2New[offset] = newOffset
-        optimizedZobj.extend(texture)
+        vanillaZobj.extend(texture)
     # Vertices
     oldVer2New = {}
     for (offset, vertex) in vertices.items():
-        newOffset = len(optimizedZobj)
+        newOffset = len(vanillaZobj)
         oldVer2New[offset] = newOffset
-        optimizedZobj.extend(vertex)
+        vanillaZobj.extend(vertex)
     # Matrices
     oldMtx2New = {}
     for (offset, matrix) in matrices.items():
-        newOffset = len(optimizedZobj)
+        newOffset = len(vanillaZobj)
         oldMtx2New[offset] = newOffset
-        optimizedZobj.extend(matrix)
+        vanillaZobj.extend(matrix)
     # Display lists
     oldDL2New = {}
     for data in displayLists.values():
         dl = data[0]
         offset = data[1]
-        oldDL2New[offset] = len(optimizedZobj)
+        oldDL2New[offset] = len(vanillaZobj)
         for i in range (0, len(dl), 8):
             op = dl[i]
             seg = dl[i+4]
@@ -278,27 +338,28 @@ def Optimize(rom, missing, rebase, linkstart, linksize, pieces, skips):
             if seg == segment:
                 if op == 0x01:
                     vertEntry = oldVer2New[lo & 0x00FFFFFF]
-                    WriteDL(dl, i + 4, BASE_OFFSET + vertEntry + rebase)
+                    WriteDLPointer(dl, i + 4, BASE_OFFSET + vertEntry + rebase)
                 elif op == 0xDA:
                     mtxEntry = oldMtx2New[lo & 0x00FFFFFF]
-                    WriteDL(dl, i + 4, BASE_OFFSET + mtxEntry + rebase)
+                    WriteDLPointer(dl, i + 4, BASE_OFFSET + mtxEntry + rebase)
                 elif op == 0xFD:
                     texEntry = oldTex2New[lo & 0x00FFFFFF]
-                    WriteDL(dl, i + 4, BASE_OFFSET + texEntry + rebase)
+                    WriteDLPointer(dl, i + 4, BASE_OFFSET + texEntry + rebase)
                 elif op == 0xDE:
                     dlEntry = oldDL2New[lo & 0x00FFFFFF]
-                    WriteDL(dl, i + 4, BASE_OFFSET + dlEntry + rebase)
-        optimizedZobj.extend(dl)
+                    WriteDLPointer(dl, i + 4, BASE_OFFSET + dlEntry + rebase)
+        vanillaZobj.extend(dl)
         # Pad to nearest multiple of 16
-        while len(optimizedZobj) % 0x10 != 0:
-            optimizedZobj.append(0x00)
+        while len(vanillaZobj) % 0x10 != 0:
+            vanillaZobj.append(0x00)
     # Now find the relation of items to new offsets
     DLOffsets = {}
     for item in missing:
         DLOffsets[item] = oldDL2New[pieces[item][1]]
-    return (optimizedZobj, DLOffsets)
+    return (vanillaZobj, DLOffsets)
 
-def FindHierarchy(zobj):
+
+def FindHierarchy(zobj, agestr):
     # I'm not going to pretend to understand what's happening here
     for i in range(0, len(zobj), 4):
         if zobj[i] == 0x06:
@@ -316,7 +377,8 @@ def FindHierarchy(zobj):
                     if a != count:
                         continue
                     return pos - 4
-    # Error
+    raise ModelDefinitionError("No hierarchy found in " + agestr + " model- Did you check \"Link hierarchy format\" in zzconvert?")
+
 
 def LoadModel(rom, model, age):
     # age 0 = adult, 1 = child
@@ -327,6 +389,7 @@ def LoadModel(rom, model, age):
     pieces = AdultPieces
     path = 'data/Models/Adult/'
     skips = adultSkips
+    agestr = "adult" # Juse used for error messages
     if age == 1:
         linkstart = CHILD_START
         linksize = CHILD_SIZE
@@ -335,11 +398,14 @@ def LoadModel(rom, model, age):
         pieces = ChildPieces
         path = 'data/Models/Child/'
         skips = childSkips
+        agestr = "child"
     # Read model data from file
     file = open(path + model, "rb")
     zobj = file.read()
     file.close()
     zobj = bytearray(zobj)
+    if len(zobj) > linksize:
+        raise ModelDefinitionError("Model for " + agestr + " too large- It is " + str(len(zobj)) + " bytes, but must be at most " + str(linksize) + " bytes.")
     # See if the string MODLOADER64 appears before the LUT- if so this is a PlayAs model and needs no further processing
     if scan(zobj, "MODLOADER64") == -1:
         # First, make sure all important bytes are zeroed out
@@ -347,6 +413,8 @@ def LoadModel(rom, model, age):
             zobj[i] = 0x00
         # Find which pieces are missing from this model
         footerstart = scan(zobj, "!PlayAsManifest0")
+        if footerstart == -1:
+            raise ModelDefinitionError("No manifest found in " + agestr + " model- Did you check \"Embed play-as data\" in zzconvert?")
         startaddr = footerstart - len("!PlayAsManifest0")
         missing = []
         present = {}
@@ -358,11 +426,11 @@ def LoadModel(rom, model, age):
             else:
                 present[piece] = offset
         if len(missing) > 0:
-            # Optimize the missing pieces to make them work in the new zobj
-            (optimizedZobj, DLOffsets) = Optimize(rom, missing, startaddr, linkstart, linksize, pieces, skips)
-            # Write optimized zobj data to end of model zobj
+            # Load vanilla model data for missing pieces
+            (vanillaZobj, DLOffsets) = LoadVanilla(rom, missing, startaddr, linkstart, linksize, pieces, skips)
+            # Write vanilla zobj data to end of model zobj
             i = 0
-            for byte in optimizedZobj:
+            for byte in vanillaZobj:
                 zobj.insert(startaddr + i, byte)
                 i += 1
         # Now we have to set the lookup table for each item
@@ -381,19 +449,6 @@ def LoadModel(rom, model, age):
             for byte in dladdressbytes:
                 zobj[entry] = byte
                 entry += 1
-            # # Testing code- Save model piece down
-            # savepieces = ["Fist.R", "Fist.L", "Limb 15", "Limb 18"]
-            # if item in savepieces:
-            #     pieceData = []
-            #     # Just go until we find a DF
-            #     offset = DLOffsets[item]
-            #     nextbyte = zobj[offset]
-            #     while nextbyte != 0xDF:
-            #         pieceData.append(nextbyte)
-            #         offset += 1
-            #         nextbyte = zobj[offset]
-            #     with open('data/Models/Adult/Pieces/' + item + '.zobj', "wb") as f:
-            #         f.write(bytearray(pieceData))
         # Put prefix for easily finding LUT in RAM
         i = 0
         for byte in "HEYLOOKHERE".encode():
@@ -415,15 +470,15 @@ def LoadModel(rom, model, age):
             zobj[postconstantstart + i] = byte
             i += 1
         # Set up hierarchy pointer
-        hierarchyOffset = FindHierarchy(zobj)
+        hierarchyOffset = FindHierarchy(zobj, agestr)
         hierarchyBytes = zobj[hierarchyOffset:hierarchyOffset+4] # Get the data the offset points to
         for i in range(4):
             zobj[hierarchy - BASE_OFFSET + i] = hierarchyBytes[i]
         zobj[hierarchy - BASE_OFFSET + 4] = 0x15 # Number of limbs
         zobj[hierarchy - BASE_OFFSET + 8] = 0x12 # Number of limbs to draw
-        # Save zobj for testing
-        with open(path + "Test_Processed.zobj", "wb") as f:
-            f.write(zobj)
+        # # Save zobj for testing
+        # with open(path + "Test_Processed.zobj", "wb") as f:
+        #     f.write(zobj)
     # Write zobj to vanilla object (object_link_boy or object_link_child)
     rom.write_bytes(linkstart, zobj)
     # Finally, want to return an address with a DF instruction for use when writing the model data
@@ -436,7 +491,7 @@ def patch_model_adult(rom, settings, log):
     if settings.model_adult == "Random": 
         model = random.choice([x for x in os.listdir('data/Models/adult')])
     log.model = model.split('.')[0]
-    writer = ModelDataWriter(rom)
+    writer = ModelPointerWriter(rom)
 
     dfAddress = LoadModel(rom, model, 0)
 
@@ -596,7 +651,7 @@ def patch_model_child(rom, settings, log):
     if settings.model_child == "Random": 
         model = random.choice([x for x in os.listdir('data/Models/child')])
     log.model = model.split('.')[0]
-    writer = ModelDataWriter(rom)
+    writer = ModelPointerWriter(rom)
 
     dfAddress = LoadModel(rom, model, 1)
 
@@ -873,6 +928,7 @@ class Offsets(IntEnum):
     CHILD_LINK_DL_FPS_RARM_SLINGSHOT = 0x06005390
     CHILD_LINK_LUT_DL_FPS_RARM_SLINGSHOT = 0x060053A0
 
+
 # Adult model pieces and their offsets
 AdultPieces = {
     "Sheath": (Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATH, 0x249D8),
@@ -930,6 +986,7 @@ AdultPieces = {
     "Limb 20": (Offsets.ADULT_LINK_LUT_DL_TORSO, 0x363B8),
 }
 
+
 # Note: Some skips which can be implemented by skipping the beginning portion of the model
 # rather than specifying those indices here, simply have their offset in the table above
 # increased by whatever amount of starting indices would be skipped.
@@ -946,6 +1003,7 @@ adultSkips = {
     "Shield.2": [(0x158, 0x2B8), (0x3A8, 0x430)], # Fist is in 2 pieces
     "Shield.3": [(0x1B8, 0x3E8)],
 }
+
 
 ChildPieces = {
     "Slingshot.String": (Offsets.CHILD_LINK_LUT_DL_SLINGSHOT_STRING, 0x221A8),
@@ -993,12 +1051,14 @@ ChildPieces = {
     "Limb 20": (Offsets.CHILD_LINK_LUT_DL_TORSO, 0x21130),
 }
 
+
 childSkips = {
     "Boomerang": [(0x140, 0x240)],
     "Hilt.1": [(0xC0, 0x170)],
     "Shield.1": [(0x140, 0x218)],
     "Ocarina.1": [(0x110, 0x240)],
 }
+
 
 BASE_OFFSET         = 0x06000000
 LUT_START           = 0x00005000
