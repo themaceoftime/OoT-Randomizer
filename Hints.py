@@ -1457,7 +1457,7 @@ def buildGanonText(world, messages):
         if world.id != location.world.id:
             text += HintArea.at(location).text(world.settings.clearer_hints, world=location.world.id + 1)
         else:
-            text += HintArea.at(location).text(world.settings.clearer_hints).replace('Ganon\'s Castle', 'my castle')
+            text += HintArea.at(location).text(world.settings.clearer_hints).replace('Ganon\'s Castle', 'my castle').replace('Ganondorf Fight', 'those pots over there')
         text += '!'
         text = str(GossipText(text, ['Green'], prefix=''))
     else:
