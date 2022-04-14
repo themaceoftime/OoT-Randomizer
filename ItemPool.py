@@ -502,7 +502,7 @@ def get_pool_core(world):
 
         # Thieves' Hideout
         elif location.vanilla_item == 'Small Key (Thieves Hideout)':
-            shuffle_item = world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']
+            shuffle_item = world.settings.shuffle_hideoutkeys != 'vanilla'
             if (world.settings.gerudo_fortress == 'open'
                     or world.settings.gerudo_fortress == 'fast' and location.name != 'Hideout Jail Guard (1 Torch)'):
                 item = IGNORE_LOCATION

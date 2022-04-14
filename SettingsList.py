@@ -3554,23 +3554,28 @@ setting_infos = [
         default        = 'vanilla',
         disabled_default = 'remove',
         choices        = {
-            'vanilla':     'Vanilla Locations',
-            'overworld':   'Overworld Only',
-            'any_dungeon': 'Any Dungeon',
-            'keysanity':   'Anywhere (Keysanity)',
+            'vanilla':     "Vanilla Locations",
+            'fortress':    "Gerudo Fortress Region",
+            'overworld':   "Overworld Only",
+            'any_dungeon': "Any Dungeon",
+            'keysanity':   "Anywhere (Keysanity)",
         },
         gui_tooltip    = '''\
-            'Vanilla': Thieves' Hideout Keys will appear in their
+            "Vanilla": Thieves' Hideout Keys will appear in their
             vanilla location, dropping from fighting Gerudo guards
             that attack when trying to free the jailed carpenters.
             
-            'Overworld Only': Thieves' Hideout Keys can only appear
+            "Gerudo Fortress Region": Thieves' Hideout Keys can only
+            appear within the Gerudo Fortress region of the world the
+            key belongs to.
+             
+            "Overworld Only": Thieves' Hideout Keys can only appear
             outside of dungeons.
             
-            'Any Dungeon': Thieves' Hideout Keys can only appear
+            "Any Dungeon": Thieves' Hideout Keys can only appear
             inside of dungeons.
 
-            'Anywhere': Thieves' Hideout Keys can appear anywhere
+            "Anywhere": Thieves' Hideout Keys can appear anywhere
             in the world.
         ''',
         shared         = True,

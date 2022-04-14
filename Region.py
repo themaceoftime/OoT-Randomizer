@@ -82,6 +82,7 @@ class Region(object):
         from Hints import HintArea
 
         is_self_dungeon_restricted = False
+        is_self_region_restricted = None
         is_dungeon_restricted = False
         is_overworld_restricted = False
         if item.map or item.compass:
@@ -93,6 +94,7 @@ class Region(object):
             is_dungeon_restricted = self.world.settings.shuffle_smallkeys == 'any_dungeon'
             is_overworld_restricted = self.world.settings.shuffle_smallkeys == 'overworld'
         elif item.type == 'HideoutSmallKey':
+            is_self_region_restricted = [HintArea.GERUDO_FORTRESS] if self.world.settings.shuffle_hideoutkeys == 'fortress' else None
             is_dungeon_restricted = self.world.settings.shuffle_hideoutkeys == 'any_dungeon'
             is_overworld_restricted = self.world.settings.shuffle_hideoutkeys == 'overworld'
         elif item.type == 'BossKey':
@@ -107,6 +109,9 @@ class Region(object):
         if is_self_dungeon_restricted and not manual:
             hint_area = HintArea.at(self)
             return hint_area.is_dungeon and hint_area.is_dungeon_item(item) and item.world.id == self.world.id
+
+        if is_self_region_restricted and not manual:
+            return HintArea.at(self) in is_self_region_restricted and item.world.id == self.world.id
 
         if is_dungeon_restricted and not manual:
             return HintArea.at(self).is_dungeon

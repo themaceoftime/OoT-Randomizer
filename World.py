@@ -601,6 +601,8 @@ class World(object):
     def initialize_items(self):
         for item in self.itempool:
             item.world = self
+            if self.settings.shuffle_hideoutkeys == 'fortress' and item.type == 'HideoutSmallKey':
+                item.priority = True
         for region in self.regions:
             for location in region.locations:
                 if location.item != None:
