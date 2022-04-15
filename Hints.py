@@ -552,7 +552,12 @@ def get_barren_hint(spoiler, world, checked, allChecked):
     if not hasattr(world, 'get_barren_hint_prev'):
         world.get_barren_hint_prev = RegionRestriction.NONE
 
+    
+    logger = logging.getLogger('')
+    logger.info("***HINTS***")
+
     checked_areas = get_checked_areas(world, checked)
+    logger.info(checked_areas)
     areas = list(filter(lambda area:
         area not in checked_areas
         and area not in world.hint_type_overrides['barren']
@@ -572,6 +577,9 @@ def get_barren_hint(spoiler, world, checked, allChecked):
     # Randomly choose between overworld or dungeon
     dungeon_areas = list(filter(lambda area: world.empty_areas[area]['dungeon'], areas))
     overworld_areas = list(filter(lambda area: not world.empty_areas[area]['dungeon'], areas))
+
+    for loc in world.empty_areas:
+        logger.info(loc)
     if not dungeon_areas:
         # no dungeons left, default to overworld
         world.get_barren_hint_prev = RegionRestriction.OVERWORLD
