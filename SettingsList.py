@@ -1057,13 +1057,12 @@ logic_tricks = {
         'name'    : 'logic_jabu_boss_hover',
         'tags'    : ("Jabu Jabu's Belly", "Skulltulas", "Entrance",),
         'tooltip' : '''\
-                    You can easily get over to the door to the
-                    near boss area early with Hover Boots. The
-                    tricky part is getting through the door
-                    without being able to use a box to keep the
-                    switch pressed. One way is to quickly roll
-                    from the switch and open the door before it
-                    closes.
+                    A box for the blue switch can be carried over 
+		    by backwalking with one while the elevator is
+		    at its peak. Alternatively, you can skip transporting
+		    a box by quickly rolling from the switch and 
+		    opening the door before it closes. However, 
+		    the timing for this is very tight.
                     '''},
     'Jabu Boss Door Switch with Bombchus': {
         'name'    : 'logic_jabu_boss_door_chus',
