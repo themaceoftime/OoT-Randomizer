@@ -3206,6 +3206,7 @@ setting_infos = [
         },
         disable        = {
             'off':  {'settings': ['shopsanity_prices']},
+            '0':    {'settings': ['shopsanity_prices']},
         },
         gui_tooltip    = '''\
             Randomizes Shop contents.
