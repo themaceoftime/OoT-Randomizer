@@ -553,7 +553,9 @@ def LoadModel(rom, model, age):
         with open(path + "Test_Processed.zobj", "wb") as f:
             f.write(zobj)
     # Check skeleton
-    CheckSkeleton(zobj, skeleton, agestr)
+    if not CheckSkeleton(zobj, skeleton, agestr):
+        # If skeleton not vanilla, display message in pause screen informing of this
+        rom.write_int16(rom.sym('illegal_model'), 1)
     # Write zobj to vanilla object (object_link_boy or object_link_child)
     rom.write_bytes(linkstart, zobj)
     # Finally, want to return an address with a DF instruction for use when writing the model data
