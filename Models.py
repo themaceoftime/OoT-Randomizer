@@ -391,6 +391,62 @@ def FindHierarchy(zobj, agestr):
     raise ModelDefinitionError("No hierarchy found in " + agestr + " model- Did you check \"Link hierarchy format\" in zzconvert?")
 
 
+TOLERANCE = 0x100
+
+def CheckDiff(limb, skeleton):
+    # The normal difference
+    normalDiff = abs(limb - skeleton)
+    # Underflow/overflow diff
+    # For example, if limb is 0xFFFF and skeleton is 0x0001, then they are technically only 2 apart
+    # So subtract 0xFFFF from the absolute value of the difference to get the true differene in this case
+    # Necessary since values are signed, but not represented as signed here
+    flowDiff = abs(normalDiff - 0xFFFF)
+    # Take the minimum of the two differences
+    diff = min(normalDiff, flowDiff)
+    # Return true if diff is too big
+    return diff > TOLERANCE
+
+def CheckSkeleton(zobj, skeleton, agestr):
+    # Get the hierarchy pointer
+    hierarchy = FindHierarchy(zobj, agestr)
+    # Get what the hierarchy pointer points to (pointer to limb 0)
+    limbPointer = int.from_bytes(zobj[hierarchy+1:hierarchy+4], 'big')
+    # Get the limb this points to
+    limb = int.from_bytes(zobj[limbPointer+1:limbPointer+4], 'big')
+    # Go through each limb in the table
+    hasVanillaSkeleton = True
+    withinTolerance = True
+    for i in range(21):
+        offset = limb + i * 0x10
+        # X, Y, Z components are 2 bytes each
+        limbX = int.from_bytes(zobj[offset:offset+2], 'big')
+        limbY = int.from_bytes(zobj[offset+2:offset+4], 'big')
+        limbZ = int.from_bytes(zobj[offset+4:offset+6], 'big')
+        skeletonX = skeleton[i][0]
+        skeletonY = skeleton[i][1]
+        skeletonZ = skeleton[i][2]
+        # Check if the X, Y, and Z components all match
+        if limbX != skeletonX or limbY != skeletonY or limbZ != skeletonZ:
+            hasVanillaSkeleton = False
+            # Now check if the components are within a tolerance
+            # Exclude limb 0 since that one is always zeroed out on models for some reason
+            if i > 0 and withinTolerance and (CheckDiff(limbX, skeletonX) or CheckDiff(limbY, skeletonY) or CheckDiff(limbZ, skeletonZ)):
+                withinTolerance = False
+    # If the skeleton is not vanilla but all components are within the tolerance, then force to vanilla
+    if not hasVanillaSkeleton and withinTolerance:
+        hasVanillaSkeleton = True
+        for i in range(21):
+            offset = limb + i * 0x10
+            bytes = []
+            bytes.extend(int.to_bytes(skeleton[i][0], 2, 'big'))
+            bytes.extend(int.to_bytes(skeleton[i][1], 2, 'big'))
+            bytes.extend(int.to_bytes(skeleton[i][2], 2, 'big'))
+            # Overwrite the X, Y, Z bytes with their vanilla values
+            for j in range(6):
+                zobj[offset+j] = bytes[j]
+    return hasVanillaSkeleton
+
+
 # Loads model from file and processes it by adding vanilla pieces and setting up the LUT if necessary.
 def LoadModel(rom, model, age):
     # age 0 = adult, 1 = child
@@ -401,7 +457,8 @@ def LoadModel(rom, model, age):
     pieces = AdultPieces
     path = 'data/Models/Adult/'
     skips = adultSkips
-    agestr = "adult" # Juse used for error messages
+    skeleton = adultSkeleton
+    agestr = "adult" # Just used for error messages
     if age == 1:
         linkstart = CHILD_START
         linksize = CHILD_SIZE
@@ -410,6 +467,7 @@ def LoadModel(rom, model, age):
         pieces = ChildPieces
         path = 'data/Models/Child/'
         skips = childSkips
+        skeleton = childSkeleton
         agestr = "child"
     # Read model data from file
     file = open(model, "rb")
@@ -492,8 +550,10 @@ def LoadModel(rom, model, age):
         zobj[hierarchy - BASE_OFFSET + 4] = 0x15 # Number of limbs
         zobj[hierarchy - BASE_OFFSET + 8] = 0x12 # Number of limbs to draw
         # # Save zobj for testing
-        # with open(path + "Test_Processed.zobj", "wb") as f:
-        #     f.write(zobj)
+        with open(path + "Test_Processed.zobj", "wb") as f:
+            f.write(zobj)
+    # Check skeleton
+    CheckSkeleton(zobj, skeleton, agestr)
     # Write zobj to vanilla object (object_link_boy or object_link_child)
     rom.write_bytes(linkstart, zobj)
     # Finally, want to return an address with a DF instruction for use when writing the model data
@@ -1042,6 +1102,30 @@ adultSkips = {
     "Shield.3": [(0x1B8, 0x3E8)],
 }
 
+adultSkeleton = [
+    [0xFFC7, 0x0D31, 0x0000], # Limb 0
+    [0x0000, 0x0000, 0x0000], # Limb 1
+    [0x03B1, 0x0000, 0x0000], # Limb 2
+    [0xFE71, 0x0045, 0xFF07], # Limb 3
+    [0x051A, 0x0000, 0x0000], # Limb 4
+    [0x04E8, 0x0005, 0x000B], # Limb 5
+    [0xFE74, 0x004C, 0x0108], # Limb 6
+    [0x0518, 0x0000, 0x0000], # Limb 7
+    [0x04E9, 0x0006, 0x0003], # Limb 8
+    [0x0000, 0x0015, 0xFFF9], # Limb 9
+    [0x0570, 0xFEFD, 0x0000], # Limb 10
+    [0xFED6, 0xFD44, 0x0000], # Limb 11
+    [0x0000, 0x0000, 0x0000], # Limb 12
+    [0x040F, 0xFF54, 0x02A8], # Limb 13
+    [0x0397, 0x0000, 0x0000], # Limb 14
+    [0x02F2, 0x0000, 0x0000], # Limb 15
+    [0x040F, 0xFF53, 0xFD58], # Limb 16
+    [0x0397, 0x0000, 0x0000], # Limb 17
+    [0x02F2, 0x0000, 0x0000], # Limb 18
+    [0x03D2, 0xFD4C, 0x0156], # Limb 19
+    [0x0000, 0x0000, 0x0000], # Limb 20
+]
+
 
 ChildPieces = {
     "Slingshot.String": (Offsets.CHILD_LINK_LUT_DL_SLINGSHOT_STRING, 0x221A8),
@@ -1097,6 +1181,29 @@ childSkips = {
     "Ocarina.1": [(0x110, 0x240)],
 }
 
+childSkeleton = [
+    [0x0000, 0x0948, 0x0000], # Limb 0
+    [0xFFFC, 0xFF98, 0x0000], # Limb 1
+    [0x025F, 0x0000, 0x0000], # Limb 2
+    [0xFF54, 0x0032, 0xFF42], # Limb 3
+    [0x02B9, 0x0000, 0x0000], # Limb 4
+    [0x0339, 0x0005, 0x000B], # Limb 5
+    [0xFF56, 0x0039, 0x00C0], # Limb 6
+    [0x02B7, 0x0000, 0x0000], # Limb 7
+    [0x0331, 0x0008, 0x0004], # Limb 8
+    [0x0000, 0xFF99, 0xFFF9], # Limb 9
+    [0x03E4, 0xFF37, 0xFFFF], # Limb 10
+    [0xFE93, 0xFD62, 0x0000], # Limb 11
+    [0x0000, 0x0000, 0x0000], # Limb 12
+    [0x02B8, 0xFF51, 0x01D2], # Limb 13
+    [0x0245, 0x0000, 0x0000], # Limb 14
+    [0x0202, 0x0000, 0x0000], # Limb 15
+    [0x02B8, 0xFF51, 0xFE21], # Limb 16
+    [0x0241, 0x0000, 0x0000], # Limb 17
+    [0x020D, 0x0000, 0x0000], # Limb 18
+    [0x0291, 0xFDF5, 0x016F], # Limb 19
+    [0x0000, 0x0000, 0x0000], # Limb 20
+]
 
 # Misc. constants 
 BASE_OFFSET         = 0x06000000
