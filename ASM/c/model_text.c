@@ -11,7 +11,7 @@ void draw_illegal_model_text(z64_disp_buf_t *db) {
     
     // Setup draw location
     int str_len = 36;
-    int total_w = str_len * font_sprite.tile_w + triforce_sprite.tile_w;
+    int total_w = str_len * font_sprite.tile_w;
     int draw_x = Z64_SCREEN_WIDTH / 2 - total_w / 2;
     int draw_y_text = 5;
 
