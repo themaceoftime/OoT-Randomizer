@@ -430,8 +430,9 @@ def CheckSkeleton(zobj, skeleton, agestr):
             hasVanillaSkeleton = False
             # Now check if the components are within a tolerance
             # Exclude limb 0 since that one is always zeroed out on models for some reason
-            if i > 0 and withinTolerance and (CheckDiff(limbX, skeletonX) or CheckDiff(limbY, skeletonY) or CheckDiff(limbZ, skeletonZ)):
+            if i > 0 and (CheckDiff(limbX, skeletonX) or CheckDiff(limbY, skeletonY) or CheckDiff(limbZ, skeletonZ)):
                 withinTolerance = False
+                break
     # If the skeleton is not vanilla but all components are within the tolerance, then force to vanilla
     if not hasVanillaSkeleton and withinTolerance:
         hasVanillaSkeleton = True
