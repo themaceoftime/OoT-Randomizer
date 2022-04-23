@@ -49,6 +49,12 @@ class ModelPointerWriter:
             self.base = 0x00DB1F40
         elif base == 'Stick':
             self.base = 0x00EAD0F0
+        elif base == 'GraveyardKid':
+            self.base = 0x00E60920
+        elif base == 'Guard':
+            self.base = 0x00D1A690
+        elif base == 'RunningMan':
+            self.base = 0x00E50440
 
     def GoTo(self, dest):
         self.offset = dest
@@ -875,6 +881,24 @@ def patch_model_child(rom, settings, log):
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_MASK_ZORA)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_MASK_GERUDO)
     writer.WriteModelData(Offsets.CHILD_LINK_LUT_DL_MASK_TRUTH)
+
+    writer.SetBase('GraveyardKid')
+    writer.GoTo(0xE62)
+    writer.WriteModelDataHi(Offsets.CHILD_LINK_LUT_DL_MASK_SPOOKY)
+    writer.GoTo(0xE66)
+    writer.WriteModelDataLo(Offsets.CHILD_LINK_LUT_DL_MASK_SPOOKY)
+
+    writer.SetBase('Guard')
+    writer.GoTo(0x1EA2)
+    writer.WriteModelDataHi(Offsets.CHILD_LINK_LUT_DL_MASK_KEATON)
+    writer.GoTo(0x1EA6)
+    writer.WriteModelDataLo(Offsets.CHILD_LINK_LUT_DL_MASK_KEATON)
+
+    writer.SetBase('RunningMan')
+    writer.GoTo(0x1142)
+    writer.WriteModelDataHi(Offsets.CHILD_LINK_LUT_DL_MASK_BUNNY)
+    writer.GoTo(0x1146)
+    writer.WriteModelDataLo(Offsets.CHILD_LINK_LUT_DL_MASK_BUNNY)
 
     writer.SetBase('Code')
     writer.GoTo(0xE65A4)
