@@ -17,7 +17,7 @@ void draw_illegal_model_text(z64_disp_buf_t *db) {
 
     // Create collected/required string
     char text[str_len + 1];
-    strncpy(text, "Race illegal model, irregular skeleton\0", str_len + 1);
+    strncpy(text, "Race advisory:irregular model skeleton\0", str_len + 1);
 
     // Call setup display list
     gSPDisplayList(db->p++, &setup_db);
