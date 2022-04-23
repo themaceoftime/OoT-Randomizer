@@ -4453,6 +4453,15 @@ setting_infos = [
         shared         = False,
         cosmetic       = True,
         choices        = get_model_choices(0),
+        gui_tooltip    = '''\
+            Link's model will be replaced by the model selected. 
+            To add more model options, save the .zobj file to 
+            data/Models/Adult.
+            Caution: Any changes to Link's skeleton have the potential 
+            to affect gameplay in significant ways and so are disallowed 
+            for all recorded Racetime races. A note will appear at the top 
+            of the pause screen if an irregular skeleton is detected.
+        ''',
         default        = 'Default',
     ),
     Setting_Info('model_adult_filepicker', str, "Adult Link Model", "Fileinput", False, {},
@@ -4475,6 +4484,15 @@ setting_infos = [
         shared         = False,
         cosmetic       = True,
         choices        = get_model_choices(1),
+        gui_tooltip    = '''\
+            Link's model will be replaced by the model selected. 
+            To add more model options, save the .zobj file to 
+            data/Models/Child.
+            Caution: Any changes to Link's skeleton have the potential 
+            to affect gameplay in significant ways and so are disallowed 
+            for all recorded Racetime races. A note will appear at the top 
+            of the pause screen if an irregular skeleton is detected.
+        ''',
         default        = 'Default',
     ),
     Setting_Info('model_child_filepicker', str, "Child Link Model", "Fileinput", False, {},
