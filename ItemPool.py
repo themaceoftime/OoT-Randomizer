@@ -480,7 +480,7 @@ def get_pool_core(world):
             # Handle dungeon item.
             if shuffle_setting is not None and not shuffle_item:
                 dungeon_collection.append(ItemFactory(item))
-                if shuffle_setting in ['remove', 'startwith', 'triforce']:
+                if shuffle_setting in ['remove', 'startwith']:
                     world.state.collect(dungeon_collection[-1])
                     item = get_junk_item()[0]
                     shuffle_item = True
@@ -546,7 +546,7 @@ def get_pool_core(world):
     if world.settings.shuffle_ganon_bosskey == 'on_lacs':
         placed_items['ToT Light Arrows Cutscene'] = 'Boss Key (Ganons Castle)'
 
-    if world.settings.shuffle_ganon_bosskey in ['stones', 'medallions', 'dungeons', 'tokens', 'hearts']:
+    if world.settings.shuffle_ganon_bosskey in ['stones', 'medallions', 'dungeons', 'tokens', 'hearts', 'triforce']:
         placed_items['Gift from Sages'] = 'Boss Key (Ganons Castle)'
         pool.extend(get_junk_item())
     else:
