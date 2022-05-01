@@ -70,7 +70,7 @@ class World(object):
             and (
                 self.shuffle_special_interior_entrances or settings.shuffle_overworld_entrances
                 or settings.warp_songs or settings.spawn_positions or (settings.shuffle_bosses != 'off')
-                or settings.decouple_entrances or (settings.mix_entrance_pools != 'off')
+                or settings.decouple_entrances or len(settings.mix_entrance_pools) > 1
             )
         ):
             self.settings.open_forest = 'closed_deku'
