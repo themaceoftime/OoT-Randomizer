@@ -2651,7 +2651,7 @@ setting_infos = [
             'Jabu Jabus Belly': "Jabu Jabu's Belly",
             'Forest Temple':    "Forest Temple",
             'Fire Temple':      "Fire Temple",
-            'Water Temple':     "Water Temple",  # doesn't do anything, but added to prevent confusion
+            'Water Temple':     "Water Temple",  # affects King Dodongo if he's in Water
             'Shadow Temple':    "Shadow Temple",
             'Spirit Temple':    "Spirit Temple",
         },
