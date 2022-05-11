@@ -492,6 +492,10 @@ def from_patch_file(settings, window=dummy_window()):
     cosmetics_log = None
     if settings.repatch_cosmetics:
         cosmetics_log = patch_cosmetics(settings, rom)
+        if settings.model_adult != "Default" or len(settings.model_adult_filepicker) > 0:
+            patch_model_adult(rom, settings, cosmetics_log)
+        if settings.model_child != "Default" or len(settings.model_child_filepicker) > 0:
+            patch_model_child(rom, settings, cosmetics_log)
     window.update_progress(65)
 
     log_and_update_window(window, 'Saving Uncompressed ROM')
@@ -579,6 +583,10 @@ def cosmetic_patch(settings, window=dummy_window()):
     window.update_status('Patching ROM')
     patchfilename = '%s_Cosmetic.zpf' % output_path
     cosmetics_log = patch_cosmetics(settings, rom)
+    if settings.model_adult != "Default" or len(settings.model_adult_filepicker) > 0:
+        patch_model_adult(rom, settings, cosmetics_log)
+    if settings.model_child != "Default" or len(settings.model_child_filepicker) > 0:
+        patch_model_child(rom, settings, cosmetics_log)
     window.update_progress(80)
 
     window.update_status('Creating Patch File')
