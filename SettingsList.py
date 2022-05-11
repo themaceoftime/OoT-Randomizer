@@ -1744,9 +1744,19 @@ setting_infos = [
                         'model_adult', 'model_child'
                     ],
                 },
+                True : {
+                    'settings' : [
+                        'model_adult', 'model_child'
+                    ],
+                },
             },
             'electron:disable' : {
                 False : {
+                    'settings' : [
+                        'model_adult_filepicker', 'model_child_filepicker'
+                    ],
+                },
+                True : {
                     'settings' : [
                         'model_adult_filepicker', 'model_child_filepicker'
                     ],
