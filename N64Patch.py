@@ -7,8 +7,6 @@ import copy
 import zipfile
 from ntype import BigStream
 
-from Models import pull_vanilla_models, apply_vanilla_models
-
 # get the next XOR key. Uses some location in the source rom.
 # This will skip of 0s, since if we hit a block of 0s, the
 # patch data will be raw.
@@ -179,12 +177,6 @@ def create_patch_file(rom, file, xor_range=(0x00B8AD30, 0x00F029A0)):
 def apply_patch_file(rom, settings, sub_file=None):
     file = settings.patch_file
 
-    # Before applying the patch file, we want to pull out the vanilla models, then place them back in, 
-    # so that the model code can utilize them correctly, if we are overriding cosmetics.
-    (adultModel, childModel) = ([], [])
-    if settings.repatch_cosmetics:
-        (adultModel, childModel) = pull_vanilla_models(rom)
-
     # load the patch file and decompress
     if sub_file:
         with zipfile.ZipFile(file, 'r') as patch_archive:
@@ -275,8 +267,8 @@ def apply_patch_file(rom, settings, sub_file=None):
                 data += [b ^ key]
 
         # Save the new data to rom
-        rom.write_bytes(block_start, data)
+        if settings.repatch_cosmetics:
+            rom.write_bytes_restrictive(block_start, block_size, data)
+        else:
+            rom.write_bytes(block_start, data)
         block_start = block_start+block_size
-
-    if settings.repatch_cosmetics:
-        apply_vanilla_models(rom, adultModel, childModel)

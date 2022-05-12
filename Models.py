@@ -40,21 +40,21 @@ class ModelPointerWriter:
     
     def SetBase(self, base):
         if base == 'Code':
-            self.base = 0x00A87000 # start of code
+            self.base = CODE_START
         elif base == 'Player':
-            self.base = 0x00BCDB70
+            self.base = PLAYER_START
         elif base == 'Hook':
-            self.base = 0x00CAD2C0
+            self.base = HOOK_START
         elif base == 'Shield':
-            self.base = 0x00DB1F40
+            self.base = SHIELD_START
         elif base == 'Stick':
-            self.base = 0x00EAD0F0
+            self.base = STICK_START
         elif base == 'GraveyardKid':
-            self.base = 0x00E60920
+            self.base = GRAVEYARD_KID_START
         elif base == 'Guard':
-            self.base = 0x00D1A690
+            self.base = GUARD_START
         elif base == 'RunningMan':
-            self.base = 0x00E50440
+            self.base = RUNNING_MAN_START
 
     def GoTo(self, dest):
         self.offset = dest
@@ -84,24 +84,6 @@ class ModelPointerWriter:
         for i in range(2, 4):
             self.rom.write_byte(self.GetAddress(), bytes[i])
             self.offset += 1
-
-
-# Pulls out the adult and child model data to be reapplied after applying patch so other code in this file works correctly
-def pull_vanilla_models(rom):
-    adultModel = []
-    for i in range(ADULT_SIZE):
-        adultModel.append(rom.buffer[ADULT_START + i])
-    childModel = []
-    for i in range(CHILD_SIZE):
-        childModel.append(rom.buffer[CHILD_START + i])
-    return (adultModel, childModel)
-
-
-def apply_vanilla_models(rom, adultModel, childModel):
-    for i in range(ADULT_SIZE):
-        rom.buffer[ADULT_START + i] = adultModel[i]
-    for i in range(CHILD_SIZE):
-        rom.buffer[CHILD_START + i] = childModel[i]
 
 
 # Either return the starting index of the requested data (when start == 0)
@@ -1250,7 +1232,16 @@ childSkeleton = [
     [0x0000, 0x0000, 0x0000], # Limb 20
 ]
 
-# Misc. constants 
+# Misc. constants
+CODE_START          = 0x00A87000
+PLAYER_START        = 0x00BCDB70
+HOOK_START          = 0x00CAD2C0
+SHIELD_START        = 0x00DB1F40
+STICK_START         = 0x00EAD0F0
+GRAVEYARD_KID_START = 0x00E60920
+GUARD_START         = 0x00D1A690
+RUNNING_MAN_START   = 0x00E50440
+
 BASE_OFFSET         = 0x06000000
 LUT_START           = 0x00005000
 LUT_END             = 0x00005800
@@ -1265,3 +1256,59 @@ CHILD_START         = 0x00FBE000
 CHILD_SIZE          = 0x0002CF80
 CHILD_HIERARCHY     = 0x060053A8
 CHILD_POST_START    = 0x00005228
+
+# Parts of the rom to not overwrite when applying a patch file
+restrictiveBytes = [
+    (ADULT_START, ADULT_SIZE), # Ignore adult model 
+    (CHILD_START, CHILD_SIZE), # Ignore child model
+    # Adult model pointers
+    (CODE_START + 0xE6718, 75 * 8), # Writes 75 4-byte pointers with 4 bytes between
+    (CODE_START + 0xE6A4C, 4 * 4), # Writes 4 4-byte pointers
+    (CODE_START + 0xE6B28, 1 * 4), # Writes 1 4-byte pointer
+    (CODE_START + 0xE6B64, 3 * 4), # Writes 1 4-byte pointer and 2 4-byte values
+    # 2 byte hi/lo segments of pointers
+    (CODE_START + 0x69112, 2),
+    (CODE_START + 0x69116, 2),
+    (CODE_START + 0x6912E, 2),
+    (CODE_START + 0x69132, 2),
+    (CODE_START + 0x6914E, 2),
+    (CODE_START + 0x69162, 2),
+    (CODE_START + 0x69166, 2),
+    (CODE_START + 0x69172, 2),
+    (CODE_START + 0x6919E, 2),
+    (CODE_START + 0x691A2, 2),
+    (CODE_START + 0x691AE, 2),
+    (CODE_START + 0x691B2, 2),
+    (CODE_START + 0x69DEA, 2),
+    (CODE_START + 0x69DEE, 2),
+    (CODE_START + 0x6A666, 2),
+    (CODE_START + 0x6A66A, 2),
+    (HOOK_START + 0xA72, 2),
+    (HOOK_START + 0xA76, 2),
+    (HOOK_START + 0xB66, 2),
+    (HOOK_START + 0xB6A, 2),
+    (HOOK_START + 0xBA8, 1 * 2), # Writes 1 2-byte value
+    (STICK_START + 0x32C, 1 * 4), # Writes 1 4-byte pointer
+    (STICK_START + 0x328, 1 * 2), # Writes 1 2-byte value
+    (CODE_START + 0xE65A0, 1 * 4), # Writes 4-byte hierarchy pointer
+    # Child model pointers
+    (CODE_START + 0xE671C, 75 * 8), # Writes 75 4-byte pointers with 4 bytes between
+    (CODE_START + 0xE6B2C, 1 * 8), # Writes 1 4-byte pointer with 4 bytes after
+    (CODE_START + 0xE6B74, 3 * 4), # Writes 1 4-byte pointer and 2 4-byte values
+    (CODE_START + 0x6922E, 2),
+    (CODE_START + 0x69232, 2),
+    (CODE_START + 0x6A80E, 2),
+    (CODE_START + 0x6A812, 2),
+    (STICK_START + 0x334, 1 * 4), # Writes 1 4-byte pointer
+    (STICK_START + 0x330, 1 * 2), # Writes 1 2-byte value
+    (SHIELD_START + 0x7EE, 2),
+    (SHIELD_START + 0x7F2, 2),
+    (PLAYER_START + 0x2253C, 8 * 4), # Writes 8 4-byte pointers
+    (GRAVEYARD_KID_START + 0xE62, 2),
+    (GRAVEYARD_KID_START + 0xE66, 2),
+    (GUARD_START + 0x1EA2, 2),
+    (GUARD_START + 0x1EA6, 2),
+    (RUNNING_MAN_START + 0x1142, 2),
+    (RUNNING_MAN_START + 0x1146, 2),
+    (CODE_START + 0xE65A4, 1 * 4), # Writes 4-byte hierarchy pointer
+]
