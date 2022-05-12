@@ -3,11 +3,9 @@ import logging
 from State import State
 from Rules import set_shop_rules
 from Location import DisableType
-from LocationList import location_groups
-from ItemPool import song_list, get_junk_item, item_groups, remove_junk_items
+from ItemPool import IGNORE_LOCATION, remove_junk_items
 from Item import ItemFactory, ItemInfo
 from Search import Search
-from functools import reduce
 
 logger = logging.getLogger('')
 
@@ -332,6 +330,7 @@ def fill_ownworld_restrictive(window, worlds, search, locations, ownpool, itempo
                 logger.info("Failed to place %s items for world %s. Will retry %s more times.", description, (world.id+1), world_attempts)
                 for location in prize_locs_dict[world.id]:
                     location.item = None
+                    location.price = None
                     if location.disabled == DisableType.DISABLED:
                         location.disabled = DisableType.PENDING
                 logger.info('\t%s' % str(e))
@@ -507,10 +506,9 @@ def fast_fill(window, locations, itempool):
     while itempool and locations:
         spot_to_fill = locations.pop()
         item_to_place = itempool.pop()
-        # Impa can't presently hand out refills at the start of the game.
-        # Only replace her item with a rupee if it's junk.
-        if spot_to_fill.world.settings.skip_child_zelda and spot_to_fill.name == 'Song from Impa' and item_to_place.name in set(remove_junk_items):
-            item_to_place = ItemFactory('Rupee (1)', spot_to_fill.world)
+        # Ice traps are currently unsupported as starting items, but forbidding them on Song from Impa would noticeably increase the chance of a major item there in Ice Trap Onslaught.
+        if spot_to_fill.world.settings.skip_child_zelda and spot_to_fill.name == 'Song from Impa' and item_to_place.name == 'Ice Trap':
+            item_to_place = ItemFactory(IGNORE_LOCATION, spot_to_fill.world)
         spot_to_fill.world.push_item(spot_to_fill, item_to_place)
         window.fillcount += 1
         window.update_progress(5 + ((window.fillcount / window.locationcount) * 30))
