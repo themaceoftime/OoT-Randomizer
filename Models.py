@@ -86,6 +86,24 @@ class ModelPointerWriter:
             self.offset += 1
 
 
+# Pulls out the adult and child model data to be reapplied after applying patch so other code in this file works correctly
+def pull_vanilla_models(rom):
+    adultModel = []
+    for i in range(ADULT_SIZE):
+        adultModel.append(rom.buffer[ADULT_START + i])
+    childModel = []
+    for i in range(CHILD_SIZE):
+        childModel.append(rom.buffer[CHILD_START + i])
+    return (adultModel, childModel)
+
+
+def apply_vanilla_models(rom, adultModel, childModel):
+    for i in range(ADULT_SIZE):
+        rom.buffer[ADULT_START + i] = adultModel[i]
+    for i in range(CHILD_SIZE):
+        rom.buffer[CHILD_START + i] = childModel[i]
+
+
 # Either return the starting index of the requested data (when start == 0)
 # or the offset of the element in the footer, if it exists (start > 0)
 def scan(bytes, data, start=0):
@@ -557,8 +575,8 @@ def LoadModel(rom, model, age):
         zobj[hierarchy - BASE_OFFSET + 4] = 0x15 # Number of limbs
         zobj[hierarchy - BASE_OFFSET + 8] = 0x12 # Number of limbs to draw
         # # Save zobj for testing
-        with open(path + "Test_Processed.zobj", "wb") as f:
-            f.write(zobj)
+        # with open(path + "Test_Processed.zobj", "wb") as f:
+        #     f.write(zobj)
     # Check skeleton
     if not CheckSkeleton(zobj, skeleton, agestr):
         # If skeleton not vanilla, display message in pause screen informing of this

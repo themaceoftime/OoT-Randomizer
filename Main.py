@@ -488,7 +488,7 @@ def from_patch_file(settings, window=dummy_window()):
             subfile = f"P{settings.player_num}.zpf"
             if not settings.output_file:
                 output_path += f"P{settings.player_num}"
-        apply_patch_file(rom, settings.patch_file, subfile)
+        apply_patch_file(rom, settings, subfile)
     cosmetics_log = None
     if settings.repatch_cosmetics:
         cosmetics_log = patch_cosmetics(settings, rom)
@@ -571,7 +571,7 @@ def cosmetic_patch(settings, window=dummy_window()):
         subfile = None
     else:
         subfile = 'P%d.zpf' % (settings.player_num)
-    apply_patch_file(rom, settings.patch_file, subfile)
+    apply_patch_file(rom, settings, subfile)
     window.update_progress(65)
 
     # clear changes from the base patch file
