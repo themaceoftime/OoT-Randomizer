@@ -68,21 +68,21 @@ def SimpleRecord(props):
     return Record
 
 
-class DungeonRecord(SimpleRecord({'mq': None})):
+class DungeonRecord(SimpleRecord({'mq': None, 'empty': None})):
     def __init__(self, src_dict='random'):
         if src_dict == 'random':
-            src_dict = {'mq': None}
+            src_dict = {'mq': None, 'empty': None}
         if src_dict == 'mq':
-            src_dict = {'mq': True}
+            src_dict = {'mq': True, 'empty': None}
         if src_dict == 'vanilla':
-            src_dict = {'mq': False}
+            src_dict = {'mq': False, 'empty': None}
         super().__init__(src_dict)
 
 
     def to_json(self):
-        if self.mq is None:
-            return 'random'
-        return 'mq' if self.mq else 'vanilla'
+        mq = {None: 'random', True: 'mq', False: 'vanilla'}[self.mq]
+        empty = " (empty)" if self.empty else ""
+        return mq + empty
 
 
 class GossipRecord(SimpleRecord({'text': None, 'colors': None})):
@@ -358,15 +358,20 @@ class WorldDistribution(object):
         self.locations[new_location] = LocationRecord(new_item)
 
 
-    def configure_dungeons(self, world, dungeon_pool):
-        dist_num_mq = 0
+    def configure_dungeons(self, world, mq_dungeon_pool, empty_dungeon_pool):
+        dist_num_mq, dist_num_empty = 0, 0
         for (name, record) in self.dungeons.items():
             if record.mq is not None:
-                dungeon_pool.remove(name)
+                mq_dungeon_pool.remove(name)
                 if record.mq:
                     dist_num_mq += 1
                     world.dungeon_mq[name] = True
-        return dist_num_mq
+                    if name in empty_dungeon_pool:
+                        empty_dungeon_pool.remove(name)
+            # TODO: Plandomize empty dungeons?
+            # if record.empty is not None:
+            #   ...
+        return dist_num_mq, dist_num_empty
 
 
     def configure_trials(self, trial_pool):
@@ -1209,7 +1214,7 @@ class Distribution(object):
         for world in spoiler.worlds:
             world_dist = self.world_dists[world.id]
             world_dist.randomized_settings = {randomized_item: getattr(world.settings, randomized_item) for randomized_item in world.randomized_list}
-            world_dist.dungeons = {dung: DungeonRecord({ 'mq': world.dungeon_mq[dung] }) for dung in world.dungeon_mq}
+            world_dist.dungeons = {dung: DungeonRecord({ 'mq': world.dungeon_mq[dung], 'empty': world.empty_dungeons.get(dung, False) }) for dung in world.dungeon_mq}
             world_dist.trials = {trial: TrialRecord({ 'active': not world.skipped_trials[trial] }) for trial in world.skipped_trials}
             if hasattr(world, 'song_notes'):
                 world_dist.songs = {song: SongRecord({ 'notes': str(world.song_notes[song]) }) for song in world.song_notes}

@@ -3877,6 +3877,77 @@ setting_infos = [
             "hide_when_disabled": True,
         },
     ),
+    Combobox(
+        name           = 'empty_dungeons_mode',
+        gui_text       = 'Empty dungeons',
+        default        = 'none',
+        choices        = {
+            'none':       'None',
+            'specific':   "Specific Dungeons",
+            'count':      "Count",
+        },
+        gui_tooltip    = '''\
+            Empty dungeons are dungeons guaranted to be barren, and whose rewards
+            are given for free to the player before the beginning of the game.
+
+            'None': No dungeon will be empty. All dungeons may contain useful items
+            and have to be beaten in order to get their rewards.
+            'Specific Dungeons': Choose which specific dungeons will be empty.
+            'Count': Choose how many dungeons will be empty.
+
+            Note that empty dungeons can't be MQ. Incompatible MQ Dungeon settings
+            and Empty dungeon settings will trigger an error.
+        ''',
+        shared         = True,
+        disable        = {
+            '!specific': {'settings': ['empty_dungeons_specific']},
+            '!count':    {'settings': ['empty_dungeons_count']}
+        },
+        gui_params     = {
+            'distribution':  [
+                ('none', 1)
+            ],
+        },   
+    ),
+    Combobox(
+        name            = 'empty_dungeons_specific',
+        multiple_select = True,
+        gui_text        = 'Empty Dungeons',
+        choices         = {
+            'Deku Tree':              "Deku Tree",
+            'Dodongos Cavern':        "Dodongo's Cavern",
+            'Jabu Jabus Belly':       "Jabu Jabu's Belly",
+            'Forest Temple':          "Forest Temple",
+            'Fire Temple':            "Fire Temple",
+            'Water Temple':           "Water Temple",
+            'Shadow Temple':          "Shadow Temple",
+            'Spirit Temple':          "Spirit Temple"
+        },
+        default         = [],
+        gui_tooltip     = '''\
+            Select the specific dungeons you would
+            like to be empty.
+        ''',
+        shared          = True,
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
+    ),
+    Scale(
+        name           = 'empty_dungeons_count',
+        gui_text       = "Empty Dungeon Count",
+        default        = 2,
+        min            = 1,
+        max            = 6,
+        gui_tooltip    = '''\
+            Specify the number of empty
+            dungeons to appear in the game.
+        ''',
+        shared         = True,
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
+    ),
     Setting_Info(
         name           = 'disabled_locations',
         type           = list,

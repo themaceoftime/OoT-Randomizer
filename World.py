@@ -93,6 +93,18 @@ class World(object):
             'Light': False
         }
 
+        # empty dungeons will be decided later
+        self.empty_dungeons = {
+            'Deku Tree': False,
+            'Dodongos Cavern': False,
+            'Jabu Jabus Belly': False,
+            'Forest Temple': False,
+            'Fire Temple': False,
+            'Water Temple': False,
+            'Spirit Temple': False,
+            'Shadow Temple': False,
+        }
+
         # dungeon forms will be decided later
         self.dungeon_mq = {
             'Deku Tree': False,
@@ -262,6 +274,7 @@ class World(object):
         new_world = World(self.id, self.settings, False)
         new_world.skipped_trials = copy.copy(self.skipped_trials)
         new_world.dungeon_mq = copy.copy(self.dungeon_mq)
+        new_world.empty_dungeons = copy.copy(self.empty_dungeons)
         new_world.shop_prices = copy.copy(self.shop_prices)
         new_world.triforce_goal = self.triforce_goal
         new_world.triforce_count = self.triforce_count
@@ -385,28 +398,54 @@ class World(object):
         for trial in self.skipped_trials:
             if trial not in chosen_trials and trial not in dist_chosen:
                 self.skipped_trials[trial] = True
+        
 
-        # Determine MQ Dungeons
-        dungeon_pool = list(self.dungeon_mq)
-        dist_num_mq = self.distribution.configure_dungeons(self, dungeon_pool)
+        # Determine empty and MQ Dungeons (make it so that a dungeon can't be both)
+        mq_dungeon_pool = list(self.dungeon_mq)
+        empty_dungeon_pool = list(self.empty_dungeons)
+        dist_num_mq, dist_num_empty = self.distribution.configure_dungeons(self, mq_dungeon_pool, empty_dungeon_pool)
+
+
+        if self.settings.empty_dungeons_mode == 'specific':
+            for dung in self.settings.empty_dungeons_specific:
+                self.empty_dungeons[dung] = True
+                mq_dungeon_pool.remove(dung)
+        elif self.settings.empty_dungeons_mode == 'count':
+            nb_to_pick = self.settings.empty_dungeons_count - dist_num_empty
+            if nb_to_pick < 0:
+                raise RuntimeError(f"{dist_num_empty} dungeons are set to empty on world {self.id+1}, but only {self.settings.empty_dungeons_count} empty dungeons allowed")
+            if self.settings.mq_dungeons_mode == 'specific':
+                empty_dungeon_pool = [dung for dung in empty_dungeon_pool if dung not in self.settings.mq_dungeons_specific]
+                if len(empty_dungeon_pool) < nb_to_pick:
+                    raise RuntimeError(f"Can't pick {self.settings.empty_dungeons_count} empty dungeons on world {self.id+1} because there are too many specific MQ dungeons.")
+            for dung in random.sample(empty_dungeon_pool, nb_to_pick):
+                self.empty_dungeons[dung] = True
+                mq_dungeon_pool.remove(dung)
+
+
 
         if self.settings.mq_dungeons_mode == 'random' and 'mq_dungeons_count' not in dist_keys:
-            for dungeon in dungeon_pool:
+            for dungeon in mq_dungeon_pool:
                 self.dungeon_mq[dungeon] = random.choice([True, False])
             self.randomized_list.append('mq_dungeons_count')
         elif self.settings.mq_dungeons_mode in ['mq', 'vanilla']:
             for dung in self.dungeon_mq.keys():
-                self.dungeon_mq[dung] = True if self.settings.mq_dungeons_mode == 'mq' else False
+                self.dungeon_mq[dung] = (self.settings.mq_dungeons_mode == 'mq') and (not self.empty_dungeons.get(dung, False))
         elif self.settings.mq_dungeons_mode == 'specific':
             for dung in self.settings.mq_dungeons_specific:
+                if dung not in mq_dungeon_pool:
+                    raise RuntimeError(f"Dungeon {dung} is specifically set both to MQ and empty on world {self.id+1}.")
                 self.dungeon_mq[dung] = True
         else:
-            if self.settings.mq_dungeons_count < dist_num_mq:
-                raise RuntimeError("%d dungeons are set to MQ on world %d, but only %d MQ dungeons allowed." % (dist_num_mq, self.id, self.settings.mq_dungeons_count))
-            mqd_picks = random.sample(dungeon_pool, self.settings.mq_dungeons_count - dist_num_mq)
+            nb_to_pick = self.settings.mq_dungeons_count - dist_num_mq
+            if nb_to_pick < 0:
+                raise RuntimeError("%d dungeons are set to MQ on world %d, but only %d MQ dungeons allowed." % (dist_num_mq, self.id+1, self.settings.mq_dungeons_count))
+            if len(mq_dungeon_pool) < nb_to_pick:
+                raise RuntimeError(f"Can't pick {self.settings.mq_dungeons_count} MQ dungeons on world {self.id+1} because there are already too many empty dungeons.")
+            mqd_picks = random.sample(mq_dungeon_pool, nb_to_pick)
             for dung in mqd_picks:
                 self.dungeon_mq[dung] = True
-
+            
         self.settings.mq_dungeons_count = list(self.dungeon_mq.values()).count(True)
         self.distribution.configure_randomized_settings(self)
 
