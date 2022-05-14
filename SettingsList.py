@@ -3882,9 +3882,9 @@ setting_infos = [
         gui_text       = 'Empty dungeons',
         default        = 'none',
         choices        = {
-            'none':       'None',
-            'specific':   "Specific Dungeons",
-            'count':      "Count",
+            'none':       'Off',
+            'specific':   'Specific Dungeons',
+            'count':      'Count',
         },
         gui_tooltip    = '''\
             Empty dungeons are dungeons guaranted to be barren, and whose rewards
