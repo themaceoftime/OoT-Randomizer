@@ -929,7 +929,7 @@ hintTable = {
 
     'Kak GS House Under Construction':                             ("night in the past reveals a #spider in a town# holding", None, 'exclude'),
     'Kak GS Skulltula House':                                      ("night in the past reveals a #spider in a town# holding", None, 'exclude'),
-    'Kak GS Guards House':                                         ("night in the past reveals a #spider in a town# holding", None, 'exclude'),
+    'Kak GS Near Gate Guard':                                      ("night in the past reveals a #spider in a town# holding", None, 'exclude'),
     'Kak GS Tree':                                                 ("night in the past reveals a #spider in a town# holding", None, 'exclude'),
     'Kak GS Watchtower':                                           ("night in the past reveals a #spider in a town# holding", None, 'exclude'),
     'Kak GS Above Impas House':                                    ("night in the future reveals a #spider in a town# holding", None, 'exclude'),
