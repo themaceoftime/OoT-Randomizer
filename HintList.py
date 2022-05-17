@@ -439,7 +439,7 @@ hintTable = {
     'GC Maze Right Chest':                                         ("in #Goron City# explosives unlock", None, 'exclude'),
     'GC Maze Center Chest':                                        ("in #Goron City# explosives unlock", None, 'exclude'),
     'ZD Chest':                                                    ("fire #beyond a waterfall# reveals", None, 'exclude'),
-    'Graveyard Hookshot Chest':                                    ("a chest hidden by a #speedy spectre# holds", "#dead Dampé's first prize# is", 'exclude'),
+    'Graveyard Dampe Race Hookshot Chest':                         ("a chest hidden by a #speedy spectre# holds", "#dead Dampé's first prize# is", 'exclude'),
     'GF Chest':                                                    ("on a #rooftop in the desert# lies", None, 'exclude'),
     'Kak Redead Grotto Chest':                                     ("#zombies beneath the earth# guard", None, 'exclude'),
     'SFM Wolfos Grotto Chest':                                     ("#wolves beneath the earth# guard", None, 'exclude'),

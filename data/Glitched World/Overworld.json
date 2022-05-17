@@ -742,7 +742,7 @@
         "region_name": "Graveyard Dampes Grave",
         "hint": "the Graveyard",
         "locations": {
-            "Graveyard Hookshot Chest": "True",
+            "Graveyard Dampe Race Hookshot Chest": "True",
             "Graveyard Dampe Race Freestanding PoH": "True",
             "Nut Pot": "True"
         }
