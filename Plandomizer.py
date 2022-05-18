@@ -982,6 +982,20 @@ class WorldDistribution(object):
         skipped_locations = ['Links Pocket']
         if world.settings.skip_child_zelda:
             skipped_locations += ['HC Malon Egg', 'HC Zeldas Letter', 'Song from Impa']
+        if world.settings.empty_dungeons_mode != 'none':
+            bosses = {
+                'Deku Tree': 'Queen Gohma',
+                'Dodongos Cavern': 'King Dodongo',
+                'Jabu Jabus Belly': 'Barinade',
+                'Forest Temple': 'Phantom Ganon',
+                'Fire Temple': 'Volvagia',
+                'Water Temple': 'Morpha',
+                'Spirit Temple': 'Bongo Bongo',
+                'Shadow Temple':  'Twinrova',
+            }
+            for dung, empty in world.empty_dungeons.items():
+                if empty:
+                    skipped_locations.append(bosses[dung])
         for iter_world in worlds:
             for location in skipped_locations:
                 loc = iter_world.get_location(location)
