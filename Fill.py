@@ -142,6 +142,18 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
         fill_dungeons_restrictive(window, worlds, search, fill_locations, dungeon_items, itempool + songitempool)
         search.collect_locations()
 
+
+    # If some dungeons are supposed to be empty, fill them with useless items.
+    if worlds[0].settings.empty_dungeons_mode != 'none':
+        empty_locations = []
+        for location in fill_locations:
+            if location.dungeon and location.world.empty_dungeons.get(location.dungeon.name, False):
+                empty_locations.append(location)
+        for loc in empty_locations:
+            fill_locations.remove(loc)
+        fast_fill(window, empty_locations, restitempool)
+
+
     # places the songs into the world
     # Currently places songs only at song locations. if there's an option
     # to allow at other locations then they should be in the main pool.
