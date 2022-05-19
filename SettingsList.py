@@ -5551,7 +5551,7 @@ setting_infos = [
         gui_tooltip    = '''\
             Ice arrows gain the power of blue fire.
             They can be used to melt red ice
-            and break the mud walls in Dodongos Cavern
+            and break the mud walls in Dodongo's Cavern.
         ''',
         default        = False,
         shared         = True,
