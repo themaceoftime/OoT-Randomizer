@@ -1,3 +1,14 @@
+# Custom Models
+
+Save the .ZOBJ file of the desired model in `data/Models/Adult` or `data/Models/Child`. The file must be in .ZOBJ format (the compressed .PAK files are not compatible), but most Modloader64 models will work.
+
+Once the models are saved, the program may be opened and the model(s) selected under the `Cosmetics` tab.
+
+If the model's skeleton is similar enough to Link, the randomizer will use Link's skeleton. If it is substantially different, then a note will be placed on the pause screen to make it clear that the skeleton was changed.
+
+
+-----------------------------
+
 # OoTRandomizer
 
 This is a randomizer for _The Legend of Zelda: Ocarina of Time_ for the Nintendo 64.
