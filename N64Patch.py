@@ -7,6 +7,7 @@ import copy
 import zipfile
 from ntype import BigStream
 
+
 # get the next XOR key. Uses some location in the source rom.
 # This will skip of 0s, since if we hit a block of 0s, the
 # patch data will be raw.
@@ -272,3 +273,4 @@ def apply_patch_file(rom, settings, sub_file=None):
         else:
             rom.write_bytes(block_start, data)
         block_start = block_start+block_size
+
