@@ -177,4 +177,8 @@ TRIFORCE_HUNT_ENABLED:
 TRIFORCE_PIECES_REQUIRED:
 .halfword 0xffff
 
+.area 8, 0x00
+SPECIAL_DEAL_COUNTS:
+.endarea
+
 .align 4

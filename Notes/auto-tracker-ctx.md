@@ -19,3 +19,4 @@ The starting address of the auto-tracker context is listed at address `0x8040_00
 |`0x42`|`LACS_CONDITION_COUNT`|2|`0x2`|The number of items (of the kind defined in `LACS_CONDITION`) required to trigger the light arrow cutscene.|
 |`0x44`|`TRIFORCE_HUNT_ENABLED`|2|`0x2`|`1` if Triforce hunt is enabled.|
 |`0x46`|`TRIFORCE_PIECES_REQUIRED`|2|`0x2`|In Triforce hunt, the total number of Triforce pieces (across all worlds) required to win the game.|
+|`0x48`|`SPECIAL_DEAL_COUNTS`|2|`0x8`|A byte representing the number of special deal slots in each shop, in the following order: KF Shop, Market Bazaar, Market Potion Shop, Market Bombchu Shop, Kak Bazaar, Kak Potion Shop, GC Shop, ZD Shop.|

@@ -1438,6 +1438,12 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     rom.write_int16(0x28E4076, 0x0005) # Change shop to Kakariko Bazaar
     #rom.write_int16(0x3489076, 0x0005) # Change shop to Kakariko Bazaar
 
+    # write shop info to auto-tracker context
+    rom.write_bytes(rom.sym('SPECIAL_DEAL_COUNTS'), [
+        sum(f'{shop} Item {idx}' in world.shop_prices for idx in ('7', '5', '8', '6')) # number of special deals in this shop
+        for shop in ('KF Shop', 'Market Bazaar', 'Market Potion Shop', 'Market Bombchu Shop', 'Kak Bazaar', 'Kak Potion Shop', 'GC Shop', 'ZD Shop')
+    ])
+
     # Load Message and Shop Data
     messages = read_messages(rom)
     remove_unused_messages(messages)
