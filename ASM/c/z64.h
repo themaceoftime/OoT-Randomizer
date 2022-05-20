@@ -1662,7 +1662,7 @@ typedef struct EnGSwitch
 #define z64_Gfx_DrawDListOpa_addr               0x80028048
 #define z64_Math_SinS_addr                      0x800636C4
 #define z64_Rand_ZeroOne_addr                   0x800CDCCC
-#define z64_RandSeed_addr                       0x800CDCCC
+#define z64_RandSeed_addr                       0x800CDCC0
 
 /* rom addresses */
 #define z64_icon_item_static_vaddr              0x007BD000
