@@ -299,8 +299,8 @@ class Search(object):
                     'Forest Temple': 'Phantom Ganon',
                     'Fire Temple': 'Volvagia',
                     'Water Temple': 'Morpha',
-                    'Spirit Temple': 'Bongo Bongo',
-                    'Shadow Temple':  'Twinrova',
+                    'Spirit Temple': 'Twinrova',
+                    'Shadow Temple': 'Bongo Bongo'
                 }
                 for dung, empty in state.world.empty_dungeons.items():
                     if empty:
