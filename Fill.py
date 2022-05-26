@@ -149,8 +149,11 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
         for location in fill_locations:
             if location.dungeon and location.world.empty_dungeons[location.dungeon.name].empty:
                 empty_locations.append(location)
-        for loc in empty_locations:
-            fill_locations.remove(loc)
+        for location in empty_locations:
+            fill_locations.remove(location)
+            location.world.hint_exclusions.add(location.name)
+            location.world.hint_type_overrides['sometimes'].append(location.name)
+            location.world.hint_type_overrides['random'].append(location.name)
         fast_fill(window, empty_locations, restitempool)
 
 

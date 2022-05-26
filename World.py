@@ -5,7 +5,7 @@ import logging
 import random
 import os
 
-from DungeonList import create_dungeons
+from DungeonList import create_dungeons, dungeon_table
 from Entrance import Entrance
 from Goals import Goal, GoalCategory
 from HintList import getRequiredHints
@@ -100,6 +100,7 @@ class World(object):
                 def __init__(self, boss_name):
                     self.empty = False
                     self.boss_name = boss_name
+                    self.hint_name = None
 
             def __init__(self):
                 super().__init__()
@@ -111,6 +112,10 @@ class World(object):
                 self['Water Temple'] = self.EmptyDungeonInfo('Morpha')
                 self['Spirit Temple'] = self.EmptyDungeonInfo('Twinrova')
                 self['Shadow Temple'] = self.EmptyDungeonInfo('Bongo Bongo')
+
+                for data in dungeon_table:
+                    if data['name'] in self:
+                        self[data['name']].hint_name = data['hint']
             
             def __missing__(self, dungeon_name):
                 return self.EmptyDungeonInfo(None)
@@ -195,7 +200,13 @@ class World(object):
             for i in self.hint_dist_user['remove_items']:
                 if dist in i['types']:
                     self.item_hint_type_overrides[dist].append(i['item'])
-                    
+
+        # Make empty dungeons non-hintable as barren dungeons
+        if settings.empty_dungeons_mode != 'none':
+            for info in self.empty_dungeons.values():
+                if info.empty:
+                    self.hint_type_overrides['barren'].append(info.hint_name)
+        
 
         self.hint_text_overrides = {}
         for loc in self.hint_dist_user['add_locations']:
