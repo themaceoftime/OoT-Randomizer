@@ -292,19 +292,9 @@ class Search(object):
                 self.collect(state.world.get_location('Song from Impa').item)
             self.collect(state.world.get_location('Links Pocket').item)
             if state.world.settings.empty_dungeons_mode != 'none':
-                bosses = {
-                    'Deku Tree': 'Queen Gohma',
-                    'Dodongos Cavern': 'King Dodongo',
-                    'Jabu Jabus Belly': 'Barinade',
-                    'Forest Temple': 'Phantom Ganon',
-                    'Fire Temple': 'Volvagia',
-                    'Water Temple': 'Morpha',
-                    'Spirit Temple': 'Twinrova',
-                    'Shadow Temple': 'Bongo Bongo'
-                }
-                for dung, empty in state.world.empty_dungeons.items():
-                    if empty:
-                        self.collect(state.world.get_location(bosses[dung]).item)
+                for dung, info in state.world.empty_dungeons.items():
+                    if info.empty:
+                        self.collect(state.world.get_location(info.boss_name).item)
 
     # Use the cache in the search to determine region reachability.
     # Implicitly requires is_starting_age or Time_Travel.

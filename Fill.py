@@ -147,7 +147,7 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
     if worlds[0].settings.empty_dungeons_mode != 'none':
         empty_locations = []
         for location in fill_locations:
-            if location.dungeon and location.world.empty_dungeons.get(location.dungeon.name, False):
+            if location.dungeon and location.world.empty_dungeons[location.dungeon.name].empty:
                 empty_locations.append(location)
         for loc in empty_locations:
             fill_locations.remove(loc)

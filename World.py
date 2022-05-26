@@ -94,16 +94,28 @@ class World(object):
         }
 
         # empty dungeons will be decided later
-        self.empty_dungeons = {
-            'Deku Tree': False,
-            'Dodongos Cavern': False,
-            'Jabu Jabus Belly': False,
-            'Forest Temple': False,
-            'Fire Temple': False,
-            'Water Temple': False,
-            'Spirit Temple': False,
-            'Shadow Temple': False,
-        }
+        class EmptyDungeons(dict):
+
+            class EmptyDungeonInfo:
+                def __init__(self, boss_name):
+                    self.empty = False
+                    self.boss_name = boss_name
+
+            def __init__(self):
+                super().__init__()
+                self['Deku Tree'] = self.EmptyDungeonInfo('Queen Gohma')
+                self['Dodongos Cavern'] = self.EmptyDungeonInfo('King Dodongo')
+                self['Jabu Jabus Belly'] = self.EmptyDungeonInfo('Barinade')
+                self['Forest Temple'] = self.EmptyDungeonInfo('Phantom Ganon')
+                self['Fire Temple'] = self.EmptyDungeonInfo('Volvagia')
+                self['Water Temple'] = self.EmptyDungeonInfo('Morpha')
+                self['Spirit Temple'] = self.EmptyDungeonInfo('Twinrova')
+                self['Shadow Temple'] = self.EmptyDungeonInfo('Bongo Bongo')
+            
+            def __missing__(self, dungeon_name):
+                return self.EmptyDungeonInfo(None)
+
+        self.empty_dungeons = EmptyDungeons()
 
         # dungeon forms will be decided later
         self.dungeon_mq = {
@@ -408,7 +420,7 @@ class World(object):
 
         if self.settings.empty_dungeons_mode == 'specific':
             for dung in self.settings.empty_dungeons_specific:
-                self.empty_dungeons[dung] = True
+                self.empty_dungeons[dung].empty = True
                 mq_dungeon_pool.remove(dung)
         elif self.settings.empty_dungeons_mode == 'count':
             nb_to_pick = self.settings.empty_dungeons_count - dist_num_empty
@@ -419,7 +431,7 @@ class World(object):
                 if len(empty_dungeon_pool) < nb_to_pick:
                     raise RuntimeError(f"Can't pick {self.settings.empty_dungeons_count} empty dungeons on world {self.id+1} because there are too many specific MQ dungeons.")
             for dung in random.sample(empty_dungeon_pool, nb_to_pick):
-                self.empty_dungeons[dung] = True
+                self.empty_dungeons[dung].empty = True
                 mq_dungeon_pool.remove(dung)
 
 
@@ -430,7 +442,7 @@ class World(object):
             self.randomized_list.append('mq_dungeons_count')
         elif self.settings.mq_dungeons_mode in ['mq', 'vanilla']:
             for dung in self.dungeon_mq.keys():
-                self.dungeon_mq[dung] = (self.settings.mq_dungeons_mode == 'mq') and (not self.empty_dungeons.get(dung, False))
+                self.dungeon_mq[dung] = (self.settings.mq_dungeons_mode == 'mq') and (not self.empty_dungeons[dung].empty)
         elif self.settings.mq_dungeons_mode == 'specific':
             for dung in self.settings.mq_dungeons_specific:
                 if dung not in mq_dungeon_pool:

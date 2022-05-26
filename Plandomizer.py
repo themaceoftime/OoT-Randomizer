@@ -983,19 +983,9 @@ class WorldDistribution(object):
         if world.settings.skip_child_zelda:
             skipped_locations += ['HC Malon Egg', 'HC Zeldas Letter', 'Song from Impa']
         if world.settings.empty_dungeons_mode != 'none':
-            bosses = {
-                'Deku Tree': 'Queen Gohma',
-                'Dodongos Cavern': 'King Dodongo',
-                'Jabu Jabus Belly': 'Barinade',
-                'Forest Temple': 'Phantom Ganon',
-                'Fire Temple': 'Volvagia',
-                'Water Temple': 'Morpha',
-                'Spirit Temple': 'Twinrova',
-                'Shadow Temple': 'Bongo Bongo'
-            }
-            for dung, empty in world.empty_dungeons.items():
-                if empty:
-                    skipped_locations.append(bosses[dung])
+            for dung, info in world.empty_dungeons.items():
+                if info.empty:
+                    skipped_locations.append(info.boss_name)
         for iter_world in worlds:
             for location in skipped_locations:
                 loc = iter_world.get_location(location)
@@ -1228,7 +1218,7 @@ class Distribution(object):
         for world in spoiler.worlds:
             world_dist = self.world_dists[world.id]
             world_dist.randomized_settings = {randomized_item: getattr(world.settings, randomized_item) for randomized_item in world.randomized_list}
-            world_dist.dungeons = {dung: DungeonRecord({ 'mq': world.dungeon_mq[dung], 'empty': world.empty_dungeons.get(dung, False) }) for dung in world.dungeon_mq}
+            world_dist.dungeons = {dung: DungeonRecord({ 'mq': world.dungeon_mq[dung], 'empty': world.empty_dungeons[dung].empty }) for dung in world.dungeon_mq}
             world_dist.trials = {trial: TrialRecord({ 'active': not world.skipped_trials[trial] }) for trial in world.skipped_trials}
             if hasattr(world, 'song_notes'):
                 world_dist.songs = {song: SongRecord({ 'notes': str(world.song_notes[song]) }) for song in world.song_notes}
