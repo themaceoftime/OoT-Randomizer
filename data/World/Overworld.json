@@ -1723,7 +1723,7 @@
             "Bean Plant Fairy": "can_plant_bean and can_play(Song_of_Storms) and has_bottle",
             "Butterfly Fairy": "can_use(Sticks) and has_bottle",
             "Bug Shrub": "
-                (is_child or is_adult and (plant_beans or Hover_Boots or logic_zora_river_lower)) and
+                (is_child or (is_adult and (plant_beans or Hover_Boots or logic_zora_river_lower))) and
                 can_cut_shrubs and has_bottle"
         },
         "exits": {
