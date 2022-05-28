@@ -2091,9 +2091,9 @@ setting_infos = [
 
                          - Logic Rules
                          - (Random) Number of MQ Dungeons
-                         - Rainbow Bridge/LACS Requirements: Gold Skulltula Tokens
+                         - Rainbow Bridge/Ganon Boss Key Requirements: Gold Skulltula Tokens
                          - Variable numbers of Spiritual Stones, Medallions, or Dungeons
-                         for Rainbow Bridge and Ganon's Boss Key on LACS 
+                         for Rainbow Bridge and Ganon's Boss Key
                          (you will always be required to obtain all the relevant rewards)
                          - Scrub Shuffle will either be "Off" or "On (Affordable)"
                          ''',
@@ -2512,25 +2512,25 @@ setting_infos = [
         name           = 'one_item_per_dungeon',
         gui_text       = 'Dungeons Have One Major Item',
         gui_tooltip    = '''\
-            Dungeons have exactly one major item. 
+            Dungeons have exactly one major item.
             This naturally makes each dungeon similar in value
             rather than vary based on shuffled locations.
 
-            Spirit Temple Colossus hands count as part 
-            of the dungeon. Spirit Temple has TWO items 
+            Spirit Temple Colossus hands count as part
+            of the dungeon. Spirit Temple has TWO items
             to match vanilla distribution.
 
-            Boss Keys and Fortress Keys only count as 
-            major items if they are shuffled Anywhere 
-            (Keysanity) or in Any Dungeon, and Small 
-            Keys only count as major items if they are 
-            shuffled Anywhere (Keysanity). This setting 
-            is disabled if Small Keys are shuffled in 
+            Boss Keys and Fortress Keys only count as
+            major items if they are shuffled Anywhere
+            (Keysanity) or in Any Dungeon, and Small
+            Keys only count as major items if they are
+            shuffled Anywhere (Keysanity). This setting
+            is disabled if Small Keys are shuffled in
             Any Dungeon.
 
-            GS Tokens only count as major items if the 
-            bridge or LACS requirements are set to 
-            "GS Tokens".
+            GS Tokens only count as major items if the
+            bridge or Ganon Boss Key requirements are
+            set to "GS Tokens".
 
             Bombchus only count as major items if they
             are considered in logic.
