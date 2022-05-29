@@ -132,6 +132,9 @@ void activate_override(override_t override) {
     active_item_text_id = item_row->text_id;
     active_item_object_id = item_row->object_id;
     active_item_graphic_id = item_row->graphic_id;
+    if (override.value.looks_like_item_id) {
+        item_row = get_item_row(override.value.looks_like_item_id);
+    }
     active_item_fast_chest = item_row->chest_type == BROWN_CHEST || item_row->chest_type == SILVER_CHEST || item_row->chest_type == SKULL_CHEST_SMALL;
     PLAYER_NAME_ID = override.value.player;
 }
