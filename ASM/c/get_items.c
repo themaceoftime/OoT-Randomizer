@@ -5,6 +5,7 @@
 #include "util.h"
 #include "z64.h"
 
+extern uint8_t FAST_CHESTS;
 extern uint8_t OCARINAS_SHUFFLED;
 
 override_t cfg_item_overrides[512] = { 0 };
@@ -321,8 +322,8 @@ void get_item(z64_actor_t *from_actor, z64_link_t *link, int8_t incoming_item_id
 
     if (from_actor->actor_id == 0x0A) {
         // Update chest contents
-        if (override.value.item_id == 0x7C && override.value.player == PLAYER_ID) {
-            // Use ice trap base item ID
+        if (override.value.item_id == 0x7C && override.value.player == PLAYER_ID && (FAST_CHESTS || active_item_fast_chest)) {
+            // Use ice trap base item ID to freeze Link as the chest opens rather than playing the full item get animation
             base_item_id = 0x7C;
         }
         from_actor->variable = (from_actor->variable & 0xF01F) | (base_item_id << 5);
