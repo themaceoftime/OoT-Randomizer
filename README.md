@@ -161,6 +161,7 @@ do that.
 * Ganondorf will now say that the Light Arrows are in your pocket if they are an effective starting item (e.g. the item given from `Skip Child Zelda`).
 * The "WINNER!" Piece of Heart will now show the proper player name in Multiworld.
 * Hinted item and location for a Gossip Stone hint are now included in the spoiler log.
+* One-way entrances are now restricted to one per hint area rather than one per scene.
 
 ### 6.2
 
