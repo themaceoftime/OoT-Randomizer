@@ -367,12 +367,12 @@ class World(object):
             self.randomized_list.append('chicken_count')
         
         # Determine dungeons with shortcuts
+        dungeons = ['Deku Tree', 'Dodongos Cavern', 'Jabu Jabus Belly', 'Forest Temple', 'Fire Temple', 'Water Temple', 'Shadow Temple', 'Spirit Temple']
         if (self.settings.dungeon_shortcuts_choice == 'random'):
-            dungeons = ['deku_tree', 'dodongos_cavern', 'jabu_jabus_belly', 'forest_temple', 'fire_temple', 'water_temple', 'shadow_temple', 'spirit_temple']
             self.settings.dungeon_shortcuts = random.sample(dungeons, random.randint(0, len(dungeons)))
             self.randomized_list.append('dungeon_shortcuts')
         elif (self.settings.dungeon_shortcuts_choice == 'all'):
-            self.settings.dungeon_shortcuts = ['deku_tree', 'dodongos_cavern', 'jabu_jabus_belly', 'forest_temple', 'fire_temple', 'water_temple', 'shadow_temple', 'spirit_temple']
+            self.settings.dungeon_shortcuts = dungeons
 
         # Handle random Rainbow Bridge condition
         if (self.settings.bridge == 'random'
@@ -1025,6 +1025,13 @@ class World(object):
 
     def reverse_boss_map(self):
         return {y: x for x, y in self.get_boss_map().items()}
+
+    def region_has_shortcuts(self, region_name, fallback_dungeon):
+        region = self.get_region(region_name)
+        dungeon_name = (region.dungeon and region.dungeon.name) or fallback_dungeon
+        if not dungeon_name:
+            return False
+        return dungeon_name in self.settings.dungeon_shortcuts
 
 
     def has_beaten_game(self, state):

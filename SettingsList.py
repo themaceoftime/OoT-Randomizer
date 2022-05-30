@@ -2665,6 +2665,8 @@ setting_infos = [
             <b>Forest Temple</b>: elevator raised and
             basement gates open
             <b>Fire Temple</b>: pillar knocked down
+            <b>Water Temple</b>: no change, but see the
+            note on "Shuffle Boss Entrances" below
             <b>Shadow Temple</b>: Truthspinner solved, boat
             block moved, and statue bridge moved. You start
             with 2 small keys if Shuffle Small Keys is set
@@ -2672,6 +2674,12 @@ setting_infos = [
             <b>Spirit Temple</b>: lobby elevator activated,
             shortcut silver blocks moved, central room
             platform lowered, and statue face melted
+
+            With "Shuffle Boss Entrances", the floor above
+            King Dodongo's arena is opened based on the
+            shortcut setting for the dungeon that contains
+            the entrance to King Dodongo's boss room, not
+            necessarily Dodongo's Cavern.
 
             Choose: Select dungeons with shortcuts
             All: Enable all dungeons shortcuts
@@ -2689,14 +2697,14 @@ setting_infos = [
         multiple_select = True,
         gui_text        = 'Dungeon Boss Shortcuts',
         choices         = {
-            'deku_tree':        "Deku Tree",
-            'dodongos_cavern':  "Dodongo's Cavern",
-            'jabu_jabus_belly': "Jabu Jabu's Belly",
-            'forest_temple':    "Forest Temple",
-            'fire_temple':      "Fire Temple",
-            'water_temple':     "Water Temple",  # doesn't do anything, but added to prevent confusion
-            'shadow_temple':    "Shadow Temple",
-            'spirit_temple':    "Spirit Temple",
+            'Deku Tree':        "Deku Tree",
+            'Dodongos Cavern':  "Dodongo's Cavern",
+            'Jabu Jabus Belly': "Jabu Jabu's Belly",
+            'Forest Temple':    "Forest Temple",
+            'Fire Temple':      "Fire Temple",
+            'Water Temple':     "Water Temple",  # affects King Dodongo if he's in Water
+            'Shadow Temple':    "Shadow Temple",
+            'Spirit Temple':    "Spirit Temple",
         },
         default        = [],
         gui_params     = {
