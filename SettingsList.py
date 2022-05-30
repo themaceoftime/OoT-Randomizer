@@ -1057,13 +1057,12 @@ logic_tricks = {
         'name'    : 'logic_jabu_boss_hover',
         'tags'    : ("Jabu Jabu's Belly", "Skulltulas", "Entrance",),
         'tooltip' : '''\
-                    You can easily get over to the door to the
-                    near boss area early with Hover Boots. The
-                    tricky part is getting through the door
-                    without being able to use a box to keep the
-                    switch pressed. One way is to quickly roll
-                    from the switch and open the door before it
-                    closes.
+                    A box for the blue switch can be carried over 
+		    by backwalking with one while the elevator is
+		    at its peak. Alternatively, you can skip transporting
+		    a box by quickly rolling from the switch and 
+		    opening the door before it closes. However, 
+		    the timing for this is very tight.
                     '''},
     'Jabu Boss Door Switch with Bombchus': {
         'name'    : 'logic_jabu_boss_door_chus',
@@ -1860,6 +1859,36 @@ setting_infos = [
         }),
     Setting_Info('output_dir',        str, "Output Directory", "Directoryinput", False, {}),
     Setting_Info('output_file',       str, None, None, False, {}),
+    Checkbutton(
+        name           = 'show_seed_info',
+        gui_text       = 'Show seed info on file screen',
+        shared         = True,
+        gui_tooltip    = '''\
+            Display the version number, generation time, and user
+            message on the file screen.
+        ''',
+        default        = True,
+        disable        = {
+            False : {'settings' : ["user_message"]}
+        }
+    ),
+    Setting_Info(
+        name           = 'user_message',
+        type           = str,
+        gui_text       = "User-configurable message",
+        shared         = True,
+        gui_type       = "Textinput",
+        choices        = {},
+        gui_tooltip    = """\
+            Add a custom message to the seed info.
+        """,
+        default        = "",
+        gui_params     = {
+            "size"               : "full",
+            "max_length"         : 42,
+            "hide_when_disabled" : True,
+        }
+    ),
     Setting_Info('seed',              str, None, None, False, {}),
     Setting_Info('patch_file',        str, "Patch File", "Fileinput", False, {},
         gui_params = {
@@ -2091,9 +2120,9 @@ setting_infos = [
 
                          - Logic Rules
                          - (Random) Number of MQ Dungeons
-                         - Rainbow Bridge/LACS Requirements: Gold Skulltula Tokens
+                         - Rainbow Bridge/Ganon Boss Key Requirements: Gold Skulltula Tokens
                          - Variable numbers of Spiritual Stones, Medallions, or Dungeons
-                         for Rainbow Bridge and Ganon's Boss Key on LACS 
+                         for Rainbow Bridge and Ganon's Boss Key
                          (you will always be required to obtain all the relevant rewards)
                          - Scrub Shuffle will either be "Off" or "On (Affordable)"
                          ''',
@@ -2263,6 +2292,7 @@ setting_infos = [
             'medallions': 'Medallions',
             'dungeons':   'Dungeons',
             'tokens':     'Gold Skulltula Tokens',
+            'hearts':     'Hearts',
             'random':     'Random'
         },
         gui_tooltip    = '''\
@@ -2272,6 +2302,7 @@ setting_infos = [
             'Medallions': A configurable amount of Medallions.
             'Dungeons': A configurable amount of Dungeon Rewards.
             'Gold Skulltula Tokens': A configurable amount of Gold Skulltula Tokens.
+            'Hearts': A configurable amount of hearts.
             'Random': A random Rainbow Bridge requirement excluding Gold Skulltula Tokens.
         ''',
         shared         = True,
@@ -2280,6 +2311,7 @@ setting_infos = [
             '!medallions': {'settings': ['bridge_medallions']},
             '!dungeons':   {'settings': ['bridge_rewards']},
             '!tokens':     {'settings': ['bridge_tokens']},
+            '!hearts':     {'settings': ['bridge_hearts']},
         },
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -2361,6 +2393,21 @@ setting_infos = [
             'electron:max': 100,
         },
     ),
+    Scale(
+        name           = 'bridge_hearts',
+        gui_text       = "Hearts Required for Bridge",
+        default        = 20,
+        min            = 4,
+        max            = 20,
+        gui_tooltip    = '''\
+            Select the amount of hearts required to spawn the rainbow bridge.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
+    ),
     Checkbutton(
         name           = 'triforce_hunt',
         gui_text       = 'Triforce Hunt',
@@ -2376,7 +2423,7 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
         disable        = {
-            True  : {'settings' : ['shuffle_ganon_bosskey', 'ganon_bosskey_stones', 'ganon_bosskey_medallions', 'ganon_bosskey_rewards', 'ganon_bosskey_tokens']},
+            True  : {'settings' : ['shuffle_ganon_bosskey', 'ganon_bosskey_stones', 'ganon_bosskey_medallions', 'ganon_bosskey_rewards', 'ganon_bosskey_tokens', 'ganon_bosskey_hearts']},
             False : {'settings' : ['triforce_count_per_world', 'triforce_goal_per_world']}
         },
     ),
@@ -2513,25 +2560,29 @@ setting_infos = [
         name           = 'one_item_per_dungeon',
         gui_text       = 'Dungeons Have One Major Item',
         gui_tooltip    = '''\
-            Dungeons have exactly one major item. 
+            Dungeons have exactly one major item.
             This naturally makes each dungeon similar in value
             rather than vary based on shuffled locations.
 
-            Spirit Temple Colossus hands count as part 
-            of the dungeon. Spirit Temple has TWO items 
+            Spirit Temple Colossus hands count as part
+            of the dungeon. Spirit Temple has TWO items
             to match vanilla distribution.
 
-            Boss Keys and Fortress Keys only count as 
-            major items if they are shuffled Anywhere 
-            (Keysanity) or in Any Dungeon, and Small 
-            Keys only count as major items if they are 
-            shuffled Anywhere (Keysanity). This setting 
-            is disabled if Small Keys are shuffled in 
+            Boss Keys and Fortress Keys only count as
+            major items if they are shuffled Anywhere
+            (Keysanity) or in Any Dungeon, and Small
+            Keys only count as major items if they are
+            shuffled Anywhere (Keysanity). This setting
+            is disabled if Small Keys are shuffled in
             Any Dungeon.
 
-            GS Tokens only count as major items if the 
-            bridge or LACS requirements are set to 
-            "GS Tokens".
+            GS Tokens only count as major items if the
+            bridge or Ganon Boss Key requirements are
+            set to "GS Tokens".
+
+            Heart Containers and Pieces of Heart only
+            count as major items if the bridge or LACS
+            requirements are set to "Hearts".
 
             Bombchus only count as major items if they
             are considered in logic.
@@ -2615,6 +2666,8 @@ setting_infos = [
             <b>Forest Temple</b>: elevator raised and
             basement gates open
             <b>Fire Temple</b>: pillar knocked down
+            <b>Water Temple</b>: no change, but see the
+            note on "Shuffle Boss Entrances" below
             <b>Shadow Temple</b>: Truthspinner solved, boat
             block moved, and statue bridge moved. You start
             with 2 small keys if Shuffle Small Keys is set
@@ -2622,6 +2675,12 @@ setting_infos = [
             <b>Spirit Temple</b>: lobby elevator activated,
             shortcut silver blocks moved, central room
             platform lowered, and statue face melted
+
+            With "Shuffle Boss Entrances", the floor above
+            King Dodongo's arena is opened based on the
+            shortcut setting for the dungeon that contains
+            the entrance to King Dodongo's boss room, not
+            necessarily Dodongo's Cavern.
 
             Choose: Select dungeons with shortcuts
             All: Enable all dungeons shortcuts
@@ -2639,14 +2698,14 @@ setting_infos = [
         multiple_select = True,
         gui_text        = 'Dungeon Boss Shortcuts',
         choices         = {
-            'deku_tree':        "Deku Tree",
-            'dodongos_cavern':  "Dodongo's Cavern",
-            'jabu_jabus_belly': "Jabu Jabu's Belly",
-            'forest_temple':    "Forest Temple",
-            'fire_temple':      "Fire Temple",
-            'water_temple':     "Water Temple",  # doesn't do anything, but added to prevent confusion
-            'shadow_temple':    "Shadow Temple",
-            'spirit_temple':    "Spirit Temple",
+            'Deku Tree':        "Deku Tree",
+            'Dodongos Cavern':  "Dodongo's Cavern",
+            'Jabu Jabus Belly': "Jabu Jabu's Belly",
+            'Forest Temple':    "Forest Temple",
+            'Fire Temple':      "Fire Temple",
+            'Water Temple':     "Water Temple",  # affects King Dodongo if he's in Water
+            'Shadow Temple':    "Shadow Temple",
+            'Spirit Temple':    "Spirit Temple",
         },
         default        = [],
         gui_params     = {
@@ -2807,9 +2866,6 @@ setting_infos = [
         ''',
         default        = False,
         shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
     ),
     Checkbutton(
         name           = 'chicken_count_random',
@@ -3001,6 +3057,21 @@ setting_infos = [
             to the item pool and changes both Medigoron and the 
             Haunted Wasteland Carpet Salesman to sell a random item 
             once at the price of 200 Rupees.
+        ''',
+        default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Checkbutton(
+        name           = 'shuffle_frog_song_rupees',
+        gui_text       = 'Shuffle Frog Song Rupees',
+        gui_tooltip    = '''\
+            Enabling this adds 5 Purple Rupees to the item pool 
+            and shuffles the rewards from playing Zelda's Lullaby,
+            Epona's Song, Saria's Song, Sun's Song, and Song of Time
+            to the frogs in Zora's River.
         ''',
         default        = False,
         shared         = True,
@@ -3262,6 +3333,7 @@ setting_infos = [
         },
         disable        = {
             'off':  {'settings': ['shopsanity_prices']},
+            '0':    {'settings': ['shopsanity_prices']},
         },
         gui_tooltip    = '''\
             Randomizes Shop contents.
@@ -3602,6 +3674,7 @@ setting_infos = [
             'medallions':      "Medallions",
             'dungeons':        "Dungeons",
             'tokens':          "Tokens",
+            'hearts':          "Hearts",
         },
         gui_tooltip    = '''\
             'Remove': Ganon's Castle Boss Key is removed
@@ -3636,6 +3709,9 @@ setting_infos = [
             
             'Tokens': Ganon's Castle Boss Key will be awarded
             when reaching the target number of Gold Skulltula Tokens.
+
+            'Hearts': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of hearts.
         ''',
         shared         = True,
         disable        = {
@@ -3643,6 +3719,7 @@ setting_infos = [
             '!medallions':  {'settings': ['ganon_bosskey_medallions']},
             '!dungeons':  {'settings': ['ganon_bosskey_rewards']},
             '!tokens':  {'settings': ['ganon_bosskey_tokens']},
+            '!hearts':  {'settings': ['ganon_bosskey_hearts']},
         },
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -3725,6 +3802,22 @@ setting_infos = [
             'electron:max': 100,
         },
     ),
+    Scale(
+        name           = 'ganon_bosskey_hearts',
+        gui_text       = "Hearts Required for Ganon's BK",
+        default        = 20,
+        min            = 4,
+        max            = 20,
+        gui_tooltip    = '''\
+            Select the amount of hearts
+            required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
+    ),
     Combobox(
         name           = 'lacs_condition',
         gui_text       = 'LACS Condition',
@@ -3735,6 +3828,7 @@ setting_infos = [
             'medallions': "Medallions",
             'dungeons':   "Dungeons",
             'tokens':     "Tokens",
+            'hearts':     "Hearts",
         },
         gui_tooltip    = '''\
             Sets the condition for the Light Arrow Cutscene
@@ -3745,6 +3839,7 @@ setting_infos = [
             'Medallions': A configurable amount of Medallions.
             'Dungeons': A configurable amount of Dungeon Rewards.
             'Tokens': A configurable amount of Gold Skulltula Tokens.
+            'Hearts': A configurable amount of hearts.
         ''',
         shared         = True,
         disable        = {
@@ -3752,6 +3847,7 @@ setting_infos = [
             '!medallions':  {'settings': ['lacs_medallions']},
             '!dungeons':  {'settings': ['lacs_rewards']},
             '!tokens':  {'settings': ['lacs_tokens']},
+            '!hearts':  {'settings': ['lacs_hearts']},
         },
         gui_params     = {
             'optional': True,
@@ -3832,6 +3928,23 @@ setting_infos = [
             "hide_when_disabled": True,
             'web:max': 100,
             'electron:max': 100,
+        },
+    ),
+    Scale(
+        name           = 'lacs_hearts',
+        gui_text       = "Hearts Required for LACS",
+        default        = 20,
+        min            = 4,
+        max            = 20,
+        gui_tooltip    = '''\
+            Select the amount of hearts
+            required to trigger the Light Arrow Cutscene.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            'optional': True,
+            "hide_when_disabled": True,
         },
     ),
     Checkbutton(
@@ -5486,6 +5599,28 @@ def validate_settings(settings_dict):
         # Ensure that the given choice is a valid choice for the setting
         elif info.choice_list and choice not in info.choice_list:
             raise ValueError('%r is not a valid choice for setting %r. %s' % (choice, setting, build_close_match(choice, 'choice', info.choice_list)))
+        # Ensure no conflicting settings are specified
+        if info.disable != None:
+            for option, disabling in info.disable.items():
+                negative = False
+                if isinstance(option, str) and option[0] == '!':
+                    negative = True
+                    option = option[1:]
+                if (choice == option) != negative:
+                    for other_setting in disabling.get('settings', []):
+                        validate_disabled_setting(settings_dict, setting, choice, other_setting)
+                    for section in disabling.get('sections', []):
+                        for other_setting in get_settings_from_section(section):
+                            validate_disabled_setting(settings_dict, setting, choice, other_setting)
+                    for tab in disabling.get('tabs', []):
+                        for other_setting in get_settings_from_tab(tab):
+                            validate_disabled_setting(settings_dict, setting, choice, other_setting)
+
+def validate_disabled_setting(settings_dict, setting, choice, other_setting):
+    if other_setting in settings_dict:
+        disabled_default = get_setting_info(other_setting).disabled_default
+        if settings_dict[other_setting] != disabled_default:
+            raise ValueError(f'{other_setting!r} must be set to {disabled_default!r} since {setting!r} is set to {choice!r}')
 
 class UnmappedSettingError(Exception):
     pass

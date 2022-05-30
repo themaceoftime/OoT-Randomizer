@@ -1,6 +1,6 @@
 import itertools
 import json
-import logging
+import math
 import re
 import random
 
@@ -85,7 +85,7 @@ class DungeonRecord(SimpleRecord({'mq': None})):
         return 'mq' if self.mq else 'vanilla'
 
 
-class GossipRecord(SimpleRecord({'text': None, 'colors': None})):
+class GossipRecord(SimpleRecord({'text': None, 'colors': None, 'hinted_location': None, 'hinted_item': None})):
     def to_json(self):
         if self.colors is not None:
             self.colors = CollapseList(self.colors)
@@ -233,9 +233,6 @@ class WorldDistribution(object):
 
 
     def update(self, src_dict, update_all=False):
-        if 'starting_items' in src_dict:
-            raise ValueError('"starting_items" at the top level is no longer supported, please move it into "settings"')
-
         update_dict = {
             'randomized_settings': {name: record for (name, record) in src_dict.get('randomized_settings', {}).items()},
             'dungeons': {name: DungeonRecord(record) for (name, record) in src_dict.get('dungeons', {}).items()},
@@ -313,6 +310,11 @@ class WorldDistribution(object):
                             self.distribution.settings.shuffle_ganon_bosskey == 'tokens' or self.distribution.settings.bridge == 'tokens')
                     if self.distribution.settings.tokensanity == 'all' and major_tokens:
                         self.major_group.append('Gold Skulltula Token')
+                    major_hearts = ((self.distribution.settings.shuffle_ganon_bosskey == 'on_lacs' and
+                            self.distribution.settings.lacs_condition == 'hearts') or
+                            self.distribution.settings.shuffle_ganon_bosskey == 'hearts' or self.distribution.settings.bridge == 'hearts')
+                    if major_hearts:
+                        self.major_group += ['Heart Container', 'Piece of Heart', 'Piece of Heart (Treasure Chest Game)']
                     if self.distribution.settings.shuffle_smallkeys == 'keysanity':
                         for dungeon in ['Bottom of the Well', 'Forest Temple', 'Fire Temple', 'Water Temple',
                                         'Shadow Temple', 'Spirit Temple', 'Gerudo Training Ground', 'Ganons Castle']:
@@ -1009,10 +1011,13 @@ class Distribution(object):
         self.search_groups = {
             **location_groups,
             **item_groups,
-        } 
-        if self.src_dict and 'custom_groups' in self.src_dict:
-            self.search_groups.update(self.src_dict['custom_groups'])
-        
+        }
+        if self.src_dict:
+            if 'custom_groups' in self.src_dict:
+                self.search_groups.update(self.src_dict['custom_groups'])
+            if 'starting_items' in self.src_dict:
+                raise ValueError('"starting_items" at the top level is no longer supported, please move it into "settings"')
+
         self.world_dists = [WorldDistribution(self, id) for id in range(settings.world_count)]
         # One-time init
         update_dict = {
@@ -1145,18 +1150,16 @@ class Distribution(object):
         # add hearts
         if self.settings.starting_hearts > 3:
             num_hearts_to_collect = self.settings.starting_hearts - 3
-            if num_hearts_to_collect % 2 == 1:
-                data['Piece of Heart'].count += 4
-                num_hearts_to_collect -= 1
-            for i in range(0, num_hearts_to_collect, 2):
-                data['Piece of Heart'].count += 4
-                data['Heart Container'].count += 1
-            if self.settings.starting_hearts >= 20:
-                data['Piece of Heart'].count -= 1
-                data['Piece of Heart (Treasure Chest Game)'].count += 1
             if self.settings.item_pool_value == 'plentiful':
-                data['Heart Container'].count += data['Piece of Heart'].count // 4
-                data['Piece of Heart'].count = data['Piece of Heart'].count % 4
+                if self.settings.starting_hearts >= 20:
+                    num_hearts_to_collect -= 1
+                    data['Piece of Heart'].count += 4
+                data['Heart Container'].count += num_hearts_to_collect
+            else:
+                # evenly split the difference between heart pieces and heart containers removed from the pool,
+                # removing an extra 4 pieces in case of an odd number since there's 9*4 of them but only 8 containers
+                data['Piece of Heart'].count += 4 * math.ceil(num_hearts_to_collect / 2)
+                data['Heart Container'].count += math.floor(num_hearts_to_collect / 2)
 
         return data
 
@@ -1237,11 +1240,13 @@ class Distribution(object):
                         goal = spoiler.goal_categories[world.id][cat_name].get_goal(goal_name)
                         goal_text = goal.hint_text.replace('#', '')
                         goal_text = goal_text[0].upper() + goal_text[1:]
-                        # Add Token/Triforce Piece reachability data
+                        # Add Token/Triforce Piece/heart reachability data
                         if goal.items[0]['name'] == 'Triforce Piece':
                             goal_text +=  ' (' + str(goal.items[0]['quantity']) + '/' + str(world.triforce_count) + ' reachable)'
                         if goal.items[0]['name'] == 'Gold Skulltula Token':
                             goal_text +=  ' (' + str(goal.items[0]['quantity']) + '/100 reachable)'
+                        if goal.items[0]['name'] == 'Piece of Heart':
+                            goal_text +=  ' (' + str(goal.items[0]['quantity']) + '/68 reachable)' #TODO adjust total based on starting_hearts?
                         world_dist.goal_locations[cat_name][goal_text] = {}
                         for location_world, locations in location_worlds.items():
                             if len(self.world_dists) == 1:
