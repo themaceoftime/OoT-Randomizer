@@ -1713,6 +1713,17 @@ setting_infos = [
             "hide_when_disabled" : True,
         }
     ),
+	Checkbutton(
+        name           = 'web_wad_legacy_mode',
+        gui_text       = 'WAD Legacy Mode',
+		shared		   = False,
+        default        = False,
+		gui_tooltip	   = "Enabling this will avoid any patching of the VC emulator in case your Wii does not have support for it. Recommended to be left unchecked.",
+		gui_params  = {
+			"no_line_break"		 : False,
+            "hide_when_disabled" : True,
+        }
+    ),
     Setting_Info(
         name       = 'web_output_type',
         type       = str,
@@ -1733,7 +1744,8 @@ setting_infos = [
                 'web_common_key_file',
                 'web_common_key_string',
                 'web_wad_channel_id',
-                'web_wad_channel_title']
+                'web_wad_channel_title',
+				'web_wad_legacy_mode']
             }
         }
     ),
@@ -1770,7 +1782,7 @@ setting_infos = [
                     'settings' : [
                         'rom','web_output_type','player_num',
                         'web_wad_file', 'web_common_key_file', 'web_common_key_string',
-                        'web_wad_channel_id','web_wad_channel_title'
+                        'web_wad_channel_id','web_wad_channel_title','web_wad_legacy_mode'
                     ],
                 },
             }
