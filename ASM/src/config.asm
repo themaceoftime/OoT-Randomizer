@@ -113,28 +113,6 @@ EXTENDED_OBJECT_TABLE:
 BOMBCHUS_IN_LOGIC:
 .word 0x00
 
-<<<<<<< HEAD
-RAINBOW_BRIDGE_CONDITION:
-.word 0x00
-; 0 = Open
-; 1 = Medallions
-; 2 = Dungeons
-; 3 = Stones
-; 4 = Vanilla
-; 5 = Tokens
-; 6 = Hearts
-
-LACS_CONDITION:
-.word 0x00
-; 0 = Vanilla
-; 1 = Medallions
-; 2 = Dungeons
-; 3 = Stones
-; 4 = Tokens
-; 5 = Hearts
-
-=======
->>>>>>> pr/1575
 GOSSIP_HINT_CONDITION:
 .word 0x00
 ; 0 = Mask of Truth
@@ -207,6 +185,7 @@ RAINBOW_BRIDGE_CONDITION:
 ; 3 = Stones
 ; 4 = Vanilla
 ; 5 = Tokens
+; 6 = Hearts
 
 LACS_CONDITION:
 .word 0x00
@@ -214,6 +193,8 @@ LACS_CONDITION:
 ; 1 = Medallions
 ; 2 = Dungeons
 ; 3 = Stones
+; 4 = Tokens
+; 5 = Hearts
 
 RAINBOW_BRIDGE_COUNT:
 .halfword 0x0064

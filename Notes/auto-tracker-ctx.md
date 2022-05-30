@@ -13,8 +13,8 @@ The starting address of the auto-tracker context is listed at address `0x8040_00
 |`0x18`|`CFG_DUNGEON_INFO_REWARD_NEED_ALTAR`|1|`0x4`|`1` if the reward info should only be displayed for rewards whose Temple of Time altar text boxes have been read.|
 |`0x1c`|`CFG_DUNGEON_REWARDS`|1|`0xe`|A byte representing the medallion or stone for each dungeon. Dungeons without rewards are listed as `0xff`.|
 |`0x2a`|`CFG_DUNGEON_IS_MQ`|1|`0xe`|A byte set to `1` for each dungeon in Master Quest mode.|
-|`0x38`|`RAINBOW_BRIDGE_CONDITION`|2|`0x4`|The condition for spawning the rainbow bridge. `0` = open, `1` = medallions, `2` = dungeon rewards, `3` = stones, `4` = vanilla, `5` = tokens.|
-|`0x3c`|`LACS_CONDITION`|2|`0x4`|The condition for triggering the light arrow cutscene. `0` = vanilla, `1` = medallions, `2` = dungeons, `3` = stones.|
+|`0x38`|`RAINBOW_BRIDGE_CONDITION`|2|`0x4`|The condition for spawning the rainbow bridge. `0` = open, `1` = medallions, `2` = dungeon rewards, `3` = stones, `4` = vanilla, `5` = tokens, `6` = hearts.|
+|`0x3c`|`LACS_CONDITION`|2|`0x4`|The condition for triggering the light arrow cutscene. `0` = vanilla, `1` = medallions, `2` = dungeons, `3` = stones, `4` = tokens, `5` = hearts.|
 |`0x40`|`RAINBOW_BRIDGE_COUNT`|2|`0x2`|The number of items (of the kind defined in `RAINBOW_BRIDGE_CONDITION`) required to spawn the rainbow bridge.|
 |`0x42`|`LACS_CONDITION_COUNT`|2|`0x2`|The number of items (of the kind defined in `LACS_CONDITION`) required to trigger the light arrow cutscene.|
 |`0x44`|`TRIFORCE_HUNT_ENABLED`|2|`0x2`|`1` if Triforce hunt is enabled.|
