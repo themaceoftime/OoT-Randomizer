@@ -115,6 +115,7 @@ do that.
   * MQ Dungeon settings have been replaced with `MQ Dungeons Mode` which allows finer selection of which dungeons are MQ, or how many are at random.
   * New setting `Shuffle Boss Entrances` allows boss rooms to be shuffled between dungeons. This is only available in glitchless logic.
   * `Misc. Hints` has been expanded to a multiple select setting allowing you to fine-tune which set of misc hints to enable or disable.
+  * New setting `Shuffle Frog Song Rupees` allows you to shuffle the rupees you receive from the Zora's River frogs.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.

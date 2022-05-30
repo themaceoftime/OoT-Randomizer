@@ -3007,6 +3007,21 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
+    Checkbutton(
+        name           = 'shuffle_frog_song_rupees',
+        gui_text       = 'Shuffle Frog Song Rupees',
+        gui_tooltip    = '''\
+            Enabling this adds 5 Purple Rupees to the item pool 
+            and shuffles the rewards from playing Zelda's Lullaby,
+            Epona's Song, Saria's Song, Sun's Song, and Song of Time
+            to the frogs in Zora's River.
+        ''',
+        default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
     Combobox(
         name           = 'shuffle_interior_entrances',
         gui_text       = 'Shuffle Interior Entrances',
