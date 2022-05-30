@@ -117,6 +117,7 @@ do that.
   * `Misc. Hints` has been expanded to a multiple select setting allowing you to fine-tune which set of misc hints to enable or disable.
   * New setting `Shuffle Frog Song Rupees` allows you to shuffle the rupees you receive from the Zora's River frogs.
   * New setting `Show Seed Info on File Screen` which also allows a user-set message to be displayed.
+  * New settings allow for Rainbow Bridge and Ganon's Boss Key to be obtained upon reaching a certain amount of total heart containers.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
