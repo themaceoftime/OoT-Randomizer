@@ -28,6 +28,8 @@
             "wad_file",
             "wad_channel_id",
             "wad_channel_title",
+            "show_seed_info",
+            "user_message",
             "open_output_dir",
             "open_python_dir"
           ]
@@ -76,7 +78,9 @@
             "web_common_key_file",
             "web_common_key_string",
             "web_wad_channel_id",
-            "web_wad_channel_title"
+            "web_wad_channel_title",
+            "show_seed_info",
+            "user_message"
           ]
         },
         {
