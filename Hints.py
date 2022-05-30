@@ -533,7 +533,7 @@ def is_not_checked(locations, checked):
 
 def get_good_item_hint(spoiler, world, checked):
     locations = list(filter(lambda location:
-        is_not_checked(location, checked)
+        is_not_checked([location], checked)
         and ((location.item.majoritem
             and location.item.name not in unHintableWothItems)
                 or location.name in world.added_hint_types['item']
@@ -1133,7 +1133,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
             raise Exception('User-provided item hints were requested, but copies per named-item hint is zero')
         else:
             for i in range(0, len(world.named_item_pool)):
-                hint = (spoiler, world, checkedLocations | checkedAlwaysLocations)
+                hint = get_specific_item_hint(spoiler, world, checkedLocations | checkedAlwaysLocations)
                 if hint:
                     gossip_text, location = hint
                     place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, hint_dist['named-item'][1], [location])
@@ -1211,9 +1211,9 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
                 if locations is None:
                     logging.getLogger('').debug('Placed %s hint.', hint_type)
                 else:
-                    logging.getLogger('').debug('Placed %s hint for %s.', hint_type, locations[0].name)
+                    logging.getLogger('').debug('Placed %s hint for %s.', hint_type, ', '.join([location.name for location in locations]))
             if not place_ok and custom_fixed:
-                logging.getLogger('').debug('Failed to place %s fixed hint for %s.', hint_type, locations[0].name)
+                logging.getLogger('').debug('Failed to place %s fixed hint for %s.', hint_type, ', '.join([location.name for location in locations]))
                 fixed_hint_types.insert(0, hint_type)
 
 

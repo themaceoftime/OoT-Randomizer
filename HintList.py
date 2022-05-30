@@ -70,14 +70,11 @@ def getHintGroup(group, world):
 
         conditional_keep = True
         type_append = False
-        if group in ['overworld', 'dungeon', 'sometimes'] and hint.name in conditional_sometimes.keys():
+        if group in ['overworld', 'dungeon', 'sometimes', 'dual'] and hint.name in conditional_sometimes.keys():
             conditional_keep = conditional_sometimes[hint.name](world)
 
-        if group == 'dual' and hint.name in conditional_dual.keys():
-            conditional_keep = conditional_dual[hint.name](world)
-
         # Hint inclusion override from distribution
-        if group in world.added_hint_types or group in world.item_added_hint_types:
+        if (group in world.added_hint_types or group in world.item_added_hint_types) and group not in ['dual', 'dual_always']:
             if hint.name in world.added_hint_types[group]:
                 hint.type = group
                 type_append = True
@@ -99,6 +96,13 @@ def getHintGroup(group, world):
                 location = world.get_location(name)
                 if location.item.name in world.item_hint_type_overrides[group]:
                     type_override = True
+            elif name in dualTable.keys():
+                dual = getDual(name)
+                for locationName in dual.locations:
+                    if locationName not in hintExclusions(world):
+                        location = world.get_location(locationName)
+                        if location.item.name in world.item_hint_type_overrides[group]:
+                            type_override = True
 
         if group in hint.type and (name not in hintExclusions(world)) and not type_override and (conditional_keep or type_append):
             ret.append(hint)
@@ -179,25 +183,29 @@ conditional_always = {
 # Dual hints required under certain settings
 conditional_dual_always = {
     'HF Ocarina of Time Retrieval': lambda world: stones_required_by_settings(world) < 2,
+    'Deku Theater Rewards':         lambda world: not world.settings.complete_mask_quest,
 }
 
-# Some sometimes hints should only be enabled under certain settings
+# Some sometimes and dual hints should only be enabled under certain settings
 conditional_sometimes = {
-    'HC Great Fairy Reward':        lambda world: world.settings.shuffle_interior_entrances == 'off',
-    'OGC Great Fairy Reward':       lambda world: world.settings.shuffle_interior_entrances == 'off',
+    # Conditionnal sometimes hints
+    'HC Great Fairy Reward':                    lambda world: world.settings.shuffle_interior_entrances == 'off',
+    'OGC Great Fairy Reward':                   lambda world: world.settings.shuffle_interior_entrances == 'off',
+    
+    # Conditionnal dual hints
+    'GV Pieces of Heart Ledges':                lambda world: not world.settings.shuffle_cows and world.settings.tokensanity not in ['overworld', 'all'],
+
+    'Fire Temple Lower Loop':                   lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+    'Water Temple River Loop Chests':           lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+    'Water Temple MQ Lower Checks':             lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+    'Spirit Temple Child Lower':                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+    'Spirit Temple Adult Lower':                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+    'Shadow Temple Invisible Blades Chests':    lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
 }
 
 # Some dual hints should only be enabled under certain settings
 conditional_dual = {
-    'LW Deku Theater Rewards':                                  lambda world: world.settings.complete_mask_quest,
-    'GV Pieces of Heart Ledges':                                lambda world: not world.settings.shuffle_cows and world.settings.tokensanity not in ['overworld', 'all'],
-
-    'Fire Temple Lower Loop':                                   lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
-    'Water Temple River Loop Chests':                           lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
-    'Water Temple MQ Lower Checks':                             lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
-    'Spirit Temple Child Lower':                                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
-    'Spirit Temple Adult Lower':                                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
-    'Shadow Temple Invisible Blades Chests':                    lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
+    
 }
     
 # Table of hints, format is (name, hint text, clear hint text, type of hint) there are special characters that are read for certain in game commands:
@@ -475,7 +483,6 @@ hintTable = {
     'Graveyard Dampe Race Rewards':                                ("racing #Dampe's ghost# yields...^", None, 'dual'),
     'Graveyard Royal Family Tomb Contents':                        ("inside the #Royal Family Tomb#, darkness and Redeads guard respectively...^", None, 'dual'),
     'DMC Child Upper Checks':                                      ("at #the crater# a spider in a crate and a single scrub hold respectively...^", None, 'dual'),
-    'Sarias Song Checks':                                          ("#Music Lovers# in the Lost Woods and Goron City gift respectively...^", None, 'dual'),
     'Haunted Wasteland Checks':                                    ("#deep in the wasteland# a chest and a spider hold respectively...^", None, 'dual'),
 
     'Deku Tree MQ Basement GS':                                    ("in the back of the #basement of the Great Deku Tree# two spiders hold...^", None, 'dual'),
@@ -1586,7 +1593,6 @@ dualTable = {
     'Graveyard Dampe Race Rewards':                             ['Graveyard Hookshot Chest', 'Graveyard Dampe Race Freestanding PoH'],
     'Graveyard Royal Family Tomb Contents':                     ['Graveyard Royal Familys Tomb Chest', 'Song from Royal Familys Tomb'],
     'DMC Child Upper Checks':                                   ['DMC GS Crate', 'DMC Deku Scrub'],
-    'Sarias Song Checks':                                       ['LW Skull Kid', 'GC Darunias Joy'],
     'Haunted Wasteland Checks':                                 ['Wasteland Chest', 'Wasteland GS'],
 
     'Deku Tree MQ Basement GS':                                 ['Deku Tree MQ GS Basement Graves Room','Deku Tree MQ GS Basement Back Room'],
@@ -1664,15 +1670,13 @@ def hintExclusions(world, clear_cache=False):
                  'dungeon',
                  'song',
                  'dual',
-                 'exclude',
-                 'dual_exclude']):
+                 'exclude']):
             location_hints.append(hint)
 
     for hint in location_hints:
         if any(item in hint.type for item in 
                 ['dual',
-                 'dual_always',
-                 'dual_exclude']):
+                 'dual_always']):
             dual = getDual(hint.name)
             exclude_hint = False
             for location in dual.locations:
