@@ -113,6 +113,7 @@ EXTENDED_OBJECT_TABLE:
 BOMBCHUS_IN_LOGIC:
 .word 0x00
 
+<<<<<<< HEAD
 RAINBOW_BRIDGE_CONDITION:
 .word 0x00
 ; 0 = Open
@@ -132,6 +133,8 @@ LACS_CONDITION:
 ; 4 = Tokens
 ; 5 = Hearts
 
+=======
+>>>>>>> pr/1575
 GOSSIP_HINT_CONDITION:
 .word 0x00
 ; 0 = Mask of Truth
@@ -140,12 +143,6 @@ GOSSIP_HINT_CONDITION:
 
 FREE_SCARECROW_ENABLED:
 .word 0x00
-
-RAINBOW_BRIDGE_COUNT:
-.halfword 0x64
-
-LACS_CONDITION_COUNT:
-.halfword 0x00
 
 JABU_ELEVATOR_ENABLE:
 .byte 0x00
@@ -178,9 +175,10 @@ PLANDOMIZER_USED:
 .align 4
 
 ; These configuration values are given fixed addresses to aid auto-trackers.
+; Any changes made here should be documented in Notes/auto-tracker-ctx.md
 AUTO_TRACKER_CONTEXT:
 AUTO_TRACKER_VERSION:
-.word 1 ; Increment this if the auto-tracker context layout changes
+.word 2 ; Increment this if the auto-tracker context layout changes
 
 CFG_DUNGEON_INFO_ENABLE:
 .word 1
@@ -199,6 +197,38 @@ CFG_DUNGEON_REWARDS:
 .endarea
 .area 14, 0x00
 CFG_DUNGEON_IS_MQ:
+.endarea
+
+RAINBOW_BRIDGE_CONDITION:
+.word 0x00
+; 0 = Open
+; 1 = Medallions
+; 2 = Dungeons
+; 3 = Stones
+; 4 = Vanilla
+; 5 = Tokens
+
+LACS_CONDITION:
+.word 0x00
+; 0 = Vanilla
+; 1 = Medallions
+; 2 = Dungeons
+; 3 = Stones
+
+RAINBOW_BRIDGE_COUNT:
+.halfword 0x0064
+
+LACS_CONDITION_COUNT:
+.halfword 0x0000
+
+TRIFORCE_HUNT_ENABLED:
+.halfword 0x0000
+
+TRIFORCE_PIECES_REQUIRED:
+.halfword 0xffff
+
+.area 8, 0x00
+SPECIAL_DEAL_COUNTS:
 .endarea
 
 .align 4
