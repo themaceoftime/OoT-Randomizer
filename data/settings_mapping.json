@@ -79,6 +79,7 @@
             "web_common_key_string",
             "web_wad_channel_id",
             "web_wad_channel_title",
+            "web_wad_legacy_mode",
             "show_seed_info",
             "user_message"
           ]
@@ -124,7 +125,8 @@
             "web_common_key_file",
             "web_common_key_string",
             "web_wad_channel_id",
-            "web_wad_channel_title"
+            "web_wad_channel_title",
+            "web_wad_legacy_mode"
           ]
         },
         {
