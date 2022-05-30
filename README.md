@@ -160,6 +160,7 @@ do that.
 * On the File Select screen, trade items that will be reverted on load now show as the item they will revert to.
 * Ganondorf will now say that the Light Arrows are in your pocket if they are an effective starting item (e.g. the item given from `Skip Child Zelda`).
 * The "WINNER!" Piece of Heart will now show the proper player name in Multiworld.
+* Hinted item and location for a Gossip Stone hint are now included in the spoiler log.
 
 ### 6.2
 
