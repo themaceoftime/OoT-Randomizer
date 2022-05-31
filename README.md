@@ -115,6 +115,9 @@ do that.
   * MQ Dungeon settings have been replaced with `MQ Dungeons Mode` which allows finer selection of which dungeons are MQ, or how many are at random.
   * New setting `Shuffle Boss Entrances` allows boss rooms to be shuffled between dungeons. This is only available in glitchless logic.
   * `Misc. Hints` has been expanded to a multiple select setting allowing you to fine-tune which set of misc hints to enable or disable.
+  * New setting `Shuffle Frog Song Rupees` allows you to shuffle the rupees you receive from the Zora's River frogs.
+  * New setting `Show Seed Info on File Screen` which also allows a user-set message to be displayed.
+  * New settings allow for Rainbow Bridge and Ganon's Boss Key to be obtained upon reaching a certain amount of total heart containers.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
@@ -144,7 +147,7 @@ do that.
 * `Goron Bracelet` is no longer greyed out as adult on the Equipment subscreen of the pause menu.
 * Plandomizer
   * You can now specify an arbitrary 4-character hexadecimal text ID as a "Gossip Stone" to overwrite text in the game.
-  * Adjusted how `starting_items` works in order to remove some redundancy. Spoiler output now includes a section `:skipped_locations` instead which is not used by Plandomizer.
+  * Adjusted how `starting_items` works in order to remove some redundancy, where it is now placed within the settings dictionary.. Spoiler output now includes a section `:skipped_locations` instead which is not used by Plandomizer.
   * Gold Skulltula Token requirements can be increased above 100 (the pool must also have at least that many).
 * Triforce Hunt changes
   * The number of Triforce pieces available per world, which was previously tied to the item pool setting, is now a separate setting.
@@ -157,6 +160,10 @@ do that.
 * On the File Select screen, trade items that will be reverted on load now show as the item they will revert to.
 * Ganondorf will now say that the Light Arrows are in your pocket if they are an effective starting item (e.g. the item given from `Skip Child Zelda`).
 * The "WINNER!" Piece of Heart will now show the proper player name in Multiworld.
+* Hinted item and location for a Gossip Stone hint are now included in the spoiler log.
+* One-way entrances are now restricted to one per hint area rather than one per scene.
+* You can now receive starting ice traps, either from Impa's item with Skip Child Zelda or with plando.
+* Plandomizer will now display an error and inform the user if they have specified conflicting settings within the plando.
 
 ### 6.2
 

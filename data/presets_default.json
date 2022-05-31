@@ -1,5 +1,7 @@
 {
   "Easy Mode": {
+    "show_seed_info": true,
+    "user_message": "Easy Mode",
     "create_spoiler": true,
     "world_count": 1,
     "randomize_settings": false,
@@ -87,6 +89,8 @@
     "logic_latest_adult_trade": "claim_check"
   },
   "S5 Tournament": {
+    "show_seed_info":                          true,
+    "user_message":                            "S5 Tournament",
     "world_count":                             1,
     "create_spoiler":                          true,
     "randomize_settings":                      false,
@@ -196,6 +200,8 @@
     "starting_age":                            "random"
   },
   "Standard Weekly (Latest)": {
+    "show_seed_info":                          true,
+    "user_message":                            "Standard Weekly (Latest)",
     "world_count":                             1,
     "create_spoiler":                          true,
     "randomize_settings":                      false,
@@ -305,6 +311,8 @@
     "starting_age":                            "random"
   },
   "DDR Weekly (2021-01-19)": {
+    "show_seed_info":                          true,
+    "user_message":                            "DDR Weekly (2021-01-19)",
     "world_count":                             1,
     "create_spoiler":                          true,
     "randomize_settings":                      false,
@@ -407,6 +415,8 @@
     "starting_age":                            "child"
   },
   "Scrub Tournament": {
+    "show_seed_info": true,
+    "user_message": "Scrub Tournament",
     "create_spoiler": true,
     "world_count": 1,
     "randomize_settings": false,
@@ -418,9 +428,6 @@
     "gerudo_fortress": "fast",
     "bridge": "medallions",
     "bridge_medallions": 4,
-    "bridge_stones": 3,
-    "bridge_rewards": 9,
-    "bridge_tokens": 1,
     "trials_random": false,
     "trials": 0,
     "starting_age": "random",
@@ -521,6 +528,8 @@
     "logic_latest_adult_trade": "claim_check"
   },
   "Multiworld Tournament Season 2": {
+    "show_seed_info":                          true,
+    "user_message":                            "Multiworld Tournament Season 2",
     "world_count":                             3,
     "create_spoiler":                          true,
     "randomize_settings":                      false,
@@ -633,6 +642,8 @@
     "starting_age":                            "adult"
   },
   "Hell Mode": {
+    "show_seed_info": true,
+    "user_message": "Hell Mode",
     "create_spoiler": true,
     "world_count": 1,
     "randomize_settings": false,
@@ -857,6 +868,8 @@
     "logic_latest_adult_trade": "pocket_egg"
   },
   "Bingo": {
+    "show_seed_info":                          true,
+    "user_message":                            "Bingo",
     "world_count":                             1,
     "create_spoiler":                          true,
     "randomize_settings":                      false,
@@ -956,6 +969,8 @@
     "starting_age":                            "child"
   },
   "League": {
+    "show_seed_info":                          true,
+    "user_message":                            "League",
     "world_count":                             1,
     "create_spoiler":                          false,
     "randomize_settings":                      false,
@@ -1059,6 +1074,8 @@
     "starting_age":                            "random"
   },
   "Co-Op Tournament Season 2": {
+    "show_seed_info":                          true,
+    "user_message":                            "Co-Op Tournament Season 2",
     "world_count":                             1,
     "create_spoiler":                          false,
     "randomize_settings":                      false,

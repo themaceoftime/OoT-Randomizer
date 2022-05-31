@@ -510,6 +510,12 @@ hintTable = {
     'Hideout Jail Guard (3 Torches)':                              ("#defeating Gerudo guards# reveals", None, 'exclude'),
     'Hideout Jail Guard (4 Torches)':                              ("#defeating Gerudo guards# reveals", None, 'exclude'),
 
+    'ZR Frogs Zeldas Lullaby':                                     ("after hearing #Zelda's Lullaby, frogs gift#", None, 'exclude'),
+    'ZR Frogs Eponas Song':                                        ("after hearing #Epona's Song, frogs gift#", None, 'exclude'),
+    'ZR Frogs Sarias Song':                                        ("after hearing #Saria's Song, frogs gift#", None, 'exclude'),
+    'ZR Frogs Suns Song':                                          ("after hearing #Sun's Song, frogs gift#", None, 'exclude'),
+    'ZR Frogs Song of Time':                                       ("after hearing #Song of Time, frogs gift#", None, 'exclude'),
+
     'Deku Tree Map Chest':                                         ("in the #center of the Deku Tree# lies", None, 'exclude'),
     'Deku Tree Slingshot Chest':                                   ("the #treasure guarded by a scrub# in the Deku Tree is", None, 'exclude'),
     'Deku Tree Slingshot Room Side Chest':                         ("the #treasure guarded by a scrub# in the Deku Tree is", None, 'exclude'),
@@ -1451,6 +1457,7 @@ hintTable = {
     'bridge_medallions':                                        ("Medallions", None, 'bridge'),
     'bridge_dungeons':                                          ("Spiritual Stones and Medallions", None, 'bridge'),
     'bridge_tokens':                                            ("Gold Skulltula Tokens", None, 'bridge'),
+    'bridge_hearts':                                            ("hearts", None, 'bridge'),
 
     'ganonBK_dungeon':                                          ("hidden somewhere #inside its castle#", None, 'ganonBossKey'),
     'ganonBK_vanilla':                                          ("kept in a big chest #inside its tower#", None, 'ganonBossKey'),
@@ -1462,12 +1469,14 @@ hintTable = {
     'ganonBK_stones':                                           ("Spiritual Stones", None, 'ganonBossKey'),
     'ganonBK_dungeons':                                         ("Spiritual Stones and Medallions", None, 'ganonBossKey'),
     'ganonBK_tokens':                                           ("Gold Skulltula Tokens", None, 'ganonBossKey'),
+    'ganonBK_hearts':                                           ("hearts", None, 'ganonBossKey'),
 
     'lacs_vanilla':                                             ("the #Shadow and Spirit Medallions#", None, 'lacs'),
     'lacs_medallions':                                          ("Medallions", None, 'lacs'),
     'lacs_stones':                                              ("Spiritual Stones", None, 'lacs'),
     'lacs_dungeons':                                            ("Spiritual Stones and Medallions", None, 'lacs'),
     'lacs_tokens':                                              ("Gold Skulltula Tokens", None, 'lacs'),
+    'lacs_hearts':                                              ("hearts", None, 'lacs'),
 
     'Spiritual Stone Text Start':                               ("3 Spiritual Stones found in Hyrule...", None, 'altar'),
     'Child Altar Text End':                                     ("\x13\x07Ye who may become a Hero...&Stand with the Ocarina and&play the Song of Time.", None, 'altar'),
