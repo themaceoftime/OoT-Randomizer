@@ -1764,8 +1764,9 @@
             "DMC Upper Nearby": "True",
             "DMC Ladder Area Nearby": "True",
             "DMC Pierre Platform": "
-                can_use(Goron_Tunic) and ((damage_multiplier != 'ohko' and damage_multiplier != 'quadruple') or 
-                (Fairy and not entrance_shuffle) or can_use(Nayrus_Love))",
+                (damage_multiplier != 'ohko' and damage_multiplier != 'quadruple') or 
+                Fairy or 
+                can_use(Nayrus_Love)",
             "DMC Central Nearby": "
                 can_use(Goron_Tunic) and can_use(Longshot) and 
                 ((damage_multiplier != 'ohko' and damage_multiplier != 'quadruple') or 
