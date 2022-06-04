@@ -117,7 +117,8 @@
                 (Progressive_Strength_Upgrade and
                     here((logic_dc_mq_eyes_adult and is_adult) or (logic_dc_mq_eyes_child and is_child)) and
                     here(can_use(Sticks) or can_use(Dins_Fire) or
-                        (is_adult and (logic_dc_jump or Megaton_Hammer or Hover_Boots or Hookshot))))"
+                        (is_adult and (logic_dc_jump or Megaton_Hammer or Hover_Boots or Hookshot))))",
+            "Dodongos Cavern Lower Lizalfos" : "has_explosives"
         }
     },
     {
@@ -176,11 +177,18 @@
             "Dodongos Cavern MQ Poes Room Crate 5": "True",
             "Dodongos Cavern MQ Poes Room Crate 6": "True",
             "Dodongos Cavern MQ Poes Room Crate 7": "True",
-            "Dodongos Cavern MQ Poes Room Crate 8": "True",
-            "Dodongos Cavern Lower Lizalfos Hidden Recovery Heart" : "True"
+            "Dodongos Cavern MQ Poes Room Crate 8": "True"
         },
         "exits": {
-            "Dodongos Cavern Lower Right Side": "True"
+            "Dodongos Cavern Lower Right Side": "True",
+            "Dodongos Cavern Lower Lizalfos" : "True"
+        }
+    },
+    {
+        "region_name" : "Dodongos Cavern Lower Lizalfos",
+        "dungeon" : "Dodongos Cavern",
+        "locations" : {
+            "Dodongos Cavern Lower Lizalfos Hidden Recovery Heart" : "True"
         }
     },
     {
