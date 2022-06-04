@@ -52,7 +52,7 @@
                 can_use(Light_Arrows) and can_use(Longshot)"
         },
         "locations": {
-            "Ganons Castle Fire Trial Recovery Heart": "logic_fewer_tunic_requirements or can_use(Goron_Tunic)",
+            "Ganons Castle Fire Trial Recovery Heart": "True",
             "Ganons Castle Fire Trial Pot 1": "can_use(Goron_Tunic) and can_use(Golden_Gauntlets) and can_use(Longshot)",
             "Ganons Castle Fire Trial Pot 2": "can_use(Goron_Tunic) and can_use(Golden_Gauntlets) and can_use(Longshot)"
         }
