@@ -58,14 +58,17 @@
         "dungeon": "Deku Tree",
         "locations": {
             "Deku Tree Basement Recovery Heart 1" : "
-                deku_tree_shortcuts
-                or here(has_fire_source_with_torch or (logic_deku_b1_webs_with_bow and can_use(Bow)))",
+                deku_tree_shortcuts or 
+                has_fire_source_with_torch or 
+                (logic_deku_b1_webs_with_bow and can_use(Bow))",
             "Deku Tree Basement Recovery Heart 2" : "
-                deku_tree_shortcuts
-                or here(has_fire_source_with_torch or (logic_deku_b1_webs_with_bow and can_use(Bow)))",
+                deku_tree_shortcuts or 
+                has_fire_source_with_torch or 
+                (logic_deku_b1_webs_with_bow and can_use(Bow))",
             "Deku Tree Basement Recovery Heart 3" : "
-                deku_tree_shortcuts
-                or here(has_fire_source_with_torch or (logic_deku_b1_webs_with_bow and can_use(Bow)))"
+                deku_tree_shortcuts or 
+                has_fire_source_with_torch or 
+                (logic_deku_b1_webs_with_bow and can_use(Bow))",
         },
         "exits": {
             "Deku Tree Basement Back Room": "is_child",
