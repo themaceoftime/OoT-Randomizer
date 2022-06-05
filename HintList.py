@@ -1599,7 +1599,7 @@ dualTable = {
     'GV Pieces of Heart Ledges':                                ['GV Crate Freestanding PoH', 'GV Waterfall Freestanding PoH'],
     'GF Horseback Archery Rewards':                             ['GF HBA 1000 Points', 'GF HBA 1500 Points'],
     'Colossus Nighttime GS':                                    ['Colossus GS Tree', 'Colossus GS Hill'],
-    'Graveyard Dampe Race Rewards':                             ['Graveyard Hookshot Chest', 'Graveyard Dampe Race Freestanding PoH'],
+    'Graveyard Dampe Race Rewards':                             ['Graveyard Dampe Race Hookshot Chest', 'Graveyard Dampe Race Freestanding PoH'],
     'Graveyard Royal Family Tomb Contents':                     ['Graveyard Royal Familys Tomb Chest', 'Song from Royal Familys Tomb'],
     'DMC Child Upper Checks':                                   ['DMC GS Crate', 'DMC Deku Scrub'],
     'Haunted Wasteland Checks':                                 ['Wasteland Chest', 'Wasteland GS'],
