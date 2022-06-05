@@ -256,8 +256,12 @@ def fill_dungeon_unique_item(window, worlds, search, fill_locations, itempool):
     # since the rest are already placed.
     major_items = [item for item in itempool if item.majoritem]
     minor_items = [item for item in itempool if not item.majoritem]
+  
+    if worlds[0].settings.empty_dungeons_mode != 'none':
+        dungeons = [dungeon for world in worlds for dungeon in world.dungeons if not world.empty_dungeons[dungeon.name].empty]
+    else:
+        dungeons = [dungeon for world in worlds for dungeon in world.dungeons]
 
-    dungeons = [dungeon for world in worlds for dungeon in world.dungeons]
     double_dungeons = []
     for dungeon in dungeons:
         # we will count spirit temple twice so that it gets 2 items to match vanilla
