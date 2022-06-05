@@ -4,7 +4,7 @@ from Hints import HintArea
 from Utils import data_path
 
 
-class Dungeon(object):
+class Dungeon:
     def __init__(self, world, name, hint):
         self.world = world
         self.name = name
