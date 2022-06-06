@@ -164,8 +164,6 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
                     restdungeon.append(item)
                 else:
                     restother.append(item)
-            logging.getLogger('').info("Here what I can place:")
-            logging.getLogger('').info(f"{list(item.name for item in restother)}")
             fast_fill(window, empty_locations, restother)
             restitempool = restdungeon + restother
             random.shuffle(restitempool)
