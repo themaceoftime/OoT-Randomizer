@@ -678,7 +678,7 @@ logic_tricks = {
                     expire. You can get extra time to show the Eye Drops if
                     you warp immediately upon receiving them. If you don't
                     have many hearts, you may have to reset the heat timer
-                    by quickly dipping in and out of Darunia's chamber or 
+                    by quickly dipping in and out of Darunia's chamber or
                     quickly equipping and unequipping the Goron Tunic.
                     This trick does not apply if "Randomize Warp Song
                     Destinations" is enabled, or if the settings are such
@@ -743,7 +743,7 @@ logic_tricks = {
         'name'    : 'logic_spirit_mq_lower_adult',
         'tags'    : ("Spirit Temple",),
         'tooltip' : '''\
-                    By standing in a precise position is it possible to
+                    By standing in a precise position it is possible to
                     light two of the torches with a single use of Din\'s
                     Fire. This saves enough time to be able to light all
                     three torches with only Din\'s.
@@ -906,8 +906,8 @@ logic_tricks = {
         'name'    : 'logic_crater_boulder_skip',
         'tags'    : ("Death Mountain Crater",),
         'tooltip' : '''\
-                    With careful positioning, you can jump to the ledge 
-                    where the boulder is, then use repeated ledge grabs 
+                    With careful positioning, you can jump to the ledge
+                    where the boulder is, then use repeated ledge grabs
                     to shimmy to a climbable ledge. This trick supersedes
                     "Death Mountain Crater Upper to Lower with Hammer".
                     '''},
@@ -1587,7 +1587,7 @@ logic_tricks = {
                     See "Shadow Temple MQ Invisible Moving Platform
                     without Lens of Truth", "Shadow Temple MQ Invisible
                     Blades Silver Rupees without Lens of Truth",
-                    "Shadow Temple MQ 2nd Dead Hand without Lens of Truth"
+                    "Shadow Temple MQ 2nd Dead Hand without Lens of Truth",
                     and "Shadow Temple Bongo Bongo without Lens of Truth"
                     for exceptions.
                     '''},

@@ -1026,7 +1026,7 @@
             "Kak GS Guards House": "is_child and at_night",
             "Kak GS Tree": "is_child and at_night",
             "Kak GS Watchtower": "
-                is_child and at_night and (Slingshot or has_bombchus or 
+                is_child and at_night and (Slingshot or has_bombchus or
                     (logic_kakariko_tower_gs and (Sticks or Kokiri_Sword)))",
             "Bug Rock": "has_bottle"
         },
