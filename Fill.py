@@ -154,7 +154,24 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
             location.world.hint_exclusions.add(location.name)
             location.world.hint_type_overrides['sometimes'].append(location.name)
             location.world.hint_type_overrides['random'].append(location.name)
-        fast_fill(window, empty_locations, restitempool)
+        
+        if worlds[0].settings.shuffle_mapcompass in ['any_dungeon', 'overworld', 'keysanity']:
+            # Non-empty dungeon items are present in restitempool but yet we 
+            # don't want to place them in an empty dungeon
+            restdungeon, restother = [], []
+            for item in restitempool:
+                if item.dungeonitem:
+                    restdungeon.append(item)
+                else:
+                    restother.append(item)
+            logging.getLogger('').info("Here what I can place:")
+            logging.getLogger('').info(f"{list(item.name for item in restother)}")
+            fast_fill(window, empty_locations, restother)
+            restitempool = restdungeon + restother
+            random.shuffle(restitempool)
+        else:
+            # We don't have to worry about this if dungeon items stay in their own dungeons
+            fast_fill(window, empty_locations, restitempool)
 
 
     # places the songs into the world
