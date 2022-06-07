@@ -985,9 +985,10 @@ class WorldDistribution(object):
         if world.settings.skip_child_zelda:
             skipped_locations += ['HC Malon Egg', 'HC Zeldas Letter', 'Song from Impa']
         if world.settings.empty_dungeons_mode != 'none':
-            for dung, info in world.empty_dungeons.items():
+            boss_map = world.get_boss_map()
+            for info in world.empty_dungeons.values():
                 if info.empty:
-                    skipped_locations.append(info.boss_name)
+                    skipped_locations.append(boss_map[info.boss_name])
         for iter_world in worlds:
             for location in skipped_locations:
                 loc = iter_world.get_location(location)

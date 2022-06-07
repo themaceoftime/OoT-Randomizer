@@ -145,10 +145,10 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
 
     # If some dungeons are supposed to be empty, fill them with useless items.
     if worlds[0].settings.empty_dungeons_mode != 'none':
-        empty_locations = []
-        for location in fill_locations:
-            if location.dungeon and location.world.empty_dungeons[location.dungeon.name].empty:
-                empty_locations.append(location)
+        empty_locations = [location for world in worlds \
+            for dungeon in world.dungeons if world.empty_dungeons[dungeon.name].empty \
+            for region in dungeon.regions \
+            for location in region.locations if location in fill_locations]
         for location in empty_locations:
             fill_locations.remove(location)
             location.world.hint_exclusions.add(location.name)
