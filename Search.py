@@ -299,9 +299,10 @@ class Search(object):
 
             # Rewards from empty dungeons are also given for free
             if state.world.settings.empty_dungeons_mode != 'none':
+                boss_map = state.world.get_boss_map()
                 for dung, info in state.world.empty_dungeons.items():
                     if info.empty:
-                        location = state.world.get_location(info.boss_name)
+                        location = state.world.get_location(boss_map[info.boss_name])
                         self._cache['visited_locations'].add(location)
                         yield location
 
