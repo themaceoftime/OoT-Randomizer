@@ -37,7 +37,7 @@ class Hint(object):
             else:
                 self.text = text[choice]
 
-class Dual(object):
+class Multi(object):
     locations = []
     
     def __init__(self, locations):
@@ -52,9 +52,9 @@ def getHint(name, clearer_hint=False):
     else:
         return Hint(name, textOptions, type)
 
-def getDual(name):
-    locations = dualTable[name]
-    return Dual(locations)
+def getMulti(name):
+    locations = multiTable[name]
+    return Multi(locations)
 
 def getHintGroup(group, world):
     ret = []
@@ -96,9 +96,9 @@ def getHintGroup(group, world):
                 location = world.get_location(name)
                 if location.item.name in world.item_hint_type_overrides[group]:
                     type_override = True
-            elif name in dualTable.keys():
-                dual = getDual(name)
-                for locationName in dual.locations:
+            elif name in multiTable.keys():
+                multi = getMulti(name)
+                for locationName in multi.locations:
                     if locationName not in hintExclusions(world):
                         location = world.get_location(locationName)
                         if location.item.name in world.item_hint_type_overrides[group]:
@@ -201,11 +201,6 @@ conditional_sometimes = {
     'Spirit Temple Child Lower':                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
     'Spirit Temple Adult Lower':                lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
     'Shadow Temple Invisible Blades Chests':    lambda world: world.settings.tokensanity not in ['dungeon', 'all'],
-}
-
-# Some dual hints should only be enabled under certain settings
-conditional_dual = {
-    
 }
     
 # Table of hints, format is (name, hint text, clear hint text, type of hint) there are special characters that are read for certain in game commands:
@@ -1585,9 +1580,9 @@ hintTable = {
     '2011':                                                     ("Today, let's begin down&'The Hero is Defeated' timeline.", None, 'ganonLine'),
 }
 
-# Table containing the pairs of locations for the dual hint
+# Table containing the groups of locations for the multi hints (dual, etc.)
 # The is used in order to add the locations to the checked list
-dualTable = {
+multiTable = {
     'ZR Frogs Rewards':                                         ['ZR Frogs in the Rain', 'ZR Frogs Ocarina Game'],
 
     'Deku Theater Rewards':                                     ['Deku Theater Skull Mask', 'Deku Theater Mask of Truth'],
@@ -1686,9 +1681,9 @@ def hintExclusions(world, clear_cache=False):
         if any(item in hint.type for item in 
                 ['dual',
                  'dual_always']):
-            dual = getDual(hint.name)
+            multi = getMulti(hint.name)
             exclude_hint = False
-            for location in dual.locations:
+            for location in multi.locations:
                 if location not in world_location_names or world.get_location(location).locked:
                     exclude_hint = True
             if exclude_hint:

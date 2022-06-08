@@ -11,7 +11,7 @@ import json
 from enum import Enum
 import itertools
 
-from HintList import getHint, getDual, getHintGroup, Hint, hintExclusions
+from HintList import getHint, getMulti, getHintGroup, Hint, hintExclusions
 from Item import MakeEventItem
 from Messages import COLOR_MAP, update_message_by_id
 from Region import Region
@@ -765,29 +765,41 @@ def get_overworld_hint(spoiler, world, checked):
 
 def get_dungeon_hint(spoiler, world, checked):
     return get_specific_hint(spoiler, world, checked, 'dungeon')
+    
+def get_multi_hint(spoiler, world, checked, type):
+    hint_group = getHintGroup(type, world)
+    multi_hints = list(filter(lambda hint: is_not_checked([world.get_location(location) for location in getMulti(hint.name).locations], checked), hint_group))
+    
+    if not multi_hints:
+        return None
+        
+    hint = random.choice(multi_hints)
+    multi = getMulti(hint.name)
+    locations = [world.get_location(location) for location in multi.locations]
+    
+    for location in locations:
+        checked.add(location.name) 
+    
+    multi_text = hint.text
+    if '#' not in multi_text:
+        multi_text = '#%s#' % multi_text
+    
+    location_count = len(locations)
+    colors = ['Red']
+    gossip_string = '%s '
+    for i in range(location_count):
+        colors = ['Green'] + colors
+        if i == location_count - 1:
+            gossip_string = gossip_string + 'and #%s#'
+        else:
+            gossip_string = gossip_string + '#%s# '
+    
+    items = [location.item for location in locations]
+    text_segments = [multi_text] + [getHint(getItemGenericName(item), world.settings.clearer_hints).text for item in items]
+    return (GossipText(gossip_string % tuple(text_segments), colors, [location.name for location in locations], [item.name for item in items]), [location for location in locations])
 
 def get_dual_hint(spoiler, world, checked):
-    hint_group = getHintGroup('dual', world)
-    dual_hints = list(filter(lambda hint: is_not_checked([world.get_location(getDual(hint.name).locations[0]), world.get_location(getDual(hint.name).locations[1])], checked), hint_group))
-    
-    if not dual_hints:
-        return None
-    
-    hint = random.choice(dual_hints)
-    dual = getDual(hint.name)
-    firstLocation = world.get_location(dual.locations[0])
-    secondLocation = world.get_location(dual.locations[1])
-
-    checked.add(firstLocation.name)
-    checked.add(secondLocation.name)
-    
-    location_text = hint.text
-    if '#' not in location_text:
-        location_text = '#%s#' % location_text
-    first_item_text = getHint(getItemGenericName(firstLocation.item), world.settings.clearer_hints).text
-    second_item_text = getHint(getItemGenericName(secondLocation.item), world.settings.clearer_hints).text
-    
-    return (GossipText('%s #%s# and #%s#.' % (location_text, first_item_text, second_item_text), ['Green', 'Green', 'Red'], [firstLocation.name, secondLocation.name], [firstLocation.item.name, secondLocation.item.name]), [firstLocation, secondLocation])
+    return get_multi_hint(spoiler, world, checked, 'dual')
 
 def get_entrance_hint(spoiler, world, checked):
     if not world.entrance_shuffle:
@@ -1078,9 +1090,9 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
     if 'dual_always' in hint_dist and hint_dist['dual_always'][1] > 0:
         alwaysDuals = getHintGroup('dual_always', world)
         for hint in alwaysDuals:
-            dual = getDual(hint.name)
-            firstLocation = world.get_location(dual.locations[0])
-            secondLocation = world.get_location(dual.locations[1])
+            multi = getMulti(hint.name)
+            firstLocation = world.get_location(multi.locations[0])
+            secondLocation = world.get_location(multi.locations[1])
             checkedAlwaysLocations.add(firstLocation.name)
             checkedAlwaysLocations.add(secondLocation.name)
             
