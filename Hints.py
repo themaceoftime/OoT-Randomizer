@@ -796,7 +796,7 @@ def get_multi_hint(spoiler, world, checked, type):
     
     items = [location.item for location in locations]
     text_segments = [multi_text] + [getHint(getItemGenericName(item), world.settings.clearer_hints).text for item in items]
-    return (GossipText(gossip_string % tuple(text_segments), colors, [location.name for location in locations], [item.name for item in items]), [location for location in locations])
+    return (GossipText(gossip_string % tuple(text_segments), colors, [location.name for location in locations], [item.name for item in items]), locations)
 
 def get_dual_hint(spoiler, world, checked):
     return get_multi_hint(spoiler, world, checked, 'dual')
