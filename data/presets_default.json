@@ -500,8 +500,6 @@
       "logic_lens_shadow",
       "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "claim_check",
-    "logic_latest_adult_trade":                "claim_check",
     "starting_equipment":                      [
       "deku_shield"
     ],
