@@ -503,8 +503,6 @@ location_table = OrderedDict([
     ("DMC Near GC Pot 2",                                             ("Collectable",0x61,  0x21, None, 'Arrows (10)',                           ("Death Mountain Crater", "Death Mountain", "Pot",))),    
     ("DMC Near GC Pot 3",                                             ("Collectable",0x61,  0x22, None, 'Rupees (5)',                           ("Death Mountain Crater", "Death Mountain", "Pot",))),    
     ("DMC Near GC Pot 4",                                             ("Collectable",0x61,  0x23, None, 'Rupees (5)',                           ("Death Mountain Crater", "Death Mountain", "Pot",))),    
-<<<<<<< HEAD
-
     ("DMC Upper Grotto Chest",                                       ("Chest",        0x3E,  0x1A, None,                        'Bombs (20)',                            ("Death Mountain Crater", "Death Mountain", "Grottos"))),
     ("DMC Great Fairy Reward",                                       ("Cutscene",     0xFF,  0x14, None,                        'Magic Meter',                           ("Death Mountain Crater", "Death Mountain", "Fairies",))),
     ("DMC Deku Scrub",                                               ("Scrub",        0x61,  0x37, None,                        'Buy Bombs (5) for 35 Rupees',           ("Death Mountain Crater", "Death Mountain", "Deku Scrub"))),
@@ -513,9 +511,7 @@ location_table = OrderedDict([
     ("DMC Deku Scrub Grotto Right",                                  ("GrottoScrub",  0xF9,  0x37, None,                        'Buy Bombs (5) for 35 Rupees',           ("Death Mountain Crater", "Death Mountain", "Deku Scrub", "Grottos"))),
     ("DMC GS Crate",                                                 ("GS Token",     0x0F,  0x80, None,                        'Gold Skulltula Token',                  ("Death Mountain Crater", "Skulltulas",))),
     ("DMC GS Bean Patch",                                            ("GS Token",     0x0F,  0x01, None,                        'Gold Skulltula Token',                  ("Death Mountain Crater", "Skulltulas",))),
-=======
     # Death mountain Crater Beehives
->>>>>>> Clean up LocationList.py
     ("DMC Upper Grotto Beehive 1",                                     ("Collectable",  0x3E, 0x60 + (0x1A*2), None,                         'Rupees (20)',                            ("Death Mountain Crater", "Death Mountain", "Grottos", "Beehive"))),
     ("DMC Upper Grotto Beehive 2",                                     ("Collectable",  0x3E, 0x60 + (0x1A*2+1), None,                         'Rupees (20)',                            ("Death Mountain Crater", "Death Mountain", "Grottos", "Beehive"))),
     ("DMC Hammer Grotto Beehive",                                      ("Collectable",  0x3E, 0x60 + (0x19*2), None,                         'Rupees (20)',                            ("Death Mountain Crater", "Death Mountain", "Grottos", "Beehive"))),
