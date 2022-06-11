@@ -2550,7 +2550,7 @@ setting_infos = [
             'glitched'  : {'settings' : ['allowed_tricks', 'shuffle_interior_entrances', 'shuffle_grotto_entrances',
                                          'shuffle_dungeon_entrances', 'shuffle_overworld_entrances', 'owl_drops',
                                          'warp_songs', 'spawn_positions', 'mq_dungeons_mode', 'mq_dungeons_specific',
-                                         'mq_dungeons_count', 'shuffle_bosses', 'dungeon_shortcuts']},
+                                         'mq_dungeons_count', 'shuffle_bosses', 'dungeon_shortcuts', 'deadly_bonks']},
             'none'      : {'settings' : ['allowed_tricks', 'logic_no_night_tokens_without_suns_song', 'reachable_locations']},
         },
         shared         = True,
@@ -4510,6 +4510,16 @@ setting_infos = [
             'OHKO': Link dies in one hit.
         ''',
         shared         = True,
+    ),
+    Checkbutton(
+        name           = 'deadly_bonks',
+        gui_text       = 'One Bonk KO',
+        gui_tooltip    = '''\
+            When rolling, hitting a wall or object
+            will kill Link.
+        ''',
+        shared         = True,
+        default        = False,
     ),
     Combobox(
         name           = 'starting_tod',
