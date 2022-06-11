@@ -644,15 +644,14 @@ def get_pool_core(world):
         pool = [item if item not in junk_items else duplicate_items.pop(0) for item in pool]
         # Handle bottles separately since only 4 can be obtained
         if world.settings.zora_fountain != 'open':
-            removed_bottles = []
             for item in pool:
-                if item in normal_bottles:
-                    removed_bottles.append(item)
-            for item in removed_bottles:
-                pool.remove(item)
-            for i in range(min(len(removed_bottles), max_extra_copies)):
+                if item in normal_bottles or item == 'Rutos Letter':
+                    pool.remove(item)
+            # Enforce max 2 Rutos Letters to balance out regular bottle availability
+            letter_adds = min(2, max_extra_copies)
+            for _ in range(letter_adds):
                 pool.append('Rutos Letter')
-            for i in range(max(len(removed_bottles) - max_extra_copies, 0)):
+            for _ in range(4 - letter_adds):
                 bottle = random.choice(normal_bottles)
                 pool.append(bottle)
         # Disabled locations use the #Junk group for fill.
