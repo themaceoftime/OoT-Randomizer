@@ -57,6 +57,7 @@
 00FEC188 .dbl:0008
 00FEC1F8 .dbl:0008
 026C10E3 .byt:0001
+02BDC0C6 .wrd:0002
 8009A2D4 @return_check_if_object_loaded
 8009A2E0 @skip_check
 8009A340 .byt:0000
