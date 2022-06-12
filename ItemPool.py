@@ -36,12 +36,18 @@ plentiful_items = ([
     ['Heart Container'] * 8
 )
 
+# Ludicrous replaces all health upgrades with heart containers
+# as done in plentiful. The item list is used separately to
+# dynamically replace all junk with even levels of each item.
+ludicrous_health = ['Heart Container'] * 8
+
 # List of items that can be multiplied in ludicrous mode.
 # Used to filter the pre-plando pool for candidates instead
 # of appending directly, making this list settings-independent.
-# Excludes Gold Skulltula Tokens and Triforce Pieces as they
-# are directly tied to win conditions and already have a large
-# count relative to available locations in the game.
+# Excludes Gold Skulltula Tokens, Triforce Pieces, and health
+# upgrades as they are directly tied to win conditions and
+# already have a large count relative to available locations
+# in the game.
 #
 # Item order is arranged to maximize subjectively useful item
 # duplicates when remaining available locations is less than
@@ -110,7 +116,9 @@ ludicrous_items = [
 
 
 item_difficulty_max = {
-    'ludicrous': {},
+    'ludicrous': {
+        'Piece of Heart': 3,
+    },
     'plentiful': {
         'Piece of Heart': 3,
     },
@@ -353,6 +361,9 @@ def get_pool_core(world):
             pending_junk_pool.append('Boss Key (Ganons Castle)')
         if world.settings.shuffle_song_items == 'any':
             pending_junk_pool.extend(song_list)
+
+    if world.settings.item_pool_value == 'ludicrous':
+        pending_junk_pool.extend(ludicrous_health)
 
     if world.settings.triforce_hunt:
         pending_junk_pool.extend(['Triforce Piece'] * world.settings.triforce_count_per_world)
@@ -635,10 +646,8 @@ def get_pool_core(world):
                                     if item not in ludicrous_items
                                     and ItemInfo.items[item].type != 'Shop'
                                     and not ItemInfo.items[item].trade
-                                    and item != 'Triforce Piece'
-                                    and item != 'Gold Skulltula Token'
                                     and item not in normal_bottles
-                                    and item != 'Rutos Letter']
+                                    and item not in ['Triforce Piece', 'Gold Skulltula Token', 'Rutos Letter', 'Heart Container', 'Piece of Heart', 'Piece of Heart (Treasure Chest Game)']]
         max_extra_copies = int(Decimal(len(junk_items) / len(duplicate_candidates)).to_integral_value(rounding=ROUND_UP))
         duplicate_items = [item for item in duplicate_candidates for _ in range(max_extra_copies)]
         pool = [item if item not in junk_items else duplicate_items.pop(0) for item in pool]
