@@ -50,8 +50,6 @@ CHECK_FOR_BONK_CANCEL:
     sw      ra, 0x10($sp)
 
     ; displaced code
-    ;lbu     v0, 0x0A63(s0)
-    ;or      a1, s0, $zero
     addiu   $at, $zero, 0x0002
     lui     t1, 0x8012
 
