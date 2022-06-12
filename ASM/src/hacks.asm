@@ -1239,6 +1239,38 @@ skip_GS_BGS_text:
 .word   0xDE000000, 0x09000010
 
 ;==================================================================================================
+; Invisible Chests
+;==================================================================================================
+
+; ovl_En_Box, EnBox_Draw
+; Invisible chest types 4 and 6 have a different display list when viewed through
+; Lens of Truth that culls outside the Lens circle. This disables the check for chest
+; type on all chests to allow other invisible chest types using only actor flag 7.
+
+; !(this->type == ENBOX_TYPE_4 || this->type == ENBOX_TYPE_6) && this->alpha == 255
+.orga 0xC07788   ; offset 0x1758
+    nop          ; bnel    a0, $at, lbl_80869EE0
+    nop          ; lw      v0, 0x02C0(s0)
+
+; z_actor, offset 0x5F58
+; Hooks into actor draw logic for invisible actors and lens of truth.
+; If invisible chests is enabled, chests in rooms with inverted lens
+; functionality (hide instead of show) will not be drawn at all unless
+; lens is active.
+; replaces
+;   lw      v0, 0x0004(s0)
+;   andi    t3, v0, 0x0060
+.orga 0xA9AAF0
+    jal     SHOW_CHEST_WITH_INVERTED_LENS
+    nop
+; replaces
+;   sll     t9, s2,  2
+;   addu    t0, s7, t9
+.orga 0xA9AB0C
+    jal     HIDE_CHEST_WITH_INVERTED_LENS
+    nop
+
+;==================================================================================================
 ; Cast Fishing Rod without B Item
 ;==================================================================================================
 
