@@ -119,6 +119,7 @@ do that.
   * New setting `Show Seed Info on File Screen` which also allows a user-set message to be displayed.
   * New settings allow for Rainbow Bridge and Ganon's Boss Key to be obtained upon reaching a certain amount of total heart containers.
   * New setting `Easier Fire Arrow Entry` allows you to set the amount of torches that must be lit to open Shadow Temple.
+  * The pause screen info menu has been split into 3 menus, which show icons on the D-Pad indicating which direction leads to which menu. In addition, the menu now tracks the total keys you've found for a dungeon, not just how many you have remaining.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.

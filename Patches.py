@@ -2473,7 +2473,10 @@ def configure_dungeon_info(rom, world):
     boss_map = world.get_boss_map()
     bosses = ['Queen Gohma', 'King Dodongo', 'Barinade', 'Phantom Ganon',
             'Volvagia', 'Morpha', 'Twinrova', 'Bongo Bongo']
-    dungeon_rewards = [boss_reward_index(world, boss_map[boss]) for boss in bosses]
+    dungeon_rewards = [
+        *(boss_reward_index(world, boss_map[boss]) for boss in bosses),
+        boss_reward_index(world, 'Links Pocket'),
+    ]
 
     codes = ['Deku Tree', 'Dodongos Cavern', 'Jabu Jabus Belly', 'Forest Temple',
              'Fire Temple', 'Water Temple', 'Spirit Temple', 'Shadow Temple',
@@ -2481,7 +2484,7 @@ def configure_dungeon_info(rom, world):
              'Gerudo Training Ground', 'Hideout (N/A)', 'Ganons Castle']
     dungeon_is_mq = [1 if world.dungeon_mq.get(c) else 0 for c in codes]
 
-    rom.write_int32(rom.sym('CFG_DUNGEON_INFO_ENABLE'), 1)
+    rom.write_int32(rom.sym('CFG_DUNGEON_INFO_ENABLE'), 2)
     rom.write_int32(rom.sym('CFG_DUNGEON_INFO_MQ_ENABLE'), int(mq_enable))
     rom.write_int32(rom.sym('CFG_DUNGEON_INFO_MQ_NEED_MAP'), int(enhance_map_compass))
     rom.write_int32(rom.sym('CFG_DUNGEON_INFO_REWARD_ENABLE'), int('altar' in world.settings.misc_hints or enhance_map_compass))
