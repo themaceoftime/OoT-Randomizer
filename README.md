@@ -166,6 +166,7 @@ do that.
 * One-way entrances are now restricted to one per hint area rather than one per scene.
 * You can now receive starting ice traps, either from Impa's item with Skip Child Zelda or with plando.
 * Plandomizer will now display an error and inform the user if they have specified conflicting settings within the plando.
+* Common ER error messages are now more helpful to solving the issue.
 
 ### 6.2
 
