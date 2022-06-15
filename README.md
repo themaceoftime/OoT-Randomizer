@@ -144,6 +144,7 @@ do that.
 * Fix `GC Medigoron` not being a hintable location.
 * Fix 1/16th damage not always killing Link when `One Hit KO` is enabled.
 * Fix ice traps cloaked as major items not giving the slow chest opening cutscenes when `Fast Chest Cutscenes` is disabled.
+* Tunics and shields can now spawn in any room when the game attempts to spawn them.
 
 #### Other changes
 * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
