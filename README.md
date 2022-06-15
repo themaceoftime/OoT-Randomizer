@@ -140,6 +140,7 @@ do that.
 * Fixed an issue where `Plentiful` item pool combined with `Starting Hearts` would result in more Heart Containers being in the item pool than intended.
 * The Like Like in Master Quest Fire Temple will now return the player's shield when defeated.
 * Junk can now be placed on excluded song locations when Songs are set to `Song Locations` and a song is started with.
+* Fixed `GC Medigoron` not being a hintable location.
 
 #### Other changes
 * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
