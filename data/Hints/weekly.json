@@ -1,5 +1,5 @@
 {
-    "name":                  "Weekly",
+    "name":                  "weekly",
     "gui_name":              "Weekly",
     "description":           "Hint distribution used for weekly races. Duplicates of each hint, Skull Mask is an always hint, 5 WotH, 3 Foolish, 8 sometimes.",
     "add_locations":         [
