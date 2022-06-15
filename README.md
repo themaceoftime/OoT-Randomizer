@@ -141,6 +141,7 @@ do that.
 * The Like Like in Master Quest Fire Temple will now return the player's shield when defeated.
 * Junk can now be placed on excluded song locations when Songs are set to `Song Locations` and a song is started with.
 * Fixed `GC Medigoron` not being a hintable location.
+* Fixed 1/16th damage not always killing Link when `One Hit KO` is enabled.
 
 #### Other changes
 * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
