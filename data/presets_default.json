@@ -203,7 +203,7 @@
     "show_seed_info":                          true,
     "user_message":                            "Standard Weekly (Latest)",
     "world_count":                             1,
-    "create_spoiler":                          true,
+    "create_spoiler":                          false,
     "randomize_settings":                      false,
     "open_forest":                             "open",
     "open_kakariko":                           "open",
@@ -286,19 +286,21 @@
     ],
     "logic_earliest_adult_trade":              "prescription",
     "logic_latest_adult_trade":                "claim_check",
-    "starting_equipment": [
+    "starting_equipment":                      [
       "deku_shield"
     ],
-    "starting_items": [
+    "starting_items":                          [
       "ocarina"
     ],
-    "starting_songs":                          [],
+    "starting_songs":                          [
+      "prelude"
+    ],
     "ocarina_songs":                           "off",
-    "correct_chest_appearances":               "off",
+    "correct_chest_appearances":               "both",
     "clearer_hints":                           true,
     "no_collectible_hearts":                   false,
     "hints":                                   "always",
-    "hint_dist":                               "tournament",
+    "hint_dist":                               "Weekly",
     "item_hints":                              [],
     "hint_dist_user":                          {},
     "text_shuffle":                            "none",
