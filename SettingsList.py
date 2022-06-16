@@ -4206,6 +4206,16 @@ setting_infos = [
         shared         = True,
     ),
     Checkbutton(
+        name           = 'invisible_chests',
+        gui_text       = 'Invisible Chests',
+        gui_tooltip    = '''\
+            Chests will be only be visible with
+            the Lens of Truth. Lens is not logically
+            required for normally visible chests.
+        ''',
+        shared         = True,
+    ),
+    Checkbutton(
         name           = 'clearer_hints',
         gui_text       = 'Clearer Hints',
         gui_tooltip    = '''\
