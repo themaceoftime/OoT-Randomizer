@@ -1203,7 +1203,7 @@ ChildPieces = {
 
 childSkips = {
     "Boomerang": [(0x140, 0x240)],
-    "Hilt.1": [(0xC0, 0x170)],
+    "Hilt.1": [(0xC8, 0x170)],
     "Shield.1": [(0x140, 0x218)],
     "Ocarina.1": [(0x110, 0x240)],
 }
