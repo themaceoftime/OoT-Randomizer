@@ -348,7 +348,9 @@
             "chicken_count_random",
             "chicken_count",
             "big_poe_count_random",
-            "big_poe_count"
+            "big_poe_count",
+            "easier_fire_arrow_entry",
+            "fae_torch_count"
           ]
         },
         {
@@ -358,6 +360,7 @@
           "settings": [
             "ocarina_songs",
             "correct_chest_appearances",
+            "invisible_chests",
             "clearer_hints",
             "hints",
             "hint_dist",
@@ -365,7 +368,8 @@
             "misc_hints",
             "text_shuffle",
             "damage_multiplier",
-			"no_collectible_hearts",
+            "deadly_bonks",
+            "no_collectible_hearts",
             "starting_tod"
           ]
         },
