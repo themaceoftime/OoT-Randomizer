@@ -121,6 +121,7 @@ do that.
   * New setting `Easier Fire Arrow Entry` allows you to set the amount of torches that must be lit to open Shadow Temple.
   * The pause screen info menu has been split into 3 menus, which show icons on the D-Pad indicating which direction leads to which menu. In addition, the menu now tracks the total keys you've found for a dungeon, not just how many you have remaining.
   * New setting `Invisible Chests` makes all chests in the game invisible.
+  * New setting `One Bonk KO` will instantly kill Link when he hits his head while rolling.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
