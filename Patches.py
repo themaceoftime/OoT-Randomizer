@@ -187,7 +187,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         world_str = ""
     rom.write_bytes(rom.sym('WORLD_STRING_TXT'), makebytes(world_str, 12))
 
-    time_str = "at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    time_str = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M") + " UTC"
     rom.write_bytes(rom.sym('TIME_STRING_TXT'), makebytes(time_str, 25))
 
     if world.settings.show_seed_info:
@@ -1617,6 +1617,9 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     if world.settings.damage_multiplier == 'ohko':
         rom.write_byte(rom.sym('CFG_DAMAGE_MULTIPLYER'), 3)
 
+    if world.settings.deadly_bonks:
+        rom.write_int32(rom.sym('CFG_DEADLY_BONKS'), 1)
+
     # Patch songs and boss rewards
     for location in world.get_filled_locations():
         item = location.item
@@ -1932,6 +1935,11 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
                 rom.write_int16(chest_address_0 + 6, 0x0172)  # Z pos
                 rom.write_int16(chest_address_2 + 6, 0x0172)  # Z pos
 
+    # Make all chests invisible
+    if world.settings.invisible_chests:
+        symbol = rom.sym('CHEST_LENS_ONLY')
+        rom.write_int32(symbol, 0x00000001)
+
     # give dungeon items the correct messages
     add_item_messages(messages, shop_items, world)
     if world.settings.enhance_map_compass:
@@ -2071,6 +2079,11 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         frog=world.settings.ocarina_songs in ('frog', 'all'),
         warp=world.settings.ocarina_songs in ('warp', 'all'),
     )
+
+    # Sets the torch count to open the entrance to Shadow Temple
+    if world.settings.easier_fire_arrow_entry:
+        torch_count = world.settings.fae_torch_count
+        rom.write_byte(0xCA61E3, torch_count)
 
     # actually write the save table to rom
     world.distribution.give_items(world, save_context)
@@ -2476,7 +2489,10 @@ def configure_dungeon_info(rom, world):
     boss_map = world.get_boss_map()
     bosses = ['Queen Gohma', 'King Dodongo', 'Barinade', 'Phantom Ganon',
             'Volvagia', 'Morpha', 'Twinrova', 'Bongo Bongo']
-    dungeon_rewards = [boss_reward_index(world, boss_map[boss]) for boss in bosses]
+    dungeon_rewards = [
+        *(boss_reward_index(world, boss_map[boss]) for boss in bosses),
+        boss_reward_index(world, 'Links Pocket'),
+    ]
 
     codes = ['Deku Tree', 'Dodongos Cavern', 'Jabu Jabus Belly', 'Forest Temple',
              'Fire Temple', 'Water Temple', 'Spirit Temple', 'Shadow Temple',
@@ -2484,7 +2500,7 @@ def configure_dungeon_info(rom, world):
              'Gerudo Training Ground', 'Hideout (N/A)', 'Ganons Castle']
     dungeon_is_mq = [1 if world.dungeon_mq.get(c) else 0 for c in codes]
 
-    rom.write_int32(rom.sym('CFG_DUNGEON_INFO_ENABLE'), 1)
+    rom.write_int32(rom.sym('CFG_DUNGEON_INFO_ENABLE'), 2)
     rom.write_int32(rom.sym('CFG_DUNGEON_INFO_MQ_ENABLE'), int(mq_enable))
     rom.write_int32(rom.sym('CFG_DUNGEON_INFO_MQ_NEED_MAP'), int(enhance_map_compass))
     rom.write_int32(rom.sym('CFG_DUNGEON_INFO_REWARD_ENABLE'), int('altar' in world.settings.misc_hints or enhance_map_compass))
