@@ -2,6 +2,7 @@ import copy
 from collections import defaultdict
 import itertools
 
+from LocationList import location_groups
 from Region import TimeOfDay
 from State import State
 
@@ -300,11 +301,19 @@ class Search(object):
             # Rewards from empty dungeons are also given for free
             if state.world.settings.empty_dungeons_mode != 'none':
                 boss_map = state.world.get_boss_map()
-                for dung, info in state.world.empty_dungeons.items():
+                for info in state.world.empty_dungeons.values():
                     if info.empty:
                         location = state.world.get_location(boss_map[info.boss_name])
                         self._cache['visited_locations'].add(location)
                         yield location
+                # If songs are shuffled inside dungeons, collect them too
+                if state.world.settings.shuffle_song_items == 'dungeon':
+                    for location_name in location_groups['BossHeart']:
+                        location = state.world.get_location(location_name)
+                        if state.world.empty_dungeons[location.dungeon.name].empty:
+                            self._cache['visited_locations'].add(location)
+                            yield location
+                    
 
     def collect_pseudo_starting_items(self):
         for location in self.iter_pseudo_starting_locations():

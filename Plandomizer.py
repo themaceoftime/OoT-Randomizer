@@ -993,6 +993,11 @@ class WorldDistribution(object):
             for info in world.empty_dungeons.values():
                 if info.empty:
                     skipped_locations.append(boss_map[info.boss_name])
+            if world.settings.shuffle_song_items == 'dungeon':
+                for location_name in location_groups['BossHeart']:
+                    location = world.get_location(location_name)
+                    if world.empty_dungeons[location.dungeon.name].empty:
+                        skipped_locations.append(location.name)
         for iter_world in worlds:
             for location in skipped_locations:
                 loc = iter_world.get_location(location)
