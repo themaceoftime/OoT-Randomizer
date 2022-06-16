@@ -148,6 +148,7 @@ do that.
 * Fix ice traps cloaked as major items not giving the slow chest opening cutscenes when `Fast Chest Cutscenes` is disabled.
 * Tunics and shields can now spawn in any room when the game attempts to spawn them.
 * Fix a crash when certain settings related to Light Arrow hints are combined.
+* Many minor logic bugs have been corrected.
 
 #### Other changes
 * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
