@@ -365,7 +365,7 @@
             "misc_hints",
             "text_shuffle",
             "damage_multiplier",
-			"no_collectible_hearts",
+            "no_collectible_hearts",
             "starting_tod"
           ]
         },
