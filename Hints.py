@@ -1150,7 +1150,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
                 hint = get_specific_item_hint(spoiler, world, checkedLocations | checkedAlwaysLocations)
                 if hint:
                     gossip_text, location = hint
-                    place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, hint_dist['named-item'][1], [location])
+                    place_ok = add_hint(spoiler, world, stoneGroups, gossip_text, hint_dist['named-item'][1], location)
                     if not place_ok:
                         raise Exception('Not enough gossip stones for user-provided item hints')
     
