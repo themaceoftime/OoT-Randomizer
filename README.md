@@ -132,6 +132,7 @@ do that.
   * New setting `Invisible Chests` makes all chests in the game invisible.
   * New setting `One Bonk KO` will instantly kill Link when he hits his head while rolling.
   * New hint type `Dual Hint` which allows multiple locations to be hinted in the same hint.
+  * New `Chaos` hint distribution which gives all hint types equal likelihood.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
