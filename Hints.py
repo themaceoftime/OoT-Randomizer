@@ -28,7 +28,7 @@ bingoBottlesForHints = (
 )
 
 defaultHintDists = [
-    'balanced.json', 'bingo.json', 'ddr.json', 'scrubs.json', 'strong.json', 'tournament.json', 'useless.json', 'very_strong.json', 'very_strong_magic.json', 'weekly.json'
+    'balanced.json', 'bingo.json', 'chaos.json', 'ddr.json', 'scrubs.json', 'strong.json', 'tournament.json', 'useless.json', 'very_strong.json', 'very_strong_magic.json', 'weekly.json'
 ]
 
 unHintableWothItems = ['Triforce Piece', 'Gold Skulltula Token']
