@@ -179,9 +179,6 @@ class World(object):
 
         self.hint_text_overrides = {}
         for loc in self.hint_dist_user['add_locations']:
-            if 'types' in loc:
-                if any(type in ['dual', 'dual_always'] for type in loc['types']):
-                    raise Exception('Custom dual hints are not yet supported')
             if 'text' in loc:
                 # Arbitrarily throw an error at 80 characters to prevent overfilling the text box.
                 if len(loc['text']) > 80:
