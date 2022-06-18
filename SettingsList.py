@@ -4143,6 +4143,33 @@ setting_infos = [
         ''',
         shared         = True,
     ),
+    Checkbutton(
+        name           = 'shuffle_magic_jars',
+        gui_text       = 'Shuffle Magic Jars',
+        gui_tooltip    = '''\
+            Enabling this shuffles magic jars into the pool.
+
+            There are magic jars in several chests in Shadow Temple, but they
+            always appear as blue rupees in the vanilla game. This setting
+            shuffles those magic jars and fixes the ability to get them from
+            chests as long as you have magic.
+        ''',
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'fix_broken_drops',
+        gui_text       = 'Fix Broken Drops',
+        gui_tooltip    = '''\
+            Enabling this fixes drops that are broken in the vanilla game.
+
+            There is a deku shield drop from a pot in the Spirit Temple child
+            side Anubis room that does not appear in the vanilla game, and
+            logic might require you to get a deku shield this way. There is a
+            magic jar on top of the Gerudo Training Ground eye statue that does
+            not always refill your magic in the vanilla game.
+        ''',
+        shared         = True,
+    ),
     Setting_Info(
         name           = 'starting_equipment',
         type           = list,

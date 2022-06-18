@@ -355,10 +355,12 @@ Gameplay_InitSkybox:
 .orga 0xA87E80 ;In memory 0x80011F20
     jal object_index_or_spawn ;Replace call to z64_ObjectIndex
 
-; Remove deku shield drop from spirit pot because it's "vanilla behavior"
-; Replace actor parameters in scene 06, room 27 actor list
-.orga 0x2BDC0C6
-    .halfword 0x603F
+; Fix magic jar wonder item in gtg
+; Sets EnItem00 getItemId if autocollect fails in EnItem00_Init to retry in EnItem00_Collected
+; Replaces:
+;   jal     func_80022CF4
+.orga 0xA880D4
+    jal     enitem00_set_incoming_item_id_if_needed
 
 ;==================================================================================================
 ; Freestanding models
