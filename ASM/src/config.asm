@@ -106,7 +106,11 @@ TIME_STRING_TXT:
 INITIAL_SAVE_DATA:
 .endarea
 
-.area 0x20, 0
+.area 0x100, 0
+EXTENDED_INITIAL_SAVE_DATA:
+.endarea
+
+.area 0x40, 0
 EXTENDED_OBJECT_TABLE:
 .endarea
 
