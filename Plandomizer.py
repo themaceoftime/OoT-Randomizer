@@ -813,6 +813,12 @@ class WorldDistribution(object):
             # location.price will be None for Shop Buy items
             if location.type == 'Shop' and location.price is None:
                 ignore_pools = [i for i in range(len(item_pools)) if i != 0]
+            else:
+                # Prevent assigning Shop Buy items to non-Shop locations
+                if ignore_pools is None:
+                    ignore_pools = [0]
+                else:
+                    ignore_pools.append(0)
 
             item = self.get_item(ignore_pools, item_pools, location, player_id, record, worlds)
 
