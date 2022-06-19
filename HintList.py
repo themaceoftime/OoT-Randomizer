@@ -74,7 +74,7 @@ def getHintGroup(group, world):
             conditional_keep = conditional_sometimes[hint.name](world)
 
         # Hint inclusion override from distribution
-        if (group in world.added_hint_types or group in world.item_added_hint_types) and group not in ['dual', 'dual_always']:
+        if (group in world.added_hint_types or group in world.item_added_hint_types):
             if hint.name in world.added_hint_types[group]:
                 hint.type = group
                 type_append = True
