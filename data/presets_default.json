@@ -309,7 +309,6 @@
     "ocarina_songs":                           "off",
     "correct_chest_appearances":               "both",
     "correct_potcrate_appearances" :           "off",
->>>>>>> Add Freestanding/Pot/Crate/Beehive Shuffle. Pot/Crate textures match contents
     "no_collectible_hearts":                   false,
     "hints":                                   "always",
     "hint_dist":                               "weekly",
