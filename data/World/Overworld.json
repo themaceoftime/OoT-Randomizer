@@ -2159,22 +2159,11 @@
         }
     },
     {
-        "region_name": "Ganons Castle Tower",
-        "dungeon": "Ganons Castle",
-        "locations": {
-            "Ganons Tower Boss Key Chest": "True"
-        },
-        "exits": {
-            "Ganons Castle Lobby": "True",
-            "Ganondorfs Chamber": "Boss_Key_Ganons_Castle or unlock_ganons_first_boss_door"
-        }
-    },
-    {
         "region_name": "Ganondorfs Chamber",
         "dungeon": "Ganons Castle",
         "hint": "Ganondorfs Chamber",
         "locations": {
-            "Ganondorf Hint": "True",
+            "Ganondorf Hint": "Boss_Key_Ganons_Castle",
             "Ganons Tower Pot 1": "unlock_ganons_first_boss_door or (shuffle_ganon_bosskey != 'triforce')",
             "Ganons Tower Pot 2": "unlock_ganons_first_boss_door or (shuffle_ganon_bosskey != 'triforce')",
             "Ganons Tower Pot 3": "unlock_ganons_first_boss_door or (shuffle_ganon_bosskey != 'triforce')",
