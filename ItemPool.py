@@ -93,6 +93,15 @@ ludicrous_items = [
     'Small Key (Water Temple)',
     'Small Key (Bottom of the Well)',
     'Small Key (Gerudo Training Ground)',
+    'Small Key Ring (Thieves Hideout)',
+    'Small Key Ring (Shadow Temple)',
+    'Small Key Ring (Ganons Castle)',
+    'Small Key Ring (Forest Temple)',
+    'Small Key Ring (Spirit Temple)',
+    'Small Key Ring (Fire Temple)',
+    'Small Key Ring (Water Temple)',
+    'Small Key Ring (Bottom of the Well)',
+    'Small Key Ring (Gerudo Training Ground)',
     'Progressive Scale',
     'Progressive Wallet',
     'Magic Meter',
@@ -114,6 +123,14 @@ ludicrous_items = [
     'Deku Nut Capacity'
 ]
 
+ludicrous_exclusions = [
+    'Triforce Piece',
+    'Gold Skulltula Token',
+    'Rutos Letter',
+    'Heart Container',
+    'Piece of Heart',
+    'Piece of Heart (Treasure Chest Game)'
+]
 
 item_difficulty_max = {
     'ludicrous': {
@@ -648,7 +665,7 @@ def get_pool_core(world):
                                     and ItemInfo.items[item].type != 'Shop'
                                     and not ItemInfo.items[item].trade
                                     and item not in normal_bottles
-                                    and item not in ['Triforce Piece', 'Gold Skulltula Token', 'Rutos Letter', 'Heart Container', 'Piece of Heart', 'Piece of Heart (Treasure Chest Game)']]
+                                    and item not in ludicrous_exclusions]
         max_extra_copies = int(Decimal(len(junk_items) / len(duplicate_candidates)).to_integral_value(rounding=ROUND_UP))
         duplicate_items = [item for item in duplicate_candidates for _ in range(max_extra_copies)]
         pool = [item if item not in junk_items else duplicate_items.pop(0) for item in pool]
@@ -668,6 +685,10 @@ def get_pool_core(world):
         # Update pattern matcher since all normal junk is removed.
         item_groups['Junk'] = remove_junk_ludicrous_items
         world.distribution.distribution.search_groups['Junk'] = remove_junk_ludicrous_items
+    else:
+        # Fix for unit tests reusing globals after ludicrous pool mutates them
+        item_groups['Junk'] = remove_junk_items
+        world.distribution.distribution.search_groups['Junk'] = remove_junk_items
 
     world.distribution.collect_starters(world.state)
 
