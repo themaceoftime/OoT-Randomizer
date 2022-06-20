@@ -2163,6 +2163,18 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         symbol = rom.sym('FAST_BUNNY_HOOD_ENABLED')
         rom.write_byte(symbol, 0x01)
 
+    if world.settings.shuffle_magic_jars:
+        symbol = rom.sym('SHUFFLE_MAGIC_JARS')
+        rom.write_byte(symbol, 0x01)
+
+    if world.settings.fix_broken_drops:
+        symbol = rom.sym('FIX_BROKEN_DROPS')
+        rom.write_byte(symbol, 0x01)
+    else:
+        # Remove deku shield drop from spirit pot because it's "vanilla behavior"
+        # Replace actor parameters in scene 06, room 27 actor list
+        rom.write_int16(0x2BDC0C6, 0x603F)
+
     # Have the Gold Skulltula Count in the pause menu turn red when equal to the
     # available number of skulls in the world instead of 100.
     rom.write_int16(0xBB340E, world.available_tokens)

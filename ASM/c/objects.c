@@ -2,6 +2,8 @@
 
 #include "z64.h"
 
+extern uint8_t FIX_BROKEN_DROPS;
+
 #define OBJECT_EXCHANGE_BANK_MAX 19
 
 int32_t object_index_or_spawn(z64_obj_ctxt_t *object_ctx, int16_t object_id)
@@ -18,4 +20,15 @@ int32_t object_index_or_spawn(z64_obj_ctxt_t *object_ctx, int16_t object_id)
     }
 
     return index;
+}
+
+void enitem00_set_incoming_item_id_if_needed(z64_actor_t *actor, z64_game_t *game, int32_t incoming_item_id)
+{
+    EnItem00 *this = (EnItem00 *)actor;
+
+    // Run z64_ActorSetLinkIncomingItemId regardless of FIX_BROKEN_DROPS
+    if (!z64_ActorSetLinkIncomingItemId(&this->actor, game, incoming_item_id, 50.0f, 10.0f) && FIX_BROKEN_DROPS)
+    {
+        this->getItemId = incoming_item_id; // Autocollect failed, try again in EnItem00_Collected
+    }
 }
