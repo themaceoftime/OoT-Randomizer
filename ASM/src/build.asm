@@ -71,6 +71,7 @@ RANDO_CONTEXT:
 .include "dampe.asm"
 .include "dpad.asm"
 .include "chests.asm"
+.include "red_ice.asm"
 .include "bunny_hood.asm"
 .include "colors.asm"
 .include "debug.asm"

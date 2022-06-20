@@ -1342,6 +1342,20 @@ skip_GS_BGS_text:
 .word   0xDE000000, 0x09000010
 
 ;==================================================================================================
+; Increase transparency of red ice in CTMC
+;==================================================================================================
+
+; In a function called by red ice init
+; Replaces addiu    t7, $zero, 0x00FF
+.orga 0xDB3244
+    j       red_ice_alpha
+;   sw      t6, 0x0154(a0) ; delay slot unchanged, sets the idle action function
+; Next 3 instructions are skipped, now done in red_ice_alpha instead.
+;   sh      t7, 0x01F0(a0)
+;   jr      ra
+;   nop
+
+;==================================================================================================
 ; Invisible Chests
 ;==================================================================================================
 
