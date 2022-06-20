@@ -916,11 +916,11 @@ location_table = OrderedDict([
     ("Dodongos Cavern MQ After Upper Lizalfos Crate 1", ("Collectable", 0x1, 0x54, ([0x1fa87f0],None), 'Rupee (1)', ("Dodongos Cavern", "Master Quest", "Crate"))),
     ("Dodongos Cavern MQ After Upper Lizalfos Crate 2", ("Collectable", 0x1, 0x55, ([0x1fa8800],None), 'Rupee (1)', ("Dodongos Cavern", "Master Quest", "Crate"))),
     # Dodongo's Cavern MQ Silver Rupees
-    ("Dodongos Cavern MQ Staircase Silver Rupee 1", ("Collectable", 0x1, 0x60, ([0x1f55b24], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
-    ("Dodongos Cavern MQ Staircase Silver Rupee 2", ("Collectable", 0x1, 0x61, ([0x1f55b34], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
-    ("Dodongos Cavern MQ Staircase Silver Rupee 3", ("Collectable", 0x1, 0x62, ([0x1f55b44], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
-    ("Dodongos Cavern MQ Staircase Silver Rupee 4", ("Collectable", 0x1, 0x63, ([0x1f55b54], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
-    ("Dodongos Cavern MQ Staircase Silver Rupee 5", ("Collectable", 0x1, 0x64, ([0x1f55b64], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
+    ("Dodongos Cavern MQ Staircase Beamos Silver Rupee", ("Collectable", 0x1, 0x60, ([0x1f55b24], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
+    ("Dodongos Cavern MQ Staircase Lower Crate Silver Rupee", ("Collectable", 0x1, 0x61, ([0x1f55b34], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
+    ("Dodongos Cavern MQ Staircase Mid Left Crate Silver Rupee", ("Collectable", 0x1, 0x62, ([0x1f55b44], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
+    ("Dodongos Cavern MQ Staircase Vines Silver Rupee", ("Collectable", 0x1, 0x63, ([0x1f55b54], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
+    ("Dodongos Cavern MQ Staircase Top Right Crate Silver Rupee", ("Collectable", 0x1, 0x64, ([0x1f55b64], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
     
 >>>>>>> Silver Rupee Shuffle
     # Dodongo's Cavern shared
