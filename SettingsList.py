@@ -2638,6 +2638,9 @@ setting_infos = [
             Bombchus only count as major items if they
             are considered in logic.
 
+            If "Empty Dungeons" is on, empty dungeons
+            won't have a major item.
+
             This setting has potential to conflict with
             other randomizer settings. Should seeds continuously
             fail to generate, consider turning this option off.
@@ -3060,6 +3063,10 @@ setting_infos = [
             - Bottom of the Well's Lens of Truth Location
             - Gerudo Training Ground's Ice Arrow Location
 
+            If "Empty Dungeons" is on, songs that would have been
+            located inside empty dungeons are given for free along
+            with the free dungeon rewards.
+
             'Anywhere': Songs can appear in any location.
         ''',
         gui_params     = {
@@ -3478,6 +3485,11 @@ setting_infos = [
             will add 2 more possible locations to each Dungeons.
             This makes dungeons more profitable, especially
             Ice Cavern, Water Temple, and Jabu Jabu's Belly.
+            
+            Regardless of the selected option, maps and compasses from
+            empty dungeons won't be placed outside their respective
+            dungeons and maps and compasses from non-empty
+            dungeons won't be placed inside empty dungeons.
         ''',
         shared         = True,
         gui_params     = {
@@ -3497,41 +3509,36 @@ setting_infos = [
             'keysanity':   'Anywhere (Keysanity)',
         },
         gui_tooltip    = '''\
-            'Remove': Small Keys are removed. All locked
-            doors in dungeons will be unlocked. An easier
-            mode.
+            'Remove': Small Keys are removed. All locked doors in dungeons
+            will be unlocked. An easier mode.
 
-            'Vanilla': Small Keys will appear in their 
-            vanilla locations. You start with 3 keys in 
-            Spirit Temple MQ because the vanilla key 
-            layout is not beatable in logic. You start with
-            2 keys in Vanilla/MQ Shadow Temple with its
-            dungeon shortcut enabled to prevent softlocks.
+            'Vanilla': Small Keys will appear in their vanilla locations. You start
+            with 3 keys in Spirit Temple MQ because the vanilla key layout is
+            not beatable in logic. You start with 2 keys in Vanilla/MQ Shadow
+            Temple with its dungeon shortcut enabled to prevent softlocks.
 
-            'Own Dungeon': Small Keys can only appear in their
-            respective dungeon. If Fire Temple is not a
-            Master Quest dungeon, the door to the Boss Key
-            chest will be unlocked.
+            'Own Dungeon': Small Keys can only appear in their respective
+            dungeon. If Fire Temple is not a Master Quest dungeon, the door to
+            the Boss Key chest will be unlocked.
             
-            'Overworld Only': Small Keys can only appear outside
-            of dungeons. You may need to enter a dungeon multiple
-            times to gain items to access the overworld locations
-            with the keys required to finish a dungeon.
+            'Overworld Only': Small Keys can only appear outside of dungeons. You
+            may need to enter a dungeon multiple times to gain items to access the
+            overworld locations with the keys required to finish a dungeon.
             
-            'Any Dungeon': Small Keys can only appear inside
-            of any dungeon, but won't necessarily be in the
-            dungeon that the key is for. A difficult mode since
-            it is more likely to need to enter a dungeon
-            multiple times.
+            'Any Dungeon': Small Keys can only appear inside of any dungeon, but
+            won't necessarily be in the dungeon that the key is for. A difficult mode
+            since it is more likely to need to enter a dungeon multiple times.
 
-            'Anywhere': Small Keys can appear
-            anywhere in the world. A difficult mode since
-            it is more likely to need to enter a dungeon
-            multiple times.
+            'Anywhere': Small Keys can appear anywhere in the world. A difficult
+            mode since it is more likely to need to enter a dungeon multiple times.
 
             Try different combination out, such as:
             'Small Keys: Dungeon' + 'Boss Keys: Anywhere'
             for a milder Keysanity experience.
+
+            Regardless of the selected option, small keys from empty dungeons
+            won't be placed outside their respective dungeons and small keys from
+            non-empty dungeons won't be placed inside empty dungeons.
         ''',
         disable        = {
             'any_dungeon': {'settings': ['one_item_per_dungeon']}
@@ -3647,6 +3654,11 @@ setting_infos = [
             Try different combination out, such as:
             'Small Keys: Dungeon' + 'Boss Keys: Anywhere'
             for a milder Keysanity experience.
+
+            Regardless of the selected option, boss keys from
+            empty dungeons won't be placed outside their respective
+            dungeons and boss keys from non-empty dungeons won't be
+            placed inside empty dungeons.
         ''',
         shared         = True,
         gui_params     = {
@@ -4058,10 +4070,16 @@ setting_infos = [
             'None': No dungeon will be empty. All dungeons may contain useful items
             and have to be beaten in order to get their rewards.
             'Specific Dungeons': Choose which specific dungeons will be empty.
-            'Count': Choose how many dungeons will be empty.
+            'Count': Choose how many empty dungeons will be randomly chosen.
 
-            Note that empty dungeons can't be MQ. Incompatible MQ Dungeon settings
-            and Empty dungeon settings will trigger an error.
+            Empty dungeons can't be MQ. Incompatible "MQ Dungeon" settings and
+            "Empty dungeon" settings will trigger an error. Empty dungeons won't
+            contain major items even if "Dungeons Have One Major Item" is on.
+            Regardless of "Shuffle Dungeon Items" settings, dungeon items from
+            empty dungeons won't be placed outside their respective dungeons and
+            dungeon items from non-empty dungeons won't be placed inside empty
+            dungeons. If "Shuffle Songs" is set to "Dungeon rewards", then songs
+            in empty dungeons are given for free along with the free dungeon rewards.
         ''',
         shared         = True,
         disable        = {
