@@ -369,7 +369,8 @@
             "damage_multiplier",
             "deadly_bonks",
             "no_collectible_hearts",
-            "starting_tod"
+            "starting_tod",
+            "no_age_limits"
           ]
         },
         {
