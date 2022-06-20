@@ -367,6 +367,7 @@
             "bingosync_url",
             "misc_hints",
             "text_shuffle",
+            "credits_autoscroll",
             "damage_multiplier",
             "deadly_bonks",
             "no_collectible_hearts",
