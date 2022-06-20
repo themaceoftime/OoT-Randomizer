@@ -79,10 +79,10 @@
             "Spirit Temple MQ Big Mirror Pot 2": "(Silver_Rupee_Spirit_Temple_Adult_Climb, 5) and (Small_Key_Spirit_Temple, 6) and can_play(Zeldas_Lullaby)",
             "Spirit Temple MQ Big Mirror Pot 3": "(Silver_Rupee_Spirit_Temple_Adult_Climb, 5) and (Small_Key_Spirit_Temple, 6) and can_play(Zeldas_Lullaby)",
             "Spirit Temple MQ Big Mirror Pot 4": "(Silver_Rupee_Spirit_Temple_Adult_Climb, 5) and (Small_Key_Spirit_Temple, 6) and can_play(Zeldas_Lullaby)",
-            "Spirit Temple MQ Big Mirror Crate 1": "(Silver_Rupee_Spirit_Temple_Adult_Climb, 5) and (Small_Key_Spirit_Temple, 6) and can_play(Zeldas_Lullaby)",
-            "Spirit Temple MQ Big Mirror Crate 2": "(Silver_Rupee_Spirit_Temple_Adult_Climb, 5) and (Small_Key_Spirit_Temple, 6) and can_play(Zeldas_Lullaby)",
-            "Spirit Temple MQ Big Mirror Crate 3": "(Silver_Rupee_Spirit_Temple_Adult_Climb, 5) and (Small_Key_Spirit_Temple, 6) and can_play(Zeldas_Lullaby)",
-            "Spirit Temple MQ Big Mirror Crate 4": "(Silver_Rupee_Spirit_Temple_Adult_Climb, 5) and (Small_Key_Spirit_Temple, 6) and can_play(Zeldas_Lullaby)",
+            "Spirit Temple MQ Big Mirror Crate 1": "(Silver_Rupee_Spirit_Temple_Adult_Climb, 5) and (Small_Key_Spirit_Temple, 6) and can_play(Zeldas_Lullaby) and can_bonk_crate",
+            "Spirit Temple MQ Big Mirror Crate 2": "(Silver_Rupee_Spirit_Temple_Adult_Climb, 5) and (Small_Key_Spirit_Temple, 6) and can_play(Zeldas_Lullaby) and can_bonk_crate",
+            "Spirit Temple MQ Big Mirror Crate 3": "(Silver_Rupee_Spirit_Temple_Adult_Climb, 5) and (Small_Key_Spirit_Temple, 6) and can_play(Zeldas_Lullaby) and can_bonk_crate",
+            "Spirit Temple MQ Big Mirror Crate 4": "(Silver_Rupee_Spirit_Temple_Adult_Climb, 5) and (Small_Key_Spirit_Temple, 6) and can_play(Zeldas_Lullaby) and can_bonk_crate",
             "Spirit Temple MQ Adult Climb Silver Rupee 1" : "True",
             "Spirit Temple MQ Adult Climb Silver Rupee 2" : "True",
             "Spirit Temple MQ Adult Climb Silver Rupee 3" : "True",
@@ -135,8 +135,8 @@
                 (is_adult and (Hover_Boots or logic_spirit_lobby_jump)) or
                 can_play(Song_of_Time) or
                 (Boomerang and (Kokiri_Sword or Sticks) and (Hover_Boots or logic_spirit_lobby_jump))",
-            "Spirit Temple MQ Central Chamber Crate 1": "True",
-            "Spirit Temple MQ Central Chamber Crate 2": "True",
+            "Spirit Temple MQ Central Chamber Crate 1": "can_bonk_crate",
+            "Spirit Temple MQ Central Chamber Crate 2": "can_bonk_crate",
             "Spirit Temple MQ Sun Block Room Pot 1": "
                 can_play(Song_of_Time) or logic_spirit_mq_sun_block_sot or
                 is_adult",
