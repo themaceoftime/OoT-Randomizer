@@ -2557,3 +2557,9 @@ skip_GS_BGS_text:
 ; Replaces: addiu   t1, zero, 0x55
 .orga 0xDB1338
     addiu   t1, v0, 0x65
+
+;===================================================================================================
+; Allow ice arrows to melt red ice
+;===================================================================================================
+.orga 0xDB32C8
+    jal blue_fire_arrows ; replaces addiu at, zero, 0x00F0
