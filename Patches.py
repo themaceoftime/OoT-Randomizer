@@ -2130,7 +2130,6 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
     # Remove age requirements on most equipment and items
     # More information at https://wiki.cloudmodding.com/oot/Item_Usability_Table
-    rom.write_byte(rom.sym('CFG_AGELESS_BOOTS'), 0x00)
     if world.settings.no_age_limits:
         # Item usability
         rom.write_byte(0xBC7794 + 0x00, 0x09) # Deku Sticks
