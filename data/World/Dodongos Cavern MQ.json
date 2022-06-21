@@ -67,7 +67,9 @@
             # staircase can't be lowered, but the boulders can be broken. The boulders
             # are permanent even though the staircase is not, so child gets access once
             # adult opens the way.
-            "Dodongos Cavern Upper Level": "here(can_bonk_crate and (is_adult or can_child_attack or Nuts))",
+            "Dodongos Cavern Upper Level" : "
+            ((Silver_Rupee_Dodongos_Cavern_Staircase, 5) and Progressive_Strength_Upgrade and (is_adult or can_child_attack or Nuts)) or
+            here(can_blast_or_smash)",
             # Other exits are not affected by one bonk ko
             "Dodongos Cavern Lower Right Side": "
                 here((can_use(Sticks) or can_use(Dins_Fire)) and
