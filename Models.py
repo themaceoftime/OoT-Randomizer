@@ -10,6 +10,8 @@ def get_model_choices(age):
         path = "data/Models/Child"
     if not os.path.exists(path): # GUI loaded, path different
         path = "../" + path
+        if not os.path.exists(path): # If it STILL doesn't exist, this is web, doesn't matter
+            return [""]
     for file in os.listdir(path):
         dotsplit = file.split('.')
         # Make sure this is a file and a zobj

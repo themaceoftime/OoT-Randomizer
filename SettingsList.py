@@ -4731,6 +4731,9 @@ setting_infos = [
             of the pause screen if an irregular skeleton is detected.
         ''',
         default        = 'Default',
+        gui_params     = {
+            "hide_when_disabled": True,
+        }
     ),
     Setting_Info('model_adult_filepicker', str, "Adult Link Model", "Fileinput", False, {},
         gui_params = {
@@ -4762,6 +4765,9 @@ setting_infos = [
             of the pause screen if an irregular skeleton is detected.
         ''',
         default        = 'Default',
+        gui_params     = {
+            "hide_when_disabled": True,
+        }
     ),
     Setting_Info('model_child_filepicker', str, "Child Link Model", "Fileinput", False, {},
         gui_params = {
