@@ -2171,7 +2171,7 @@ setting_infos = [
 
                          - Logic Rules
                          - (Random) Number of MQ Dungeons
-                         - Empty dungeons
+                         - Pre-completed dungeons
                          - Rainbow Bridge/Ganon Boss Key Requirements: Gold Skulltula Tokens
                          - Variable numbers of Spiritual Stones, Medallions, or Dungeons
                          for Rainbow Bridge and Ganon's Boss Key
@@ -2638,8 +2638,8 @@ setting_infos = [
             Bombchus only count as major items if they
             are considered in logic.
 
-            If "Empty Dungeons" is on, empty dungeons
-            won't have a major item.
+            Pre-completed dungeons (if any) won't have
+            a major item.
 
             This setting has potential to conflict with
             other randomizer settings. Should seeds continuously
@@ -3063,8 +3063,8 @@ setting_infos = [
             - Bottom of the Well's Lens of Truth Location
             - Gerudo Training Ground's Ice Arrow Location
 
-            If "Empty Dungeons" is on, songs that would have been
-            located inside empty dungeons are given for free along
+            If some dungeons are pre-completed, songs that would have
+            been located inside these dungeons are given for free along
             with the free dungeon rewards.
 
             'Anywhere': Songs can appear in any location.
@@ -3459,37 +3459,31 @@ setting_infos = [
         },
         gui_tooltip    = '''\
             'Remove': Maps and Compasses are removed.
-            This will add a small amount of money and
-            refill items to the pool.
+            This will add a small amount of money and refill items to the pool.
 
-            'Start With': Maps and Compasses are given to
-            you from the start. This will add a small
-            amount of money and refill items to the pool.
+            'Start With': Maps and Compasses are given to you from the start.
+            This will add a small amount of money and refill items to the pool.
 
-            'Vanilla': Maps and Compasses will appear in
-            their vanilla locations.
+            'Vanilla': Maps and Compasses will appear in their vanilla locations.
 
-            'Own Dungeon': Maps and Compasses can only appear
-            in their respective dungeon.
+            'Own Dungeon': Maps and Compasses can only appear in their respective
+            dungeon.
             
-            'Overworld Only': Maps and Compasses can only appear
-            outside of dungeons.
+            'Overworld Only': Maps and Compasses can only appear outside of
+            dungeons.
 
-            'Any Dungeon': Maps and Compasses can only appear in a
-            dungeon, but not necessarily the dungeon they are for.            
+            'Any Dungeon': Maps and Compasses can only appear in a dungeon, but
+            not necessarily the dungeon they are for.            
 
-            'Anywhere': Maps and Compasses can appear
-            anywhere in the world.
+            'Anywhere': Maps and Compasses can appear anywhere in the world.
 
-            Setting 'Remove', 'Start With, 'Overworld', or 'Anywhere'
-            will add 2 more possible locations to each Dungeons.
-            This makes dungeons more profitable, especially
-            Ice Cavern, Water Temple, and Jabu Jabu's Belly.
+            Setting 'Remove', 'Start With, 'Overworld', or 'Anywhere' will add 2
+            more possible locations to each Dungeons. This makes dungeons more
+            profitable, especially Ice Cavern, Water Temple, and Jabu Jabu's Belly.
             
-            Regardless of the selected option, maps and compasses from
-            empty dungeons won't be placed outside their respective
-            dungeons and maps and compasses from non-empty
-            dungeons won't be placed inside empty dungeons.
+            Regardless of the selected option, maps and compasses from pre-completed
+            dungeons won't be placed outside their respective dungeons and maps and
+            compasses from other dungeons won't be placed inside pre-completed dungeons.
         ''',
         shared         = True,
         gui_params     = {
@@ -3536,9 +3530,9 @@ setting_infos = [
             'Small Keys: Dungeon' + 'Boss Keys: Anywhere'
             for a milder Keysanity experience.
 
-            Regardless of the selected option, small keys from empty dungeons
+            Regardless of the selected option, small keys from pre-completed dungeons
             won't be placed outside their respective dungeons and small keys from
-            non-empty dungeons won't be placed inside empty dungeons.
+            other dungeons won't be placed inside pre-completed dungeons.
         ''',
         disable        = {
             'any_dungeon': {'settings': ['one_item_per_dungeon']}
@@ -3656,9 +3650,9 @@ setting_infos = [
             for a milder Keysanity experience.
 
             Regardless of the selected option, boss keys from
-            empty dungeons won't be placed outside their respective
-            dungeons and boss keys from non-empty dungeons won't be
-            placed inside empty dungeons.
+            pre-completed dungeons won't be placed outside their
+            respective dungeons and boss keys from other dungeons
+            won't be placed inside pre-completed dungeons.
         ''',
         shared         = True,
         gui_params     = {
@@ -4056,7 +4050,7 @@ setting_infos = [
     ),
     Combobox(
         name           = 'empty_dungeons_mode',
-        gui_text       = 'Empty dungeons',
+        gui_text       = 'Pre-completed dungeons',
         default        = 'none',
         choices        = {
             'none':       'Off',
@@ -4064,22 +4058,30 @@ setting_infos = [
             'count':      'Count',
         },
         gui_tooltip    = '''\
-            Empty dungeons are dungeons guaranted to be barren, and whose rewards
-            are given for free to the player before the beginning of the game.
+            Pre-completed dungeons are dungeons guaranteed to be barren and whose
+            dungeon rewards are given for free to the player before the beginning
+            of the game.
 
-            'None': No dungeon will be empty. All dungeons may contain useful items
-            and have to be beaten in order to get their rewards.
-            'Specific Dungeons': Choose which specific dungeons will be empty.
-            'Count': Choose how many empty dungeons will be randomly chosen.
+            - 'None': No dungeon will be pre-completed. Some dungeons may still be
+            randomly rolled with no major items, but their dungeon rewards won't
+            be given for free.
+            - 'Specific Dungeons': Choose which specific dungeons will be pre-completed.
+            - 'Count': Choose how many pre-completed dungeons will be randomly chosen.
 
-            Empty dungeons can't be MQ. Incompatible "MQ Dungeon" settings and
-            "Empty dungeon" settings will trigger an error. Empty dungeons won't
-            contain major items even if "Dungeons Have One Major Item" is on.
+            Pre-completed dungeons can't be MQ. Incompatible "MQ Dungeon" settings
+            and "Pre-completed dungeon" settings will trigger an error.
+
+            Pre-completed dungeons won't contain major items even if "Dungeons Have
+            One Major Item" is on.
+
             Regardless of "Shuffle Dungeon Items" settings, dungeon items from
-            empty dungeons won't be placed outside their respective dungeons and
-            dungeon items from non-empty dungeons won't be placed inside empty
-            dungeons. If "Shuffle Songs" is set to "Dungeon rewards", then songs
-            in empty dungeons are given for free along with the free dungeon rewards.
+            pre-completed dungeons won't be placed outside their respective dungeons
+            and dungeon items from other dungeons won't be placed inside pre-completed
+            dungeons.
+
+            If "Shuffle Songs" is set to "Dungeon rewards", then songs that would have
+            been placed in pre-completed dungeons are given for free along with the
+            free dungeon rewards.
         ''',
         shared         = True,
         disable        = {
@@ -4095,7 +4097,7 @@ setting_infos = [
     Combobox(
         name            = 'empty_dungeons_specific',
         multiple_select = True,
-        gui_text        = 'Empty Dungeons',
+        gui_text        = 'Pre-completed Dungeons',
         choices         = {
             'Deku Tree':              "Deku Tree",
             'Dodongos Cavern':        "Dodongo's Cavern",
@@ -4109,7 +4111,7 @@ setting_infos = [
         default         = [],
         gui_tooltip     = '''\
             Select the specific dungeons you would
-            like to be empty.
+            like to be pre-completed.
         ''',
         shared          = True,
         gui_params     = {
@@ -4118,12 +4120,12 @@ setting_infos = [
     ),
     Scale(
         name           = 'empty_dungeons_count',
-        gui_text       = "Empty Dungeon Count",
+        gui_text       = "Pre-completed Dungeon Count",
         default        = 2,
         min            = 1,
         max            = 6,
         gui_tooltip    = '''\
-            Specify the number of empty
+            Specify the number of pre-completed
             dungeons to appear in the game.
         ''',
         shared         = True,

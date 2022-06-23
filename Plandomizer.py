@@ -81,7 +81,7 @@ class DungeonRecord(SimpleRecord({'mq': None, 'empty': None})):
 
     def to_json(self):
         mq = {None: 'random', True: 'mq', False: 'vanilla'}[self.mq]
-        empty = " (empty)" if self.empty else ""
+        empty = " (pre-completed)" if self.empty else ""
         return mq + empty
 
 
