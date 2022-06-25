@@ -1344,9 +1344,10 @@ def add_starting_ammo(starting_items, item_name):
     for item in StartingItems.inventory.values():
         if item.itemname == item_name and item.ammo:
             for ammo, qty in item.ammo.items():
+                # Add ammo to starter record, but not overriding existing count if present
                 if ammo not in starting_items:
                     starting_items[ammo] = StarterRecord(0)
-                starting_items[ammo].count = qty[starting_items[item_name].count - 1]
+                    starting_items[ammo].count = qty[starting_items[item_name].count - 1]
             break
 
 def add_starting_item_with_ammo(starting_items, item_name, count=1):
