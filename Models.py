@@ -578,15 +578,15 @@ def patch_model_adult(rom, settings, log):
     model = settings.model_adult_filepicker
     # Default to filepicker if non empty
     if len(model) == 0:
-        model = settings.model_adult + ".zobj"
+        model = settings.model_adult
         if settings.model_adult == "Random":
             choices = get_model_choices(0)
             choices.remove("Default")
             choices.remove("Random")
             model = random.choice(choices)
-        model = 'data\\Models\\Adult\\' + model
-    pathsplit = model.split('\\')
-    log.settings.model_adult = pathsplit[len(pathsplit)-1].split('.')[0]
+        model = os.path.join('data', 'Models', 'Adult', model + '.zobj')
+    pathsplit = os.path.basename(model)
+    log.settings.model_adult = pathsplit.split('.')[0]
 
     # Load and process model
     dfAddress = LoadModel(rom, model, 0)
@@ -749,15 +749,15 @@ def patch_model_child(rom, settings, log):
     model = settings.model_child_filepicker
     # Default to filepicker if non empty
     if len(model) == 0:
-        model = settings.model_child + ".zobj"
+        model = settings.model_child
         if settings.model_child == "Random":
             choices = get_model_choices(1)
             choices.remove("Default")
             choices.remove("Random")
             model = random.choice(choices)
-        model = 'data\\Models\\Child\\' + model
-    pathsplit = model.split('\\')
-    log.settings.model_child = pathsplit[len(pathsplit)-1].split('.')[0]
+        model = os.path.join('data', 'Models', 'Child', model + '.zobj')
+    pathsplit = os.path.basename(model)
+    log.settings.model_child = pathsplit.split('.')[0]
 
     # Load and process model
     dfAddress = LoadModel(rom, model, 1)
