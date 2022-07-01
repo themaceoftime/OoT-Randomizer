@@ -1572,8 +1572,7 @@
             # inconvenience from being required, fairies are not in logic
             # for this crate with both OHKO and BONKO.
             "DMC GS Crate": "
-                is_child and can_child_attack and
-                ((not deadly_bonks) or (Fairy and damage_multiplier != 'ohko') or can_use(Nayrus_Love) or can_blast_or_smash)",
+                is_child and can_child_attack and can_bonk_heated_crate",
             "DMC Gossip Stone": "has_explosives",
             "Gossip Stone Fairy": "
                 has_explosives and can_summon_gossip_fairy_without_suns and has_bottle"
