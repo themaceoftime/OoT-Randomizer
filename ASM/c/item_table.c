@@ -87,8 +87,8 @@ item_row_t item_table[] = {
     [0x40] = ITEM_ROW(0x53,       BROWN_CHEST, 0x75, 0x0067, 0x00B8, 0x0B, no_upgrade, no_effect, -1, -1), // Compass
     [0x41] = ITEM_ROW(0x53,       BROWN_CHEST, 0x76, 0x0066, 0x00C8, 0x1C, no_upgrade, no_effect, -1, -1), // Map
     [0x42] = ITEM_ROW(0x53,      SILVER_CHEST, 0x77, 0x0060, 0x00AA, 0x02, no_upgrade, no_effect, -1, -1), // Small Key
-    [0x43] = ITEM_ROW(0x53,       BROWN_CHEST, 0x78, 0x0052, 0x00CD, 0x1E, no_upgrade, no_effect, -1, -1), // Small Magic Jar
-    [0x44] = ITEM_ROW(0x53,       BROWN_CHEST, 0x79, 0x0052, 0x00CD, 0x1F, no_upgrade, no_effect, -1, -1), // Large Magic Jar
+    [0x43] = ITEM_ROW(0x53,       BROWN_CHEST, 0x78, 0x0052, 0x00CD, 0x1E, magic_jar_to_rupee, no_effect, -1, -1), // Small Magic Jar
+    [0x44] = ITEM_ROW(0x53,       BROWN_CHEST, 0x79, 0x0052, 0x00CD, 0x1F, magic_jar_to_rupee, no_effect, -1, -1), // Large Magic Jar
     [0x45] = ITEM_ROW(0x53,      GILDED_CHEST, 0x56, 0x005E, 0x00D1, 0x22, no_upgrade, fill_wallet_upgrade, 1, -1), // Adult's Wallet
     [0x46] = ITEM_ROW(0x53,      GILDED_CHEST, 0x57, 0x005F, 0x00D1, 0x23, no_upgrade, fill_wallet_upgrade, 2, -1), // Giant's Wallet
     [0x47] = ITEM_ROW(0x53,      GILDED_CHEST, 0x21, 0x009A, 0x00DA, 0x29, no_upgrade, no_effect, -1, -1), // Weird Egg
@@ -159,7 +159,7 @@ item_row_t item_table[] = {
     [0x87] = ITEM_ROW(  -1,       BROWN_CHEST,   -1,     -1, 0x00BB, 0x12, nut_upgrade,       no_effect, -1, -1), // Progressive Nut Capacity
     [0x88] = ITEM_ROW(  -1,       BROWN_CHEST,   -1,     -1, 0x00C7, 0x1B, stick_upgrade,     no_effect, -1, -1), // Progressive Stick Capacity
     [0x89] = ITEM_ROW(  -1,      GILDED_CHEST,   -1,     -1, 0x00D9, 0x28, bombchu_upgrade,   no_effect, -1, -1), // Progressive Bombchus
-    [0x8A] = ITEM_ROW(  -1,      GILDED_CHEST,   -1,     -1, 0x00CD, 0x1E, magic_upgrade,     no_effect, -1, -1), // Progressive Magic Meter
+    [0x8A] = ITEM_ROW(  -1,      GILDED_CHEST,   -1,     -1, 0x0195, 0x1E, magic_upgrade,     no_effect, -1, -1), // Progressive Magic Meter
     [0x8B] = ITEM_ROW(  -1,      GILDED_CHEST,   -1,     -1, 0x010E, 0x46, ocarina_upgrade,   no_effect, -1, -1), // Progressive Ocarina
 
     [0x8C] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0x0043, 0x00C6, 0x01, no_upgrade, give_bottle, 0x15, -1), // Bottle with Red Potion
@@ -212,8 +212,8 @@ item_row_t item_table[] = {
     [0xB7] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0x00A1, 0x00AA, 0x02, no_upgrade, give_small_key, CASTLE_ID, -1), // Ganon's Castle Small Key
 
     [0xB8] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0x00E9, 0x0194, 0x13, no_upgrade, give_defense,      -1, -1), // Double Defense
-    [0xB9] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0x00E4, 0x00CD, 0x1E, no_upgrade, give_magic,        -1, -1), // Magic Meter
-    [0xBA] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0x00E8, 0x00CD, 0x1F, no_upgrade, give_double_magic, -1, -1), // Double Magic
+    [0xB9] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0x00E4, 0x0195, 0x1E, no_upgrade, give_magic,        -1, -1), // Magic Meter
+    [0xBA] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0x00E8, 0x0195, 0x1F, no_upgrade, give_double_magic, -1, -1), // Double Magic
 
     [0xBB] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0x0073, 0x00B6, 0x03, no_upgrade, give_song, 6, -1 ), // Minuet of Forest
     [0xBC] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0x0074, 0x00B6, 0x04, no_upgrade, give_song, 7, -1 ), // Bolero of Fire

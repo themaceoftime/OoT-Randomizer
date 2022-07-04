@@ -106,7 +106,7 @@ TIME_STRING_TXT:
 INITIAL_SAVE_DATA:
 .endarea
 
-.area 0x20, 0
+.area 0x38, 0 ; size must be at least 8 * ((max object_id parameter Patches.add_to_extended_object_table is called with) - 0x192)
 EXTENDED_OBJECT_TABLE:
 .endarea
 
@@ -145,6 +145,10 @@ DUNGEONS_SHUFFLED:
 OVERWORLD_SHUFFLED:
 .byte 0x00
 FAST_BUNNY_HOOD_ENABLED:
+.byte 0x00
+SHUFFLE_MAGIC_JARS:
+.byte 0x00
+FIX_BROKEN_DROPS:
 .byte 0x00
 SPOILER_AVAILABLE:
 .byte 0x00
