@@ -1059,12 +1059,12 @@ class Offsets(IntEnum):
 # Adult model pieces and their offsets, both in the LUT and in vanilla
 AdultPieces = {
     "Sheath": (Offsets.ADULT_LINK_LUT_DL_SWORD_SHEATH, 0x249D8),
-    "FPS.Hookshot": (Offsets.ADULT_LINK_LUT_DL_FPS_HOOKSHOT, 0x24D70),
+    "FPS.Hookshot": (Offsets.ADULT_LINK_LUT_DL_FPS_HOOKSHOT, 0x2A738), 
     "Hilt.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_HILT, 0x22060), # 0x21F78 + 0xE8, skips blade
     "Hilt.3": (Offsets.ADULT_LINK_LUT_DL_LONGSWORD_HILT, 0x238C8),
     "Blade.2": (Offsets.ADULT_LINK_LUT_DL_SWORD_BLADE, 0x21F78),
     "Hookshot.Spike": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT_HOOK, 0x2B288),
-    "Hookshot": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT, 0x2A738),
+    "Hookshot": (Offsets.ADULT_LINK_LUT_DL_HOOKSHOT, 0x24D70),
     "Fist.L": (Offsets.ADULT_LINK_LUT_DL_LFIST, 0x21CE8),
     "Fist.R": (Offsets.ADULT_LINK_LUT_DL_RFIST, 0x226E0),
     "FPS.Forearm.L": (Offsets.ADULT_LINK_LUT_DL_FPS_LFOREARM, 0x29FA0),
@@ -1118,11 +1118,11 @@ AdultPieces = {
 # rather than specifying those indices here, simply have their offset in the table above
 # increased by whatever amount of starting indices would be skipped.
 adultSkips = {
-    "FPS.Hookshot":  [(0x250, 0x4A0)],
+    "FPS.Hookshot":  [(0x2F0, 0x618)],
     "Hilt.2": [(0x1E8, 0x430)],
     "Hilt.3": [(0x160, 0x480)],
     "Blade.2": [(0xE8, 0x518)],
-    "Hookshot": [(0x2F0, 0x618)],
+    "Hookshot": [(0x250, 0x4A0)],
     "Bow": [(0x158, 0x3B0)],
     "Blade.3": [(0xB8, 0x320)],
     "Broken.Blade.3": [(0xA0, 0x308)],
