@@ -28,9 +28,7 @@
     "shuffle_hideoutkeys":                     "keysanity",
     "shuffle_bosskeys":                        "keysanity",
     "disabled_locations":                      [],
-    "starting_equipment":                      [],
     "starting_items":                          [],
-    "starting_songs":                          [],
     "ice_trap_appearance":                     "junk_only",
     "junk_ice_traps":                          "onslaught"
   }
