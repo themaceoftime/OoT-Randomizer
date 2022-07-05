@@ -4474,7 +4474,7 @@ setting_infos = [
         },
         gui_tooltip    = '''\
             'Ludicrous': Every item in the game is a major
-            item.
+            item. Incompatible with one major item per dungeon.
 
             'Plentiful': One additional copy of each major 
             item is added.
@@ -4493,6 +4493,9 @@ setting_infos = [
             available.
         ''',
         shared         = True,
+        disable        = {
+            'ludicrous':  {'settings': ['one_item_per_dungeon']}
+        }
     ),
     Combobox(
         name           = 'damage_multiplier',

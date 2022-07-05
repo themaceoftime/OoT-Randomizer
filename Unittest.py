@@ -13,7 +13,7 @@ import unittest
 
 from EntranceShuffle import EntranceShuffleError
 from Item import ItemInfo
-from ItemPool import remove_junk_items, remove_junk_ludicrous_items, ludicrous_items, trade_items, ludicrous_exclusions, item_groups
+from ItemPool import remove_junk_items, remove_junk_ludicrous_items, ludicrous_items_base, ludicrous_items_extended, trade_items, ludicrous_exclusions, item_groups
 from LocationList import location_groups, location_is_viewable
 from Main import main, resolve_settings, build_world_graphs, place_items
 from Search import Search
@@ -46,7 +46,7 @@ bottles = {name for name, item in ItemInfo.items.items() if item.special.get('bo
 junk = set(remove_junk_items)
 shop_items = {i for i, nfo in ItemInfo.items.items() if nfo.type == 'Shop'}
 ludicrous_junk = set(remove_junk_ludicrous_items)
-ludicrous_set = set(ludicrous_items) | ludicrous_junk | {i for t, i in trade_items.items()} | set(bottles) | set(ludicrous_exclusions) | set(['Bottle with Big Poe']) | shop_items
+ludicrous_set = set(ludicrous_items_base) | set(ludicrous_items_extended) | ludicrous_junk | {i for t, i in trade_items.items()} | set(bottles) | set(ludicrous_exclusions) | set(['Bottle with Big Poe']) | shop_items
 
 
 def make_settings_for_test(settings_dict, seed=None, outfilename=None):
@@ -330,7 +330,10 @@ class TestPlandomizer(unittest.TestCase):
             "plando-ludicrous-default",
             "plando-ludicrous-skip-child-zelda",
             "plando-ludicrous-max-locations",
-            "plando-ludicrous-ice-traps"
+            "plando-ludicrous-ice-traps",
+            "plando-ludicrous-starting-bottles",
+            "plando-ludicrous-starting-hearts",
+            "plando-ludicrous-starting-all-items"
         ]
         for filename in filenames:
             with self.subTest(filename + " ludicrous junk"):

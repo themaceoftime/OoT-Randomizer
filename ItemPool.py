@@ -49,10 +49,40 @@ ludicrous_health = ['Heart Container'] * 8
 # already have a large count relative to available locations
 # in the game.
 #
-# Item order is arranged to maximize subjectively useful item
-# duplicates when remaining available locations is less than
-# a full duplicate set.
-ludicrous_items = [
+# Base items will always be candidates to replace junk items,
+# even if the player starts with all "normal" copies of an item.
+ludicrous_items_base = [
+    'Light Arrows',
+    'Megaton Hammer',
+    'Progressive Hookshot',
+    'Progressive Strength Upgrade',
+    'Dins Fire',
+    'Hover Boots',
+    'Mirror Shield',
+    'Boomerang',
+    'Iron Boots',
+    'Fire Arrows',
+    'Progressive Scale',
+    'Progressive Wallet',
+    'Magic Meter',
+    'Bow',
+    'Slingshot',
+    'Bomb Bag',
+    'Bombchus',
+    'Lens of Truth',
+    'Goron Tunic',
+    'Zora Tunic',
+    'Biggoron Sword',
+    'Double Defense',
+    'Farores Wind',
+    'Nayrus Love',
+    'Stone of Agony',
+    'Ice Arrows',
+    'Deku Stick Capacity',
+    'Deku Nut Capacity'
+]
+
+ludicrous_items_extended = [
     'Zeldas Lullaby',
     'Eponas Song',
     'Suns Song',
@@ -66,17 +96,7 @@ ludicrous_items = [
     'Nocturne of Shadow',
     'Requiem of Spirit',
     'Ocarina',
-    'Light Arrows',
-    'Megaton Hammer',
-    'Progressive Hookshot',
-    'Progressive Strength Upgrade',
-    'Dins Fire',
-    'Hover Boots',
-    'Mirror Shield',
-    'Boomerang',
-    'Iron Boots',
     'Kokiri Sword',
-    'Fire Arrows',
     'Boss Key (Ganons Castle)',
     'Boss Key (Forest Temple)',
     'Boss Key (Fire Temple)',
@@ -102,25 +122,7 @@ ludicrous_items = [
     'Small Key Ring (Water Temple)',
     'Small Key Ring (Bottom of the Well)',
     'Small Key Ring (Gerudo Training Ground)',
-    'Progressive Scale',
-    'Progressive Wallet',
-    'Magic Meter',
-    'Bow',
-    'Slingshot',
-    'Bomb Bag',
-    'Bombchus',
-    'Lens of Truth',
-    'Goron Tunic',
-    'Zora Tunic',
-    'Biggoron Sword',
-    'Double Defense',
-    'Farores Wind',
-    'Nayrus Love',
-    'Stone of Agony',
-    'Ice Arrows',
-    'Magic Bean Pack',
-    'Deku Stick Capacity',
-    'Deku Nut Capacity'
+    'Magic Bean Pack'
 ]
 
 ludicrous_exclusions = [
@@ -659,10 +661,12 @@ def get_pool_core(world):
         # Replace all junk items with major items
         # Overrides plando'd junk items
         # Songs are in the unrestricted pool even if their fill is restricted. Filter from candidates
-        duplicate_candidates = [item for item in ludicrous_items if item in pool and (ItemInfo.items[item].type != 'Song' or world.settings.shuffle_song_items == 'any')]
+        duplicate_candidates = [item for item in ludicrous_items_extended if item in pool and (ItemInfo.items[item].type != 'Song' or world.settings.shuffle_song_items == 'any')]
+        duplicate_candidates.extend(ludicrous_items_base)
         junk_items = [item for item in pool \
-                                    if item not in ludicrous_items
+                                    if item not in duplicate_candidates
                                     and ItemInfo.items[item].type != 'Shop'
+                                    and ItemInfo.items[item].type != 'Song'
                                     and not ItemInfo.items[item].trade
                                     and item not in normal_bottles
                                     and item not in ludicrous_exclusions]
@@ -670,17 +674,27 @@ def get_pool_core(world):
         duplicate_items = [item for item in duplicate_candidates for _ in range(max_extra_copies)]
         pool = [item if item not in junk_items else duplicate_items.pop(0) for item in pool]
         # Handle bottles separately since only 4 can be obtained
-        if world.settings.zora_fountain != 'open':
-            for item in pool:
-                if item in normal_bottles or item == 'Rutos Letter':
-                    pool.remove(item)
+        pool_bottles = 0
+        pool_letters = 0
+        for item in pool:
+            if item == 'Rutos Letter':
+                pool.remove(item)
+                pool_bottles += 1
+                pool_letters += 1
+            if item in normal_bottles:
+                pool.remove(item)
+                pool_bottles += 1
+        letter_adds = 0
+        # No Rutos Letters in the pool could be due to open fountain or starting with one
+        if pool_letters > 0:
             # Enforce max 2 Rutos Letters to balance out regular bottle availability
             letter_adds = min(2, max_extra_copies)
             for _ in range(letter_adds):
                 pool.append('Rutos Letter')
-            for _ in range(4 - letter_adds):
-                bottle = random.choice(normal_bottles)
-                pool.append(bottle)
+        # Dynamically add bottles back to pool, accounting for starting items
+        for _ in range(pool_bottles - letter_adds):
+            bottle = random.choice(normal_bottles)
+            pool.append(bottle)
         # Disabled locations use the #Junk group for fill.
         # Update pattern matcher since all normal junk is removed.
         item_groups['Junk'] = remove_junk_ludicrous_items
