@@ -20,6 +20,8 @@
 
 // Action ID 0x41 (give kokiri tunic) is used to indicate no action.
 
+// "graphic id" - 1 indicates the entry used in the item_draw_table when rendering the GI model.
+
 item_row_t item_table[] = {
     [0x01] = ITEM_ROW(0x4D,       BROWN_CHEST, 0x8E, 0x0032, 0x00CE, 0x20, bombs_to_rupee, no_effect, -1, -1), // Bombs (5)
     [0x02] = ITEM_ROW(0x4D,       BROWN_CHEST, 0x8C, 0x0034, 0x00BB, 0x12, no_upgrade, no_effect, -1, -1), // Deku Nuts (5)
