@@ -973,7 +973,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
                 # entrance table method.
                 # This runs after and overrides the cutscene edits for Forest Temple
                 # and Water Temple if needed.
-                if blue_out_data >= 0x2000:
+                if blue_out_data >= 0x1000:
                     for address in blue_warp_addresses:
                         rom.write_int16(address, blue_out_data)
                 else:
