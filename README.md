@@ -153,6 +153,7 @@ do that.
 * Fix a crash when certain settings related to Light Arrow hints are combined.
 * Many minor logic bugs have been corrected.
 * Fix a softlock when plandoing starting with less than 10 beans.
+* Fix plando negative locations (ex. "!Gold Skulltula Token") choosing Buy items for non-Buy locations.
 
 #### Other changes
 * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
