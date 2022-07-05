@@ -51,17 +51,6 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         keatonBytes = bytearray([a ^ b for a, b in zip(keatonBytesDiff, originalBytes)])
         rom.write_bytes(writeAddress, keatonBytes)
 
-    # Load Key Ring model into a file
-    keyring_obj_file = File({ 'Name': 'object_gi_keyring' })
-    keyring_obj_file.copy(rom)
-    with open(data_path('KeyRing.zobj'), 'rb') as stream:
-        obj_data = stream.read()
-        rom.write_bytes(keyring_obj_file.start, obj_data)
-        keyring_obj_file.end = keyring_obj_file.start + len(obj_data)
-    update_dmadata(rom, keyring_obj_file)
-    # Add it to the extended object table
-    add_to_extended_object_table(rom, 0x195, keyring_obj_file)
-
     # Load Triforce model into a file
     triforce_obj_file = File({ 'Name': 'object_gi_triforce' })
     triforce_obj_file.copy(rom)
@@ -89,6 +78,17 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     update_dmadata(rom, dd_obj_file)
     # Add it to the extended object table
     add_to_extended_object_table(rom, 0x194, dd_obj_file)
+
+    # Load Key Ring model into a file
+    keyring_obj_file = File({ 'Name': 'object_gi_keyring' })
+    keyring_obj_file.copy(rom)
+    with open(data_path('KeyRing.zobj'), 'rb') as stream:
+        obj_data = stream.read()
+        rom.write_bytes(keyring_obj_file.start, obj_data)
+        keyring_obj_file.end = keyring_obj_file.start + len(obj_data)
+    update_dmadata(rom, keyring_obj_file)
+    # Add it to the extended object table
+    add_to_extended_object_table(rom, 0x195, keyring_obj_file)
 
     # Apply chest texture diffs to vanilla wooden chest texture for Chest Texture Matches Content setting
     # new texture, vanilla texture, num bytes
