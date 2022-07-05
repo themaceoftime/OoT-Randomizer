@@ -64,7 +64,7 @@
     "can_bonk_tree": "(not deadly_bonks) or Fairy or can_use(Nayrus_Love)",
     "can_bonk_crate": "(not deadly_bonks) or Fairy or can_use(Nayrus_Love) or can_blast_or_smash",
     "can_bonk_underwater_crate": "(not deadly_bonks) or Fairy or can_use(Nayrus_Love)",
-    "can_bonk_heated_crate": "((not deadly_bonks) or (Fairy and can_use(Goron_Tunic)) or can_use(Nayrus_Love) or can_blast_or_smash)",
+    "can_bonk_heated_crate": "((not deadly_bonks) or (Fairy and (can_use(Goron_Tunic) or damage_multiplier != 'ohko')) or can_use(Nayrus_Love) or can_blast_or_smash)",
 
     # can_use and helpers
     # The parser reduces this to smallest form based on item category.
