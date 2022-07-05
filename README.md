@@ -152,6 +152,7 @@ do that.
 * Tunics and shields can now spawn in any room when the game attempts to spawn them.
 * Fix a crash when certain settings related to Light Arrow hints are combined.
 * Many minor logic bugs have been corrected.
+* Fix a softlock when plandoing starting with less than 10 beans.
 
 #### Other changes
 * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
