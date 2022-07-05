@@ -545,7 +545,7 @@ def get_goal_hint(spoiler, world, checked):
         player_text = "Player %s's" % (world_id + 1)
         goal_text = spoiler.goal_categories[world_id][goal_category.name].get_goal(goal.name).hint_text
 
-return (GossipText('%s is on %s %s.' % (location_text, player_text, goal_text), [goal.color, 'Light Blue'], [location.name], [location.item.name]), location])
+    return (GossipText('%s is on %s %s.' % (location_text, player_text, goal_text), [goal.color, 'Light Blue'], [location.name], [location.item.name]), [location])
 
 
 def get_barren_hint(spoiler, world, checked, allChecked):
@@ -561,7 +561,7 @@ def get_barren_hint(spoiler, world, checked, allChecked):
             location.name not in allChecked
             and location.name not in world.hint_exclusions
             and location.name not in hintExclusions(world)
-            and get_hint_area(location)[0] == area
+            and HintArea.at(location) == area
             for location in world.get_locations()
         ),
         world.empty_areas))
