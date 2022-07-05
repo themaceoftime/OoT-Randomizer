@@ -131,7 +131,9 @@ item_draw_table_entry_t item_draw_table[] = {
     [0x73] = { draw_gi_various_opa0,        { 0x06000960 } }, // Kokiri Sword
     [0x74] = { draw_gi_gs_token,            { 0x06004DB0, 0x06004EB8 } }, // Gold Skulltula Token II (only for En_Si)
 
+    //Rando-added functions
     [0x75] = { draw_gi_various_opa0,        { 0x06000660 } }, // Triforce Piece
+    [0x76] = { draw_gi_various_opa0,        { 0x060023D8 } }, // Key Ring
 };
 
 void base_draw_gi_model(z64_game_t *game, uint32_t draw_id) {
