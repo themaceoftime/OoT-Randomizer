@@ -4525,7 +4525,7 @@ setting_infos = [
         },
         gui_tooltip    = '''\
             When rolling, hitting a wall or object
-            will kill Link.
+            will hurt Link.
         ''',
         shared         = True,
     ),
