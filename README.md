@@ -130,6 +130,7 @@ do that.
   * Shortened the animation for equipping magic arrows.
   * You can now use the child trade item (Zelda's Letter, masks, etc) as child using D-Pad Right.
   * Red Ice transparency is increased when any Chest Appearance setting is enabled.
+  * Zelda's text after defeating Ganon now advances automatically.
 
 
 #### Bug fixes
