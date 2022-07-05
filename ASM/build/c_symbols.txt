@@ -330,7 +330,7 @@ SYMBOL TABLE:
 00000048 g     O .sdata	00000004 c_note_b
 00004af4 g     F .text	00000120 get_skulltula_token
 00000000         *UND*	00000000 CFG_RAINBOW_NAVI_IDLE_INNER_ENABLED
-000031d4 g     O .bss	00000016 extended_savectx
+000031d8 g     O .bss	00000016 extended_savectx
 00005564 g     F .text	00000018 push_pending_ice_trap
 00000000         *UND*	00000000 CFG_DUNGEON_INFO_REWARD_ENABLE
 00007334 g     F .text	000000a4 bowling_bomb_bag_draw

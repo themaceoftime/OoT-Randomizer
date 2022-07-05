@@ -27,10 +27,7 @@ extern uint16_t SRAM_SLOTS[6];
 
 typedef void (*Sram_InitNewSave_Func)(void);
 Sram_InitNewSave_Func Sram_InitNewSave = (Sram_InitNewSave_Func)(0x8008FFC0);
-
 extended_savecontext_static_t extended_savectx;
-
-
 
 //Override Sram_WriteSave to include the collectible flags in the checksum calculation.
 void Sram_WriteSave(SramContext* sramCtx)
