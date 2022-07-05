@@ -1085,7 +1085,6 @@ class World(object):
         # these are items that can never be required but are still considered major items
         exclude_item_list = [
             'Double Defense',
-            'Ice Arrows',
         ]
         if (self.settings.damage_multiplier != 'ohko' and self.settings.damage_multiplier != 'quadruple' and
             self.settings.shuffle_scrubs == 'off' and not self.settings.shuffle_grotto_entrances):
@@ -1107,6 +1106,9 @@ class World(object):
             exclude_item_list.append('Magic Bean')
             exclude_item_list.append('Buy Magic Bean')
             exclude_item_list.append('Magic Bean Pack')
+        if not self.settings.blue_fire_arrows:
+            # Ice Arrows can only be required when the Blue Fire Arrows setting is enabled
+            exclude_item_list.append('Ice Arrows')
 
         for i in self.item_hint_type_overrides['barren']:
             if i in exclude_item_list:

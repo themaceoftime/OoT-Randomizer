@@ -124,6 +124,7 @@ do that.
   * New setting `One Bonk KO` will instantly kill Link when he hits his head while rolling.
   * New hint type `Dual Hint` which allows multiple locations to be hinted in the same hint.
   * New `Chaos` hint distribution which gives all hint types equal likelihood.
+  * New setting `Blue Fire Arrows` gives Ice Arrows the power to melt red ice and mud walls to give them more utility.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
