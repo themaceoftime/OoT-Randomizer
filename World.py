@@ -58,6 +58,12 @@ class World(object):
             or settings.spawn_positions or (settings.shuffle_bosses != 'off')
         )
 
+        self.mixed_entrance_pools = []
+        for pool in self.settings.mix_entrance_pools:
+            self.mixed_entrance_pools.append(pool)
+            if pool != 'Overworld' and self.settings.decouple_entrances:
+                self.mixed_entrance_pools.append(pool + 'Reverse')
+
         self.ensure_tod_access = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances or settings.spawn_positions
         self.disable_trade_revert = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances
 

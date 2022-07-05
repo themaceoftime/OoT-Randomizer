@@ -514,7 +514,7 @@ def shuffle_random_entrances(worlds):
         # Combine all entrance pools into one when mixing entrance pools
         if len(worlds[0].settings.mix_entrance_pools) > 1:
             entrance_pools['Mixed'] = []
-            for pool in worlds[0].settings.mix_entrance_pools:
+            for pool in worlds[0].mixed_entrance_pools:
                 entrance_pools['Mixed'] += entrance_pools.pop(pool, [])
 
         # Build target entrance pools and set the assumption for entrances being reachable
@@ -637,10 +637,10 @@ def shuffle_one_way_priority_entrances(worlds, world, one_way_priorities, one_wa
             logging.getLogger('').info('\t%s' % error)
 
     if world.settings.custom_seed:
-        raise EntranceShuffleError('Entrance placement attempt count exceeded for world %d. Ensure the \"Seed\" field is empty and retry a few times.' % entrance_pool[0].world.id)
+        raise EntranceShuffleError('Entrance placement attempt count exceeded for world %d. Ensure the \"Seed\" field is empty and retry a few times.' % one_way_entrance_pools[0].world.id)
     if world.settings.distribution_file:
-        raise EntranceShuffleError('Entrance placement attempt count exceeded for world %d. Some entrances in the Plandomizer File may have to be changed to create a valid seed. Reach out to Support on Discord for help.' % entrance_pool[0].world.id)
-    raise EntranceShuffleError('Entrance placement attempt count exceeded for world %d. Retry a few times or reach out to Support on Discord for help.' % entrance_pool[0].world.id)
+        raise EntranceShuffleError('Entrance placement attempt count exceeded for world %d. Some entrances in the Plandomizer File may have to be changed to create a valid seed. Reach out to Support on Discord for help.' % one_way_entrance_pools[0].world.id)
+    raise EntranceShuffleError('Entrance placement attempt count exceeded for world %d. Retry a few times or reach out to Support on Discord for help.' % one_way_entrance_pools[0].world.id)
 
 # Shuffle all entrances within a provided pool
 def shuffle_entrance_pool(world, worlds, entrance_pool, target_entrances, locations_to_ensure_reachable, check_all=False, retry_count=20, placed_one_way_entrances=()):
