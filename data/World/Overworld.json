@@ -1726,7 +1726,7 @@
         "region_name": "DMC Pierre Platform",
         "font_color": "Red",
         "scene": "Death Mountain Crater",
-        "hint": "Death Mountain Crater",
+        "hint": "DEATH_MOUNTAIN_CRATER",
         "locations": {
             "DMC Adult Green Rupee 1": "is_adult",
             "DMC Adult Green Rupee 2": "is_adult",
@@ -2163,7 +2163,8 @@
     {
         "region_name": "Ganondorfs Chamber",
         "dungeon": "Ganons Castle",
-        "hint": "Ganondorfs Chamber",
+        "hint": "INSIDE_GANONS_CASTLE",
+        "alt_hint": "GANONDORFS_CHAMBER",
         "locations": {
             "Ganondorf Hint": "Boss_Key_Ganons_Castle",
             "Ganons Tower Pot 1": "unlock_ganons_first_boss_door or (shuffle_ganon_bosskey != 'triforce')",
