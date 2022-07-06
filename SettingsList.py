@@ -4375,9 +4375,10 @@ setting_infos = [
         multiple_select = True,
         gui_text        = 'Misc. Hints',
         choices         = {
-            'altar':      'Temple of Time Altar',
-            'ganondorf':  'Ganondorf',
-            'warp_songs': 'Warp Songs',
+            'altar':       'Temple of Time Altar',
+            'dampe_diary': "Dampé's Diary (Hookshot)",
+            'ganondorf':   'Ganondorf (Light Arrows)',
+            'warp_songs':  'Warp Songs',
         },
         gui_tooltip    = '''\
             This setting adds some hints at locations
@@ -4394,6 +4395,10 @@ setting_infos = [
             is enabled), as well as the conditions for
             building the Rainbow Bridge and getting the
             Boss Key for Ganon's Castle.
+
+            Reading the diary of Dampé the gravekeeper
+            as adult will tell you the location of one
+            of the Hookshots.
 
             Talking to Ganondorf in his boss room will
             tell you the location of the Light Arrows.

@@ -5,7 +5,7 @@ import random
 
 from Entrance import Entrance
 from Goals import Goal, GoalCategory
-from HintList import getRequiredHints
+from HintList import getRequiredHints, misc_item_hint_table
 from Hints import HintArea, hint_dist_keys, HintDistFiles
 from Item import ItemFactory, ItemInfo, MakeEventItem
 from Location import Location, LocationFactory
@@ -32,7 +32,7 @@ class World(object):
         self.shop_prices = {}
         self.scrub_prices = {}
         self.maximum_wallets = 0
-        self.light_arrow_location = None
+        self.misc_hint_item_locations = {}
         self.triforce_count = 0
         self.total_starting_triforce_count = 0
         self.bingosync_url = None
@@ -185,6 +185,8 @@ class World(object):
         self.named_item_pool = list(self.item_hints)
 
         self.always_hints = [hint.name for hint in getRequiredHints(self)]
+
+        self.misc_hint_items = {hint_type: self.hint_dist_user.get('misc_hint_items', {}).get(hint_type, data['default_item']) for hint_type, data in misc_item_hint_table.items()}
 
         self.state = State(self)
 
