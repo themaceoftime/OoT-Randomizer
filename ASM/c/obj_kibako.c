@@ -38,7 +38,7 @@ void ObjKibako_Draw(z64_actor_t *actor, z64_game_t *game)
     override_t crate_override = get_smallcrate_override(actor, game);
     if(POTCRATE_TEXTURES_MATCH_CONTENTS == PTMC_UNCHECKED && crate_override.key.all != 0)
     {
-        texture = get_texture(TEXTURE_ID_CRATE_GOLD);
+        texture = get_texture(TEXTURE_ID_SMALLCRATE_GOLD);
     }
     else if (POTCRATE_TEXTURES_MATCH_CONTENTS == PTMC_CONTENTS && crate_override.key.all != 0)
     {
