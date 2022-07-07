@@ -40,7 +40,7 @@ void ObjKibako_Draw(z64_actor_t *actor, z64_game_t *game)
     {
         texture = get_texture(TEXTURE_ID_CRATE_GOLD);
     }
-    else if (POTCRATE_TEXTURES_MATCH_CONTENTS && crate_override.key.all != 0)
+    else if (POTCRATE_TEXTURES_MATCH_CONTENTS == PTMC_CONTENTS && crate_override.key.all != 0)
     {
         uint16_t item_id = resolve_upgrades(crate_override.value.item_id);
         item_row_t *row = get_item_row(crate_override.value.looks_like_item_id);
