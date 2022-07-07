@@ -5,7 +5,7 @@
 
 #define SMALLCRATE_DLIST (z64_gfx_t *)0x05005290
 #define SMALLCRATE_TEXTURE (uint8_t *)0x05011CA0
-extern bool POTCRATE_TEXTURES_MATCH_CONTENTS;
+extern uint8_t POTCRATE_TEXTURES_MATCH_CONTENTS;
 
 override_t get_smallcrate_override(z64_actor_t *actor, z64_game_t *game)
 {
