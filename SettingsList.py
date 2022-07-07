@@ -4525,7 +4525,8 @@ setting_infos = [
         },
         gui_tooltip    = '''\
             When rolling, hitting a wall or object
-            will hurt Link.
+            will hurt Link. Damage is unaffected
+            by the damage multiplier setting.
         ''',
         shared         = True,
     ),
