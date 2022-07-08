@@ -869,30 +869,6 @@ location_table = OrderedDict([
     ("Dodongos Cavern MQ Back Poe Room Pot 1",                         ("Collectable",  0x01,  0x38, None,                        'Rupees (5)',                           ("Dodongo's Cavern", "Master Quest", "Pot"))),
     ("Dodongos Cavern MQ Back Poe Room Pot 2",                         ("Collectable",  0x01,  0x3F, None,                        'Rupees (5)',                           ("Dodongo's Cavern", "Master Quest", "Pot"))),
     # Dodongo's Cavern MQ Crates
-<<<<<<< HEAD
-    ("Dodongos Cavern MQ Staircase Crate Bottom Left", ("Collectable", 0x1, 0x40, ([0x1f55d04],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Staircase Crate Bottom Right", ("Collectable", 0x1, 0x41, ([0x1f55d14],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Staircase Crate Mid Left", ("Collectable", 0x1, 0x42, ([0x1f55ce4],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Staircase Crate Top Left", ("Collectable", 0x1, 0x43, ([0x1f55cf4],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Staircase Crate Mid Right", ("Collectable", 0x1, 0x44, ([0x1f55d24],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Staircase Crate Top Right", ("Collectable", 0x1, 0x45, ([0x1f55d34],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Poes Room Crate 5", ("Collectable", 0x1, 0x46, ([0x1f6d9bc],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Poes Room Crate 6", ("Collectable", 0x1, 0x47, ([0x1f6d9cc],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Poes Room Crate 1", ("Collectable", 0x1, 0x48, ([0x1f6d9dc],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Poes Room Crate 2", ("Collectable", 0x1, 0x49, ([0x1f6d9ec],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Poes Room Crate 3", ("Collectable", 0x1, 0x4A, ([0x1f6d9fc],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Poes Room Crate 4", ("Collectable", 0x1, 0x4B, ([0x1f6da0c],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Poes Room Crate 7", ("Collectable", 0x1, 0x4C, ([0x1f6da1c],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Poes Room Crate 8", ("Collectable", 0x1, 0x4D, ([0x1f6da2c],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Larvae Room Crate 1", ("Collectable", 0x1, 0x4E, ([0x1f7646c],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Larvae Room Crate 2", ("Collectable", 0x1, 0x4F, ([0x1f7647c],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Larvae Room Crate 3", ("Collectable", 0x1, 0x50, ([0x1f7648c],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Larvae Room Crate 4", ("Collectable", 0x1, 0x51, ([0x1f7649c],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Larvae Room Crate 5", ("Collectable", 0x1, 0x52, ([0x1f764ac],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ Larvae Room Crate 6", ("Collectable", 0x1, 0x53, ([0x1f764bc],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ After Upper Lizalfos Crate 1", ("Collectable", 0x1, 0x54, ([0x1fa87f0],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-    ("Dodongos Cavern MQ After Upper Lizalfos Crate 2", ("Collectable", 0x1, 0x55, ([0x1fa8800],None), 'Rupee (1)', ("Dodongo's Cavern", "Master Quest", "Crate"))),
-=======
     ("Dodongos Cavern MQ Staircase Crate Bottom Left", ("Collectable", 0x1, 0x40, ([0x1f55d04],None), 'Rupee (1)', ("Dodongos Cavern", "Master Quest", "Crate"))),
     ("Dodongos Cavern MQ Staircase Crate Bottom Right", ("Collectable", 0x1, 0x41, ([0x1f55d14],None), 'Rupee (1)', ("Dodongos Cavern", "Master Quest", "Crate"))),
     ("Dodongos Cavern MQ Staircase Crate Mid Left", ("Collectable", 0x1, 0x42, ([0x1f55ce4],None), 'Rupee (1)', ("Dodongos Cavern", "Master Quest", "Crate"))),
@@ -922,7 +898,6 @@ location_table = OrderedDict([
     ("Dodongos Cavern MQ Staircase Vines Silver Rupee", ("Collectable", 0x1, 0x63, ([0x1f55b54], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
     ("Dodongos Cavern MQ Staircase Top Right Crate Silver Rupee", ("Collectable", 0x1, 0x64, ([0x1f55b64], None), 'Silver Rupee (Dodongos Cavern Staircase)', ("Dodongos Cavern", "Master Quest", "Silver Rupee"))),
     
->>>>>>> Silver Rupee Shuffle
     # Dodongo's Cavern shared
     ("Dodongos Cavern Lower Lizalfos Hidden Recovery Heart",               ("Collectable",   0x01,  0x18, None,                       'Recovery Heart',                        ("Dodongo's Cavern", "Vanilla", "Master Quest", "Freestanding",))),
     ("Dodongos Cavern Boss Room Chest",                              ("Chest",        0x12,  0x00, None,                        'Bombs (5)',                             ("Dodongo's Cavern", "Vanilla", "Master Quest",))),
