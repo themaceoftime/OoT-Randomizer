@@ -1643,9 +1643,9 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
 
     logger = logging.getLogger('')
-    #Patch actor overrides for freestanding items. Need to figure out how to fix this for MQ
+    # Patch freestanding items
     if world.settings.shuffle_freestanding_items:
-    # Get actor_override locations
+    # Get freestanding item locations
         actor_override_locations = [location for location in world.get_locations() if location.disabled == DisableType.ENABLED and location.type == 'ActorOverride' ]
         freestanding_locations = [location for location in world.get_locations() if location.disabled == DisableType.ENABLED and location.type == 'Collectable' and 'Freestanding' in location.filter_tags]
         rupeetower_locations = [location for location in world.get_locations() if location.disabled == DisableType.ENABLED and location.type == 'Collectable' and 'RupeeTower' in location.filter_tags]
@@ -1656,14 +1656,15 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             patch_freestanding_collectible(location, rom)
         for location in rupeetower_locations:
             patch_rupee_tower(location, rom)
-        
-
+    
+    # Patch beehives 
     if world.settings.shuffle_beehives:
         beehive_locations = [location for location in world.get_locations() if location.disabled == DisableType.ENABLED and location.type == 'Collectable' and 'Beehive' in location.filter_tags]
         for location in beehive_locations:
             patch_beehive(location, rom)
         patch_grotto_beehive_2(rom)
 
+    # Patch pots/crates
     if world.settings.shuffle_pots_crates:
         pot_locations = [location for location in world.get_locations() if location.disabled == DisableType.ENABLED and location.type == 'Collectable' and ('Pot' in location.filter_tags)]
         flying_pot_locations = [location for location in world.get_locations() if location.disabled == DisableType.ENABLED and location.type == 'Collectable' and ('FlyingPot' in location.filter_tags)]
@@ -1803,7 +1804,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     shuffle_messages.shop_item_messages = []
 
     # kokiri shop
-    shop_locations = world.get_region('KF Kokiri Shop').locations
+    shop_locations = [location for location in world.get_region('KF Kokiri Shop').locations if location.type == 'Shop'] # Need to filter because of the freestanding item in KF Shop
     shop_objs = place_shop_items(rom, world, shop_items, messages,
         shop_locations[1:], True)
     shop_objs |= {0x00FC, 0x00B2, 0x0101, 0x0102, 0x00FD, 0x00C5} # Shop objects

@@ -227,7 +227,7 @@ def generate_itempool(world):
         placed_items_count[item] = placed_items_count.get(item, 0) + 1
         world.push_item(location, ItemFactory(item, world))
         world.get_location(location).locked = True
-    
+
     world.initialize_items()
     world.distribution.set_complete_itempool(world.itempool)
 
