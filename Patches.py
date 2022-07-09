@@ -79,6 +79,31 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     # Add it to the extended object table
     add_to_extended_object_table(rom, 0x194, dd_obj_file)
 
+    # Build a Magic Meter model from the Magic Jar model
+    magic_jar_obj_file = File({
+        'Name': 'object_gi_magicpot',
+        'Start': '0154C000',
+        'End': '0154D1D0',
+    })
+    magic_jar_obj_file.copy(rom)
+    # Update colors for the Magic Meter variant if magic jars are shuffled
+    if world.settings.shuffle_magic_jars:
+        # Original color combiner settings: 0xFC30EC04 0x5FDAEDF6
+        rom.write_int32s(magic_jar_obj_file.start + 0x0590, [0xFC17EC60, 0x15D8ED76]) # Small Jar Combine Mode
+        rom.write_bytes(magic_jar_obj_file.start + 0x059C, [0xFF, 0xFF, 0xFF]) # Small Jar Ring Primary Color
+        rom.write_bytes(magic_jar_obj_file.start + 0x05A4, [0xFF, 0xFF, 0xFF]) # Small Jar Ring Env Color
+        rom.write_bytes(magic_jar_obj_file.start + 0x0654, [0xCF, 0xFF, 0x0F]) # Small Jar Light Primary Color
+        rom.write_bytes(magic_jar_obj_file.start + 0x065C, [0x46, 0xFF, 0x32]) # Small Jar Light Env Color
+        # Original color combiner settings: 0xFC30EC04 0x5FDAEDF6
+        rom.write_int32s(magic_jar_obj_file.start + 0x0EF0, [0xFC17EC60, 0x15D8ED76]) # Large Jar Combine Mode
+        rom.write_bytes(magic_jar_obj_file.start + 0x0EFC, [0xFF, 0xFF, 0xFF]) # Large Jar Ring Primary Color
+        rom.write_bytes(magic_jar_obj_file.start + 0x0F04, [0xFF, 0xFF, 0xFF]) # Large Jar Ring Env Color
+        rom.write_bytes(magic_jar_obj_file.start + 0x0FB4, [0xCF, 0xFF, 0x0F]) # Large Jar Light Primary Color
+        rom.write_bytes(magic_jar_obj_file.start + 0x0FBC, [0x46, 0xFF, 0x32]) # Large Jar Light Env Color
+    update_dmadata(rom, magic_jar_obj_file)
+    # Add it to the extended object table
+    add_to_extended_object_table(rom, 0x195, magic_jar_obj_file)
+
     # Apply chest texture diffs to vanilla wooden chest texture for Chest Texture Matches Content setting
     # new texture, vanilla texture, num bytes
     textures = [(rom.sym('SILVER_CHEST_FRONT_TEXTURE'), 0xFEC798, 4096),
@@ -2175,6 +2200,22 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     if world.settings.fast_bunny_hood:
         symbol = rom.sym('FAST_BUNNY_HOOD_ENABLED')
         rom.write_byte(symbol, 0x01)
+
+    if world.settings.shuffle_magic_jars:
+        symbol = rom.sym('SHUFFLE_MAGIC_JARS')
+        rom.write_byte(symbol, 0x01)
+
+    if world.settings.fix_broken_drops:
+        symbol = rom.sym('FIX_BROKEN_DROPS')
+        rom.write_byte(symbol, 0x01)
+
+        # Autocollect incoming_item_id for magic jars are swapped
+        rom.write_int16(0xA88066, 0x0044) # Change GI_MAGIC_SMALL to GI_MAGIC_LARGE
+        rom.write_int16(0xA88072, 0x0043) # Change GI_MAGIC_LARGE to GI_MAGIC_SMALL
+    else:
+        # Remove deku shield drop from spirit pot because it's "vanilla behavior"
+        # Replace actor parameters in scene 06, room 27 actor list
+        rom.write_int16(0x2BDC0C6, 0x603F)
 
     # Have the Gold Skulltula Count in the pause menu turn red when equal to the
     # available number of skulls in the world instead of 100.

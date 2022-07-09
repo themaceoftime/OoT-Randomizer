@@ -384,7 +384,9 @@
             "junk_ice_traps",
             "ice_trap_appearance",
             "logic_earliest_adult_trade",
-            "logic_latest_adult_trade"
+            "logic_latest_adult_trade",
+            "shuffle_magic_jars",
+            "fix_broken_drops"
           ]
         }
       ]
