@@ -4331,6 +4331,21 @@ setting_infos = [
         default        = False,
         shared         = True,
     ),
+    Checkbutton(
+        name           = 'no_age_limits',
+        gui_text       = 'Disable Item Age Checks',
+        gui_tooltip    = '''\
+            Make most items usable as both ages.
+            Exceptions are the bow and magic arrows
+            as child, hookshot as child, and magic
+            beans as adult.
+
+            Not considered by logic. It may be possible
+            to softlock yourself if you are not careful.
+        ''',
+        default        = False,
+        shared         = True,
+    ),
     Combobox(
         name           = 'hints',
         gui_text       = 'Gossip Stones',
