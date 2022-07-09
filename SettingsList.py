@@ -2698,8 +2698,8 @@ setting_infos = [
             Unlocks the first boss key door in Ganon's Tower
             to give access to the pots in the room.
 
-            The door leading to the upper stairway to
-            Ganondorf will still be locked.
+            The door leading out of the room to the 
+            upper stairway to Ganondorf will be locked.
         ''',
         gui_params     = {
             'randomize_key': 'randomize_settings',
