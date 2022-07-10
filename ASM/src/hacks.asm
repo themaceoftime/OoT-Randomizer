@@ -2503,8 +2503,9 @@ skip_GS_BGS_text:
 .endarea
 
 ;==================================================================================================
+; TEMPORARILY COMMENTED OUT: Until issues with increasing the allocation size of the model are resolved
 ; Increases max size of GI Models
 ;==================================================================================================
 ; Replaces: addiu   a0, $zero, 0x2008
-.orga 0xBE2930
-    addiu   a0, $zero, 0x6000
+; .orga 0xBE2930
+;    addiu   a0, $zero, 0x6000
