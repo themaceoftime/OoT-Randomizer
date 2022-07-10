@@ -2925,6 +2925,25 @@ setting_infos = [
         shared         = True,
     ),
     Checkbutton(
+        name           = 'spawn_gerudo_guard_outside_gate',
+        gui_text       = 'Gate-Opening Gerudo Guard',
+        gui_tooltip    = '''\
+            A Gerudo guard will spawn outside the Fortress
+            gate near the Haunted Wasteland.  Talking to the guard 
+            will open the gate if the Gerudo Card has been acquired.
+
+            The guard will be spawned regardless of this setting when 
+            Shuffle Gerudo Card, Shuffle Overworld Entrances, or
+            Randomize Overworld Spawns are enabled.
+        ''',
+        gui_params={
+            'optional': True,
+            "hide_when_disabled": True,
+        },
+        default        = False,
+        shared         = True,
+    ),
+    Checkbutton(
         name           = 'chicken_count_random',
         gui_text       = 'Random Cucco Count',
         gui_tooltip    = '''\
@@ -3036,6 +3055,9 @@ setting_infos = [
             The Gerudo Card is required to enter the Gerudo Training Ground
             and prevents the guards from throwing you in jail.
         ''',
+        disable        = {
+            True : {'settings' : ['spawn_gerudo_guard_outside_gate']}
+        },
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -3253,6 +3275,9 @@ setting_infos = [
             even when dying or loading a save.
         ''',
         default        = False,
+        disable        = {
+            True : {'settings' : ['spawn_gerudo_guard_outside_gate']}
+        },
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -3347,6 +3372,9 @@ setting_infos = [
 
             This stays consistent after saving and loading the game again.
         ''',
+        disable        = {
+            True : {'settings' : ['spawn_gerudo_guard_outside_gate']}
+        },
         default        = False,
         shared         = True,
         gui_params     = {
