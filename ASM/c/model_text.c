@@ -4,10 +4,7 @@ uint16_t illegal_model = 0;
 
 void draw_illegal_model_text(z64_disp_buf_t *db) {
 
-    // Only draw when paused
-    if (!(z64_game.pause_ctxt.state == 6)) {
-        return;
-    }
+    return;
     
     // Setup draw location
     int str_len = 38;
