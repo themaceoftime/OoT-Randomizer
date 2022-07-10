@@ -27,6 +27,13 @@ Differences between this branch and the main Dev branch (on [Testrunner's Fork](
   * TestRunnerSRL/OoT-Randomizer#1623
   * TestRunnerSRL/OoT-Randomizer#1625
 
+## Hidden Menus
+
+Holding the A button on the pause screen will show collected silver rupees for each dungeon. Holding different D-pad directions on the pause menu will show the following information:
+* Right: Dungeon Vanilla/MQ Identification
+* Down: Medallion and Stone Locations
+* Right: Dungeon Keys available and (collected)
+
 ## Index
 
 * [Installation](#installation)
