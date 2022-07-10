@@ -1,32 +1,36 @@
-# Custom Models
-
-Save the .ZOBJ file of the desired model in `data/Models/Adult` or `data/Models/Child`. The file must be in .ZOBJ format (the compressed .PAK files are not compatible), but most Modloader64 models will work. Exceptions are models which are larger than the base Link models (the randomizer will give an error message) and those created on the new pipeline (technically load but the textures get wonky).
-
-Once the models are saved, the program may be opened and the model(s) selected under the `Cosmetics` tab.
-
-If the model's skeleton is similar enough to Link, the randomizer will use Link's skeleton. If it is substantially different, then a note will be placed on the pause screen to make it clear that the skeleton was changed.
-
-
------------------------------
-
 # OoTRandomizer
 
 This is a randomizer for _The Legend of Zelda: Ocarina of Time_ for the Nintendo 64.
 
+
 **WARNING:** This branch is a modified version of the randomizer. It is **not** officially supported and may be **very unstable**.
 Please refrain from asking questions and from reporting issues in the main Randomizer Discord when using this branch.
-Instead, you can open an issue on this fork [here](https://github.com/Roman971/OoT-Randomizer/issues) or contact me directly on discord (Roman#7295) for any help, report or request.
+Instead, you can open an issue on this fork [here](https://github.com/mracsys/OoT-Randomizer/issues) or contact me directly on discord (mracsys#5846) for any help, report or request.
 
 Differences between this branch and the main Dev branch (on [Testrunner's Fork](https://github.com/TestRunnerSRL/OoT-Randomizer/tree/Dev)):
 * Various GUI tweaks and improvements along with setting tooltip/option changes
 * 2 new advanced ER settings: "Mixed Entrance Pools" and "Decouple Entrances"
-* Picking up Gold Skulltula Tokens in non-Tokensanity displays a self-closing textbox which no longer freezes the player.
+* "Fast Tokens" setting makes picking up Gold Skulltula Tokens no longer freeze the player and display a self-closing textbox.
 * "Bombchus In Logic" is improved to include bombchu drops (from grass, pots, etc) that start dropping once you have found Bombchus.
+* "Climb Anywhere" setting allows climbing on almost any vertical surface and hookshotting any surface.
 * New cosmetic setting to randomize the color of some additional equipment and items.
+* The following open PRs on the main branch:
+  * TestRunnerSRL/OoT-Randomizer#1472
+  * TestRunnerSRL/OoT-Randomizer#1507
+  * TestRunnerSRL/OoT-Randomizer#1516
+  * TestRunnerSRL/OoT-Randomizer#1546
+  * TestRunnerSRL/OoT-Randomizer#1558
+  * TestRunnerSRL/OoT-Randomizer#1610
+  * TestRunnerSRL/OoT-Randomizer#1613
+  * TestRunnerSRL/OoT-Randomizer#1616
+  * TestRunnerSRL/OoT-Randomizer#1619
+  * TestRunnerSRL/OoT-Randomizer#1623
+  * TestRunnerSRL/OoT-Randomizer#1625
 
 ## Index
 
 * [Installation](#installation)
+* [Custom Models](#custom-models)
 * [General Description](#general-description)
   * [Getting Stuck](#getting-stuck)
   * [Settings](#settings)
@@ -65,6 +69,14 @@ In a nutshell the differences are:
 Please follow [the guides on our wiki](https://wiki.ootrandomizer.com/index.php?title=Setup#Emulators) carefully to ensure a stable game experience and that
 [the settings requirements for races](https://wiki.ootrandomizer.com/index.php?title=Racing#Emulator_Settings_Requirements) are met. OoTR can also be run on
 an N64 using an [EverDrive](https://wiki.ootrandomizer.com/index.php?title=Everdrive), or on [Wii Virtual Console](https://wiki.ootrandomizer.com/index.php?title=Wii_Virtual_Console). For questions and tech support we kindly refer you to our [Discord](https://discord.gg/q6m6kzK).
+
+## Custom Models
+
+Save the .ZOBJ file of the desired model in `data/Models/Adult` or `data/Models/Child`. The file must be in .ZOBJ format (the compressed .PAK files are not compatible), but most Modloader64 models will work. Exceptions are models which are larger than the base Link models (the randomizer will give an error message) and those created on the new pipeline (technically load but the textures get wonky).
+
+Once the models are saved, the program may be opened and the model(s) selected under the `Cosmetics` tab.
+
+Custom models can be found in the [OoT Online repository](https://github.com/hylian-modding/Z64-CustomPlayerModels/tree/master/oot/PlayAsPackages)
 
 ## General Description
 
