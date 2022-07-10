@@ -11,7 +11,7 @@ from Fill import FillError
 from EntranceShuffle import EntranceShuffleError, change_connections, confirm_replacement, validate_world, check_entrances_compatibility
 from Hints import gossipLocations, GossipText
 from Item import ItemFactory, ItemInfo, ItemIterator, IsItem
-from ItemPool import item_groups, get_junk_item
+from ItemPool import item_groups, get_junk_item, song_list
 from Location import LocationIterator, LocationFactory, IsLocation
 from LocationList import location_groups, location_table
 from Search import Search
@@ -801,7 +801,7 @@ class WorldDistribution(object):
             if record.item in item_groups['DungeonReward']:
                 raise RuntimeError('Cannot place dungeon reward %s in world %d in location %s.' % (record.item, self.id + 1, location_name))
 
-            if record.item == '#Junk' and location.type == 'Song' and world.settings.shuffle_song_items == 'song' and not world.settings.starting_songs:
+            if record.item == '#Junk' and location.type == 'Song' and world.settings.shuffle_song_items == 'song' and not any(name in song_list and record.count for name, record in world.settings.starting_items.items()):
                 record.item = '#JunkSong'
 
             ignore_pools = None
