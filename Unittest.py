@@ -274,6 +274,7 @@ class TestPlandomizer(unittest.TestCase):
             "dual-hints",
             "negative-pattern-test",
             "dual-hints-custom-text",
+            "dual-hints-with-upgrade",
         ]
         for filename in filenames:
             with self.subTest(filename):
