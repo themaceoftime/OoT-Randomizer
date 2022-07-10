@@ -128,10 +128,10 @@ def getUpgradeHintList(world, locations):
             multi = getMulti(name)
 
             if len(locations) < len(multi.locations) and all(location in multi.locations for location in locations) and (hint.name not in conditional_sometimes.keys() or conditional_sometimes[hint.name](world)):
-                accepted_type = True
-                type_override = False
+                accepted_type = False
 
                 for hint_type in hint.type:
+                    type_override = False
                     if hint_type in world.hint_type_overrides:
                         if name in world.hint_type_overrides[hint_type]:
                             type_override = True
@@ -143,10 +143,12 @@ def getUpgradeHintList(world, locations):
                                     type_override = True
 
                     if world.hint_dist_user['upgrade_hints'] == 'limited':
-                        if world.hint_dist_user['distribution'][hint_type]['copies'] == 0:
-                            accepted_type = False
+                        if world.hint_dist_user['distribution'][hint_type]['copies'] > 0:
+                            accepted_type = True
+                    if not type_override:
+                        accepted_type = True
 
-                if accepted_type and not type_override:
+                if accepted_type:
                     ret.append(hint)
     return ret
 
