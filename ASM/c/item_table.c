@@ -20,6 +20,8 @@
 
 // Action ID 0x41 (give kokiri tunic) is used to indicate no action.
 
+// "graphic id" - 1 indicates the entry used in the item_draw_table when rendering the GI model.
+
 item_row_t item_table[] = {
     [0x01] = ITEM_ROW(0x4D,       BROWN_CHEST, 0x8E, 11, 0x0032, 0x00CE, 0x20, bombs_to_rupee, no_effect, -1, -1), // Bombs (5)
     [0x02] = ITEM_ROW(0x4D,       BROWN_CHEST, 0x8C, 12, 0x0034, 0x00BB, 0x12, no_upgrade, no_effect, -1, -1), // Deku Nuts (5)
@@ -159,7 +161,7 @@ item_row_t item_table[] = {
     [0x87] = ITEM_ROW(  -1,       BROWN_CHEST,   -1, 0,    -1, 0x00BB, 0x12, nut_upgrade,       no_effect, -1, -1), // Progressive Nut Capacity
     [0x88] = ITEM_ROW(  -1,       BROWN_CHEST,   -1, 0,    -1, 0x00C7, 0x1B, stick_upgrade,     no_effect, -1, -1), // Progressive Stick Capacity
     [0x89] = ITEM_ROW(  -1,      GILDED_CHEST,   -1, 0,    -1, 0x00D9, 0x28, bombchu_upgrade,   no_effect, -1, -1), // Progressive Bombchus
-    [0x8A] = ITEM_ROW(  -1,      GILDED_CHEST,   -1, 0,    -1, 0x00CD, 0x1E, magic_upgrade,     no_effect, -1, -1), // Progressive Magic Meter
+    [0x8A] = ITEM_ROW(  -1,      GILDED_CHEST,   -1, 0,    -1, 0x0196, 0x1E, magic_upgrade,     no_effect, -1, -1), // Progressive Magic Meter
     [0x8B] = ITEM_ROW(  -1,      GILDED_CHEST,   -1, 0,    -1, 0x010E, 0x46, ocarina_upgrade,   no_effect, -1, -1), // Progressive Ocarina
 
     [0x8C] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0, 0x0043, 0x00C6, 0x01, no_upgrade, give_bottle, 0x15, -1), // Bottle with Red Potion
@@ -212,8 +214,8 @@ item_row_t item_table[] = {
     [0xB7] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x00A1, 0x00AA, 0x02, no_upgrade, give_small_key, CASTLE_ID, -1), // Ganon's Castle Small Key
 
     [0xB8] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0, 0x00E9, 0x0194, 0x13, no_upgrade, give_defense,      -1, -1), // Double Defense
-    [0xB9] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0, 0x00E4, 0x00CD, 0x1E, no_upgrade, give_magic,        -1, -1), // Magic Meter
-    [0xBA] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0, 0x00E8, 0x00CD, 0x1F, no_upgrade, give_double_magic, -1, -1), // Double Magic
+    [0xB9] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0, 0x00E4, 0x0196, 0x1E, no_upgrade, give_magic,        -1, -1), // Magic Meter
+    [0xBA] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0, 0x00E8, 0x0196, 0x1F, no_upgrade, give_double_magic, -1, -1), // Double Magic
 
     [0xBB] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0, 0x0073, 0x00B6, 0x03, no_upgrade, give_song, 6, -1 ), // Minuet of Forest
     [0xBC] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0, 0x0074, 0x00B6, 0x04, no_upgrade, give_song, 7, -1 ), // Bolero of Fire
@@ -234,15 +236,15 @@ item_row_t item_table[] = {
     [0xC9] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0, 0x9048, 0x00F3, 0x3E, no_upgrade, give_bean_pack, -1, -1), // Magic Bean Pack
     [0xCA] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, 0, 0x9003, 0x0193, 0x35, no_upgrade, give_triforce_piece, -1, -1), // Triforce piece
 
-    [0xCB] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9010, 0x00AA, 0x02, no_upgrade, give_small_key_ring, FOREST_ID, -1), // Forest Temple Small Key Ring
-    [0xCC] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9011, 0x00AA, 0x02, no_upgrade, give_small_key_ring, FIRE_ID,   -1), // Fire Temple Small Key Ring
-    [0xCD] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9012, 0x00AA, 0x02, no_upgrade, give_small_key_ring, WATER_ID,  -1), // Water Temple Small Key Ring
-    [0xCE] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9013, 0x00AA, 0x02, no_upgrade, give_small_key_ring, SPIRIT_ID, -1), // Spirit Temple Small Key Ring
-    [0xCF] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9014, 0x00AA, 0x02, no_upgrade, give_small_key_ring, SHADOW_ID, -1), // Shadow Temple Small Key Ring
-    [0xD0] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9015, 0x00AA, 0x02, no_upgrade, give_small_key_ring, BOTW_ID,   -1), // Bottom of the Well Small Key Ring
-    [0xD1] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9016, 0x00AA, 0x02, no_upgrade, give_small_key_ring, GTG_ID,    -1), // Gerudo Training Small Key Ring
-    [0xD2] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9017, 0x00AA, 0x02, no_upgrade, give_small_key_ring, FORT_ID,   -1), // Gerudo Fortress Small Key Ring
-    [0xD3] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9018, 0x00AA, 0x02, no_upgrade, give_small_key_ring, CASTLE_ID, -1), // Ganon's Castle Small Key Ring
+    [0xCB] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9010, 0x0197, 0x77, no_upgrade, give_small_key_ring, FOREST_ID, -1), // Forest Temple Small Key Ring
+    [0xCC] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9011, 0x0197, 0x77, no_upgrade, give_small_key_ring, FIRE_ID,   -1), // Fire Temple Small Key Ring
+    [0xCD] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9012, 0x0197, 0x77, no_upgrade, give_small_key_ring, WATER_ID,  -1), // Water Temple Small Key Ring
+    [0xCE] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9013, 0x0197, 0x77, no_upgrade, give_small_key_ring, SPIRIT_ID, -1), // Spirit Temple Small Key Ring
+    [0xCF] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9014, 0x0197, 0x77, no_upgrade, give_small_key_ring, SHADOW_ID, -1), // Shadow Temple Small Key Ring
+    [0xD0] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9015, 0x0197, 0x77, no_upgrade, give_small_key_ring, BOTW_ID,   -1), // Bottom of the Well Small Key Ring
+    [0xD1] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9016, 0x0197, 0x77, no_upgrade, give_small_key_ring, GTG_ID,    -1), // Gerudo Training Small Key Ring
+    [0xD2] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9017, 0x0197, 0x77, no_upgrade, give_small_key_ring, FORT_ID,   -1), // Gerudo Fortress Small Key Ring
+    [0xD3] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, 0, 0x9018, 0x0197, 0x77, no_upgrade, give_small_key_ring, CASTLE_ID, -1), // Ganon's Castle Small Key Ring
 
     [0xD4] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, 0, 0x9019, 0x0195, 0x72, no_upgrade, give_silver_rupee, DODONGO_ID, 0x00), // Silver Rupee (Dodongos Cavern Staircase)
     [0xD5] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, 0, 0x901A, 0x0195, 0x72, no_upgrade, give_silver_rupee, ICE_ID,     0x01), // Silver Rupee (Ice Cavern Spinning Scythe)

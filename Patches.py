@@ -107,7 +107,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         rom.write_bytes(magic_jar_obj_file.start + 0x0FBC, [0x46, 0xFF, 0x32]) # Large Jar Light Env Color
     update_dmadata(rom, magic_jar_obj_file)
     # Add it to the extended object table
-    add_to_extended_object_table(rom, 0x195, magic_jar_obj_file)
+    add_to_extended_object_table(rom, 0x196, magic_jar_obj_file)
     
     # Build a Silver Rupee model from the Huge Rupee model
     silver_rupee_obj_file = File({
@@ -169,6 +169,16 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         logger.debug(entry['file_vrom_start'])
         logger.debug(entry['file_size'])
         write_rom_texture(rom, texture_id, entry)
+    # Load Key Ring model into a file
+    keyring_obj_file = File({ 'Name': 'object_gi_keyring' })
+    keyring_obj_file.copy(rom)
+    with open(data_path('KeyRing.zobj'), 'rb') as stream:
+        obj_data = stream.read()
+        rom.write_bytes(keyring_obj_file.start, obj_data)
+        keyring_obj_file.end = keyring_obj_file.start + len(obj_data)
+    update_dmadata(rom, keyring_obj_file)
+    # Add it to the extended object table
+    add_to_extended_object_table(rom, 0x197, keyring_obj_file)
 
     # Apply chest texture diffs to vanilla wooden chest texture for Chest Texture Matches Content setting
     # new texture, vanilla texture, num bytes
@@ -195,6 +205,10 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     if world.settings.no_collectible_hearts:
         symbol = rom.sym('NO_COLLECTIBLE_HEARTS')
         rom.write_byte(symbol, 0x01)
+        
+    # Remove color commands inside certain object display lists
+    rom.write_int32s(0x1455818, [0x00000000, 0x00000000, 0x00000000, 0x00000000]) # Small Key
+    rom.write_int32s(0x14B9F20, [0x00000000, 0x00000000, 0x00000000, 0x00000000]) # Boss Key
 
     # Force language to be English in the event a Japanese rom was submitted
     rom.write_byte(0x3E, 0x45)
