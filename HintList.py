@@ -76,7 +76,7 @@ def getHintGroup(group, world):
             conditional_keep = conditional_sometimes[hint.name](world)
 
         # Hint inclusion override from distribution
-        if (group in world.added_hint_types or group in world.item_added_hint_types) and group not in ['dual', 'dual_always']:
+        if (group in world.added_hint_types or group in world.item_added_hint_types):
             if hint.name in world.added_hint_types[group]:
                 hint.type = group
                 type_append = True
@@ -394,6 +394,7 @@ hintTable = {
     'Bombs (20)':                                               (["lots-o-explosives", "plenty of blast balls"], "Bombs (20 pieces)", 'item'),
     'Ice Trap':                                                 (["a gift from Ganon", "a chilling discovery", "frosty fun"], "an Ice Trap", 'item'),
     'Magic Bean':                                               (["a wizardly legume"], "a Magic Bean", 'item'),
+    'Buy Magic Bean':                                           (["a wizardly legume"], "a Magic Bean", 'item'),
     'Magic Bean Pack':                                          (["wizardly legumes"], "Magic Beans", 'item'),
     'Bombchus':                                                 (["mice bombs", "proximity mice", "wall crawlers", "trail blazers"], "Bombchus", 'item'),
     'Bombchus (5)':                                             (["a few mice bombs", "a few proximity mice", "a few wall crawlers", "a few trail blazers"], "Bombchus (5 pieces)", 'item'),
@@ -908,6 +909,16 @@ hintTable = {
     'Water Temple Morpha Heart':                                   ("the #Giant Aquatic Amoeba# holds", "#Morpha# holds", 'exclude'),
     'Spirit Temple Twinrova Heart':                                ("the #Sorceress Sisters# hold", "#Twinrova# holds", 'exclude'),
     'Shadow Temple Bongo Bongo Heart':                             ("the #Phantom Shadow Beast# holds", "#Bongo Bongo# holds", 'exclude'),
+
+    'Queen Gohma':                                                 ("the #Parasitic Armored Arachnid# holds", "#Queen Gohma# holds", 'exclude'),
+    'King Dodongo':                                                ("the #Infernal Dinosaur# holds", "#King Dodongo# holds", 'exclude'),
+    'Barinade':                                                    ("the #Bio-Electric Anemone# holds", "#Barinade# holds", 'exclude'),
+    'Phantom Ganon':                                               ("the #Evil Spirit from Beyond# holds", "#Phantom Ganon# holds", 'exclude'),
+    'Volvagia':                                                    ("the #Subterranean Lava Dragon# holds", "#Volvagia# holds", 'exclude'),
+    'Morpha':                                                      ("the #Giant Aquatic Amoeba# holds", "#Morpha# holds", 'exclude'),
+    'Bongo Bongo':                                                 ("the #Sorceress Sisters# hold", "#Twinrova# holds", 'exclude'),
+    'Twinrova':                                                    ("the #Phantom Shadow Beast# holds", "#Bongo Bongo# holds", 'exclude'),
+    'Links Pocket':                                                ("#@'s pocket# holds", "@ already has", 'exclude'),
 
     'Deku Tree GS Basement Back Room':                             ("a #spider deep within the Deku Tree# hides", None, 'exclude'),
     'Deku Tree GS Basement Gate':                                  ("a #web protects a spider# within the Deku Tree holding", None, 'exclude'),
@@ -1535,28 +1546,18 @@ hintTable = {
     '1234':                                                     ("Ganondorf doesn't specialize in hiding items, nor in keeping secrets for that matter.", None, 'junk'),
     '1235':                                                     ("While you're wasting time reading this hint, the others are playing the seed.", None, 'junk'),
 
-    'Deku Tree':                                                ("an ancient tree", "Deku Tree", 'dungeonName'),
+    'Deku Tree':                                                ("an ancient tree", "the Deku Tree", 'dungeonName'),
     'Dodongos Cavern':                                          ("an immense cavern", "Dodongo's Cavern", 'dungeonName'),
     'Jabu Jabus Belly':                                         ("the belly of a deity", "Jabu Jabu's Belly", 'dungeonName'),
-    'Forest Temple':                                            ("a deep forest", "Forest Temple", 'dungeonName'),
-    'Fire Temple':                                              ("a high mountain", "Fire Temple", 'dungeonName'),
-    'Water Temple':                                             ("a vast lake", "Water Temple", 'dungeonName'),
-    'Shadow Temple':                                            ("the house of the dead", "Shadow Temple", 'dungeonName'),
-    'Spirit Temple':                                            ("the goddess of the sand", "Spirit Temple", 'dungeonName'),
-    'Ice Cavern':                                               ("a frozen maze", "Ice Cavern", 'dungeonName'),
-    'Bottom of the Well':                                       ("a shadow's prison", "Bottom of the Well", 'dungeonName'),
-    'Gerudo Training Ground':                                   ("the test of thieves", "Gerudo Training Ground", 'dungeonName'),
+    'Forest Temple':                                            ("a deep forest", "the Forest Temple", 'dungeonName'),
+    'Fire Temple':                                              ("a high mountain", "the Fire Temple", 'dungeonName'),
+    'Water Temple':                                             ("a vast lake", "the Water Temple", 'dungeonName'),
+    'Shadow Temple':                                            ("the house of the dead", "the Shadow Temple", 'dungeonName'),
+    'Spirit Temple':                                            ("the goddess of the sand", "the Spirit Temple", 'dungeonName'),
+    'Ice Cavern':                                               ("a frozen maze", "the Ice Cavern", 'dungeonName'),
+    'Bottom of the Well':                                       ("a shadow's prison", "the Bottom of the Well", 'dungeonName'),
+    'Gerudo Training Ground':                                   ("the test of thieves", "the Gerudo Training Ground", 'dungeonName'),
     'Ganons Castle':                                            ("a conquered citadel", "inside Ganon's Castle", 'dungeonName'),
-    
-    'Queen Gohma':                                              ("One inside an #ancient tree#...", "One in the #Deku Tree#...", 'boss'),
-    'King Dodongo':                                             ("One within an #immense cavern#...", "One in #Dodongo's Cavern#...", 'boss'),
-    'Barinade':                                                 ("One in the #belly of a deity#...", "One in #Jabu Jabu's Belly#...", 'boss'),
-    'Phantom Ganon':                                            ("One in a #deep forest#...", "One in the #Forest Temple#...", 'boss'),
-    'Volvagia':                                                 ("One on a #high mountain#...", "One in the #Fire Temple#...", 'boss'),
-    'Morpha':                                                   ("One under a #vast lake#...", "One in the #Water Temple#...", 'boss'),
-    'Bongo Bongo':                                              ("One within the #house of the dead#...", "One in the #Shadow Temple#...", 'boss'),
-    'Twinrova':                                                 ("One inside a #goddess of the sand#...", "One in the #Spirit Temple#...", 'boss'),
-    'Links Pocket':                                             ("One in #@'s pocket#...", "One #@ already has#...", 'boss'),
 
     'bridge_vanilla':                                           ("the #Shadow and Spirit Medallions# as well as the #Light Arrows#", None, 'bridge'),
     'bridge_stones':                                            ("Spiritual Stones", None, 'bridge'),

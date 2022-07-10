@@ -124,10 +124,13 @@ do that.
   * New setting `One Bonk KO` will instantly kill Link when he hits his head while rolling.
   * New hint type `Dual Hint` which allows multiple locations to be hinted in the same hint.
   * New `Chaos` hint distribution which gives all hint types equal likelihood.
+  * New setting `Blue Fire Arrows` gives Ice Arrows the power to melt red ice and mud walls to give them more utility.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
   * You can now use the child trade item (Zelda's Letter, masks, etc) as child using D-Pad Right.
+  * Red Ice transparency is increased when any Chest Appearance setting is enabled.
+  * Zelda's text after defeating Ganon now advances automatically.
 
 
 #### Bug fixes
@@ -152,6 +155,8 @@ do that.
 * Tunics and shields can now spawn in any room when the game attempts to spawn them.
 * Fix a crash when certain settings related to Light Arrow hints are combined.
 * Many minor logic bugs have been corrected.
+* Fix a softlock when plandoing starting with less than 10 beans.
+* Fix plando negative locations (ex. "!Gold Skulltula Token") choosing Buy items for non-Buy locations.
 
 #### Other changes
 * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.

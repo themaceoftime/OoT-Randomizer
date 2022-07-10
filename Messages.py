@@ -571,10 +571,10 @@ class Message:
             elif speed_up_text and code.code in box_breaks:
                 # some special cases for text that needs to be on a timer
                 if (self.id == 0x605A or  # twinrova transformation
-                    self.id == 0x706C or  # raru ending text
+                    self.id == 0x706C or  # rauru ending text
                     self.id == 0x70DD or  # ganondorf ending text
-                    self.id == 0x7070
-                ):   # zelda ending text
+                    self.id in (0x706F, 0x7091, 0x7092, 0x7093, 0x7094, 0x7095, 0x7070)  # zelda ending text
+                ):
                     text_codes.append(code)
                     text_codes.append(instant_text_code)  # allow instant
                 else:
@@ -1004,7 +1004,7 @@ def shuffle_messages(messages, except_hints=True, always_allow_skip=True):
 
 # Update warp song text boxes for ER
 def update_warp_song_text(messages, world):
-    from Hints import get_hint_area
+    from Hints import HintArea
 
     msg_list = {
         0x088D: 'Minuet of Forest Warp -> Sacred Forest Meadow',
@@ -1018,11 +1018,13 @@ def update_warp_song_text(messages, world):
     for id, entr in msg_list.items():
         if 'warp_songs' in world.settings.misc_hints:
             destination = world.get_entrance(entr).connected_region
-            destination_name, color = get_hint_area(destination)
-            color = COLOR_MAP[color]
+            destination_name = HintArea.at(destination)
+            color = COLOR_MAP[destination_name.color]
+            if destination_name.preposition(True) is not None:
+                destination_name = f'to {destination_name}'
         else:
-            destination_name = 'a mysterious place'
+            destination_name = 'to a mysterious place'
             color = COLOR_MAP['White']
 
-        new_msg = f"\x08\x05{color}Warp to {destination_name}?\x05\40\x09\x01\x01\x1b\x05\x42OK\x01No\x05\40"
+        new_msg = f"\x08\x05{color}Warp {destination_name}?\x05\40\x09\x01\x01\x1b\x05\x42OK\x01No\x05\40"
         update_message_by_id(messages, id, new_msg)
