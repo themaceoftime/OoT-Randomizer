@@ -38,9 +38,11 @@ class Hint(object):
                 self.text = text[choice]
 
 class Multi(object):
+    name = ""
     locations = []
 
-    def __init__(self, locations):
+    def __init__(self, name, locations):
+        self.name = name
         self.locations = locations
 
 def getHint(name, clearer_hint=False):
@@ -54,7 +56,7 @@ def getHint(name, clearer_hint=False):
 
 def getMulti(name):
     locations = multiTable[name]
-    return Multi(locations)
+    return Multi(name, locations)
 
 def getHintGroup(group, world):
     ret = []
@@ -117,6 +119,27 @@ def getRequiredHints(world):
             ret.append(hint)
     return ret
 
+# Get the multi hints containing the list of locations for a possible hint upgrade.
+def getUpgradeHintList(world, locations):
+    ret = []
+    for name in multiTable:
+        if name not in hintExclusions(world):
+            hint = getHint(name, world.settings.clearer_hints)
+            multi = getMulti(name)
+            
+            if len(locations) < len(multi.locations) and all(location in multi.locations for location in locations) and (hint.name not in conditional_sometimes.keys() or conditional_sometimes[hint.name](world)):
+                if world.hint_dist_user['upgrade_hints'] == 'limited':
+                    accepted_type = False
+                    
+                    for hint_type in hint.type:
+                        if world.hint_dist_user['distribution'][hint_type]['copies'] > 0:
+                            accepted_type = True
+        
+                    if accepted_type:
+                        ret.append(hint)
+                else:
+                    ret.append(hint)
+    return ret
 
 # Helpers for conditional always hints
 def stones_required_by_settings(world):
@@ -1616,7 +1639,6 @@ multiTable = {
     'Spirit Temple MQ Child Top':                               ['Spirit Temple MQ Sun Block Room Chest', 'Spirit Temple MQ GS Sun Block Room'],
     'Spirit Temple MQ Symphony Room':                           ['Spirit Temple MQ Symphony Room Chest', 'Spirit Temple MQ GS Symphony Room'],
     'Spirit Temple MQ Throne Room GS':                          ['Spirit Temple MQ GS Nine Thrones Room West', 'Spirit Temple MQ GS Nine Thrones Room North'],
-    'Shadow Temple Upper Checks':                               ['Shadow Temple Map Chest', 'Shadow Temple Hover Boots Chest'],
     'Shadow Temple Invisible Blades Chests':                    ['Shadow Temple Invisible Blades Visible Chest', 'Shadow Temple Invisible Blades Invisible Chest'],
     'Shadow Temple Single Pot Room':                            ['Shadow Temple Freestanding Key', 'Shadow Temple GS Single Giant Pot'],
     'Shadow Temple Spike Walls Room':                           ['Shadow Temple Spike Walls Left Chest', 'Shadow Temple Boss Key Chest'],

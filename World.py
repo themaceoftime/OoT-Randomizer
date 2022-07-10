@@ -131,6 +131,8 @@ class World(object):
             self.hint_dist_user['distribution']['dual_always'] = {"order": 0, "weight": 0.0, "fixed": 0, "copies": 0}
         if 'use_default_goals' not in self.hint_dist_user:
             self.hint_dist_user['use_default_goals'] = True
+        if 'upgrade_hints' not in self.hint_dist_user:
+            self.hint_dist_user['upgrade_hints'] = 'off'
 
         # Validate hint distribution format
         # Originally built when I was just adding the type distributions

@@ -11,7 +11,7 @@ import json
 from enum import Enum
 import itertools
 
-from HintList import getHint, getMulti, getHintGroup, Hint, hintExclusions
+from HintList import getHint, getMulti, getHintGroup, getUpgradeHintList, Hint, hintExclusions
 from Item import MakeEventItem
 from Messages import COLOR_MAP, update_message_by_id
 from Region import Region
@@ -744,6 +744,25 @@ def get_specific_hint(spoiler, world, checked, type):
         return None
 
     hint = random.choice(hintGroup)
+    
+    if world.hint_dist_user['upgrade_hints'] in ['on', 'limited']:
+        upgrade_list = getUpgradeHintList(world, [hint.name])
+        upgrade_list = list(filter(lambda upgrade: is_not_checked([world.get_location(location) for location in getMulti(upgrade.name).locations], checked), upgrade_list))
+
+        if upgrade_list is not None:
+            multi = None
+
+            for upgrade in upgrade_list:
+                upgrade_multi = getMulti(upgrade.name)
+
+                if not multi or len(multi.locations) < len(upgrade_multi.locations):
+                    hint = upgrade
+                    multi = getMulti(hint.name)
+
+            if multi:
+                return get_specific_multi_hint(spoiler, world, checked, hint)
+
+    
     location = world.get_location(hint.name)
     checked.add(location.name)
 
@@ -773,7 +792,7 @@ def get_overworld_hint(spoiler, world, checked):
 def get_dungeon_hint(spoiler, world, checked):
     return get_specific_hint(spoiler, world, checked, 'dungeon')
 
-def get_multi_hint(spoiler, world, checked, type):
+def get_random_multi_hint(spoiler, world, checked, type):
     hint_group = getHintGroup(type, world)
     multi_hints = list(filter(lambda hint: is_not_checked([world.get_location(location) for location in getMulti(hint.name).locations], checked), hint_group))
 
@@ -781,6 +800,24 @@ def get_multi_hint(spoiler, world, checked, type):
         return None
 
     hint = random.choice(multi_hints)
+
+    if world.hint_dist_user['upgrade_hints'] in ['on', 'limited']:
+        multi = getMulti(hint.name)
+
+        upgrade_list = getUpgradeHintList(world, multi.locations)
+        upgrade_list = list(filter(lambda upgrade: is_not_checked([world.get_location(location) for location in getMulti(upgrade.name).locations], checked), upgrade_list))
+
+        if upgrade_list:
+            for upgrade in upgrade_list:
+                upgrade_multi = getMulti(upgrade.name)
+
+                if len(multi.locations) < len(upgrade_multi.locations):
+                    hint = upgrade
+                    multi = getMulti(hint.name)
+
+    return get_specific_multi_hint(spoiler, world, checked, hint)
+
+def get_specific_multi_hint(spoiler, world, checked, hint):
     multi = getMulti(hint.name)
     locations = [world.get_location(location) for location in multi.locations]
 
@@ -806,7 +843,7 @@ def get_multi_hint(spoiler, world, checked, type):
     return (GossipText(gossip_string % tuple(text_segments), colors, [location.name for location in locations], [item.name for item in items]), locations)
 
 def get_dual_hint(spoiler, world, checked):
-    return get_multi_hint(spoiler, world, checked, 'dual')
+    return get_random_multi_hint(spoiler, world, checked, 'dual')
 
 def get_entrance_hint(spoiler, world, checked):
     if not world.entrance_shuffle:
