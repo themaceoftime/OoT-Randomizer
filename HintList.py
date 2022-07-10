@@ -126,18 +126,27 @@ def getUpgradeHintList(world, locations):
         if name not in hintExclusions(world):
             hint = getHint(name, world.settings.clearer_hints)
             multi = getMulti(name)
-            
+
             if len(locations) < len(multi.locations) and all(location in multi.locations for location in locations) and (hint.name not in conditional_sometimes.keys() or conditional_sometimes[hint.name](world)):
-                if world.hint_dist_user['upgrade_hints'] == 'limited':
-                    accepted_type = False
-                    
-                    for hint_type in hint.type:
-                        if world.hint_dist_user['distribution'][hint_type]['copies'] > 0:
-                            accepted_type = True
-        
-                    if accepted_type:
-                        ret.append(hint)
-                else:
+                accepted_type = True
+                type_override = False
+
+                for hint_type in hint.type:
+                    if hint_type in world.hint_type_overrides:
+                        if name in world.hint_type_overrides[hint_type]:
+                            type_override = True
+                    if hint_type in world.item_hint_type_overrides:
+                        for locationName in multi.locations:
+                            if locationName not in hintExclusions(world):
+                                location = world.get_location(locationName)
+                                if location.item.name in world.item_hint_type_overrides[hint_type]:
+                                    type_override = True
+
+                    if world.hint_dist_user['upgrade_hints'] == 'limited':
+                        if world.hint_dist_user['distribution'][hint_type]['copies'] == 0:
+                            accepted_type = False
+
+                if accepted_type and not type_override:
                     ret.append(hint)
     return ret
 
