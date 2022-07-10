@@ -323,11 +323,23 @@ class Settings:
 
 
     def to_json(self):
-        return {setting.name: self.__dict__[setting.name] for setting in setting_infos
-                if setting.shared and (setting.name not in self._disabled or
+        return {
+            setting.name: (
+                {name: (
+                    {name: record.to_json() for name, record in record.items()} if isinstance(record, dict) else record.to_json()
+                ) for name, record in self.__dict__[setting.name].items()}
+                if setting.name == 'starting_items' else
+                self.__dict__[setting.name]
+            )
+            for setting in setting_infos
+            if setting.shared and (
+                setting.name not in self._disabled or
                 # We want to still include settings disabled by randomized settings options if they're specified in distribution
-                ('_settings' in self.distribution.src_dict and setting.name in self.distribution.src_dict['_settings'].keys()))}
-
+                ('_settings' in self.distribution.src_dict and setting.name in self.distribution.src_dict['_settings'].keys())
+            )
+            # Don't want to include list starting equipment and songs, these are consolidated into starting_items
+            and not (setting.name == "starting_equipment" or setting.name == "starting_songs")
+        }
 
     def to_json_cosmetics(self):
         return {setting.name: self.__dict__[setting.name] for setting in setting_infos if setting.cosmetic}

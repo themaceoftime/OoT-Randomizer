@@ -975,7 +975,21 @@ class WorldDistribution(object):
 
     @property
     def starting_items(self):
-        return self.distribution.starting_items_from_settings(self.id)
+        data = defaultdict(lambda: StarterRecord(0))
+        world_names = ['World %d' % (i + 1) for i in range(len(self.distribution.world_dists))]
+
+        # For each entry here of the form 'World %d', apply that entry to that world.
+        # If there are any entries that aren't of this form,
+        # apply them all to each world.
+        if world_names[self.id] in self.distribution.settings.starting_items:
+            data.update(self.distribution.settings.starting_items[world_names[self.id]])
+        data.update(
+            (item_name, count)
+            for item_name, count in self.distribution.settings.starting_items.items()
+            if item_name not in world_names
+        )
+
+        return data
 
     def configure_effective_starting_items(self, worlds, world):
         items = {item_name: record.copy() for item_name, record in self.starting_items.items()}
@@ -1106,30 +1120,22 @@ class Distribution(object):
                     for world in self.world_dists:
                         world.update({k: self.src_dict[k]})
 
-
-    def starting_items_from_settings(self, world_id):
+        # normalize starting items to use the dictionary format
         data = defaultdict(lambda: StarterRecord(0))
-        if isinstance(self.settings.starting_items, dict):
+        if isinstance(self.settings.starting_items, dict) and self.settings.starting_items:
             if self.settings.starting_equipment:
                 raise ValueError('Incompatible starting item settings. Either move starting_equipment into starting_items or make starting_items a list')
             if self.settings.starting_songs:
                 raise ValueError('Incompatible starting item settings. Either move starting_songs into starting_items or make starting_items a list')
 
             world_names = ['World %d' % (i + 1) for i in range(len(self.world_dists))]
-
-            # For each entry here of the form 'World %d', apply that entry to that world.
-            # If there are any entries that aren't of this form,
-            # apply them all to each world.
-            if world_names[world_id] in self.settings.starting_items:
-                data.update((item_name, StarterRecord(count)) for item_name, count in self.settings.starting_items[world_names[world_id]].items())
-            data.update(
-                (item_name, StarterRecord(count))
-                for item_name, count in self.settings.starting_items.items()
-                if item_name not in world_names
-            )
+            for name, record in self.settings.starting_items.items():
+                if name in world_names:
+                    data[name] = {item_name: count if isinstance(count, StarterRecord) else StarterRecord(count) for item_name, count in record.items()}
+                else:
+                    data[name] = record if isinstance(record, StarterRecord) else StarterRecord(record)
         else:
-            starting_items = list(itertools.chain(self.settings.starting_equipment, self.settings.starting_items, self.settings.starting_songs))
-            for itemsetting in starting_items:
+            for itemsetting in itertools.chain(self.settings.starting_equipment, self.settings.starting_items, self.settings.starting_songs):
                 if itemsetting in StartingItems.everything:
                     item = StartingItems.everything[itemsetting]
                     if not item.special:
@@ -1143,7 +1149,8 @@ class Distribution(object):
                             raise KeyError("invalid special item: {}".format(item.itemname))
                 else:
                     raise KeyError("invalid starting item: {}".format(itemsetting))
-
+            self.settings.starting_equipment = []
+            self.settings.starting_songs = []
         # add hearts
         if self.settings.starting_hearts > 3:
             num_hearts_to_collect = self.settings.starting_hearts - 3
@@ -1157,8 +1164,7 @@ class Distribution(object):
                 # removing an extra 4 pieces in case of an odd number since there's 9*4 of them but only 8 containers
                 data['Piece of Heart'].count += 4 * math.ceil(num_hearts_to_collect / 2)
                 data['Heart Container'].count += math.floor(num_hearts_to_collect / 2)
-
-        return data
+        self.settings.starting_items = data
 
 
     def to_json(self, include_output=True, spoiler=True):
