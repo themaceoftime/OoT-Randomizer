@@ -1132,8 +1132,10 @@ class Distribution(object):
             for name, record in self.settings.starting_items.items():
                 if name in world_names:
                     data[name] = {item_name: count if isinstance(count, StarterRecord) else StarterRecord(count) for item_name, count in record.items()}
+                    add_starting_ammo(data[name])
                 else:
                     data[name] = record if isinstance(record, StarterRecord) else StarterRecord(record)
+            add_starting_ammo(data)
         else:
             for itemsetting in itertools.chain(self.settings.starting_equipment, self.settings.starting_items, self.settings.starting_songs):
                 if itemsetting in StartingItems.everything:
@@ -1308,6 +1310,16 @@ class Distribution(object):
         json = self.to_str(spoiler=output_spoiler)
         with open(filename, 'w', encoding='utf-8') as outfile:
             outfile.write(json)
+
+
+def add_starting_ammo(starting_items):
+    for item in StartingItems.inventory.values():
+        if item.itemname in starting_items and item.ammo:
+            for ammo, qty in item.ammo.items():
+                # Add ammo to starter record, but not overriding existing count if present
+                if ammo not in starting_items:
+                    starting_items[ammo] = StarterRecord(0)
+                    starting_items[ammo].count = qty[starting_items[item.itemname].count - 1]
 
 
 def add_starting_item_with_ammo(starting_items, item_name, count=1):
