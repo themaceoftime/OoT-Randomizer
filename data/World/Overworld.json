@@ -613,7 +613,7 @@
             "Hideout 2 Torches Jail": "True",
             "Hideout Kitchen Front": "True",
             "GF Entrances Behind Crates": "True",
-            "GF Southeast Roof": "logic_gf_jump_roof and is_adult"
+            "GF Southeast Roof": "logic_gf_jump and is_adult"
         }
     },
     {
