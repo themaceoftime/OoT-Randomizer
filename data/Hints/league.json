@@ -1,7 +1,7 @@
 {
     "name":                  "league",
     "gui_name":              "League S3",
-    "description":           "Hint Distribution for the S3 of League. 5 Goal Hints, 3 Barren Hints, 5 Sometimes hints, 7 Always hints (including skull mask), Several hints removed from the Soemstimes hint pool.",
+    "description":           "Hint Distribution for the S3 of League. 5 Goal Hints, 3 Barren Hints, 5 Sometimes hints, 7 Always hints (including skull mask), Several hints removed from the Sometimes hint pool.",
     "add_locations":         [{ "location": "Deku Theater Skull Mask", "types": ["always"]}],
     "remove_locations":      [
                                 {"location": "Sheik in Crater", "types": "sometimes"},
