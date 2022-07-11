@@ -1,3 +1,5 @@
+# This script is called by GitHub Actions, see .github/workflows/python.yml
+
 import json
 import sys
 from SettingsList import logic_tricks
