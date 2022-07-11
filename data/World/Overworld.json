@@ -789,7 +789,10 @@
             "Hideout 2 Torches Jail Gerudo": "is_adult or Kokiri_Sword",
             "Hideout 2 Torches Jail Carpenter": "
                 'Hideout 2 Torches Jail Gerudo' and
-                (gerudo_fortress == 'normal' and (Small_Key_Thieves_Hideout, 4))",
+                (gerudo_fortress == 'normal' and (Small_Key_Thieves_Hideout, 4))"
+        },
+        "locations": {
+            "Hideout 2 Torches Jail Gerudo Key": "'Hideout 2 Torches Jail Gerudo'",
             "Hideout 2 Torch Jail Pot 1": "True",
             "Hideout 2 Torch Jail Pot 2": "True",
             "Hideout 2 Torch Jail Pot 3": "True",
@@ -799,9 +802,6 @@
             "Hideout 2 Torch Jail In Cell Pot 4": "True",
             "Hideout 2 Torch Jail Crate 1": "can_bonk_crate",
             "Hideout 2 Torch Jail Crate 2": "can_bonk_crate"
-        },
-        "locations": {
-            "Hideout 2 Torches Jail Gerudo Key": "'Hideout 2 Torches Jail Gerudo'"
         },
         "exits": {
             "Gerudo Fortress": "True",
