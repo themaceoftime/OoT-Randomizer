@@ -664,6 +664,12 @@ def get_pool_core(world):
     if not world.keysanity and not world.dungeon_mq['Fire Temple']:
         world.state.collect(ItemFactory('Small Key (Fire Temple)'))
 
+    # With Thieves Hideout shuffle, assuming the Membership Card location is reachable
+    # if Gerudo Fortress is reachable is not possible. Add the item to world state as
+    # it works this way in-game.
+    if world.settings.gerudo_fortress == "open":
+        world.state.collect(ItemFactory('Gerudo Membership Card'))
+
     if world.settings.shuffle_ganon_bosskey == 'on_lacs':
         placed_items['ToT Light Arrows Cutscene'] = 'Boss Key (Ganons Castle)'
 
