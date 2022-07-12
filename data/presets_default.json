@@ -979,7 +979,7 @@
     "show_seed_info":                          true,
     "user_message":                            "OoTR League S3",
     "world_count":                             1,
-    "create_spoiler":                          true,
+    "create_spoiler":                          false,
     "randomize_settings":                      false,
     "open_forest":                             "closed_deku",
     "open_kakariko":                           "open",
