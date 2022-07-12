@@ -504,7 +504,7 @@ hintTable = {
     'HF Ocarina of Time Retrieval':                                ("during her escape, #Princess Zelda# entrusted you with both...^", None, 'dual'),
     'HF Valley Grotto':                                            ("in a grotto full of #spider webs# a cow and a spider hold respectively...^", None, 'dual'),
     'Market Bombchu Bowling Rewards':                              ("at the #Bombchu Bowling Alley#, the first and second prizes are...^", None, 'dual'),
-    'ZR Frogs Rewards':                                            ("the #Frogs of Zora River#, for giving them rain and a great performance, will reward you with...", None, 'dual'),
+    'ZR Frogs Rewards':                                            ("the #Frogs of Zora River#, for giving them rain and a great performance, will reward you with...^", None, 'dual'),
     'LH Lake Lab Pool':                                            ("inside a #lakeside lab# a person and a spider hold respectively...^", None, 'dual'),
     'LH Adult Bean Destination Checks':                            ("#riding the bean platform# of the lake to the lab's roof and the fishing hole leads to...^", None, 'dual'),
     'GV Pieces of Heart Ledges':                                   ("within the #valley#, the crate and waterfall conceal respectively...^", None, 'dual'),
