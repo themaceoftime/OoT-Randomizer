@@ -14,7 +14,7 @@ from Messages import COLOR_MAP, update_message_by_id
 from Region import Region
 from Search import Search
 from TextBox import line_wrap
-from Utils import random_choices, data_path, read_json
+from Utils import random_choices, data_path
 
 
 bingoBottlesForHints = (
@@ -978,13 +978,15 @@ def buildBingoHintList(boardURL):
     except (URLError, HTTPError) as e:
         logger = logging.getLogger('')
         logger.info(f"Could not retrieve board info. Using default bingo hints instead: {e}")
-        genericBingo = read_json(data_path('Bingo/generic_bingo_hints.json'))
+        with open(data_path('Bingo/generic_bingo_hints.json'), 'r') as bingoFile:
+            genericBingo = json.load(bingoFile)
         return genericBingo['settings']['item_hints']
 
     # Goal list returned from Bingosync is a sequential list of all of the goals on the bingo board, starting at top-left and moving to the right.
     # Each goal is a dictionary with attributes for name, slot, and colours. The only one we use is the name
     goalList = [goal['name'] for goal in json.loads(goalList)]
-    goalHintRequirements = read_json(data_path('Bingo/bingo_goals.json'))
+    with open(data_path('Bingo/bingo_goals.json'), 'r') as bingoFile:
+        goalHintRequirements = json.load(bingoFile)
 
     hintsToAdd = {}
     for goal in goalList:
@@ -1095,7 +1097,8 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
     # Create list of items for which we want hints. If Bingosync URL is supplied, include items specific to that bingo.
     # If not (or if the URL is invalid), use generic bingo hints
     if world.settings.hint_dist == "bingo":
-        bingoDefaults = read_json(data_path('Bingo/generic_bingo_hints.json'))
+        with open(data_path('Bingo/generic_bingo_hints.json'), 'r') as bingoFile:
+            bingoDefaults = json.load(bingoFile)
         if world.bingosync_url is not None and world.bingosync_url.startswith("https://bingosync.com/"): # Verify that user actually entered a bingosync URL
             logger = logging.getLogger('')
             logger.info("Got Bingosync URL. Building board-specific goals.")
@@ -1497,7 +1500,8 @@ def HintDistFiles():
 def HintDistList():
     dists = {}
     for d in HintDistFiles():
-        dist = read_json(d)
+        with open(d, 'r') as dist_file:
+            dist = json.load(dist_file)
         dist_name = dist['name']
         gui_name = dist['gui_name']
         dists.update({ dist_name: gui_name })
@@ -1513,7 +1517,8 @@ def HintDistTips():
             tips = tips + "\n"
         else:
             first_dist = False
-        dist = read_json(d)
+        with open(d, 'r') as dist_file:
+            dist = json.load(dist_file)
         gui_name = dist['gui_name']
         desc = dist['description']
         i = 0
