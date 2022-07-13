@@ -184,24 +184,28 @@ class TestPlandomizer(unittest.TestCase):
             self.assertNotEqual(excess_item, test_item)
         self.assertNotIn(excess_item, spoiler['item_pool'])
 
-    def test_ammo_max_out_of_bounds_use_last_list_element(self):
-        # This issue only appeared while patching
+    def test_rom_patching(self):
+        # This makes sure there are no crashes while patching.
         filename = "plando-ammo-max-out-of-bounds"
-        settings = Settings({
-            'enable_distribution_file': True,
-            'distribution_file': os.path.join(test_dir, 'plando', filename + '.json'),
-            'patch_without_output': True,
-            'create_patch_file': False,
-            'create_compressed_rom': False,
-            'create_wad_file': False,
-            'create_uncompressed_rom': False,
-            'count': 1,
-            'create_spoiler': True,
-            'create_cosmetics_log': False,
-            'output_file': os.path.join(test_dir, 'Output', filename),
-            'seed': 'TESTTESTTEST'
-        })
-        main(settings)  # Should not crash
+        logic_rules_settings = ['glitchless', 'glitched', 'none']
+        for logic_rules_setting in logic_rules_settings:
+            with self.subTest(f"Logic Rules: {logic_rules_setting}"):
+                settings = Settings({
+                    'enable_distribution_file': True,
+                    'distribution_file': os.path.join(test_dir, 'plando', filename + '.json'),
+                    'patch_without_output': True,
+                    'create_patch_file': False,
+                    'create_compressed_rom': False,
+                    'create_wad_file': False,
+                    'create_uncompressed_rom': False,
+                    'count': 1,
+                    'create_spoiler': True,
+                    'create_cosmetics_log': False,
+                    'output_file': os.path.join(test_dir, 'Output', filename),
+                    'seed': 'TESTTESTTEST',
+                    'logic_rules': logic_rules_setting
+                })
+                main(settings)  # Should not crash
 
     def test_ice_traps(self):
         filenames = [
