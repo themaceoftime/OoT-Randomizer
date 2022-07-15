@@ -1835,7 +1835,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             rom.write_int16(rom.sym('CFG_BONK_DAMAGE'), 0x0008)
         if world.settings.deadly_bonks == 'double':
             rom.write_int16(rom.sym('CFG_BONK_DAMAGE'), 0x0010)
-        if world.settings.deadly_bonks == 'quad':
+        if world.settings.deadly_bonks == 'quadruple':
             rom.write_int16(rom.sym('CFG_BONK_DAMAGE'), 0x0020)
         if world.settings.deadly_bonks == 'ohko':
             rom.write_int16(rom.sym('CFG_BONK_DAMAGE'), 0xFFFE)
