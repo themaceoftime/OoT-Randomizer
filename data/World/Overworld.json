@@ -819,9 +819,8 @@
     },
     {
         "region_name": "Castle Grounds From Ganons Castle",
-        "font_color": "Light Blue",
         "scene": "Castle Grounds",
-        "hint": "outside Ganon's Castle",
+        "hint": "OUTSIDE_GANONS_CASTLE",
         "exits": {
             # the rainbow bridge cutscene trigger doesn't extend to the castle entrance
             "Ganons Castle Grounds": "is_adult and bridge == 'open'"
