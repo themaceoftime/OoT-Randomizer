@@ -4508,15 +4508,24 @@ setting_infos = [
         ''',
         shared         = True,
     ),
-    Checkbutton(
+    Combobox(
         name           = 'deadly_bonks',
-        gui_text       = 'One Bonk KO',
+        gui_text       = 'Bonks Do Damage',
+        default        = 'none',
+        choices        = {
+            'none':      'No Damage',
+            'half':      'Quarter Heart',
+            'normal':    'Half Heart',
+            'double':    'Whole Heart',
+            'quadruple': 'Two Hearts',
+            'ohko':      'One Bonk KO',
+        },
         gui_tooltip    = '''\
             When rolling, hitting a wall or object
-            will kill Link.
+            will hurt Link. Damage is unaffected
+            by the damage multiplier setting.
         ''',
         shared         = True,
-        default        = False,
     ),
     Combobox(
         name           = 'starting_tod',
