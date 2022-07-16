@@ -1,5 +1,6 @@
 import random
 import logging
+from Hints import HintArea
 from State import State
 from Rules import set_shop_rules
 from Location import DisableType
@@ -144,13 +145,10 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
 
     # If some dungeons are supposed to be empty, fill them with useless items.
     if worlds[0].settings.empty_dungeons_mode != 'none':
-        empty_locations = [location for world in worlds \
-            for dungeon in world.dungeons if world.empty_dungeons[dungeon.name].empty \
-            for region in dungeon.regions \
-            for location in region.locations if location in fill_locations]
+        empty_locations = [location for location in fill_locations \
+            if world.empty_dungeons[HintArea.at(location).dungeon_name].empty]
         for location in empty_locations:
             fill_locations.remove(location)
-            location.world.hint_exclusions.add(location.name)
             location.world.hint_type_overrides['sometimes'].append(location.name)
             location.world.hint_type_overrides['random'].append(location.name)
         
