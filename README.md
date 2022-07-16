@@ -127,6 +127,7 @@ do that.
   * New setting `Blue Fire Arrows` gives Ice Arrows the power to melt red ice and mud walls to give them more utility.
   * New Misc. Hint `Dampé's Diary` which reveals the location of a hookshot.
   * New item pool setting `Ludicrous` makes it so every check will be a major item.
+  * `Shuffle Dungeon Entrances` has new setting `Dungeons and Ganon` which puts Ganon's Castle into the pool of dungeons which can be shuffled. 
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
