@@ -341,7 +341,7 @@ class HintArea(Enum):
     DESERT_COLOSSUS        = 'at',     'at',     'the Desert Colossus',        'Yellow',     None
     SPIRIT_TEMPLE          = 'inside', 'in',     'the Spirit Temple',          'Yellow',     'Spirit Temple'
 
-    # Peforms a breadth first search to find the closest hint area from a given spot (region, location, or entrance).
+    # Performs a breadth first search to find the closest hint area from a given spot (region, location, or entrance).
     # May fail to find a hint if the given spot is only accessible from the root and not from any other region with a hint area
     @staticmethod
     def at(spot):
@@ -367,6 +367,13 @@ class HintArea(Enum):
             spot_queue.extend(list(filter(lambda ent: ent not in already_checked, parent_region.entrances)))
 
         raise HintAreaNotFound('No hint area could be found for %s [World %d]' % (spot, spot.world.id))
+
+    @classmethod
+    def get_dungeon_color(cls, dungeon_name):
+        for hint_area in cls:
+            if hint_area.value[4] == dungeon_name:
+                return hint_area.value[3]
+        return None
 
     def __str__(self):
         return self.value[2]
