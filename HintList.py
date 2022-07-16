@@ -1602,7 +1602,6 @@ hintTable = {
     'Adult Altar Text End':                                     ("Together with the Hero of Time,&the awakened ones will bind the&evil and return the light of peace&to the world...", None, 'altar'),
 
     'Validation Line':                                          ("Hmph... Since you made it this far,&I'll let you know what glorious&prize of Ganon's you likely&missed out on in my tower.^Behold...^", None, 'validation line'),
-    'Light Arrow Location':                                     ("Ha ha ha... You'll never beat me by&reflecting my lightning bolts&and unleashing the arrows from&", None, 'Light Arrow Location'),
     '2001':                                                     ("Oh! It's @.&I was expecting someone called&Sheik. Do you know what&happened to them?", None, 'ganonLine'),
     '2002':                                                     ("I knew I shouldn't have put the key&on the other side of my door.", None, 'ganonLine'),
     '2003':                                                     ("Looks like it's time for a&round of tennis.", None, 'ganonLine'),
@@ -1664,6 +1663,31 @@ multiTable = {
     'Ice Cavern Final Room':                                    ['Ice Cavern Iron Boots Chest', 'Sheik in Ice Cavern'],
     'Ice Cavern MQ Final Room':                                 ['Ice Cavern MQ Iron Boots Chest', 'Sheik in Ice Cavern'],
     'Ganons Castle Spirit Trial Chests':                        ['Ganons Castle Spirit Trial Crystal Switch Chest', 'Ganons Castle Spirit Trial Invisible Chest'],
+}
+
+misc_item_hint_table = {
+    'dampe_diary': {
+        'id': 0x5003,
+        'hint_location': 'Dampe Diary Hint',
+        'default_item': 'Progressive Hookshot',
+        'default_item_text': "Whoever reads this, please enter {area}. I will let you have my stretching, shrinking keepsake.^I'm waiting for you.&--Dampé",
+        'custom_item_text': "Whoever reads this, please enter {area}. I will let you have {item}.^I'm waiting for you.&--Dampé",
+        'default_item_fallback': "Whoever reads this, I'm sorry, but I seem to have #misplaced# my stretching, shrinking keepsake.&--Dampé",
+        'custom_item_fallback': "Whoever reads this, I'm sorry, but I seem to have #misplaced# {item}.&--Dampé",
+        'replace': {
+            "enter #your pocket#. I will let you have": "check #your pocket#. You will find",
+        },
+    },
+    'ganondorf': {
+        'id': 0x70CC,
+        'hint_location': 'Ganondorf Hint',
+        'default_item': 'Light Arrows',
+        'default_item_text': "Ha ha ha... You'll never beat me by reflecting my lightning bolts and unleashing the arrows from {area}!",
+        'custom_item_text': "Ha ha ha... You'll never find {item} from {area}!",
+        'replace': {
+            "from #Ganon's Castle#": "from #my castle#",
+        },
+    },
 }
 
 # Separate table for goal names to avoid duplicates in the hint table.

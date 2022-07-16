@@ -8,7 +8,7 @@ import json
 from enum import Enum
 import itertools
 
-from HintList import getHint, getMulti, getHintGroup, getUpgradeHintList, hintExclusions
+from HintList import getHint, getMulti, getHintGroup, getUpgradeHintList, hintExclusions, misc_item_hint_table
 from Item import MakeEventItem
 from Messages import COLOR_MAP, update_message_by_id
 from Region import Region
@@ -1059,16 +1059,14 @@ def alwaysNamedItem(world, locations):
 
 def buildGossipHints(spoiler, worlds):
     checkedLocations = dict()
-    # Add Light Arrow locations to "checked" locations if Ganondorf is reachable without it.
+    # Add misc. item hint locations to "checked" locations if the respective hint is reachable without the hinted item.
     for world in worlds:
-        location = world.light_arrow_location
-        if location is None:
-            continue
-        if 'ganondorf' in world.settings.misc_hints and can_reach_hint(worlds, world.get_location("Ganondorf Hint"), location):
-            light_arrow_world = location.world
-            if light_arrow_world.id not in checkedLocations:
-                checkedLocations[light_arrow_world.id] = set()
-            checkedLocations[light_arrow_world.id].add(location.name)
+        for hint_type, location in world.misc_hint_item_locations.items():
+            if hint_type in world.settings.misc_hints and can_reach_hint(worlds, world.get_location(misc_item_hint_table[hint_type]['hint_location']), location):
+                item_world = location.world
+                if item_world.id not in checkedLocations:
+                    checkedLocations[item_world.id] = set()
+                checkedLocations[item_world.id].add(location.name)
 
     # Build all the hints.
     for world in worlds:
@@ -1487,28 +1485,38 @@ def buildGanonText(world, messages):
     text = get_raw_text(ganonLines.pop().text)
     update_message_by_id(messages, 0x70CB, text)
 
-    # light arrow hint or validation chest item
-    if 'Light Arrows' in world.distribution.effective_starting_items and world.distribution.effective_starting_items['Light Arrows'].count > 0:
-        text = getHint('Light Arrow Location', world.settings.clearer_hints).text
-        text += "#your pocket#"
-    elif world.light_arrow_location:
-        text = getHint('Light Arrow Location', world.settings.clearer_hints).text
-        location = world.light_arrow_location
-        if world.id != location.world.id:
-            text += HintArea.at(location).text(world.settings.clearer_hints, world=location.world.id + 1)
-        else:
-            text += HintArea.at(location).text(world.settings.clearer_hints).replace('Ganon\'s Castle', 'my castle')
-        text += '!'
-        text = str(GossipText(text, ['Green'], prefix=''))
-    else:
-        text = get_raw_text(getHint('Validation Line', world.settings.clearer_hints).text)
-        for location in world.get_filled_locations():
-            if location.name == 'Ganons Tower Boss Key Chest':
-                text += get_raw_text(getHint(getItemGenericName(location.item), world.settings.clearer_hints).text)
-                break
-        text += '!'
 
-    update_message_by_id(messages, 0x70CC, text)
+def buildMiscItemHints(world, messages):
+    for hint_type, data in misc_item_hint_table.items():
+        if hint_type in world.settings.misc_hints:
+            item = world.misc_hint_items[hint_type]
+            if item in world.distribution.effective_starting_items and world.distribution.effective_starting_items[item].count > 0:
+                if item == data['default_item']:
+                    text = data['default_item_text'].format(area='#your pocket#')
+                else:
+                    text = data['custom_item_text'].format(area='#your pocket#', item=item)
+            elif hint_type in world.misc_hint_item_locations:
+                location = world.misc_hint_item_locations[hint_type]
+                area = HintArea.at(location).text(world.settings.clearer_hints, world=None if location.world.id == world.id else location.world.id + 1)
+                if item == data['default_item']:
+                    text = data['default_item_text'].format(area=area)
+                else:
+                    text = data['custom_item_text'].format(area=area, item=getHint(getItemGenericName(location.item), world.settings.clearer_hints).text)
+            elif 'fallback' in data:
+                if item == data['default_item']:
+                    text = data['default_item_fallback']
+                else:
+                    text = data['custom_item_fallback'].format(item=item)
+            else:
+                text = getHint('Validation Line', world.settings.clearer_hints).text
+                for location in world.get_filled_locations():
+                    if location.name == 'Ganons Tower Boss Key Chest':
+                        text += f"#{getHint(getItemGenericName(location.item), world.settings.clearer_hints).text}#"
+                        break
+            for find, replace in data.get('replace', {}).items():
+                text = text.replace(find, replace)
+
+            update_message_by_id(messages, data['id'], str(GossipText(text, ['Green'], prefix='')))
 
 
 def get_raw_text(string):
