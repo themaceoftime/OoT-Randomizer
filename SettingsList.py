@@ -633,14 +633,6 @@ logic_tricks = {
                     Note that jumps of this distance are inconsistent, but
                     still possible.
                     '''},
-    'Shadow Temple MQ After Wind Gold Skulltula with Nothing': {
-        'name'    : 'logic_shadow_mq_after_wind_gs',
-        'tags'    : ("Shadow Temple", "Skulltulas",),
-        'tooltip' : '''\
-                    The Gold Skulltula in the rubble pile can be killed
-                    with a sword slash without blowing up the rubble. The
-                    reward will appear above the rubble pile.
-                    '''},
     'Backflip over Mido as Adult': {
         'name'    : 'logic_mido_backflip',
         'tags'    : ("the Lost Woods",),
