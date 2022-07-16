@@ -4066,7 +4066,8 @@ setting_infos = [
         gui_tooltip    = '''\
             Pre-completed dungeons are dungeons guaranteed to be barren and whose
             dungeon rewards are given for free to the player before the beginning
-            of the game.
+            of the game. This setting only applies to dungeons with dungeon rewards
+            (blue warps).
 
             - 'None': No dungeon will be pre-completed. Some dungeons may still be
             randomly rolled with no major items, but their dungeon rewards won't
@@ -4129,7 +4130,7 @@ setting_infos = [
         gui_text       = "Pre-completed Dungeon Count",
         default        = 2,
         min            = 1,
-        max            = 6,
+        max            = 8,
         gui_tooltip    = '''\
             Specify the number of pre-completed
             dungeons to appear in the game.
