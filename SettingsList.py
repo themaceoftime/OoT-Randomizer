@@ -633,14 +633,6 @@ logic_tricks = {
                     Note that jumps of this distance are inconsistent, but
                     still possible.
                     '''},
-    'Shadow Temple MQ After Wind Gold Skulltula with Nothing': {
-        'name'    : 'logic_shadow_mq_after_wind_gs',
-        'tags'    : ("Shadow Temple", "Skulltulas",),
-        'tooltip' : '''\
-                    The Gold Skulltula in the rubble pile can be killed
-                    with a sword slash without blowing up the rubble. The
-                    reward will appear above the rubble pile.
-                    '''},
     'Backflip over Mido as Adult': {
         'name'    : 'logic_mido_backflip',
         'tags'    : ("the Lost Woods",),
@@ -3181,21 +3173,35 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
-    Checkbutton(
+    Combobox(
         name           = 'shuffle_dungeon_entrances',
         gui_text       = 'Shuffle Dungeon Entrances',
+        default        = 'off',
+        choices        = {
+            'off':       'Off',
+            'simple':    'Dungeon',
+            'all':       'Dungeon and Ganon',
+        },
         gui_tooltip    = '''\
-            Shuffle the pool of dungeon entrances, including Bottom 
+            Shuffle the pool of dungeon entrances, including Bottom
             of the Well, Ice Cavern, and Gerudo Training Ground.
-            However, Ganon's Castle and Thieves' Hideout are not shuffled.
 
-            Additionally, the entrances of Deku Tree, Fire Temple and 
+            Additionally, the entrances of Deku Tree, Fire Temple and
             Bottom of the Well are opened for both adult and child.
+
+            With Dungeon and Ganon selected, all dungeons including Ganon's
+            castle will be shuffled.
+
+            Thieves' Hideout is not shuffled.
         ''',
-        default        = False,
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
+            'distribution': [
+                ('off', 2),
+                ('simple', 1),
+                ('all', 1),
+            ],
         },
     ),
     Combobox(
@@ -4467,9 +4473,10 @@ setting_infos = [
         multiple_select = True,
         gui_text        = 'Misc. Hints',
         choices         = {
-            'altar':      'Temple of Time Altar',
-            'ganondorf':  'Ganondorf',
-            'warp_songs': 'Warp Songs',
+            'altar':       'Temple of Time Altar',
+            'dampe_diary': "Dampé's Diary (Hookshot)",
+            'ganondorf':   'Ganondorf (Light Arrows)',
+            'warp_songs':  'Warp Songs',
         },
         gui_tooltip    = '''\
             This setting adds some hints at locations
@@ -4486,6 +4493,10 @@ setting_infos = [
             is enabled), as well as the conditions for
             building the Rainbow Bridge and getting the
             Boss Key for Ganon's Castle.
+
+            Reading the diary of Dampé the gravekeeper
+            as adult will tell you the location of one
+            of the Hookshots.
 
             Talking to Ganondorf in his boss room will
             tell you the location of the Light Arrows.
@@ -4558,14 +4569,15 @@ setting_infos = [
         gui_text       = 'Item Pool',
         default        = 'balanced',
         choices        = {
+            'ludicrous': 'Ludicrous',
             'plentiful': 'Plentiful',
             'balanced':  'Balanced',
             'scarce':    'Scarce',
             'minimal':   'Minimal'
         },
         gui_tooltip    = '''\
-            Changes the amount of major items that are 
-            available in the game.
+            'Ludicrous': Every item in the game is a major
+            item. Incompatible with one major item per dungeon.
 
             'Plentiful': One additional copy of each major 
             item is added.
@@ -4584,6 +4596,9 @@ setting_infos = [
             available.
         ''',
         shared         = True,
+        disable        = {
+            'ludicrous':  {'settings': ['one_item_per_dungeon']}
+        }
     ),
     Combobox(
         name           = 'damage_multiplier',
@@ -4603,15 +4618,24 @@ setting_infos = [
         ''',
         shared         = True,
     ),
-    Checkbutton(
+    Combobox(
         name           = 'deadly_bonks',
-        gui_text       = 'One Bonk KO',
+        gui_text       = 'Bonks Do Damage',
+        default        = 'none',
+        choices        = {
+            'none':      'No Damage',
+            'half':      'Quarter Heart',
+            'normal':    'Half Heart',
+            'double':    'Whole Heart',
+            'quadruple': 'Two Hearts',
+            'ohko':      'One Bonk KO',
+        },
         gui_tooltip    = '''\
             When rolling, hitting a wall or object
-            will kill Link.
+            will hurt Link. Damage is unaffected
+            by the damage multiplier setting.
         ''',
         shared         = True,
-        default        = False,
     ),
     Combobox(
         name           = 'starting_tod',
@@ -5636,6 +5660,17 @@ setting_infos = [
         gui_params     = {
             "hide_when_disabled": True,
         }
+    ),
+    Checkbutton(
+        name           = 'blue_fire_arrows',
+        gui_text       = 'Blue Fire Arrows',
+        gui_tooltip    = '''\
+            Ice arrows gain the power of blue fire.
+            They can be used to melt red ice
+            and break the mud walls in Dodongo's Cavern.
+        ''',
+        default        = False,
+        shared         = True,
     ),
 ]
 
