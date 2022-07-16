@@ -126,6 +126,7 @@ do that.
   * New `Chaos` hint distribution which gives all hint types equal likelihood.
   * New setting `Blue Fire Arrows` gives Ice Arrows the power to melt red ice and mud walls to give them more utility.
   * New Misc. Hint `Dampé's Diary` which reveals the location of a hookshot.
+  * New item pool setting `Ludicrous` makes it so every check will be a major item.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
