@@ -4,8 +4,6 @@ import logging
 import random
 import json
 
-from scipy import rand
-
 from Entrance import Entrance
 from Goals import Goal, GoalCategory
 from HintList import getRequiredHints, misc_item_hint_table

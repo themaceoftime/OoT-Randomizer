@@ -4075,8 +4075,9 @@ setting_infos = [
             - 'Specific Dungeons': Choose which specific dungeons will be pre-completed.
             - 'Count': Choose how many pre-completed dungeons will be randomly chosen.
 
-            Pre-completed dungeons can't be MQ. Incompatible "MQ Dungeon" settings
-            and "Pre-completed dungeon" settings will trigger an error.
+            A same dungeon won't be both MQ and pre-completed unless it has been
+            explicitly specified as such or unless it is the only way to fulfill both MQ and
+            pre-completed selected settings.
 
             Pre-completed dungeons won't contain major items even if "Dungeons Have
             One Major Item" is on.

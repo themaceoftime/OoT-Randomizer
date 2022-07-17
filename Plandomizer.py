@@ -7,8 +7,6 @@ import random
 from functools import reduce
 from collections import defaultdict
 
-from numpy import True_
-
 from Fill import FillError
 from EntranceShuffle import EntranceShuffleError, change_connections, confirm_replacement, validate_world, check_entrances_compatibility
 from Hints import gossipLocations, GossipText
