@@ -401,20 +401,23 @@ class HintArea(Enum):
             text = getHint(self.dungeon_name, clearer_hints).text
         else:
             text = str(self)
-        if '#' not in text:
-            text = f'#{text}#'
-        if world is not None:
+        prefix, suffix = text.replace('#', '').split(' ', 1)
+        if world is None:
+            if prefix == "Link's":
+                text = f"@'s {suffix}"
+        else:
             replace_prefixes = ('a', 'an', 'the')
             move_prefixes = ('outside', 'inside')
-            prefix, suffix = text.split(' ', 1)
             if prefix in replace_prefixes:
-                text = f"#world {world}'s {suffix.replace('#', '')}#"
+                text = f"world {world}'s {suffix}"
             elif prefix in move_prefixes:
-                text = f"#{prefix} world {world}'s {suffix.replace('#', '')}#"
+                text = f"{prefix} world {world}'s {suffix}"
             elif prefix == "Link's":
-                text = f"#player {world}'s {suffix.replace('#', '')}#"
+                text = f"player {world}'s {suffix}"
             else:
-                text = f"#world {world}'s {text.replace('#', '')}#"
+                text = f"world {world}'s {text}"
+        if '#' not in text:
+            text = f'#{text}#'
         if preposition and self.preposition(clearer_hints) is not None:
             text = f'{self.preposition(clearer_hints)} {text}'
         return text
@@ -812,7 +815,7 @@ def get_specific_hint(spoiler, world, checked, type):
         return None
 
     hint = random.choice(hintGroup)
-    
+
     if world.hint_dist_user['upgrade_hints'] in ['on', 'limited']:
         upgrade_list = getUpgradeHintList(world, [hint.name])
         upgrade_list = list(filter(lambda upgrade: is_not_checked([world.get_location(location) for location in getMulti(upgrade.name).locations], checked), upgrade_list))
@@ -830,7 +833,7 @@ def get_specific_hint(spoiler, world, checked, type):
             if multi:
                 return get_specific_multi_hint(spoiler, world, checked, hint)
 
-    
+
     location = world.get_location(hint.name)
     checked.add(location.name)
 
@@ -1148,7 +1151,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
 
         if world.settings.shopsanity != "off" and "Progressive Wallet" not in world.item_hints:
             world.item_hints.append("Progressive Wallet")
-                
+
 
     #Removes items from item_hints list if they are included in starting gear.
     #This method ensures that the right number of copies are removed, e.g.
@@ -1168,7 +1171,7 @@ def buildWorldGossipHints(spoiler, world, checkedLocations=None):
             world.hint_dist_user['distribution']['always']['copies'] = 1
             world.hint_dist_user['distribution']['trial']['copies'] = 1
 
-            
+
     # Load hint distro from distribution file or pre-defined settings
     #
     # 'fixed' key is used to mimic the tournament distribution, creating a list of fixed hint types to fill
