@@ -3459,7 +3459,7 @@ setting_infos = [
             'startwith':   'Start With',
             'vanilla':     'Vanilla Locations',
             'dungeon':     'Own Dungeon',
-            'hint_color':  'Hint Color Regions',
+            'regional':    'Regional Keysanity',
             'overworld':   'Overworld Only',
             'any_dungeon': 'Any Dungeon',
             'keysanity':   'Anywhere',
@@ -3476,15 +3476,20 @@ setting_infos = [
             'Own Dungeon': Maps and Compasses can only appear in their respective
             dungeon.
             
-            'Overworld Only': Maps and Compasses can only appear outside of
-            dungeons.
+            'Regional Keysanity': Maps and Compasses can only appear
+            in regions near the original dungeon (including the
+            dungeon itself or other dungeons in the region).
+            <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
+            
+            'Overworld Only': Maps and Compasses can only appear
+            outside of dungeons.
 
             'Any Dungeon': Maps and Compasses can only appear in a dungeon, but
             not necessarily the dungeon they are for.            
 
             'Anywhere': Maps and Compasses can appear anywhere in the world.
 
-            Setting 'Remove', 'Start With, 'Overworld', or 'Anywhere' will add 2
+            Setting 'Remove', 'Start With', 'Overworld', or 'Anywhere' will add 2
             more possible locations to each Dungeons. This makes dungeons more
             profitable, especially Ice Cavern, Water Temple, and Jabu Jabu's Belly.
             
@@ -3505,7 +3510,7 @@ setting_infos = [
             'remove':      'Remove (Keysy)',
             'vanilla':     'Vanilla Locations',
             'dungeon':     'Own Dungeon',
-            'hint_color':  'Hint Color Regions',
+            'regional':    'Regional Keysanity',
             'overworld':   'Overworld Only',
             'any_dungeon': 'Any Dungeon',
             'keysanity':   'Anywhere (Keysanity)',
@@ -3523,9 +3528,15 @@ setting_infos = [
             dungeon. If Fire Temple is not a Master Quest dungeon, the door to
             the Boss Key chest will be unlocked.
             
-            'Overworld Only': Small Keys can only appear outside of dungeons. You
-            may need to enter a dungeon multiple times to gain items to access the
-            overworld locations with the keys required to finish a dungeon.
+            'Regional Keysanity': Small Keys can only appear
+            in regions near the original dungeon (including
+            the dungeon itself or other dungeons in the region).
+            <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
+            
+            'Overworld Only': Small Keys can only appear outside
+            of dungeons. You may need to enter a dungeon multiple
+            times to gain items to access the overworld locations
+            with the keys required to finish a dungeon.
             
             'Any Dungeon': Small Keys can only appear inside of any dungeon, but
             won't necessarily be in the dungeon that the key is for. A difficult mode
@@ -3558,7 +3569,7 @@ setting_infos = [
         choices        = {
             'vanilla':     "Vanilla Locations",
             'fortress':    "Gerudo Fortress Region",
-            'hint_color':  'Hint Color Regions',
+            'regional':    "Regional Keysanity",
             'overworld':   "Overworld Only",
             'any_dungeon': "Any Dungeon",
             'keysanity':   "Anywhere (Keysanity)",
@@ -3567,6 +3578,11 @@ setting_infos = [
             "Vanilla": Thieves' Hideout Keys will appear in their
             vanilla location, dropping from fighting Gerudo guards
             that attack when trying to free the jailed carpenters.
+            
+            "Regional Keysanity": Thieves' Hideout Keys can only appear
+            in Gerudo Valley, Gerudo Fortress, Thieves' Hideout, Gerudo
+            Training Ground, Haunted Wasteland, Desert Colossus, or
+            Spirit Temple.
             
             "Overworld Only": Thieves' Hideout Keys can only appear
             outside of dungeons.
@@ -3648,7 +3664,7 @@ setting_infos = [
             'remove':      'Remove (Keysy)',
             'vanilla':     'Vanilla Locations',
             'dungeon':     'Own Dungeon',
-            'hint_color':  'Hint Color Regions',
+            'regional':    'Regional Keysanity',
             'overworld':   'Overworld Only',
             'any_dungeon': 'Any Dungeon',
             'keysanity':   'Anywhere (Keysanity)',
@@ -3663,6 +3679,11 @@ setting_infos = [
 
             'Own Dungeon': Boss Keys can only appear in their
             respective dungeon.
+            
+            'Regional Keysanity': Boss Keys can only appear
+            in regions near the original dungeon (including
+            the dungeon itself or other dungeons in the region).
+            <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
             
             'Overworld Only': Boss Keys can only appear outside
             of dungeons. You may need to enter a dungeon without
@@ -3703,7 +3724,7 @@ setting_infos = [
             'remove':          "Remove (Keysy)",
             'vanilla':         "Vanilla Location",
             'dungeon':         "Own Dungeon",
-            'hint_color':      "Hint Color Regions",
+            'regional':        "Regional Keysanity",
             'overworld':       "Overworld Only",
             'any_dungeon':     "Any Dungeon",
             'keysanity':       "Anywhere (Keysanity)",
@@ -3717,12 +3738,16 @@ setting_infos = [
         gui_tooltip    = '''\
             'Remove': Ganon's Castle Boss Key is removed
             and the boss door in Ganon's Tower starts unlocked.
-
-            'Own Dungeon': Ganon's Castle Boss Key can only appear
-            inside Ganon's Castle.
-
+            
             'Vanilla': Ganon's Castle Boss Key will appear in 
             the vanilla location.
+            
+            'Own Dungeon': Ganon's Castle Boss Key can only appear
+            inside Ganon's Castle.
+            
+            'Regional Keysanity': Ganon's Castle Boss Key can only appear
+            in Hyrule Field, Lon Lon Ranch, Market, Temple of Time, Hyrule Castle,
+            (Outside) Ganon's Castle, and Inside Ganon's Castle.
             
             'Overworld Only': Ganon's Castle Boss Key can only appear
             outside of dungeons.

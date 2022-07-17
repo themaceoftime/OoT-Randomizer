@@ -88,30 +88,30 @@ class Region(object):
         is_overworld_restricted = False
         if item.map or item.compass:
             is_self_dungeon_restricted = self.world.settings.shuffle_mapcompass in ['dungeon', 'vanilla']
-            if self.world.settings.shuffle_mapcompass == 'hint_color':
+            if self.world.settings.shuffle_mapcompass == 'regional':
                 is_hint_color_restricted = [HintArea.get_dungeon_color(item.name[item.name.find("(") + 1:item.name.find(")")])]
             is_dungeon_restricted = self.world.settings.shuffle_mapcompass == 'any_dungeon'
             is_overworld_restricted = self.world.settings.shuffle_mapcompass == 'overworld'
         elif item.type == 'SmallKey':
             is_self_dungeon_restricted = self.world.settings.shuffle_smallkeys in ['dungeon', 'vanilla']
-            if self.world.settings.shuffle_smallkeys == 'hint_color':
+            if self.world.settings.shuffle_smallkeys == 'regional':
                 is_hint_color_restricted = [HintArea.get_dungeon_color(item.name[item.name.find("(")+1:item.name.find(")")])]
             is_dungeon_restricted = self.world.settings.shuffle_smallkeys == 'any_dungeon'
             is_overworld_restricted = self.world.settings.shuffle_smallkeys == 'overworld'
         elif item.type == 'HideoutSmallKey':
             is_self_region_restricted = [HintArea.GERUDO_FORTRESS] if self.world.settings.shuffle_hideoutkeys == 'fortress' else None
-            is_hint_color_restricted = ['Yellow'] if self.world.settings.shuffle_hideoutkeys == 'hint_color' else None
+            is_hint_color_restricted = ['Yellow'] if self.world.settings.shuffle_hideoutkeys == 'regional' else None
             is_dungeon_restricted = self.world.settings.shuffle_hideoutkeys == 'any_dungeon'
             is_overworld_restricted = self.world.settings.shuffle_hideoutkeys == 'overworld'
         elif item.type == 'BossKey':
             is_self_dungeon_restricted = self.world.settings.shuffle_bosskeys in ['dungeon', 'vanilla']
-            if self.world.settings.shuffle_bosskeys == 'hint_color':
+            if self.world.settings.shuffle_bosskeys == 'regional':
                 is_hint_color_restricted = [HintArea.get_dungeon_color(item.name[item.name.find("(")+1:item.name.find(")")])]
             is_dungeon_restricted = self.world.settings.shuffle_bosskeys == 'any_dungeon'
             is_overworld_restricted = self.world.settings.shuffle_bosskeys == 'overworld'
         elif item.type == 'GanonBossKey':
             is_self_dungeon_restricted = self.world.settings.shuffle_ganon_bosskey in ['dungeon', 'vanilla']
-            if self.world.settings.shuffle_ganon_bosskey == 'hint_color':
+            if self.world.settings.shuffle_ganon_bosskey == 'regional':
                 is_hint_color_restricted = [HintArea.get_dungeon_color(item.name[item.name.find("(")+1:item.name.find(")")])]
             is_dungeon_restricted = self.world.settings.shuffle_ganon_bosskey == 'any_dungeon'
             is_overworld_restricted = self.world.settings.shuffle_ganon_bosskey == 'overworld'
