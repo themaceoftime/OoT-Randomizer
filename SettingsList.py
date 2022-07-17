@@ -3568,10 +3568,6 @@ setting_infos = [
             vanilla location, dropping from fighting Gerudo guards
             that attack when trying to free the jailed carpenters.
             
-            "Gerudo Fortress Region": Thieves' Hideout Keys can only
-            appear within the Gerudo Fortress region of the world the
-            key belongs to.
-             
             "Overworld Only": Thieves' Hideout Keys can only appear
             outside of dungeons.
             
@@ -3584,6 +3580,7 @@ setting_infos = [
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
+            'option_remove': ['fortress'],
         },
     ),
     Combobox(
