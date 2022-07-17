@@ -446,7 +446,7 @@ class World(object):
             if 'time_passes' in region:
                 new_region.time_passes = region['time_passes']
                 new_region.provides_time = TimeOfDay.ALL
-            if new_region.name == 'Ganons Castle Grounds':
+            if new_region.name in ['Ganons Castle Grounds', 'Ganons Castle Ledge']:
                 new_region.provides_time = TimeOfDay.DAMPE
             if 'locations' in region:
                 for location, rule in region['locations'].items():
@@ -640,7 +640,7 @@ class World(object):
         # and Skull conditions, there is only one goal in the category
         # requesting X copies within the goal, so minimum goals has to
         # be 1 for these.
-        b = GoalCategory('rainbow_bridge', 10, lock_entrances=['Ganons Castle Grounds -> Ganons Castle Lobby'])
+        b = GoalCategory('rainbow_bridge', 10, lock_entrances=['Ganons Castle Ledge -> Ganons Castle Lobby'])
         gbk = GoalCategory('ganon_bosskey', 20)
         trials = GoalCategory('trials', 30, minimum_goals=1)
         th = GoalCategory('triforce_hunt', 30, goal_count=round(self.settings.triforce_goal_per_world / 10), minimum_goals=1)

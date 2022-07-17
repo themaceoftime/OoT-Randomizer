@@ -105,7 +105,7 @@ entrance_shuffle_table = [
                         ('Ice Cavern Beginning -> ZF Ice Ledge',                            { 'index': 0x03D4 })),
     ('Dungeon',         ('Gerudo Fortress -> Gerudo Training Ground Lobby',                 { 'index': 0x0008 }),
                         ('Gerudo Training Ground Lobby -> Gerudo Fortress',                 { 'index': 0x03A8 })),
-    ('DungeonSpecial',  ('Ganons Castle Grounds -> Ganons Castle Lobby',                    { 'index': 0x0467 }),
+    ('DungeonSpecial',  ('Ganons Castle Ledge -> Ganons Castle Lobby',                      { 'index': 0x0467 }),
                         ('Ganons Castle Lobby -> Castle Grounds From Ganons Castle',        { 'index': 0x023D })),
 
     ('Interior',        ('Kokiri Forest -> KF Midos House',                                 { 'index': 0x0433 }),
@@ -833,7 +833,7 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
         # This means we need to hard check that none of the relevant entrances are ever reachable as that age
         # This is mostly relevant when shuffling special interiors (such as windmill or kak potion shop)
         # Warp Songs and Overworld Spawns can also end up inside certain indoors so those need to be handled as well
-        CHILD_FORBIDDEN = ['OGC Great Fairy Fountain -> Castle Grounds', 'GV Carpenter Tent -> GV Fortress Side', 'Ganons Castle Lobby -> Castle Grounds']
+        CHILD_FORBIDDEN = ['OGC Great Fairy Fountain -> Castle Grounds', 'Ganons Castle Lobby -> Castle Grounds From Ganons Castle', 'GV Carpenter Tent -> GV Fortress Side']
         ADULT_FORBIDDEN = ['HC Great Fairy Fountain -> Castle Grounds', 'HC Storms Grotto -> Castle Grounds']
 
         for entrance in world.get_shufflable_entrances():
