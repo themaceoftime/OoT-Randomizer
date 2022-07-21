@@ -384,6 +384,7 @@ def get_settings_from_command_line_args():
     parser.add_argument('--loglevel', default='info', const='info', nargs='?', choices=['error', 'info', 'warning', 'debug'], help='Select level of logging for output.')
     parser.add_argument('--settings_string', help='Provide sharable settings using a settings string. This will override all flags that it specifies.')
     parser.add_argument('--convert_settings', help='Only convert the specified settings to a settings string. If a settings string is specified output the used settings instead.', action='store_true')
+    parser.add_argument('--convert_settings_gui', help="Only convert the specified settings to a settings string. If a settings string is specified output the used settings instead. This uses the old 'starting_items' format.", action='store_true')
     parser.add_argument('--settings', help='Use the specified settings file to use for generation')
     parser.add_argument('--settings_preset', help="Use the given preset for base settings. Anything defined in the --settings file or the --settings_string will override the preset.")
     parser.add_argument('--seed', help='Generate the specified seed.')
@@ -428,10 +429,10 @@ def get_settings_from_command_line_args():
         settings.update_seed(args.seed)
         settings.custom_seed = True
 
-    if args.convert_settings:
+    if args.convert_settings or args.convert_settings_gui:
         if args.settings_string is not None:
             # used by the GUI which doesn't support the new dict-style starting items yet
-            print(json.dumps(settings.to_json(legacy_starting_items=True)))
+            print(json.dumps(settings.to_json(legacy_starting_items=args.convert_settings_gui)))
         else:
             print(settings.get_settings_string())
         sys.exit(0)
