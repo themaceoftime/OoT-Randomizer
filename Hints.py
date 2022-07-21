@@ -369,10 +369,18 @@ class HintArea(Enum):
         raise HintAreaNotFound('No hint area could be found for %s [World %d]' % (spot, spot.world.id))
 
     @classmethod
-    def get_dungeon_color(cls, dungeon_name):
+    def get_dungeon_hint_area(cls, dungeon_name: str):
+        if dungeon_name.find("(") != -1 and dungeon_name.find(")") != -1:
+            # A dungeon item name was passed in - get the name of the dungeon from it.
+            dungeon_name = dungeon_name[dungeon_name.index("(")+1:dungeon_name.index(")")]
+
+        if dungeon_name == "Thieves Hideout":
+            # Special case for Thieves' Hideout - change this if it gets its own hint area.
+            return HintArea.GERUDO_FORTRESS
+
         for hint_area in cls:
-            if hint_area.value[4] == dungeon_name:
-                return hint_area.value[3]
+            if hint_area.dungeon_name == dungeon_name:
+                return hint_area
         return None
 
     def __str__(self):
