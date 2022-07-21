@@ -266,7 +266,7 @@ function getSettings(pythonPath, randoPath, settingsString) {
     let output = "";
     let error = false;
 
-    let args = ['--convert_settings_gui', '--settings_string', settingsString];
+    let args = ['--convert_settings', '--settings_string', settingsString];
 
     //console.log("Get settings now with spawn!");
 
