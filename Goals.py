@@ -337,7 +337,7 @@ def search_goals(categories, reachable_goals, search, priority_locations, all_lo
             if search_woth and not valid_goals['way of the hero']:
                 required_locations['way of the hero'].append(location)
             location.item = old_item
-            _maybe_set_misc_item_hints(location)
+        _maybe_set_misc_item_hints(location)
         search.state_list[location.item.world.id].collect(location.item)
     return required_locations
 

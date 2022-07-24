@@ -650,7 +650,8 @@ def copy_worlds(worlds):
 
 def find_misc_hint_items(spoiler):
     search = Search([world.state for world in spoiler.worlds])
-    for location in search.iter_reachable_locations(search.progression_locations()):
+    all_locations = [location for world in spoiler.worlds for location in world.get_filled_locations()]
+    for location in search.iter_reachable_locations(all_locations):
         search.collect(location.item)
         maybe_set_misc_item_hints(location)
 
