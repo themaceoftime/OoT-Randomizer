@@ -11,6 +11,7 @@ import re
 import unittest
 
 from EntranceShuffle import EntranceShuffleError
+from Hints import HintArea
 from Item import ItemInfo
 from ItemPool import remove_junk_items, remove_junk_ludicrous_items, ludicrous_items_base, ludicrous_items_extended, trade_items, ludicrous_exclusions
 from LocationList import location_is_viewable
@@ -441,6 +442,58 @@ class TestPlandomizer(unittest.TestCase):
         self.assertNotIn('Small Key Ring (Forest Temple)', spoiler['locations'].values())
         self.assertGreater(get_actual_pool(spoiler)['Small Key (Thieves Hideout)'], 5)
         self.assertNotIn('Small Key Ring (Thieves Hideout)', spoiler['locations'].values())
+    
+    def test_empty_dungeons(self):
+        filenames = [
+            "empty-dungeons-all-dungeon-er",
+            "empty-dungeons-all-dungeon-item-any-dungeon",
+            "empty-dungeons-all-dungeon-item-anywhere",
+            "empty-dungeons-all-dungeon-item-remove",
+            "empty-dungeons-all-mq-all",
+            "empty-dungeons-all-mq-random",
+            "empty-dungeons-all-plentiful",
+            "empty-dungeons-all-songs-dungeon",
+            "empty-dungeons-half-boss-shuffle",
+            "empty-dungeons-half-dungeon-er",
+            "empty-dungeons-half-dungeon-item-any-dungeon",
+            "empty-dungeons-half-dungeon-item-anywhere",
+            "empty-dungeons-half-dungeon-item-remove",
+            "empty-dungeons-half-mq-all",
+            "empty-dungeons-half-mq-random",
+            "empty-dungeons-half-plentiful",
+            "empty-dungeons-half-songs-dungeon"
+        ]
+        dungeons = {
+            HintArea.DEKU_TREE: "Queen Gohma",
+            HintArea.DODONGOS_CAVERN: "King Dodongo",
+            HintArea.JABU_JABUS_BELLY: "Barinade",
+            HintArea.FOREST_TEMPLE: "Phantom Ganon",
+            HintArea.FIRE_TEMPLE: "Volvagia",
+            HintArea.WATER_TEMPLE: "Morpha",
+            HintArea.SHADOW_TEMPLE: "Bongo Bongo",
+            HintArea.SPIRIT_TEMPLE: "Twinrova"
+        }
+        for filename in filenames:
+            with self.subTest(filename):
+                distribution_file, spoiler = generate_with_plandomizer(filename)
+                # Proper rewards should be given on file select
+                if spoiler['settings']['shuffle_bosses'] == 'off':
+                    for dungeon, boss in dungeons.items():
+                        if spoiler['empty_dungeons'][dungeon.dungeon_name]:
+                            self.assertIn(boss, spoiler[':skipped_locations'])
+                # Empty dungeons should be barren (except in settings where keys or tokens are major items)
+                if spoiler['settings']['shuffle_smallkeys'] not in ['dungeon', 'vanilla']:
+                    continue
+                if spoiler['settings']['shuffle_bosskeys'] not in ['dungeon', 'vanilla']:
+                    continue
+                if spoiler['settings']['bridge'] == 'tokens' or spoiler['settings']['shuffle_ganon_bosskey'] == 'tokens':
+                    continue
+                if spoiler['settings']['shuffle_ganon_bosskey'] == 'on_lacs' and spoiler['settings']['lacs_condition'] == 'tokens':
+                    continue
+                for dungeon in dungeons:
+                    if spoiler['empty_dungeons'][dungeon.dungeon_name]:
+                        self.assertIn(str(dungeon), spoiler[':barren_regions'])
+
 
 class TestHints(unittest.TestCase):
     def test_skip_zelda(self):
@@ -464,7 +517,52 @@ class TestHints(unittest.TestCase):
                 _, spoiler = generate_with_plandomizer(filename, live_copy=True)
                 self.assertIsNotNone(spoiler.worlds[0].misc_hint_item_locations["ganondorf"])
                 self.assertNotEqual('Ganons Tower Boss Key Chest', spoiler.worlds[0].misc_hint_item_locations["ganondorf"].name)
-
+    
+    # Test that every goal in every goal category is hinted at least once
+    # if the bridge and Ganon's Boss Key conditions are for the same type
+    # of win condition, such as 4 medallion bridge and 6 medallion GBK.
+    def test_one_hint_per_goal(self):
+        # To ensure there are no empty goals, one required item per dungeon is plando'd
+        # in song of storms grottos for bridge goals, and in light trial for Ganon's Boss
+        # Key goals. Careful placement with minimal item pool guarantees every goal will
+        # have more hintable items than there are goals in the category. This prevents
+        # goals from being skipped because all items for it were already hinted.
+        filenames = [
+            "one-hint-per-goal-medallions",
+            "one-hint-per-goal-stones",
+            "one-hint-per-goal-dungeons",
+            "one-hint-per-goal-skulls",
+            "one-hint-per-goal-hearts",
+            "one-hint-per-goal-triforce-hunt"
+        ]
+        for filename in filenames:
+            with self.subTest(filename):
+                _, spoiler = generate_with_plandomizer(filename)
+                goals = list(goal_name for goal in list(spoiler[':goal_locations'].values()) for goal_name in list(goal.keys()))
+                # If the hint distro in the plando removes goal hints in the future, alert that the test is broken
+                # A custom distro is used to prevent this, but just in case...
+                self.assertGreater(len(goals), 0)
+                found_goals = []
+                for g in range(len(goals)):
+                    # Triforce Hunt, Skull, and Heart goals all add total available collectables
+                    # in parentheses to the path name. Remove for the hint text search.
+                    try:
+                        goals[g] = goals[g][:goals[g].index(' (')]
+                    except:
+                        pass
+                    # We need at least one hint per goal, but it doesn't matter if there are duplicates
+                    # of a goal hint or more than one hint for the goal.
+                    for hint in spoiler['gossip_stones'].values():
+                        if goals[g].lower() in hint['text'].replace('#','').lower():
+                            found_goals.append(goals[g])
+                            break
+                self.assertEqual(found_goals, goals)
+        # 1 stone bridge / 3 stone gbk
+        # 5 med bridge / 6 med bridge
+        # 5 dungeon bridge / 9 dungeon gbk 
+        # 99 skull bridge / 100 skull gbk
+        # 19 heart bridge / 20 heart gbk
+        # TH
 
 class TestEntranceRandomizer(unittest.TestCase):
     def test_spawn_point_invalid_areas(self):
