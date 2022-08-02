@@ -9,7 +9,7 @@ from collections import defaultdict
 
 from Fill import FillError
 from EntranceShuffle import EntranceShuffleError, change_connections, confirm_replacement, validate_world, check_entrances_compatibility
-from Hints import gossipLocations, GossipText
+from Hints import HintArea, gossipLocations, GossipText
 from Item import ItemFactory, ItemInfo, ItemIterator, IsItem
 from ItemPool import item_groups, get_junk_item, song_list
 from Location import LocationIterator, LocationFactory, IsLocation
@@ -1034,7 +1034,8 @@ class WorldDistribution(object):
             if world.settings.shuffle_song_items == 'dungeon':
                 for location_name in location_groups['BossHeart']:
                     location = world.get_location(location_name)
-                    if world.empty_dungeons[location.dungeon.name].empty:
+                    hint_area = HintArea.at(location)
+                    if hint_area.is_dungeon and world.empty_dungeons[hint_area.dungeon_name].empty:
                         skipped_locations.append(location.name)
         for iter_world in worlds:
             for location in skipped_locations:

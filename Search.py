@@ -308,9 +308,11 @@ class Search(object):
                         yield location
                 # If songs are shuffled inside dungeons, collect them too
                 if state.world.settings.shuffle_song_items == 'dungeon':
+                    from Hints import HintArea
                     for location_name in location_groups['BossHeart']:
                         location = state.world.get_location(location_name)
-                        if state.world.empty_dungeons[location.dungeon.name].empty:
+                        hint_area = HintArea.at(location)
+                        if hint_area.is_dungeon and state.world.empty_dungeons[hint_area.dungeon_name].empty:
                             self._cache['visited_locations'].add(location)
                             yield location
                     
