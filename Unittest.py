@@ -453,6 +453,7 @@ class TestPlandomizer(unittest.TestCase):
             "empty-dungeons-all-mq-random",
             "empty-dungeons-all-plentiful",
             "empty-dungeons-all-songs-dungeon",
+            "empty-dungeons-half-boss-shuffle",
             "empty-dungeons-half-dungeon-er",
             "empty-dungeons-half-dungeon-item-any-dungeon",
             "empty-dungeons-half-dungeon-item-anywhere",
@@ -476,9 +477,10 @@ class TestPlandomizer(unittest.TestCase):
             with self.subTest(filename):
                 distribution_file, spoiler = generate_with_plandomizer(filename)
                 # Proper rewards should be given on file select
-                for dungeon, boss in dungeons.items():
-                    if spoiler['empty_dungeons'][dungeon.dungeon_name]:
-                        self.assertIn(boss, spoiler[':skipped_locations'])
+                if spoiler['settings']['shuffle_bosses'] == 'off':
+                    for dungeon, boss in dungeons.items():
+                        if spoiler['empty_dungeons'][dungeon.dungeon_name]:
+                            self.assertIn(boss, spoiler[':skipped_locations'])
                 # Empty dungeons should be barren (except in settings where keys or tokens are major items)
                 if spoiler['settings']['shuffle_smallkeys'] not in ['dungeon', 'vanilla']:
                     continue
