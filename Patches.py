@@ -2081,9 +2081,8 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     elif world.settings.text_shuffle == 'complete':
         permutation = shuffle_messages(messages, except_hints=False)
 
-    # If Warp Song ER is on, update text boxes
-    if world.settings.warp_songs:
-        update_warp_song_text(messages, world)
+    # update warp song preview text boxes
+    update_warp_song_text(messages, world)
 
     if world.settings.blue_fire_arrows:
         rom.write_byte(0xC230C1, 0x29) #Adds AT_TYPE_OTHER to arrows to allow collision with red ice

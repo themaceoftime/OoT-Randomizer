@@ -4507,8 +4507,7 @@ setting_infos = [
             Stones will never hint the Light Arrows.
 
             Playing a warp song will tell you where
-            it leads. (If warp song destinations
-            are vanilla, the vanilla text is used.)
+            it leads.
         ''',
         shared         = True,
         default        = ['altar', 'ganondorf', 'warp_songs'],
