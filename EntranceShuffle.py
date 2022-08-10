@@ -817,9 +817,11 @@ def check_entrances_compatibility(entrance, target, rollbacks=(), placed_one_way
         except HintAreaNotFound:
             pass # not connected to a hint area yet, will be checked when shuffling two-way entrances
         else:
-            for placed_entrance in rollbacks:
+            # Check all already placed entrances of the same type (including priority entrances placed separately)
+            for rollback in (*rollbacks, *placed_one_way_entrances):
                 try:
-                    if HintArea.at(placed_entrance[0].connected_region) == hint_area:
+                    placed_entrance = rollback[0]
+                    if entrance.type == placed_entrance.type and HintArea.at(placed_entrance.connected_region) == hint_area:
                         raise EntranceShuffleError(f'Another {entrance.type} entrance already leads to {hint_area}')
                 except HintAreaNotFound:
                     pass
