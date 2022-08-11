@@ -545,7 +545,7 @@ hintTable = {
     'Water Temple North Basement Checks':                          ("the #northern basement of the Water Temple# contains...^", None, 'dual'),
     'Water Temple MQ North Basement Checks':                       ("the #northern basement of the Water Temple# contains...^", None, 'dual'),
     'Water Temple MQ Lower Checks':                                ("#a chest and a crate in locked basements# in the Water Temple hold...^", None, 'dual'),
-    'Spirit Temple Colossus Hands':                                ("upon the #Colossus's hands# lies...^", None, 'dual'),
+    'Spirit Temple Colossus Hands':                                ("upon the #Colossus's hands# right and left hands lie...^", None, 'dual'),
     'Spirit Temple Child Lower':                                   ("between the #crawl spaces in the Spirit Temple# chests contain...^", None, 'dual'),
     'Spirit Temple Child Top':                                     ("on the path to the #right hand of the Spirit Temple# a chest and a spider hold...^", None, 'dual'),
     'Spirit Temple Adult Lower':                                   ("past a #silver block in the Spirit Temple# boulders and a melody conceal...^", None, 'dual'),
