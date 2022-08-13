@@ -232,6 +232,7 @@
             "shuffle_mapcompass",
             "shuffle_smallkeys",
             "shuffle_hideoutkeys",
+            "key_rings_choice",
             "key_rings",
             "shuffle_bosskeys",
             "shuffle_ganon_bosskey",
