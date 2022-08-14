@@ -103,6 +103,8 @@ APPLY_BONK_DAMAGE:
     
 @@normal_defense:
     sub     t4, t4, t3
+    bltz    t4, @@bonks_kill
+    nop
     sh      t4, 0x30(t8)
     b       @@return_bonk
     nop
