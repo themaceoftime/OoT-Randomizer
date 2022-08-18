@@ -234,9 +234,9 @@ void draw_dungeon_info(z64_disp_buf_t *db) {
                 if (total_keys < 0) total_keys = 0;
                 if (total_keys > 9) total_keys = 9;
 
-                char count[4] = "0(0)";
-                count[0] += current_keys;
-                count[2] += total_keys;
+                char count[4] = "O(O)";
+                if (current_keys > 0) count[0] = current_keys + '0';
+                if (total_keys > 0) count[2] = total_keys + '0';
                 int top = start_top + ((icon_size + padding) * (i - 1)) + 1;
                 text_print_size(count, left, top, font_width);
             }
