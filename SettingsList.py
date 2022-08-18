@@ -1989,7 +1989,7 @@ setting_infos = [
             which have the potential to require the player to perform difficult techniques. 
             Expect a long playthrough, even with good note-taking.
 
-            The other presets are for racing and/or touranments. 
+            The other presets are for racing and/or tournaments. 
 
             After a preset is loaded, the settings can be viewed/changed in the other tabs before
             generating a seed.
