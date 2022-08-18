@@ -115,7 +115,7 @@ class World(object):
 
                 for area in HintArea:
                     if area.is_dungeon and area.dungeon_name in self:
-                        self[area.dungeon_name].hint_name = str(area)
+                        self[area.dungeon_name].hint_name = area
             
             def __missing__(self, dungeon_name):
                 return self.EmptyDungeonInfo(None)
