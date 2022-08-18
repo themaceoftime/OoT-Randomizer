@@ -291,7 +291,15 @@ def fill_dungeon_unique_item(window, worlds, search, fill_locations, itempool):
 
     # iterate of all the dungeons in a random order, placing the item there
     for dungeon in dungeons:
-        dungeon_locations = [location for region in dungeon.regions for location in region.locations if location in fill_locations]
+        # Need to re-get dungeon regions to ensure boss rooms are considered
+        regions = []
+        for region in dungeon.world.regions:
+            try:
+                if HintArea.at(region).dungeon_name == dungeon.name:
+                    regions.append(region)
+            except:
+                pass
+        dungeon_locations = [location for region in regions for location in region.locations if location in fill_locations]
 
         # cache this list to flag afterwards
         all_dungeon_locations.extend(dungeon_locations)
