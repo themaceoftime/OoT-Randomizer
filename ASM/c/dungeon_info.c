@@ -102,15 +102,17 @@ void draw_dungeon_info(z64_disp_buf_t *db) {
 
         // Set up dimensions
 
-        int icon_size = 16;
+        int icon_size = 12;
+        int font_width = 6;
+        int font_height = 11;
         int padding = 1;
         int rows = 13;
         int mq_width = show_mq ?
-            ((6 * font_sprite.tile_w) + padding) :
+            ((6 * font_width) + padding) :
             0;
         int bg_width =
             (6 * icon_size) +
-            (11 * font_sprite.tile_w) +
+            (11 * font_width) +
             (8 * padding) +
             mq_width;
         int bg_height = (rows * icon_size) + ((rows + 1) * padding);
@@ -207,13 +209,14 @@ void draw_dungeon_info(z64_disp_buf_t *db) {
         for (int i = 1; i < dungeon_count; i++) {
             dungeon_entry_t *d = &(dungeons[i]);
             int top = start_top + ((icon_size + padding) * (i - 1)) + 1;
-            text_print(d->name, left, top);
+            text_print_size(d->name, left, top, font_width);
         }
+        text_flush_size(db, font_width, font_height, 0, 0);
 
-        left += (8 * font_sprite.tile_w) + padding;
+        left += (8 * font_width) + padding;
 
         // Draw keys
-
+        
         if (show_keys) {
             // Draw small key counts
 
@@ -231,14 +234,15 @@ void draw_dungeon_info(z64_disp_buf_t *db) {
                 if (total_keys < 0) total_keys = 0;
                 if (total_keys > 9) total_keys = 9;
 
-                char count[5] = "0(0)";
+                char count[4] = "0(0)";
                 count[0] += current_keys;
                 count[2] += total_keys;
                 int top = start_top + ((icon_size + padding) * (i - 1)) + 1;
-                text_print(count, left, top);
+                text_print_size(count, left, top, font_width);
             }
+            text_flush_size(db, font_width, font_height, 0, 0);
 
-            left += (4 * font_sprite.tile_w) + padding;
+            left += (4 * font_width) + padding;
 
             // Draw boss keys
 
@@ -334,11 +338,12 @@ void draw_dungeon_info(z64_disp_buf_t *db) {
                 }
                 char *str = CFG_DUNGEON_IS_MQ[d->index] ? "MQ" : "Normal";
                 int top = start_top + ((icon_size + padding) * (i - 1)) + 1;
-                text_print(str, left, top);
+                text_print_size(str, left, top, font_width);
             }
 
             left += icon_size + padding;
         }
+        text_flush_size(db, font_width, font_height, 0, 0);
 
         // Finish
 
