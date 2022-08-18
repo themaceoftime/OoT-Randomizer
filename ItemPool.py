@@ -252,7 +252,10 @@ exclude_from_major = [
     'Bombchus (10)',
     'Bombchus (20)',
     'Odd Potion',
-    'Triforce Piece'
+    'Triforce Piece',
+    'Heart Container', 
+    'Piece of Heart', 
+    'Piece of Heart (Treasure Chest Game)',
 ]
 
 item_groups = {
