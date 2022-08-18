@@ -3579,21 +3579,15 @@ setting_infos = [
         },
     ),
     Combobox(
-        name            = 'key_rings',
-        multiple_select = True,
-        gui_text        = 'Key Rings',
-        choices         = {
-            'Thieves Hideout':        "Thieves' Hideout",
-            'Forest Temple':          "Forest Temple",
-            'Fire Temple':            "Fire Temple",
-            'Water Temple':           "Water Temple",
-            'Shadow Temple':          "Shadow Temple",
-            'Spirit Temple':          "Spirit Temple",
-            'Bottom of the Well':     "Bottom of the Well",
-            'Gerudo Training Ground': "Gerudo Training Ground",
-            'Ganons Castle':          "Ganon's Castle"
+        name           = 'key_rings_choice',
+        gui_text       = 'Key Rings Mode',
+        default        = 'off',
+        choices        = {
+            'off':       'Off',
+            'choice':    'Choose dungeons',
+            'all':       'All dungeons',
+            'random':    'Random dungeons'
         },
-        default         = [],
         gui_tooltip     = '''\
             Selected dungeons will have all of their keys found 
             at once in a ring rather than individually. 
@@ -3609,6 +3603,35 @@ setting_infos = [
             no effect if Thieves' Hideout keys are in vanilla 
             locations or Gerudo's Fortress is set to Rescue
             One Carpenter.
+        ''',
+        shared         = True,
+        disable={
+            'off': {'settings' : ['key_rings']},
+            'all': {'settings' : ['key_rings']},
+            'random': {'settings' : ['key_rings']},
+        },
+    ),
+    Combobox(
+        name            = 'key_rings',
+        multiple_select = True,
+        gui_text        = 'Key Rings',
+        choices         = {
+            'Thieves Hideout':        "Thieves' Hideout",
+            'Forest Temple':          "Forest Temple",
+            'Fire Temple':            "Fire Temple",
+            'Water Temple':           "Water Temple",
+            'Shadow Temple':          "Shadow Temple",
+            'Spirit Temple':          "Spirit Temple",
+            'Bottom of the Well':     "Bottom of the Well",
+            'Gerudo Training Ground': "Gerudo Training Ground",
+            'Ganons Castle':          "Ganon's Castle"
+        },
+        default         = [],
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
+        gui_tooltip    = '''\
+            Select areas with keyring instead of multiple keys
         ''',
         shared          = True,
     ),
