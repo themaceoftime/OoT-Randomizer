@@ -1016,7 +1016,7 @@ def update_warp_song_text(messages, world):
     }
 
     for id, entr in msg_list.items():
-        if 'warp_songs' in world.settings.misc_hints:
+        if 'warp_songs' in world.settings.misc_hints or not world.settings.warp_songs:
             destination = world.get_entrance(entr).connected_region
             destination_name = HintArea.at(destination)
             color = COLOR_MAP[destination_name.color]
