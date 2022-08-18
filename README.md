@@ -136,6 +136,7 @@ do that.
   * Red Ice transparency is increased when any Chest Appearance setting is enabled.
   * Zelda's text after defeating Ganon now advances automatically.
   * Health and Magic potion models in shops will now match your health and magic colors when `Item Model Colors Match Cosmetics` is enabled.
+  * The Gerudo guard on the Wasteland side of the gate will now spawn regardless of settings.
 
 
 #### Bug fixes
