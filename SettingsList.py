@@ -3459,7 +3459,7 @@ setting_infos = [
             'startwith':   'Start With',
             'vanilla':     'Vanilla Locations',
             'dungeon':     'Own Dungeon',
-            'regional':    'Regional Keysanity',
+            'regional':    'Regional',
             'overworld':   'Overworld Only',
             'any_dungeon': 'Any Dungeon',
             'keysanity':   'Anywhere',
@@ -3476,10 +3476,9 @@ setting_infos = [
             'Own Dungeon': Maps and Compasses can only appear in their respective
             dungeon.
             
-            'Regional Keysanity': Maps and Compasses can only appear
-            in regions near the original dungeon (including the
-            dungeon itself or other dungeons in the region).
-            <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
+            'Regional': Maps and Compasses can only appear in regions near the
+            original dungeon (including the dungeon itself or other dungeons in
+            the region). <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
             
             'Overworld Only': Maps and Compasses can only appear
             outside of dungeons.
@@ -3510,7 +3509,7 @@ setting_infos = [
             'remove':      'Remove (Keysy)',
             'vanilla':     'Vanilla Locations',
             'dungeon':     'Own Dungeon',
-            'regional':    'Regional Keysanity',
+            'regional':    'Regional',
             'overworld':   'Overworld Only',
             'any_dungeon': 'Any Dungeon',
             'keysanity':   'Anywhere (Keysanity)',
@@ -3528,7 +3527,7 @@ setting_infos = [
             dungeon. If Fire Temple is not a Master Quest dungeon, the door to
             the Boss Key chest will be unlocked.
             
-            'Regional Keysanity': Small Keys can only appear
+            'Regional': Small Keys can only appear
             in regions near the original dungeon (including
             the dungeon itself or other dungeons in the region).
             <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
@@ -3569,7 +3568,7 @@ setting_infos = [
         choices        = {
             'vanilla':     "Vanilla Locations",
             'fortress':    "Gerudo Fortress Region",
-            'regional':    "Regional Keysanity",
+            'regional':    "Regional",
             'overworld':   "Overworld Only",
             'any_dungeon': "Any Dungeon",
             'keysanity':   "Anywhere (Keysanity)",
@@ -3579,8 +3578,8 @@ setting_infos = [
             vanilla location, dropping from fighting Gerudo guards
             that attack when trying to free the jailed carpenters.
             
-            "Regional Keysanity": Thieves' Hideout Keys can only appear
-            in Gerudo Valley, Gerudo Fortress, Thieves' Hideout, Gerudo
+            "Regional": Thieves' Hideout Keys can only appear in
+            Gerudo Valley, Gerudo Fortress, Thieves' Hideout, Gerudo
             Training Ground, Haunted Wasteland, Desert Colossus, or
             Spirit Temple.
             
@@ -3664,7 +3663,7 @@ setting_infos = [
             'remove':      'Remove (Keysy)',
             'vanilla':     'Vanilla Locations',
             'dungeon':     'Own Dungeon',
-            'regional':    'Regional Keysanity',
+            'regional':    'Regional',
             'overworld':   'Overworld Only',
             'any_dungeon': 'Any Dungeon',
             'keysanity':   'Anywhere (Keysanity)',
@@ -3680,9 +3679,9 @@ setting_infos = [
             'Own Dungeon': Boss Keys can only appear in their
             respective dungeon.
             
-            'Regional Keysanity': Boss Keys can only appear
-            in regions near the original dungeon (including
-            the dungeon itself or other dungeons in the region).
+            'Regional': Boss Keys can only appear in regions
+            near the original dungeon (including the dungeon
+            itself or other dungeons in the region).
             <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
             
             'Overworld Only': Boss Keys can only appear outside
@@ -3724,7 +3723,7 @@ setting_infos = [
             'remove':          "Remove (Keysy)",
             'vanilla':         "Vanilla Location",
             'dungeon':         "Own Dungeon",
-            'regional':        "Regional Keysanity",
+            'regional':        "Regional",
             'overworld':       "Overworld Only",
             'any_dungeon':     "Any Dungeon",
             'keysanity':       "Anywhere (Keysanity)",
@@ -3745,7 +3744,7 @@ setting_infos = [
             'Own Dungeon': Ganon's Castle Boss Key can only appear
             inside Ganon's Castle.
             
-            'Regional Keysanity': Ganon's Castle Boss Key can only appear
+            'Regional': Ganon's Castle Boss Key can only appear
             in Hyrule Field, Lon Lon Ranch, Market, Temple of Time, Hyrule Castle,
             (Outside) Ganon's Castle, and Inside Ganon's Castle.
             
