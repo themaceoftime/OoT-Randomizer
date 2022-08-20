@@ -152,7 +152,7 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
             location.world.hint_type_overrides['sometimes'].append(location.name)
             location.world.hint_type_overrides['random'].append(location.name)
         
-        if worlds[0].settings.shuffle_mapcompass in ['any_dungeon', 'overworld', 'keysanity']:
+        if worlds[0].settings.shuffle_mapcompass in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
             # Non-empty dungeon items are present in restitempool but yet we 
             # don't want to place them in an empty dungeon
             restdungeon, restother = [], []
@@ -403,6 +403,7 @@ def fill_restrictive(window, worlds, base_search, locations, itempool, count=-1)
     items_search = base_search.copy()
     items_search.collect_all(itempool)
     logging.getLogger('').debug(f'Placing {len(itempool)} items among {len(locations)} potential locations.')
+    itempool.sort(key=lambda item: not item.priority)
 
     # loop until there are no items or locations
     while itempool and locations:
@@ -412,7 +413,9 @@ def fill_restrictive(window, worlds, base_search, locations, itempool, count=-1)
 
         # get an item and remove it from the itempool
         item_to_place = itempool.pop()
-        if item_to_place.majoritem:
+        if item_to_place.priority:
+            l2cations = [l for l in locations if l.can_fill_fast(item_to_place)]
+        elif item_to_place.majoritem:
             l2cations = [l for l in locations if not l.minor_only]
         else:
             l2cations = locations

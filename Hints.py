@@ -341,7 +341,7 @@ class HintArea(Enum):
     DESERT_COLOSSUS        = 'at',     'at',     'the Desert Colossus',        'Yellow',     None
     SPIRIT_TEMPLE          = 'inside', 'in',     'the Spirit Temple',          'Yellow',     'Spirit Temple'
 
-    # Peforms a breadth first search to find the closest hint area from a given spot (region, location, or entrance).
+    # Performs a breadth first search to find the closest hint area from a given spot (region, location, or entrance).
     # May fail to find a hint if the given spot is only accessible from the root and not from any other region with a hint area
     @staticmethod
     def at(spot):
@@ -367,6 +367,21 @@ class HintArea(Enum):
             spot_queue.extend(list(filter(lambda ent: ent not in already_checked, parent_region.entrances)))
 
         raise HintAreaNotFound('No hint area could be found for %s [World %d]' % (spot, spot.world.id))
+
+    @classmethod
+    def get_dungeon_hint_area(cls, dungeon_name: str):
+        if dungeon_name.find("(") != -1 and dungeon_name.find(")") != -1:
+            # A dungeon item name was passed in - get the name of the dungeon from it.
+            dungeon_name = dungeon_name[dungeon_name.index("(")+1:dungeon_name.index(")")]
+
+        if dungeon_name == "Thieves Hideout":
+            # Special case for Thieves' Hideout - change this if it gets its own hint area.
+            return HintArea.GERUDO_FORTRESS
+
+        for hint_area in cls:
+            if hint_area.dungeon_name == dungeon_name:
+                return hint_area
+        return None
 
     def __str__(self):
         return self.value[2]
