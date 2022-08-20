@@ -152,7 +152,7 @@ def distribute_items_restrictive(window, worlds, fill_locations=None):
             location.world.hint_type_overrides['sometimes'].append(location.name)
             location.world.hint_type_overrides['random'].append(location.name)
         
-        if worlds[0].settings.shuffle_mapcompass in ['any_dungeon', 'overworld', 'keysanity']:
+        if worlds[0].settings.shuffle_mapcompass in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
             # Non-empty dungeon items are present in restitempool but yet we 
             # don't want to place them in an empty dungeon
             restdungeon, restother = [], []

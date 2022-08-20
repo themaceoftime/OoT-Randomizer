@@ -362,7 +362,7 @@ def get_pool_core(world):
         if world.settings.shuffle_beans and world.distribution.get_starting_item('Magic Bean') < 10:
             pending_junk_pool.append('Magic Bean Pack')
         if (world.settings.gerudo_fortress != "open"
-                and world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity']):
+                and world.settings.shuffle_hideoutkeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']):
             if 'Thieves Hideout' in world.settings.key_rings and world.settings.gerudo_fortress != "fast":
                 pending_junk_pool.extend(['Small Key Ring (Thieves Hideout)'])
             else:

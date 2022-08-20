@@ -1031,17 +1031,17 @@ class World(object):
 
         if self.settings.shuffle_mapcompass == 'dungeon':
             itempool.extend([item for dungeon in self.dungeons for item in dungeon.dungeon_items])
-        elif self.settings.shuffle_mapcompass in ['any_dungeon', 'overworld', 'keysanity']:
+        elif self.settings.shuffle_mapcompass in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
             itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.dungeon_items])
 
         if self.settings.shuffle_smallkeys == 'dungeon':
             itempool.extend([item for dungeon in self.dungeons for item in dungeon.small_keys])
-        elif self.settings.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity']:
+        elif self.settings.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
             itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.small_keys])
 
         if self.settings.shuffle_bosskeys == 'dungeon':
             itempool.extend([item for dungeon in self.dungeons if dungeon.name != 'Ganons Castle' for item in dungeon.boss_key])
-        elif self.settings.shuffle_bosskeys in ['any_dungeon', 'overworld', 'keysanity']:
+        elif self.settings.shuffle_bosskeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
             itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.boss_key])
 
         if self.settings.shuffle_ganon_bosskey == 'dungeon':
