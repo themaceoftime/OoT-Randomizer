@@ -165,6 +165,7 @@ do that.
 * Fix a softlock when plandoing starting with less than 10 beans.
 * Fix plando negative locations (ex. "!Gold Skulltula Token") choosing Buy items for non-Buy locations.
 * Ice traps will no longer be sent to players in the Treasure Chest Game to prevent using deaths to circumvent the game.
+* Fixed dragging list items in the GUI not working when the target is empty.
 
 #### Other changes
 * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
