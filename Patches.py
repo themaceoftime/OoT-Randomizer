@@ -1237,7 +1237,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     if world.settings.complete_mask_quest:
         rom.write_byte(rom.sym('COMPLETE_MASK_QUEST'), 1)
 
-    if world.settings.skip_child_zelda:
+    if world.settings.shuffle_child_trade == 'skip_child_zelda':
         save_context.write_bits(0x0ED7, 0x04) # "Obtained Malon's Item"
         save_context.write_bits(0x0ED7, 0x08) # "Woke Talon in castle"
         save_context.write_bits(0x0ED7, 0x10) # "Talon has fled castle"

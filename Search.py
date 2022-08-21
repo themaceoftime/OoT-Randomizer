@@ -289,7 +289,7 @@ class Search(object):
     def iter_pseudo_starting_locations(self):
         for state in self.state_list:
             # Skip Child Zelda and Link's Pocket are not technically starting items, so collect them now
-            if state.world.settings.skip_child_zelda:
+            if state.world.settings.shuffle_child_trade == 'skip_child_zelda':
                 location = state.world.get_location('Song from Impa')
                 self._cache['visited_locations'].add(location)
                 yield location

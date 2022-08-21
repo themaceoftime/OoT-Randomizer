@@ -18,7 +18,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "skip_child_zelda":                        true,
+    "shuffle_child_trade":                     "skip_child_zelda",
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,

@@ -2673,21 +2673,6 @@ setting_infos = [
         shared         = True,
         disabled_default = 0,
     ),
-    Checkbutton(
-        name           = 'skip_child_zelda',
-        gui_text       = 'Skip Child Zelda',
-        gui_tooltip    = '''\
-            Start having already met Zelda and obtained
-            Zelda's Letter along with the item from Impa.
-            Supersedes "Skip Child Stealth" since the whole
-            sequence is skipped. Similarly, this is
-            incompatible with Shuffle Weird Egg.
-        ''',
-        shared         = True,
-        disable = {
-            True: {'settings': ['shuffle_weird_egg']},
-        },
-    ),
     Combobox(
         name           = 'dungeon_shortcuts_choice',
         gui_text       = 'Dungeon Boss Shortcuts Mode',
@@ -2996,25 +2981,40 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
-    Checkbutton(
-        name           = 'shuffle_weird_egg',
-        gui_text       = 'Shuffle Weird Egg',
+    Combobox(
+        name           = 'shuffle_child_trade',
+        gui_text       = 'Shuffle Child Trade Item',
+        default        = 'vanilla',
+        choices        = {
+            'vanilla':          'Vanilla Locations',
+            'shuffle':          'Shuffle Weird Egg',
+            'skip_child_zelda': 'Skip Child Zelda',
+            },
         gui_tooltip    = '''\
-            Enabling this shuffles the Weird Egg from Malon into the pool.
-
-            This will require finding the Weird Egg to talk to Zelda in
-            Hyrule Castle, which in turn locks rewards from Impa, Saria,
-            Malon, and Talon, as well as the Happy Mask sidequest.
-            The Weird Egg is also required for Zelda's Letter to open 
-            the Kakariko Gate as child which can lock some progression.
+            This changes the beginning of the child trade quest.
+            
+            'Vanilla Locations': Weird Egg is found from Malon outside
+            of Hyrule Castle and the child trade quest continues normally.
+            
+            'Shuffle Weird Egg': The Weird Egg is shuffled into the item pool
+            and Malon gives a randomized item. This will require finding the
+            Weird Egg to talk to Zelda in Hyrule Castle, which in turn locks
+            rewards from Impa, Saria, Malon, and Talon, as well as the Happy
+            Mask sidequest.
+            
+            'Skip Child Zelda': Start having already met Zelda and obtained
+            Zelda's Letter along with the item from Impa.
+            Supersedes "Skip Child Stealth" since the whole sequence is skipped.
         ''',
-        disable        = {
-            True : {'settings' : ['skip_child_zelda']}
-        },
-        shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
+            'distribution':  [
+                ('vanilla', 1),
+                ('shuffle', 1),
+                ('skip_child_zelda', 1),
+            ],
         },
+        shared         = True,
     ),
     Checkbutton(
         name           = 'shuffle_gerudo_card',

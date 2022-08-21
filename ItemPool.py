@@ -437,11 +437,12 @@ def get_pool_core(world):
 
         # Weird Egg
         elif location.vanilla_item == 'Weird Egg':
-            if world.settings.skip_child_zelda:
+            if world.settings.shuffle_child_trade == 'skip_child_zelda':
                 item = IGNORE_LOCATION
                 shuffle_item = False
+                world.state.collect(ItemFactory('Weird Egg'))
             else:
-                shuffle_item = world.settings.shuffle_weird_egg
+                shuffle_item = world.settings.shuffle_child_trade != 'vanilla'
 
         # Ocarinas
         elif location.vanilla_item == 'Ocarina':
