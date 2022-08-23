@@ -210,16 +210,16 @@ deku_scrubs_items = {
 }
 
 trade_items = OrderedDict([
-    ("pocket_egg",   "Pocket Egg"),
-    ("pocket_cucco", "Pocket Cucco"),
-    ("cojiro",       "Cojiro"),
-    ("odd_mushroom", "Odd Mushroom"),
-    ("poachers_saw", "Poachers Saw"),
-    ("broken_sword", "Broken Sword"),
-    ("prescription", "Prescription"),
-    ("eyeball_frog", "Eyeball Frog"),
-    ("eyedrops",     "Eyedrops"),
-    ("claim_check",  "Claim Check"),
+    ("Pocket Egg",   "Pocket Egg"),
+    ("Pocket Cucco", "Pocket Cucco"),
+    ("Cojiro",       "Cojiro"),
+    ("Odd Mushroom", "Odd Mushroom"),
+    ("Poachers Saw", "Poachers Saw"),
+    ("Broken Sword", "Broken Sword"),
+    ("Prescription", "Prescription"),
+    ("Eyeball Frog", "Eyeball Frog"),
+    ("Eyedrops",     "Eyedrops"),
+    ("Claim Check",  "Claim Check"),
 ])
 
 normal_bottles = [bottle for bottle in sorted(ItemInfo.bottles) if bottle not in ['Deliver Letter', 'Sell Big Poe']] + ['Bottle with Big Poe']
@@ -492,12 +492,8 @@ def get_pool_core(world):
 
         # Adult Trade Item
         elif location.vanilla_item == 'Pocket Egg':
-            trade_item_options = list(trade_items.keys())
-            earliest_trade = trade_item_options.index(world.settings.logic_earliest_adult_trade)
-            latest_trade = trade_item_options.index(world.settings.logic_latest_adult_trade)
-            if earliest_trade > latest_trade:
-                earliest_trade, latest_trade = latest_trade, earliest_trade
-            item = trade_items[random.choice(trade_item_options[earliest_trade:latest_trade + 1])]
+            potential_trade_items = world.settings.adult_trade_start if world.settings.adult_trade_start else trade_items.values()
+            item = random.choice(potential_trade_items)
             world.selected_adult_trade_item = item
             shuffle_item = True
 

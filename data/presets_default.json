@@ -84,8 +84,7 @@
     "item_pool_value": "balanced",
     "ice_trap_appearance": "junk_only",
     "junk_ice_traps": "normal",
-    "logic_earliest_adult_trade": "prescription",
-    "logic_latest_adult_trade": "claim_check"
+    "adult_trade_start": ["Prescription", "Eyeball Frog", "Eyedrops", "Claim Check"]
   },
   "S5 Tournament": {
     "show_seed_info":                          true,
@@ -172,8 +171,12 @@
       "logic_lens_bongo",
       "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_equipment":                      [
       "deku_shield"
     ],
@@ -283,8 +286,12 @@
       "logic_lens_bongo",
       "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_equipment":                      [
       "deku_shield"
     ],
@@ -396,8 +403,12 @@
         "logic_lens_shadow_platform",
         "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_equipment":                      [],
     "starting_items":                          [],
     "ocarina_songs":                           "off",
@@ -524,8 +535,9 @@
     "item_pool_value":                         "balanced",
     "junk_ice_traps":                          "off",
     "ice_trap_appearance":                     "junk_only",
-    "logic_earliest_adult_trade":              "claim_check",
-    "logic_latest_adult_trade":                "claim_check"
+    "adult_trade_start":                       [
+      "Claim Check"
+    ]
   },
   "Multiworld Tournament Season 3": {
     "show_seed_info":                          true,
@@ -619,8 +631,9 @@
       "logic_lens_spirit",
       "logic_dc_scarecrow_gs"
     ],
-    "logic_earliest_adult_trade":              "claim_check",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Claim Check"
+    ],
     "starting_equipment":                      [],
     "starting_items":                          [
       "ocarina",
@@ -880,8 +893,9 @@
     "starting_tod": "random",
     "item_pool_value": "minimal",
     "junk_ice_traps": "onslaught",
-    "logic_earliest_adult_trade": "pocket_egg",
-    "logic_latest_adult_trade": "pocket_egg"
+    "adult_trade_start":                       [
+      "Pocket Egg"
+    ]
   },
   "Bingo": {
     "show_seed_info":                          true,
@@ -961,8 +975,12 @@
       "logic_lens_bongo",
       "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_equipment":                      [],
     "starting_items":                          [],
     "starting_songs":                          [],
@@ -1069,8 +1087,12 @@
       "logic_lens_bongo",
       "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_items":                          [
       "ocarina",
       "lens",
@@ -1190,8 +1212,12 @@
       "logic_lens_bongo",
       "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_equipment":                      [],
     "starting_items":                          [
       "ocarina"

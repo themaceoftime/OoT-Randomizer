@@ -382,8 +382,7 @@
             "item_pool_value",
             "junk_ice_traps",
             "ice_trap_appearance",
-            "logic_earliest_adult_trade",
-            "logic_latest_adult_trade"
+            "adult_trade_start"
           ]
         }
       ]
