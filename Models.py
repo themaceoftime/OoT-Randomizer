@@ -590,6 +590,7 @@ def patch_model_adult(rom, settings, log):
 
     # Load and process model
     dfAddress = LoadModel(rom, model, 0)
+    dfAddress = dfAddress | 0x06000000 # Add segment to DF address
 
     # Write adult Link pointer data
     writer = ModelPointerWriter(rom)
@@ -761,6 +762,7 @@ def patch_model_child(rom, settings, log):
 
     # Load and process model
     dfAddress = LoadModel(rom, model, 1)
+    dfAddress = dfAddress | 0x06000000 # Add segment to DF address
 
     # Write child Link pointer data
     writer = ModelPointerWriter(rom)
