@@ -184,7 +184,9 @@ logic_tricks = {
         'tags'    : ("Kakariko Village",),
         'tooltip' : '''\
                     Can be reached by side-hopping off
-                    the watchtower.
+                    the watchtower as either age, or by
+                    jumping onto the potion shop's roof
+                    from the ledge as adult.
                     '''},
     'Dodongo\'s Cavern Staircase with Bow': {
         'name'    : 'logic_dc_staircase',
