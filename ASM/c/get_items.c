@@ -153,9 +153,11 @@ void clear_override() {
 }
 
 void set_outgoing_override(override_t *override) {
-    OUTGOING_KEY = override->key;
-    OUTGOING_ITEM = override->value.item_id;
-    OUTGOING_PLAYER = override->value.player;
+    if (override->key.type != OVR_DELAYED || override->key.flag != 0xFF) { // don't send items received from incoming back to outgoing
+        OUTGOING_KEY = override->key;
+        OUTGOING_ITEM = override->value.item_id;
+        OUTGOING_PLAYER = override->value.player;
+    }
 }
 
 void push_pending_item(override_t override) {
