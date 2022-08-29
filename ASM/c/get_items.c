@@ -19,6 +19,7 @@ extern uint8_t PLAYER_ID;
 extern uint8_t PLAYER_NAME_ID;
 extern uint16_t INCOMING_PLAYER;
 extern uint16_t INCOMING_ITEM;
+extern uint8_t MW_SEND_OWN_ITEMS;
 extern override_key_t OUTGOING_KEY;
 extern uint16_t OUTGOING_ITEM;
 extern uint16_t OUTGOING_PLAYER;
@@ -236,7 +237,7 @@ void after_item_received() {
         return;
     }
 
-    if (active_override_is_outgoing) {
+    if (MW_SEND_OWN_ITEMS || active_override_is_outgoing) {
         set_outgoing_override(&active_override);
     }
 
@@ -363,6 +364,9 @@ void get_skulltula_token(z64_actor_t *token_actor) {
     } else if (player != PLAYER_ID) {
         set_outgoing_override(&override);
     } else {
+        if (MW_SEND_OWN_ITEMS) {
+            set_outgoing_override(&override);
+        }
         z64_GiveItem(&z64_game, item_row->action_id);
         call_effect_function(item_row);
     }
