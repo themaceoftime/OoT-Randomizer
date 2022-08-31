@@ -9,7 +9,7 @@ from enum import Enum
 import itertools
 
 from HintList import getHint, getMulti, getHintGroup, getUpgradeHintList, hintExclusions, misc_item_hint_table
-from Item import MakeEventItem
+from Item import Item, MakeEventItem
 from Messages import COLOR_MAP, update_message_by_id
 from Region import Region
 from Search import Search
@@ -1463,14 +1463,14 @@ def buildAltarHints(world, messages, include_rewards=True, include_wincons=True)
 
 # pulls text string from hintlist for reward after sending the location to hintlist.
 def buildBossString(reward, color, world):
-    location = world.hinted_dungeon_reward_locations[reward]
-    item_icon = chr(location.item.special['item_id'])
+    item_icon = chr(Item(reward).special['item_id'])
     if reward in world.distribution.effective_starting_items and world.distribution.effective_starting_items[reward].count > 0:
         if world.settings.clearer_hints:
             text = GossipText(f"\x08\x13{item_icon}One #@ already has#...", [color], prefix='')
         else:
             text = GossipText(f"\x08\x13{item_icon}One in #@'s pocket#...", [color], prefix='')
     else:
+        location = world.hinted_dungeon_reward_locations[reward]
         location_text = HintArea.at(location).text(world.settings.clearer_hints, preposition=True)
         text = GossipText(f"\x08\x13{item_icon}One {location_text}...", [color], prefix='')
     return str(text) + '\x04'
