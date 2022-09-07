@@ -33,7 +33,7 @@ SET_BONK_FLAG:
     or      a0, s0, $zero
     addiu   a1, $zero, 0x00FF
 
-    ; Bong damage enabled
+    ; Bonk damage enabled
     lw      t0, CFG_DEADLY_BONKS
     beqz    t0, @@return_bonk_flag
     nop
