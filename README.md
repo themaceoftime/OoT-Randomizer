@@ -94,8 +94,6 @@ issue. You should always Hard Reset to avoid this issue entirely.
 * Versions older than 3.0 of Project64 have known compatablity issues with OoTR. To avoid this either 
 [update to v3.0 and follow the rest of our PJ64 guide](https://wiki.ootrandomizer.com/index.php?title=Project64) or change to one of our other two supported emulators.
 * Executing the collection delay glitch on various NPCs may have unpredictable and undesirable consequences.
-* Saving and quitting on the very first frame after becoming an adult when you would trigger the Light Arrow cutscene can have undesired consequences. Just don't
-do that.
 * This randomizer is based on the 1.0 version of _Ocarina of Time_, so some of its specific bugs remain.
 
 ## Changelog
