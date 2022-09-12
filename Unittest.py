@@ -45,7 +45,7 @@ bottles = {name for name, item in ItemInfo.items.items() if item.special.get('bo
 junk = set(remove_junk_items)
 shop_items = {i for i, nfo in ItemInfo.items.items() if nfo.type == 'Shop'}
 ludicrous_junk = set(remove_junk_ludicrous_items)
-ludicrous_set = set(ludicrous_items_base) | set(ludicrous_items_extended) | ludicrous_junk | {i for t, i in trade_items.items()} | set(bottles) | set(ludicrous_exclusions) | set(['Bottle with Big Poe']) | shop_items
+ludicrous_set = set(ludicrous_items_base) | set(ludicrous_items_extended) | ludicrous_junk | set(trade_items) | set(bottles) | set(ludicrous_exclusions) | set(['Bottle with Big Poe']) | shop_items
 
 
 def make_settings_for_test(settings_dict, seed=None, outfilename=None, strict=True):

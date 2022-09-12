@@ -209,18 +209,19 @@ deku_scrubs_items = {
     'Buy Deku Seeds (30)': [('Arrows (30)', 3), ('Deku Seeds (30)', 1)],
 }
 
-trade_items = OrderedDict([
-    ("Pocket Egg",   "Pocket Egg"),
-    ("Pocket Cucco", "Pocket Cucco"),
-    ("Cojiro",       "Cojiro"),
-    ("Odd Mushroom", "Odd Mushroom"),
-    ("Poachers Saw", "Poachers Saw"),
-    ("Broken Sword", "Broken Sword"),
-    ("Prescription", "Prescription"),
-    ("Eyeball Frog", "Eyeball Frog"),
-    ("Eyedrops",     "Eyedrops"),
-    ("Claim Check",  "Claim Check"),
-])
+trade_items = (
+    "Pocket Egg",
+    "Pocket Cucco",
+    "Cojiro",
+    "Odd Mushroom",
+    #"Odd Potion",
+    "Poachers Saw",
+    "Broken Sword",
+    "Prescription",
+    "Eyeball Frog",
+    "Eyedrops",
+    "Claim Check",
+)
 
 normal_bottles = [bottle for bottle in sorted(ItemInfo.bottles) if bottle not in ['Deliver Letter', 'Sell Big Poe']] + ['Bottle with Big Poe']
 song_list = [item.name for item in sorted([i for n, i in ItemInfo.items.items() if i.type == 'Song'], key=lambda x: x.index)]
@@ -261,7 +262,7 @@ exclude_from_major = [
 item_groups = {
     'Junk': remove_junk_items,
     'JunkSong': ('Prelude of Light', 'Serenade of Water'),
-    'AdultTrade': list(trade_items.values()),
+    'AdultTrade': trade_items,
     'Bottle': normal_bottles,
     'Spell': ('Dins Fire', 'Farores Wind', 'Nayrus Love'),
     'Shield': ('Deku Shield', 'Hylian Shield'),
@@ -492,7 +493,7 @@ def get_pool_core(world):
 
         # Adult Trade Item
         elif location.vanilla_item == 'Pocket Egg':
-            potential_trade_items = world.settings.adult_trade_start if world.settings.adult_trade_start else trade_items.values()
+            potential_trade_items = world.settings.adult_trade_start if world.settings.adult_trade_start else trade_items
             item = random.choice(potential_trade_items)
             world.selected_adult_trade_item = item
             shuffle_item = True
