@@ -406,8 +406,24 @@
           ]
         },
         {
-          "name": "playermodels_section",
+          "name": "playermodels_section_electron",
           "text": "Player Models",
+          "exclude_from_web": true,
+          "app_type": ["generator", "patcher"],
+          "col_span": 2,
+          "row_span": [2,2,2],
+          "settings": [
+            "model_adult",
+            "model_adult_filepicker",
+            "model_child",
+            "model_child_filepicker"
+          ]
+        },
+        {
+          "name": "playermodels_section_web",
+          "text": "Player Models",
+          "exclude_from_electron": true,
+          "app_type": ["patcher"],
           "col_span": 2,
           "row_span": [2,2,2],
           "settings": [
