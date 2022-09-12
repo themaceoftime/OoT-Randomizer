@@ -128,6 +128,8 @@ issue. You should always Hard Reset to avoid this issue entirely.
   * `Shuffle Dungeon Entrances` has new setting `Dungeons and Ganon` which puts Ganon's Castle into the pool of dungeons which can be shuffled.
   * New setting `Pre-Completed Dungeons` which allows some dungeons to be filled with junk and their dungeon rewards given as a starting item.
   * New setting `Regional` for dungeon items makes it so dungeon items such as keys will be placed in the same region as their dungeon. For example, if Small Keys are set to Regional, then Small keys for Forest Temple can be found in the temple itself, Sacred Forest Meadow, Lost Woods, Kokiri Forest, or Deku Tree.
+  * `Skip Child Zelda` and `Shuffle Weird Egg` have been combined into one setting `Shuffle Child Trade Item`.
+  * The Adult earliest and latest trade item settings have been combined into a multiselect `Adult Trade Sequence Item` which allows you to choose whatever items you wish as the starting item for the adult trade quest.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.

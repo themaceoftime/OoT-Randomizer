@@ -34,7 +34,6 @@
     "shuffle_cows": false,
     "shuffle_kokiri_sword": false,
     "shuffle_ocarinas": false,
-    "shuffle_weird_egg": false,
     "shuffle_gerudo_card": false,
     "shuffle_beans": false,
     "shuffle_medigoron_carpet_salesman": false,
@@ -52,7 +51,7 @@
       "GF HBA 1500 Points"
     ],
     "allowed_tricks": [],
-    "skip_child_zelda": true,
+    "shuffle_child_trade": "skip_child_zelda",
     "no_escape_sequence": true,
     "no_guard_stealth": true,
     "no_epona_race": true,
@@ -85,8 +84,7 @@
     "item_pool_value": "balanced",
     "ice_trap_appearance": "junk_only",
     "junk_ice_traps": "normal",
-    "logic_earliest_adult_trade": "prescription",
-    "logic_latest_adult_trade": "claim_check"
+    "adult_trade_start": ["Prescription", "Eyeball Frog", "Eyedrops", "Claim Check"]
   },
   "S5 Tournament": {
     "show_seed_info":                          true,
@@ -108,7 +106,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "skip_child_zelda":                        true,
+    "shuffle_child_trade":                     "skip_child_zelda",
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,
@@ -173,8 +171,12 @@
       "logic_lens_bongo",
       "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_equipment":                      [
       "deku_shield"
     ],
@@ -219,7 +221,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "skip_child_zelda":                        true,
+    "shuffle_child_trade":                     "skip_child_zelda",
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,
@@ -284,8 +286,12 @@
       "logic_lens_bongo",
       "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_equipment":                      [
       "deku_shield"
     ],
@@ -332,7 +338,6 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "skip_child_zelda":                        false,
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,
@@ -353,7 +358,7 @@
     "big_poe_count":                           1,
     "shuffle_kokiri_sword":                    true,
     "shuffle_ocarinas":                        false,
-    "shuffle_weird_egg":                       false,
+    "shuffle_child_trade":                     "vanilla",
     "shuffle_gerudo_card":                     false,
     "shuffle_song_items":                      "song",
     "shuffle_cows":                            false,
@@ -398,8 +403,12 @@
         "logic_lens_shadow_platform",
         "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_equipment":                      [],
     "starting_items":                          [],
     "ocarina_songs":                           "off",
@@ -436,7 +445,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "skip_child_zelda":                        true,
+    "shuffle_child_trade":                     "skip_child_zelda",
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,
@@ -526,8 +535,9 @@
     "item_pool_value":                         "balanced",
     "junk_ice_traps":                          "off",
     "ice_trap_appearance":                     "junk_only",
-    "logic_earliest_adult_trade":              "claim_check",
-    "logic_latest_adult_trade":                "claim_check"
+    "adult_trade_start":                       [
+      "Claim Check"
+    ]
   },
   "Multiworld Tournament Season 3": {
     "show_seed_info":                          true,
@@ -553,7 +563,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "skip_child_zelda":                        true,
+    "shuffle_child_trade":                     "skip_child_zelda",
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,
@@ -621,8 +631,9 @@
       "logic_lens_spirit",
       "logic_dc_scarecrow_gs"
     ],
-    "logic_earliest_adult_trade":              "claim_check",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Claim Check"
+    ],
     "starting_equipment":                      [],
     "starting_items":                          [
       "ocarina",
@@ -680,7 +691,7 @@
     "shuffle_cows": true,
     "shuffle_kokiri_sword": true,
     "shuffle_ocarinas": true,
-    "shuffle_weird_egg": true,
+    "shuffle_child_trade": "shuffle",
     "shuffle_gerudo_card": true,
     "shuffle_beans": true,
     "shuffle_medigoron_carpet_salesman": true,
@@ -882,8 +893,9 @@
     "starting_tod": "random",
     "item_pool_value": "minimal",
     "junk_ice_traps": "onslaught",
-    "logic_earliest_adult_trade": "pocket_egg",
-    "logic_latest_adult_trade": "pocket_egg"
+    "adult_trade_start":                       [
+      "Pocket Egg"
+    ]
   },
   "Bingo": {
     "show_seed_info":                          true,
@@ -904,7 +916,6 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  6,
-    "skip_child_zelda":                        false,
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        false,
     "no_epona_race":                           false,
@@ -925,7 +936,7 @@
     "big_poe_count":                           1,
     "shuffle_kokiri_sword":                    true,
     "shuffle_ocarinas":                        false,
-    "shuffle_weird_egg":                       false,
+    "shuffle_child_trade":                     "vanilla",
     "shuffle_gerudo_card":                     false,
     "shuffle_song_items":                      "song",
     "shuffle_cows":                            false,
@@ -964,8 +975,12 @@
       "logic_lens_bongo",
       "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_equipment":                      [],
     "starting_items":                          [],
     "starting_songs":                          [],
@@ -1006,7 +1021,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "skip_child_zelda":                        true,
+    "shuffle_child_trade":                     "skip_child_zelda",
     "dungeon_shortcuts_choice":                "off",
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
@@ -1072,8 +1087,12 @@
       "logic_lens_bongo",
       "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_items":                          [
       "ocarina",
       "lens",
@@ -1126,7 +1145,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "skip_child_zelda":                        true,
+    "shuffle_child_trade":                     "skip_child_zelda",
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,
@@ -1193,8 +1212,12 @@
       "logic_lens_bongo",
       "logic_lens_spirit"
     ],
-    "logic_earliest_adult_trade":              "prescription",
-    "logic_latest_adult_trade":                "claim_check",
+    "adult_trade_start":                       [
+      "Prescription",
+      "Eyeball Frog",
+      "Eyedrops",
+      "Claim Check"
+    ],
     "starting_equipment":                      [],
     "starting_items":                          [
       "ocarina"
