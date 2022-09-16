@@ -563,7 +563,7 @@ export class GUIGlobal {
 
         remote.baseVersion = baseMatch != null && baseMatch[1] !== undefined ? baseMatch[1] : "";
         remote.supplementaryVersion = supplementaryMatch != null && supplementaryMatch[1] !== undefined ? parseInt(supplementaryMatch[1]) : 0;
-        remote.fullVersion = fullMatch != null && fullMatch[1] !== undefined ? fullMatch[1] : "";
+        remote.fullVersion = fullMatch != null && fullMatch[1] !== undefined ? fullMatch[1] : remote.baseVersion;
         remote.fullVersion = remote.fullVersion
           .replace('{base_version}', remote.baseVersion)
           .replace('{supplementary_version}', remote.supplementaryVersion.toString())

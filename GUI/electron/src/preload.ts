@@ -103,7 +103,7 @@ post.on('getCurrentSourceVersion', function (event) {
 
     data.baseVersion = baseMatch != null && baseMatch[1] !== undefined ? baseMatch[1] : "";
     data.supplementaryVersion = supplementaryMatch != null && supplementaryMatch[1] !== undefined ? parseInt(supplementaryMatch[1]) : 0;
-    data.fullVersion = fullMatch != null && fullMatch[1] !== undefined ? fullMatch[1] : "";
+    data.fullVersion = fullMatch != null && fullMatch[1] !== undefined ? fullMatch[1] : data.baseVersion;
     data.fullVersion = data.fullVersion
       .replace('{base_version}', data.baseVersion)
       .replace('{supplementary_version}', data.supplementaryVersion.toString())
