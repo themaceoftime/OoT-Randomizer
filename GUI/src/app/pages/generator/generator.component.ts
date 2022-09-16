@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChil
 import { OverlayContainer } from '@angular/cdk/overlay';
 
 import { GUIGlobal } from '../../providers/GUIGlobal';
-import { MatGridList, MatGridTile } from '@angular/material';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { NbTabsetComponent } from '@nebular/theme/components/tabset/tabset.component';
 import { NbSelectComponent } from '@nebular/theme/components/select/select.component';
 import { NbDialogService } from '@nebular/theme';
@@ -27,8 +27,8 @@ export class GeneratorComponent implements OnInit {
 
   tooltipComponent = GUITooltip;
 
-  @ViewChild('refTabSet') tabSet: NbTabsetComponent;
-  @ViewChild('refTabFooter') tabSetFooter: NbTabsetComponent;
+  @ViewChild('refTabSet', { static: false }) tabSet: NbTabsetComponent;
+  @ViewChild('refTabFooter', { static: false }) tabSetFooter: NbTabsetComponent;
   activeTab: string = "";
   activeFooterTab: string = "";
   settingsLocked: boolean = false;
