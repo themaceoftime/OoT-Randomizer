@@ -2,7 +2,8 @@ import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ComponentFactoryResolver, ApplicationRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NbDialogModule } from '@nebular/theme/components/dialog';
+import { NbDialogModule } from '@nebular/theme';
+import { NbEvaIconsModule } from "@nebular/eva-icons";
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -11,7 +12,6 @@ import { AppComponent, BypassSecurityPipe } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ThemeModule } from './@theme/theme.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -68,9 +68,9 @@ import { TextInputWindow } from './pages/generator/textInputWindow/textInputWind
     FormsModule,
     ReactiveFormsModule,
     CdkTableModule,
-    NgbModule.forRoot(),
     ThemeModule.forRoot(),
-    NbDialogModule.forRoot()
+    NbDialogModule.forRoot(),
+    NbEvaIconsModule
   ],
   exports: [
     MatButtonModule,

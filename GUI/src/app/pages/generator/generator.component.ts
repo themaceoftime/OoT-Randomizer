@@ -4,9 +4,8 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 
 import { GUIGlobal } from '../../providers/GUIGlobal';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
-import { NbTabsetComponent } from '@nebular/theme/components/tabset/tabset.component';
 import { NbSelectComponent } from '@nebular/theme/components/select/select.component';
-import { NbDialogService } from '@nebular/theme';
+import {NbDialogService, NbTabsetComponent} from '@nebular/theme';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ngfModule, ngf } from "angular-file";
 
@@ -24,6 +23,8 @@ import { TextInputWindow } from './textInputWindow/textInputWindow.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GeneratorComponent implements OnInit {
+
+  selectedItem = '2';
 
   tooltipComponent = GUITooltip;
 
@@ -547,7 +548,7 @@ export class GeneratorComponent implements OnInit {
               this.cd.markForCheck();
               this.cd.detectChanges();
 
-              refPresetSelect.setSelected = trimmedName;
+              refPresetSelect.selected = trimmedName;
 
               //console.log("Preset created");
             }
