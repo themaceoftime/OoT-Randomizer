@@ -536,7 +536,7 @@ hintTable = {
     'Haunted Wasteland Checks':                                    ("deep in the #wasteland a spider and a chest# hold...^", None, 'dual'),
 
     'Deku Tree MQ Basement GS':                                    ("in the back of the #basement of the Great Deku Tree# two spiders hold...^", None, 'dual'),
-    'Dodongos Cavern Upper Business Scrubs':                       ("in #Dodongo's Cavern a pair of scrubs# sell...^", None, 'dual'),
+    'Dodongos Cavern Upper Business Scrubs':                       ("deep in #Dodongo's Cavern a pair of scrubs# sell...^", None, 'dual'),
     'Dodongos Cavern MQ Larvae Room':                              ("amid #larvae in Dodongo's Cavern# a chest and a spider hold...^", None, 'dual'),
     'Fire Temple Lower Loop':                                      ("under the #entrance of the Fire Temple# a blocked path leads to...^", None, 'dual'),
     'Fire Temple MQ Lower Loop':                                   ("under the #entrance of the Fire Temple# a blocked path leads to...^", None, 'dual'),
@@ -545,7 +545,7 @@ hintTable = {
     'Water Temple North Basement Checks':                          ("the #northern basement of the Water Temple# contains...^", None, 'dual'),
     'Water Temple MQ North Basement Checks':                       ("the #northern basement of the Water Temple# contains...^", None, 'dual'),
     'Water Temple MQ Lower Checks':                                ("#a chest and a crate in locked basements# in the Water Temple hold...^", None, 'dual'),
-    'Spirit Temple Colossus Hands':                                ("upon the #Colossus's hands# right and left hands lie...^", None, 'dual'),
+    'Spirit Temple Colossus Hands':                                ("upon the #Colossus's right and left hands# lie...^", None, 'dual'),
     'Spirit Temple Child Lower':                                   ("between the #crawl spaces in the Spirit Temple# chests contain...^", None, 'dual'),
     'Spirit Temple Child Top':                                     ("on the path to the #right hand of the Spirit Temple# a chest and a spider hold...^", None, 'dual'),
     'Spirit Temple Adult Lower':                                   ("past a #silver block in the Spirit Temple# boulders and a melody conceal...^", None, 'dual'),
