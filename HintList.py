@@ -1587,6 +1587,7 @@ hintTable = {
     '1233':                                                     ("When the moon hits Termina like a big pizza pie that's game over.", None, 'junk'), # ref: That's Amore by Dean Martin + Majora's Mask
     '1234':                                                     ("Ganondorf doesn't specialize in hiding items, nor in keeping secrets for that matter.", None, 'junk'),
     '1235':                                                     ("While you're wasting time reading this hint, the others are playing the seed.", None, 'junk'),
+    '1236':                                                     ("Have you ever tried hammering the ground in a room with Torch Slugs, Tektites, Walltulas, Scrubs or Deku Babas?", None, 'junk'),
 
     'Deku Tree':                                                ("an ancient tree", "the Deku Tree", 'dungeonName'),
     'Dodongos Cavern':                                          ("an immense cavern", "Dodongo's Cavern", 'dungeonName'),
