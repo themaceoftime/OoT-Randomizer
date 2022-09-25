@@ -292,7 +292,8 @@ def search_goals(categories, reachable_goals, search, priority_locations, all_lo
     world_ids = [state.world.id for state in search.state_list]
     if search_woth:
         required_locations['way of the hero'] = []
-    for location in search.iter_reachable_locations(all_locations[:]):
+    remaining_locations = all_locations[:]
+    for location in search.iter_reachable_locations(all_locations):
         # Try to remove items one at a time and see if the goal is still reachable
         if location in item_locations:
             old_item = location.item
@@ -333,9 +334,9 @@ def search_goals(categories, reachable_goals, search, priority_locations, all_lo
                 required_locations['way of the hero'].append(location)
             location.item = old_item
         maybe_set_misc_item_hints(location)
-        all_locations.remove(location)
+        remaining_locations.remove(location)
         search.state_list[location.item.world.id].collect(location.item)
-    for location in all_locations:
+    for location in remaining_locations:
         # finally, collect unreachable locations for misc. item hints
         maybe_set_misc_item_hints(location)
     return required_locations
