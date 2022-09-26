@@ -752,7 +752,7 @@ class World(object):
         # set is identical to WOTH.
         if not self.settings.triforce_hunt:
             if self.settings.starting_age == 'child':
-                dot_items = [{'name': 'Time Travel', 'quantity': 1, 'minimum': 1, 'hintable': True}]
+                dot_items = [{'name': 'Temple of Time Access', 'quantity': 1, 'minimum': 1, 'hintable': True}]
                 if not self.settings.open_door_of_time:
                     dot_items.append({'name': 'Song of Time', 'quantity': 2 if self.settings.shuffle_song_items == 'any' and self.settings.item_pool_value == 'plentiful' else 1, 'minimum': 1, 'hintable': True})
                     if self.settings.shuffle_ocarinas:
