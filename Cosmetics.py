@@ -10,6 +10,7 @@ from JSONDump import dump_obj, CollapseList, CollapseDict, AlignedDict, SortedDi
 from SettingsList import setting_infos
 from Plandomizer import InvalidFileException
 import json
+from N64Patch import apply_patch_file
 
 
 def patch_targeting(rom, settings, log, symbols):
@@ -768,6 +769,24 @@ def patch_instrument(rom, settings, log, symbols):
     rom.write_byte(0x00B4BF6F, instruments[choice]) # For Lost Woods Skull Kids' minigame in Lost Woods
     log.sfx['Ocarina'] = ocarina_options[choice]
 
+def patch_voices(rom, settings, log):
+    # Link's Voice
+    if settings.sfx_link_child == 'feminine':
+        patch_voice(rom, settings, 'data/FemaleChildVoice.zpf')
+    elif settings.sfx_link_child == 'silent':
+        patch_voice(rom, settings, 'data/SilentChildVoice.zpf')
+    if settings.sfx_link_adult == 'feminine':
+        patch_voice(rom, settings, 'data/FemaleAdultVoice.zpf')
+    elif settings.sfx_link_adult == 'silent':
+        patch_voice(rom, settings, 'data/SilentAdultVoice.zpf')
+    log.sfx['Child Voice'] = settings.sfx_link_child
+    log.sfx['Adult Voice'] = settings.sfx_link_adult
+
+def patch_voice(rom, settings, voice_file):
+    patch_file = settings.patch_file
+    settings.patch_file = voice_file
+    apply_patch_file(rom, settings)
+    settings.patch_file = patch_file
 
 legacy_cosmetic_data_headers = [
     0x03481000,
