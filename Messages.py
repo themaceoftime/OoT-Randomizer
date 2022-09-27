@@ -105,6 +105,7 @@ for char, byte in CHARACTER_MAP.items():
     SPECIAL_CHARACTERS.setdefault(byte, char)
     REVERSE_MAP[byte] = char
 
+# [0x0500,0x0560] (inclusive) are reserved for plandomakers
 GOSSIP_STONE_MESSAGES = list( range(0x0401, 0x04FF) ) # ids of the actual hints
 GOSSIP_STONE_MESSAGES += [0x2053, 0x2054] # shared initial stone messages
 TEMPLE_HINTS_MESSAGES = [0x7057, 0x707A] # dungeon reward hints from the temple of time pedestal
