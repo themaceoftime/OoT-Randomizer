@@ -325,7 +325,18 @@ MISC_MESSAGES = {
             ), None),
     0x0422: ("They say that once \x05\x41Morpha's Curse\x05\x40\x01is lifted, striking \x05\x42this stone\x05\x40 can\x01shift the tides of \x05\x44Lake Hylia\x05\x40.\x02", 0x23),
     0x401C: ("Please find my dear \05\x41Princess Ruto\x05\x40\x01immediately... Zora!\x12\x68\x7A", 0x23),
-    0x9100: ("I am out of goods now.\x01Sorry!\x04The mark that will lead you to\x01the Spirit Temple is the \x05\x41flag on\x01the left \x05\x40outside the shop.\x01Be seeing you!\x02", 0x00)
+    0x9100: ("I am out of goods now.\x01Sorry!\x04The mark that will lead you to\x01the Spirit Temple is the \x05\x41flag on\x01the left \x05\x40outside the shop.\x01Be seeing you!\x02", 0x00),
+    0x0451: ("\x12\x68\x7AMweep\x07\x04\x52", 0x23),
+    0x0452: ("\x12\x68\x7AMweep\x07\x04\x53", 0x23),
+    0x0453: ("\x12\x68\x7AMweep\x07\x04\x54", 0x23),
+    0x0454: ("\x12\x68\x7AMweep\x07\x04\x55", 0x23),
+    0x0455: ("\x12\x68\x7AMweep\x07\x04\x56", 0x23),
+    0x0456: ("\x12\x68\x7AMweep\x07\x04\x57", 0x23),
+    0x0457: ("\x12\x68\x7AMweep\x07\x04\x58", 0x23),
+    0x0458: ("\x12\x68\x7AMweep\x07\x04\x59", 0x23),
+    0x0459: ("\x12\x68\x7AMweep\x07\x04\x5A", 0x23),
+    0x045A: ("\x12\x68\x7AMweep\x07\x04\x5B", 0x23),
+    0x045B: ("\x12\x68\x7AMweep", 0x23)
 }
 
 
