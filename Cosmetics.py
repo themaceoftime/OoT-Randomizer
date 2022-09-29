@@ -771,14 +771,22 @@ def patch_instrument(rom, settings, log, symbols):
 
 def patch_voices(rom, settings, log):
     # Link's Voice
-    if settings.sfx_link_child == 'feminine':
-        patch_voice(rom, settings, 'data/FemaleChildVoice.zpf')
-    elif settings.sfx_link_child == 'silent':
+    if settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'default':
+        patch_voice(rom, settings, 'data/FemaleChildVoice.zpf') #Don't forget change femchild after fixing low health sound
+    elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'default':
         patch_voice(rom, settings, 'data/SilentChildVoice.zpf')
-    if settings.sfx_link_adult == 'feminine':
+    elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'feminine':
         patch_voice(rom, settings, 'data/FemaleAdultVoice.zpf')
-    elif settings.sfx_link_adult == 'silent':
+    elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'silent':
         patch_voice(rom, settings, 'data/SilentAdultVoice.zpf')
+    elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'feminine':
+        patch_voice(rom, settings, 'data/FeminineVoices.zpf') #Don't forget change femchild after fixing low health sound
+    elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'silent':
+        patch_voice(rom, settings, 'data/SilentVoices.zpf')
+    elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'silent':
+        patch_voice(rom, settings, 'data/FemChildSilentAdult.zpf') #Don't forget change femchild after fixing low health sound
+    elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'feminine':
+        patch_voice(rom, settings, 'data/SilentChildFemAdult.zpf')
     log.sfx['Child Voice'] = settings.sfx_link_child
     log.sfx['Adult Voice'] = settings.sfx_link_adult
 
