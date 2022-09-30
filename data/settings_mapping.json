@@ -361,6 +361,7 @@
           "settings": [
             "ocarina_songs",
             "correct_chest_appearances",
+            "minor_items_as_major_chest",
             "invisible_chests",
             "clearer_hints",
             "hints",
