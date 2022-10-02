@@ -8,7 +8,7 @@ If the model's skeleton is similar enough to Link, the randomizer will use Link'
 
 # Alternate Voices
 
-New sfx were created by Maple and Shiroaelli on the ZOoTR discord to replace the adult and child sfx, respectively. Completely silent options are also available. Please note that these changes **cannot be returned to default once in a patch file**. So if using this branch to create a patch file to share with others, please leave these settings on default then patch your own seed with your desired sfx afterwards from it.
+New sfx were created by Maple and Shiroaelli on the ZOoTR discord to replace the adult and child voices, respectively. Completely silent options are also available for both ages.
 
 -----------------------------
 
