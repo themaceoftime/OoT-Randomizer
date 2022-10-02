@@ -770,9 +770,10 @@ def patch_instrument(rom, settings, log, symbols):
     log.sfx['Ocarina'] = ocarina_options[choice]
 
 def patch_voices(rom, settings, log, symbols):
-    # Link's Voice Replacement
+    # Link's Voice Replacement Files
+    override_voice(rom, settings)
     if settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'default':
-        patch_voice(rom, settings, 'data/FemaleChildVoice.zpf') #Don't forget change femchild after fixing low health sound
+        patch_voice(rom, settings, 'data/FemaleChildVoice.zpf')
     elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'default':
         patch_voice(rom, settings, 'data/SilentChildVoice.zpf')
     elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'feminine':
@@ -780,17 +781,17 @@ def patch_voices(rom, settings, log, symbols):
     elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'silent':
         patch_voice(rom, settings, 'data/SilentAdultVoice.zpf')
     elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'feminine':
-        patch_voice(rom, settings, 'data/FeminineVoices.zpf') #Don't forget change femchild after fixing low health sound
+        patch_voice(rom, settings, 'data/FeminineVoices.zpf')
     elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'silent':
         patch_voice(rom, settings, 'data/SilentVoices.zpf')
     elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'silent':
-        patch_voice(rom, settings, 'data/FemChildSilentAdult.zpf') #Don't forget change femchild after fixing low health sound
+        patch_voice(rom, settings, 'data/FemChildSilentAdult.zpf')
     elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'feminine':
         patch_voice(rom, settings, 'data/SilentChildFemAdult.zpf')
     log.sfx['Child Voice'] = settings.sfx_link_child
     log.sfx['Adult Voice'] = settings.sfx_link_adult
 
-def patch_voice(rom, settings, voice_file):
+def override_voice(rom, settings):
     # These 3 sections cancel out patchfile changes that exist in the current .zpf voice files.
     original = rom.original.read_bytes(0xF, 0x8)
     rom.write_bytes(0xF, original)
@@ -800,7 +801,11 @@ def patch_voice(rom, settings, voice_file):
     # Cancel out the entire audiotable because finding specific areas changed was too hard.
     original = rom.original.read_bytes(0x00079470, 0x460AD0)
     rom.write_bytes(0x00079470, original)
-    # Actually patch in the new voice file.
+    # Cancel out random section that's in the game code.
+    original = rom.original.read_bytes(0x00B896B5, 0x258)
+    rom.write_bytes(0x00B896B5, original)
+
+def patch_voice(rom, settings, voice_file):
     patch_file = settings.patch_file
     settings.patch_file = voice_file
     apply_patch_file(rom, settings)
