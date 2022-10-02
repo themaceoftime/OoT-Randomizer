@@ -769,8 +769,8 @@ def patch_instrument(rom, settings, log, symbols):
     rom.write_byte(0x00B4BF6F, instruments[choice]) # For Lost Woods Skull Kids' minigame in Lost Woods
     log.sfx['Ocarina'] = ocarina_options[choice]
 
-def patch_voices(rom, settings, log):
-    # Link's Voice
+def patch_voices(rom, settings, log, symbols):
+    # Link's Voice Replacement
     if settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'default':
         patch_voice(rom, settings, 'data/FemaleChildVoice.zpf') #Don't forget change femchild after fixing low health sound
     elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'default':
@@ -791,6 +791,16 @@ def patch_voices(rom, settings, log):
     log.sfx['Adult Voice'] = settings.sfx_link_adult
 
 def patch_voice(rom, settings, voice_file):
+    # These 3 sections cancel out patchfile changes that exist in the current .zpf voice files.
+    original = rom.original.read_bytes(0xF, 0x8)
+    rom.write_bytes(0xF, original)
+    # Cancel out the entire audiobank because finding specific areas changed was too hard.
+    original = rom.original.read_bytes(0x0000D390, 0x01CA50)
+    rom.write_bytes(0x0000D390, original)
+    # Cancel out the entire audiotable because finding specific areas changed was too hard.
+    original = rom.original.read_bytes(0x00079470, 0x460AD0)
+    rom.write_bytes(0x00079470, original)
+    # Actually patch in the new voice file.
     patch_file = settings.patch_file
     settings.patch_file = voice_file
     apply_patch_file(rom, settings)
@@ -809,6 +819,7 @@ global_patch_sets = [
     patch_sword_trails,
     patch_gauntlet_colors,
     patch_shield_frame_colors,
+    patch_voices,
     patch_sfx,
     patch_instrument,
 ]

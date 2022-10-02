@@ -18,7 +18,7 @@ from World import World
 from Spoiler import Spoiler
 from Rom import Rom
 from Patches import patch_rom
-from Cosmetics import patch_cosmetics, patch_voices
+from Cosmetics import patch_cosmetics
 from Dungeon import create_dungeons
 from Fill import distribute_items_restrictive, ShuffleError
 from Item import Item
@@ -224,7 +224,6 @@ def prepare_rom(spoiler, world, rom, settings, rng_state=None, restore=True):
         patch_model_adult(rom, settings, cosmetics_log)
     if settings.model_child != "Default" or len(settings.model_child_filepicker) > 0:
         patch_model_child(rom, settings, cosmetics_log)
-    patch_voices(rom, settings, cosmetics_log)
     rom.update_header()
     return cosmetics_log
 
