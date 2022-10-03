@@ -1,4 +1,4 @@
-body.pace-done, body.pace-running {
+body {
   background-color: #f5f5f5;
   font-family: "Exo";
 }
@@ -338,7 +338,6 @@ textarea {
   vertical-align: middle;
   margin-left: 2px;
   line-height: 90%;
-  font-family: Exo;
 }
 
 .webFooter .creditfooter {
@@ -348,11 +347,9 @@ textarea {
   vertical-align: middle;
   margin-left: 2px;
   line-height: 60%;
-  font-family: Exo;
 }
 
 .webFooter #disclaimer {
-  font-family: Exo;
   color: white;
   font-size: 9px;
 }
@@ -362,17 +359,7 @@ textarea {
   bottom: 0;
 }
 
-.layout-container .content {
-  background-color: #f5f5f5;
-}
-
-nb-card.webLayout nb-card-body nb-tabset.footerTabset ul.tabset {
-  margin-top: 14px;
-}
-
-.webFooter .footertitle {
-  font-family: Exo;
-  line-height: 1.1;
+.footertitle {
   margin-top: 0.5vw;
   color: white !important;
   font-size: 4vw;
@@ -403,9 +390,6 @@ nb-card.webLayout nb-card-body nb-tabset.footerTabset ul.tabset {
   color: white !important;
   font-size: 5vw;
   font-weight: 800;
-  font-family: Exo;
-  margin-top: 20px;
-  margin-bottom: 10px;
 }
 
 .webHeader #logo {
@@ -440,7 +424,7 @@ nb-card.webLayout nb-card-body nb-tabset.footerTabset ul.tabset {
   border-radius: 10px;
   margin-left: 10px;
   margin-right: 10px;
-  /*background:
+  /*background: 
 	linear-gradient(115deg, transparent 75%, #275379) 0 0,
 	linear-gradient(245deg, transparent 75%, #275379) 0 0,
 	linear-gradient(115deg, transparent 75%, #275379) 30px -57px,
@@ -709,28 +693,4 @@ nb-card.webLayout nb-card-body nb-tabset.footerTabset ul.tabset {
 
 .sbL {
   margin-top: 30px !important;
-}
-
-.webHeader h6 {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.webFooter h6 {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.webFooter #ootr a {
-  line-height: 1;
-}
-
-.basecontainer h1 {
-  font-family: Exo;
-  line-height: 1.1;
-  color: #333;
-}
-
-label {
-  font-weight: 400;
 }
