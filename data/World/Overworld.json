@@ -737,6 +737,10 @@
         "region_name": "Temple of Time",
         "scene": "Temple of Time",
         "hint": "TEMPLE_OF_TIME",
+        "events": {
+            # used for the "path of time" goal
+            "Temple of Time Access": "True"
+        },
         "locations": {
             "ToT Light Arrows Cutscene": "is_adult and can_trigger_lacs",
             "ToT Child Altar Hint": "is_child",
@@ -751,10 +755,6 @@
         "region_name": "Beyond Door of Time",
         "scene": "Temple of Time",
         "hint": "TEMPLE_OF_TIME",
-        "events": {
-            # used for the "path of time" goal
-            "Temple of Time Access": "True"
-        },
         "locations": {
             "Master Sword Pedestal": "True",
             "Sheik at Temple": "Forest_Medallion and is_adult"
