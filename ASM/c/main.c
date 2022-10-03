@@ -26,6 +26,7 @@ void c_init() {
     text_init();
     item_overrides_init();
     models_init();
+    //check_model_skeletons();
 }
 
 void before_game_state_update() {

@@ -414,7 +414,7 @@ def CheckDiff(limb, skeleton):
     # Return true if diff is too big
     return diff > TOLERANCE
 
-def CheckSkeleton(zobj, skeleton, agestr):
+def CorrectSkeleton(zobj, skeleton, agestr):
     # Get the hierarchy pointer
     hierarchy = FindHierarchy(zobj, agestr)
     # Get what the hierarchy pointer points to (pointer to limb 0)
@@ -561,10 +561,8 @@ def LoadModel(rom, model, age):
         # # Save zobj for testing
         # with open(path + "Test_Processed.zobj", "wb") as f:
         #     f.write(zobj)
-    # Check skeleton
-    if not CheckSkeleton(zobj, skeleton, agestr):
-        # If skeleton not vanilla, display message in pause screen informing of this
-        rom.write_int16(rom.sym('illegal_model'), 1)
+    # Correct skeleton if it should be corrected
+    CorrectSkeleton(zobj, skeleton, agestr)
     # Write zobj to vanilla object (object_link_boy or object_link_child)
     rom.write_bytes(linkstart, zobj)
     # Finally, want to return an address with a DF instruction for use when writing the model data
