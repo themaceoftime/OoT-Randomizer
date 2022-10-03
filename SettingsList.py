@@ -5762,7 +5762,7 @@ setting_infos = [
             'feminine':      'Feminine',
             'silent':        'Silent',
         },
-        default        = 'link',
+        default        = 'default',
         gui_tooltip    = '''\
             Change Link's adult voice.
         ''',
@@ -5785,7 +5785,7 @@ setting_infos = [
             'feminine':      'Feminine',
             'silent':        'Silent',
         },
-        default        = 'link',
+        default        = 'default',
         gui_tooltip    = '''\
             Change Link's child voice.
         ''',
