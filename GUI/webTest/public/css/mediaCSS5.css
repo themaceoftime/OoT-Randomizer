@@ -130,7 +130,7 @@
 		height: 70%;
 	}
 
-	.webFooter .footertitle {
+	.footertitle {
 		margin-top: 8px;
 		font-size: 14px;
 		font-weight: 600;
@@ -140,7 +140,7 @@
 		font-size: 8px;
 	}
 
-	.webFooter .creditfooter {
+	.creditfooter {
 		font-weight: 600;
 		font-size: 12px;
 		vertical-align: middle;
@@ -226,7 +226,7 @@
 		height: 70%;
 	}
 
-	.webFooter .footertitle {
+	.footertitle {
 		margin-top: 8px;
 		font-size: 14px;
 		font-weight: 600;
@@ -236,7 +236,7 @@
 		font-size: 9px;
 	}
 
-	.webFooter .creditfooter {
+	.creditfooter {
 		font-weight: 600;
 		font-size: 12px;
 		vertical-align: middle;
@@ -320,7 +320,7 @@
 		height: 70%;
 	}
 
-	.webFooter .footertitle {
+	.footertitle {
 		margin-top: 8px;
 		font-size: 16px;
 		font-weight: 600;
@@ -330,7 +330,7 @@
 		font-size: 11px;
 	}
 
-	.webFooter .creditfooter {
+	.creditfooter {
 		font-weight: 600;
 		font-size: 12px !important;
 		vertical-align: middle;
@@ -343,7 +343,7 @@
 	.sectionBox {
 		min-width: 390px;
 	}
-
+	
 }
 
 @media (min-width: 768px) {
@@ -399,13 +399,13 @@
 		z-index: 10;
 		height: 7.5em;
 	}
-
+	
 	#logofooter {
 		vertical-align: middle;
 		height: 70%;
 	}
 
-	.webFooter .footertitle {
+	.footertitle {
 		margin-top: 8px;
 		font-size: 18px;
 		font-weight: 600;
@@ -415,7 +415,7 @@
 		font-size: 11px;
 	}
 
-	.webFooter .creditfooter {
+	.creditfooter {
 		font-weight: 600;
 		font-size: 14px !important;
 		vertical-align: middle;
@@ -482,7 +482,7 @@
 		height: 70%;
 	}
 
-	.webFooter .footertitle {
+	.footertitle {
 		margin-top: 8px;
 		font-size: 18px;
 		font-weight: 600;
@@ -492,7 +492,7 @@
 		font-size: 11px;
 	}
 
-	.webFooter .creditfooter {
+	.creditfooter {
 		font-weight: 600;
 		font-size: 14px !important;
 		vertical-align: middle;
@@ -550,14 +550,14 @@
 		margin-top: 15px;
 		z-index: 10;
 		height: 7.5em;
-	}
+	}	
 
 	#logofooter {
 		vertical-align: middle;
 		height: 70%;
 	}
 
-	.webFooter .footertitle {
+	.footertitle {
 		margin-top: 2px;
 		font-size: 22px;
 		font-weight: 600;
@@ -567,7 +567,7 @@
 		font-size: 12px;
 	}
 
-	.webFooter .creditfooter {
+	.creditfooter {
 		font-weight: 600;
 		font-size: 14px !important;
 		vertical-align: middle;
@@ -631,7 +631,7 @@
 		height: 70%;
 	}
 
-	.webFooter .footertitle {
+	.footertitle {
 		margin-top: 2px;
 		font-size: 22px;
 		font-weight: 600;
@@ -641,7 +641,7 @@
 		font-size: 12px;
 	}
 
-	.webFooter .creditfooter {
+	.creditfooter {
 		font-weight: 600;
 		font-size: 14px !important;
 		vertical-align: middle;
@@ -705,7 +705,7 @@
 		height: 70%;
 	}
 
-	.webFooter .footertitle {
+	.footertitle {
 		margin-top: 2px;
 		font-size: 22px;
 		font-weight: 600;
@@ -715,7 +715,7 @@
 		font-size: 12px;
 	}
 
-	.webFooter .creditfooter {
+	.creditfooter {
 		font-weight: 600;
 		font-size: 14px !important;
 		vertical-align: middle;
@@ -779,7 +779,7 @@
 		height: 70%;
 	}
 
-	.webFooter .footertitle {
+	.footertitle {
 		margin-top: 2px;
 		font-size: 22px;
 		font-weight: 600;
@@ -789,7 +789,7 @@
 		font-size: 12px;
 	}
 
-	.webFooter .creditfooter {
+	.creditfooter {
 		font-weight: 600;
 		font-size: 14px !important;
 		vertical-align: middle;
@@ -853,7 +853,7 @@
 		height: 70%;
 	}
 
-	.webFooter .footertitle {
+	.footertitle {
 		margin-top: 2px;
 		font-size: 22px;
 		font-weight: 600;
@@ -863,7 +863,7 @@
 		font-size: 12px;
 	}
 
-	.webFooter .creditfooter {
+	.creditfooter {
 		font-weight: 600;
 		font-size: 14px !important;
 		vertical-align: middle;
@@ -930,7 +930,7 @@
 		height: 70%;
 	}
 
-	.webFooter .footertitle {
+	.footertitle {
 		margin-top: 2px;
 		font-size: 22px;
 		font-weight: 600;
@@ -940,7 +940,7 @@
 		font-size: 12px;
 	}
 
-	.webFooter .creditfooter {
+	.creditfooter {
 		font-weight: 600;
 		font-size: 14px !important;
 		vertical-align: middle;

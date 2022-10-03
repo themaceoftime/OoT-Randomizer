@@ -51,95 +51,128 @@ html {
   font-size: 14px;
 }
 
-.columns {
-  //Electron
-  top: 30px;
-  height: 91%;
-  left: 0px;
-  padding-left: 0px;
-  position: absolute;
-}
+// theme related changes restoring the old look and feel scoped to generator to not mess with outer website
+body#generator {
+  @import "~typeface-exo/index.css";
+  @import "~roboto-fontface/css/roboto/roboto-fontface.css";
+  @import "~ionicons/dist/css/ionicons.css";
+  @import "~socicon/css/socicon.css";
+  @import "~@fortawesome/fontawesome-free/css/fontawesome.css";
+  @import "~@fortawesome/fontawesome-free/css/brands.css";
 
-.webLayout {
   .columns {
-    //Web
-    top: 0px;
-    height: 100%;
+    //Electron
+    top: 30px;
+    height: 91%;
+    left: 0px;
+    padding-left: 0px;
+    position: absolute;
   }
-}
 
-.themes-switcher {
-  color: nb-theme(color-basic-100) !important;
-}
+  .webLayout {
+    .columns {
+      //Web
+      [nbButton].footerGenerateButton.appearance-filled.status-success {
+        bottom: 3px;
+      }
 
-.ioInput,
-.ioInputWeb,
-.numberTextInput,
-.footerInput,
-.footerInputWeb,
-.footerInputShort {
-  background: nb-theme(color-basic-100) !important;
-}
+      top: 0px;
+      height: 100%;
+    }
+  }
 
-.record-picker .selected {
-  background-color: nb-theme(color-basic-1100) !important;
-}
+  .themes-switcher {
+    color: nb-theme(color-basic-100) !important;
+  }
 
-nb-popover {
-  border: 2px solid nb-theme(color-basic-1100) !important;
-}
+  .ioInput,
+  .ioInputWeb,
+  .numberTextInput,
+  .footerInput,
+  .footerInputWeb,
+  .footerInputShort {
+    background: nb-theme(color-basic-100) !important;
+  }
 
-nb-card-body .selected {
-  background: nb-theme(color-basic-1100) !important;
-}
+  .record-picker .selected {
+    background-color: nb-theme(color-basic-1100) !important;
+  }
 
-nb-card.select.primary {
-  border: 2px solid nb-theme(color-info-500) !important;
-}
+  nb-popover {
+    .arrow {
+      &::after {
+        border-bottom: 11px solid nb-theme(color-basic-700);
+        border-left: 11px solid transparent;
+        border-right: 11px solid transparent;
+      }
 
-.btn-xsmall {
-  max-width: 300px;
-}
+      border-bottom: 11px solid nb-theme(color-basic-1100);
+      border-left: 11px solid transparent;
+      border-right: 11px solid transparent;
+    }
 
-nb-select {
-  line-height: 0.8 !important;
-}
+    border: 2px solid nb-theme(color-basic-1100) !important;
+  }
 
-nb-option:hover {
-  background-color: nb-theme(color-info-500) !important;
-  color: nb-theme(color-basic-100) !important;
-}
+  nb-card-body .selected {
+    background: nb-theme(color-basic-1100) !important;
+  }
 
-.textInput:focus {
-  border-color: nb-theme(color-info-500) !important;
-}
+  nb-card.select.primary {
+    border: 2px solid nb-theme(color-info-500) !important;
+  }
 
-.numberInput:focus {
-  border-color: nb-theme(color-info-500) !important;
-}
+  .btn-xsmall {
+    max-width: 300px;
+  }
 
-.progress-value.success {
-  background-color: nb-theme(color-basic-1100) !important;
-  color: nb-theme(color-basic-1000);
-}
+  nb-select {
+    line-height: 0.8 !important;
+  }
 
-.form-control {
-  background-color: nb-theme(color-basic-100) !important;
-}
+  nb-option:hover {
+    background-color: nb-theme(color-info-500) !important;
+    color: nb-theme(color-basic-100) !important;
+  }
 
-.form-control:focus {
-  background-color: nb-theme(color-basic-100) !important;
-}
+  .textInput:focus {
+    border-color: nb-theme(color-info-500) !important;
+  }
 
-// theme related changes restoring the old look and feel
+  .numberInput:focus {
+    border-color: nb-theme(color-info-500) !important;
+  }
 
-.nb-theme-default {
+  .progress-value.success {
+    background-color: nb-theme(color-basic-1100) !important;
+    color: nb-theme(color-basic-1000);
+  }
+
+  .form-control {
+    background-color: nb-theme(color-basic-100) !important;
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: nb-theme(color-basic-600);
+    background-clip: padding-box;
+    border-radius: 0.25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    padding: 0.75rem 1.125rem;
+    font-family: Roboto;
+    font-weight: 400;
+  }
+
+  .form-control:focus {
+    background-color: nb-theme(color-basic-100) !important;
+  }
 
   nb-select {
     &.appearance-outline.status-basic {
       .select-button[disabled] {
         &:hover {
-          background-color: nb-theme(color-basic-300);
+          background-color: nb-theme(color-basic-900);
+          cursor: default;
         }
 
         background-color: nb-theme(color-basic-200);
@@ -228,6 +261,7 @@ nb-option:hover {
     &.numberTextInputFull.numberTextInput {
       left: 0;
       width: 100%;
+      text-align: left;
     }
 
     &.numberTextInput {
@@ -235,6 +269,7 @@ nb-option:hover {
       left: 15px;
       max-width: 36px;
       min-width: 30px;
+      width: auto;
       text-align: center;
     }
   }
@@ -242,6 +277,8 @@ nb-option:hover {
   nb-tabset {
     ul {
       > li.tab.active {
+        background-color: unset;
+
         .tab-link::before {
           height: 5px;
         }
@@ -401,14 +438,6 @@ nb-option:hover {
     }
   }
 
-  .record-picker {
-    ul > li {
-      //font-family: Roboto;
-      border: 0;
-      line-height: 13px;
-    }
-  }
-
   p.footerInputLabel {
     left: 3px;
   }
@@ -422,10 +451,16 @@ nb-option:hover {
     width: 100%;
     background: nb-theme(color-info-500);
     color: nb-theme(color-basic-100) !important;
+
+    a {
+      text-decoration: none;
+    }
   }
 
-  a, a:hover, a:active {
-    color: nb-theme(color-primary-800);
+  nb-tab {
+    a, a:hover, a:active {
+      color: nb-theme(color-primary-800);
+    }
   }
 
   [nbInput].status-basic, [nbInput].status-basic:hover {
@@ -433,7 +468,11 @@ nb-option:hover {
   }
 
   .tabset .tab a {
-    color: nb-theme(color-basic-1000) !important
+    color: nb-theme(color-basic-1000) !important;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   nb-tabset .tab.active .tab-link::before,
@@ -460,13 +499,5 @@ nb-option:hover {
     line-height: 1rem;
     text-transform: uppercase;
     margin-top: 0.5rem;
-  }
-
-  nb-popover .arrow {
-    &:after {
-      border-bottom: nb-theme(color-basic-700);
-    }
-
-    border-bottom: 11px solid nb-theme(color-basic-700) !important;
   }
 }

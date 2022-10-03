@@ -20,7 +20,6 @@ export class BypassSecurityPipe implements PipeTransform {
   template: `<body id="generator" class="nb-theme-default">
     <router-outlet></router-outlet>
   </body>`,
-  styleUrls: ["../app.component.scss"],
   // Shadow-DOM requires code tweaks within Nebular.
   // Style interference with website is addressed by usage of selector specificity.
   encapsulation: ViewEncapsulation.None
