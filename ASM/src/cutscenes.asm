@@ -602,20 +602,15 @@ sos_talk_prevention:
     lh      t7, 0xB6(s0)   ;displaced
     lhu     t9, 0xB4AE(t9) ;displaced
     la      t1, PLAYER_ACTOR
-    lb      t2, 0x424(t1)  ;get item id
+    lw      t2, 0x428(t1)  ;interactRangeActor
     beqz    t2, @@no_item
     nop
-    li      t1, 0x7E
-    bne     t2, t1, @@item
-    nop
+    jr      ra
+    li      t2, 1
 
 @@no_item:
     jr      ra
     li      t2, 0
-
-@@item:
-    jr      ra
-    li      t2, 1
 
 ;==================================================================================================
 ;move royal tombstone if draw function is null
