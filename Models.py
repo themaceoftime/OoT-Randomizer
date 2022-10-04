@@ -1,22 +1,18 @@
 import os
 import random
 from enum import IntEnum
+from Utils import data_path
 
 
 def get_model_choices(age):
     names = ["Default"]
-    path = "data/Models/Adult"
+    path = data_path("Models/Adult")
     if age == 1:
-        path = "data/Models/Child"
-    if not os.path.exists(path): # GUI loaded, path different
-        path = "../" + path
-        if not os.path.exists(path): # If it STILL doesn't exist, this is web, doesn't matter
-            return [""]
-    for file in os.listdir(path):
-        dotsplit = file.split('.')
-        # Make sure this is a file and a zobj
-        if len(dotsplit) > 1 and dotsplit[1] == "zobj":
-            names.append(dotsplit[0])
+        path = data_path("Models/Child")
+    if os.path.exists(path):
+        for file in os.listdir(path):
+            if file.endswith(".zobj"):
+                names.append(file[:-5])
     if len(names) > 2:
         # If more than 2 non-default model choices, add random option
         names.insert(1, "Random")
