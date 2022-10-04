@@ -460,7 +460,7 @@ def LoadModel(rom, model, age):
     hierarchy = ADULT_HIERARCHY
     postconstantstart = ADULT_POST_START
     pieces = AdultPieces
-    path = 'data/Models/Adult/'
+    path = data_path('Models/Adult')
     skips = adultSkips
     skeleton = adultSkeleton
     agestr = "adult" # Just used for error messages
@@ -470,7 +470,7 @@ def LoadModel(rom, model, age):
         hierarchy = CHILD_HIERARCHY
         postconstantstart = CHILD_POST_START
         pieces = ChildPieces
-        path = 'data/Models/Child/'
+        path = data_path('Models/Child')
         skips = childSkips
         skeleton = childSkeleton
         agestr = "child"
@@ -533,14 +533,14 @@ def LoadModel(rom, model, age):
             zobj[LUT_START+i] = byte
             i += 1 
         # Set constants in the LUT
-        file = open(path + 'Constants/preconstants.zobj', "rb")
+        file = open(os.path.join(path, 'Constants/preconstants.zobj'), "rb")
         constants = file.read()
         file.close()
         i = 0
         for byte in constants:
             zobj[PRE_CONSTANT_START + i] = byte
             i += 1
-        file = open(path + 'Constants/postconstants.zobj', "rb")
+        file = open(os.path.join(path, 'Constants/postconstants.zobj'), "rb")
         constants = file.read()
         file.close()
         i = 0
@@ -578,7 +578,7 @@ def patch_model_adult(rom, settings, log):
             choices.remove("Default")
             choices.remove("Random")
             model = random.choice(choices)
-        model = os.path.join('data', 'Models', 'Adult', model + '.zobj')
+        model = data_path(f'Models/Adult/{model}.zobj')
     pathsplit = os.path.basename(model)
     log.settings.model_adult = pathsplit.split('.')[0]
 
@@ -750,7 +750,7 @@ def patch_model_child(rom, settings, log):
             choices.remove("Default")
             choices.remove("Random")
             model = random.choice(choices)
-        model = os.path.join('data', 'Models', 'Child', model + '.zobj')
+        model = data_path(f'Models/Child/{model}.zobj')
     pathsplit = os.path.basename(model)
     log.settings.model_child = pathsplit.split('.')[0]
 

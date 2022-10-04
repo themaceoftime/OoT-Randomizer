@@ -773,21 +773,21 @@ def patch_voices(rom, settings, log, symbols):
     # Link's Voice Replacement Files
     override_voice(rom, settings)
     if settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'default':
-        patch_voice(rom, settings, 'data/FemaleChildVoice.zpf')
+        patch_voice(rom, settings, data_path('FemaleChildVoice.zpf'))
     elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'default':
-        patch_voice(rom, settings, 'data/SilentChildVoice.zpf')
+        patch_voice(rom, settings, data_path('SilentChildVoice.zpf'))
     elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'feminine':
-        patch_voice(rom, settings, 'data/FemaleAdultVoice.zpf')
+        patch_voice(rom, settings, data_path('FemaleAdultVoice.zpf'))
     elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'silent':
-        patch_voice(rom, settings, 'data/SilentAdultVoice.zpf')
+        patch_voice(rom, settings, data_path('SilentAdultVoice.zpf'))
     elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'feminine':
-        patch_voice(rom, settings, 'data/FeminineVoices.zpf')
+        patch_voice(rom, settings, data_path('FeminineVoices.zpf'))
     elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'silent':
-        patch_voice(rom, settings, 'data/SilentVoices.zpf')
+        patch_voice(rom, settings, data_path('SilentVoices.zpf'))
     elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'silent':
-        patch_voice(rom, settings, 'data/FemChildSilentAdult.zpf')
+        patch_voice(rom, settings, data_path('FemChildSilentAdult.zpf'))
     elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'feminine':
-        patch_voice(rom, settings, 'data/SilentChildFemAdult.zpf')
+        patch_voice(rom, settings, data_path('SilentChildFemAdult.zpf'))
     log.sfx['Child Voice'] = settings.sfx_link_child
     log.sfx['Adult Voice'] = settings.sfx_link_adult
 
