@@ -2509,3 +2509,26 @@ skip_GS_BGS_text:
 ; Replaces: addiu   a0, $zero, 0x2008
 ; .orga 0xBE2930
 ;    addiu   a0, $zero, 0x6000
+
+;===================================================================================================
+; Remove the cutscene when throwing a bomb at the rock in front of Dodongo's cavern
+;===================================================================================================
+.orga 0xD55998
+	nop
+	nop
+	nop
+	nop
+	nop
+	
+.orga 0xD55A80
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+
+
+
+
+
