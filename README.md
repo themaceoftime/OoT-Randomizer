@@ -169,6 +169,7 @@ issue. You should always Hard Reset to avoid this issue entirely.
 * Fix plando negative locations (ex. "!Gold Skulltula Token") choosing Buy items for non-Buy locations.
 * Ice traps will no longer be sent to players in the Treasure Chest Game to prevent using deaths to circumvent the game.
 * Fixed dragging list items in the GUI not working when the target is empty.
+* Recovery hearts in several scenes in MQ dungeon rooms have been fixed to no longer be invisible.
 
 #### Other changes
 * Added an auto-tracker context area to memory, so auto-trackers can find certain symbols much easier.
