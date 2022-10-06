@@ -195,6 +195,7 @@ issue. You should always Hard Reset to avoid this issue entirely.
 * Common ER error messages are now more helpful to solving the issue.
 * Corrected some goal hint colors.
 * Triforce Piece model has been updated so that it is shinier and centered.
+* Goal hints are now selected based on their category rather than their parent goal.
 
 ### 6.2
 
