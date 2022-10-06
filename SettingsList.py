@@ -4379,6 +4379,25 @@ setting_infos = [
             smaller version of the fancy chest.
         ''',
         shared         = True,
+        disable        = {
+            'off' : {'settings' : ['minor_items_as_major_chest']},
+        },
+    ),
+    Checkbutton(
+        name           = 'minor_items_as_major_chest',
+        gui_text       = 'Minor Items in Big/Gold chests',
+        gui_tooltip    = '''\
+            Chests with Hylian Shield, Deku Shield
+            or Bombchus (regardless of the Bombchus
+            In Logic setting), will appear in
+            Big and/or Gold chests, depending on the 
+            Chest Appearance Matches Contents setting.
+        ''',
+        shared         = True,
+        disabled_default = False,
+        gui_params       = {
+            "hide_when_disabled" : True
+        },
     ),
     Checkbutton(
         name           = 'invisible_chests',

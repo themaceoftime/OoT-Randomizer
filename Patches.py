@@ -1953,7 +1953,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     SILVER_CHEST = 13
     SKULL_CHEST_SMALL = 14
     SKULL_CHEST_BIG =  15
-    if world.settings.bombchus_in_logic:
+    if world.settings.bombchus_in_logic or world.settings.minor_items_as_major_chest:
         bombchu_ids = [0x6A, 0x03, 0x6B]
         for i in bombchu_ids:
             item = read_rom_item(rom, i)
@@ -1969,6 +1969,15 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             item = read_rom_item(rom, i)
             item['chest_type'] = GILDED_CHEST
             write_rom_item(rom, i, item)
+    if world.settings.minor_items_as_major_chest:
+        # Deku
+        item = read_rom_item(rom, 0x29)
+        item['chest_type'] = GILDED_CHEST
+        write_rom_item(rom, 0x29, item)
+        # Hylian
+        item = read_rom_item(rom, 0x2A)
+        item['chest_type'] = GILDED_CHEST
+        write_rom_item(rom, 0x2A, item)
 
     # Update chest type appearance
     if world.settings.correct_chest_appearances == 'textures':
