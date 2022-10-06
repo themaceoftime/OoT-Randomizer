@@ -140,6 +140,7 @@ issue. You should always Hard Reset to avoid this issue entirely.
   * Health and Magic potion models in shops will now match your health and magic colors when `Item Model Colors Match Cosmetics` is enabled.
   * The Gerudo guard on the Wasteland side of the gate will now spawn regardless of settings.
   * Several vanilla warp destination messages have been updated to keep consistency with our custom warp destination messages.
+  * Removed the cutscenes when throwing a bomb at and blowing up the boulder in front of Dodongo's Cavern.
 
 
 #### Bug fixes
