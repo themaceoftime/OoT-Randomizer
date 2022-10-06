@@ -473,7 +473,9 @@ def get_checked_areas(world, checked):
             location = world.get_location(check)
         except Exception:
             return check
-        return HintArea.at(location)
+        # Don't consider dungeons as already hinted from the reward hint on the Temple of Time altar
+        if location.type != 'Boss': #TODO or shuffled dungeon rewards
+            return HintArea.at(location)
 
     return set(get_area_from_name(check) for check in checked)
 
