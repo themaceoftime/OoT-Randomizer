@@ -318,8 +318,8 @@ entrance_shuffle_table = [
     ('OwlDrop',         ('LH Owl Flight -> Hyrule Field',                                   { 'index': 0x027E, 'addresses': [0xAC9F26] })),
     ('OwlDrop',         ('DMT Owl Flight -> Kak Impas Rooftop',                             { 'index': 0x0554, 'addresses': [0xAC9EF2] })),
 
-    ('Spawn',           ('Child Spawn -> KF Links House',                                   { 'index': 0x00BB, 'addresses': [0xB06342] })),
-    ('Spawn',           ('Adult Spawn -> Temple of Time',                                   { 'index': 0x05F4, 'addresses': [0xB06332] })),
+    ('ChildSpawn',           ('Child Spawn -> KF Links House',                                   { 'index': 0x00BB, 'addresses': [0xB06342] })),
+    ('AdultSpawn',           ('Adult Spawn -> Temple of Time',                                   { 'index': 0x05F4, 'addresses': [0xB06332] })),
 
     ('WarpSong',        ('Minuet of Forest Warp -> Sacred Forest Meadow',                   { 'index': 0x0600, 'addresses': [0xBF023C] })),
     ('WarpSong',        ('Bolero of Fire Warp -> DMC Central Local',                        { 'index': 0x04F6, 'addresses': [0xBF023E] })),
@@ -452,8 +452,13 @@ def shuffle_random_entrances(worlds):
         if worlds[0].settings.owl_drops:
             one_way_entrance_pools['OwlDrop'] = world.get_shufflable_entrances(type='OwlDrop')
 
-        if worlds[0].settings.spawn_positions:
-            one_way_entrance_pools['Spawn'] = world.get_shufflable_entrances(type='Spawn')
+        if (worlds[0].settings.spawn_positions == 'child'):
+            one_way_entrance_pools['Spawn'] = world.get_shufflable_entrances(type='ChildSpawn')
+        if (worlds[0].settings.spawn_positions == 'adult'):
+            one_way_entrance_pools['Spawn'] = world.get_shufflable_entrances(type='AdultSpawn')
+        if (worlds[0].settings.spawn_positions == 'both'):
+            one_way_entrance_pools['Spawn'] = world.get_shufflable_entrances(type='ChildSpawn')
+            one_way_entrance_pools['Spawn'] += world.get_shufflable_entrances(type='AdultSpawn')
 
         if worlds[0].settings.warp_songs:
             one_way_entrance_pools['WarpSong'] = world.get_shufflable_entrances(type='WarpSong')
