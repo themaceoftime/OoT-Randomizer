@@ -1036,7 +1036,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         # Remove deku sprout and drop player at SFM after forest completion
         rom.write_int16(0xAC9F96, 0x0608)
 
-    if (world.settings.spawn_positions != 'off'):
+    if world.settings.spawn_positions != 'off':
         # Fix save warping inside Link's House to not be a special case
         rom.write_int32(0xB06318, 0x00000000)
 
