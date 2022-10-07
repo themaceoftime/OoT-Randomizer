@@ -772,29 +772,32 @@ def patch_instrument(rom, settings, log, symbols):
 def patch_voices(rom, settings, log, symbols):
     # Link's Voice Replacement Files
     override_voice(rom, settings)
+    # Resolve random settings
+    if settings.sfx_link_child == 'random-choice':
+        settings.sfx_link_child = random.choice(['default', 'feminine', 'silent'])
+    if settings.sfx_link_adult == 'random-choice':
+        settings.sfx_link_adult = random.choice(['default', 'feminine', 'silent'])
+    # Perform patch
     if settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'default':
-        patch_voice(rom, settings, data_path('FemaleChildVoice.zpf'))
+        patch_voice(rom, settings, data_path('Voices/FemaleChildVoice.zpf'))
     elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'default':
-        patch_voice(rom, settings, data_path('SilentChildVoice.zpf'))
+        patch_voice(rom, settings, data_path('Voices/SilentChildVoice.zpf'))
     elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'feminine':
-        patch_voice(rom, settings, data_path('FemaleAdultVoice.zpf'))
+        patch_voice(rom, settings, data_path('Voices/FemaleAdultVoice.zpf'))
     elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'silent':
-        patch_voice(rom, settings, data_path('SilentAdultVoice.zpf'))
+        patch_voice(rom, settings, data_path('Voices/SilentAdultVoice.zpf'))
     elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'feminine':
-        patch_voice(rom, settings, data_path('FeminineVoices.zpf'))
+        patch_voice(rom, settings, data_path('Voices/FeminineVoices.zpf'))
     elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'silent':
-        patch_voice(rom, settings, data_path('SilentVoices.zpf'))
+        patch_voice(rom, settings, data_path('Voices/SilentVoices.zpf'))
     elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'silent':
-        patch_voice(rom, settings, data_path('FemChildSilentAdult.zpf'))
+        patch_voice(rom, settings, data_path('Voices/FemChildSilentAdult.zpf'))
     elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'feminine':
-        patch_voice(rom, settings, data_path('SilentChildFemAdult.zpf'))
+        patch_voice(rom, settings, data_path('Voices/SilentChildFemAdult.zpf'))
     log.sfx['Child Voice'] = settings.sfx_link_child
     log.sfx['Adult Voice'] = settings.sfx_link_adult
 
 def override_voice(rom, settings):
-    # These 3 sections cancel out patchfile changes that exist in the current .zpf voice files.
-    original = rom.original.read_bytes(0xF, 0x8)
-    rom.write_bytes(0xF, original)
     # Cancel out the entire audiobank because finding specific areas changed was too hard.
     original = rom.original.read_bytes(0x0000D390, 0x01CA50)
     rom.write_bytes(0x0000D390, original)

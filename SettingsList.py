@@ -5761,19 +5761,12 @@ setting_infos = [
             'default':       'Default',
             'feminine':      'Feminine',
             'silent':        'Silent',
+            'random-choice': 'Random Choice',
         },
         default        = 'default',
         gui_tooltip    = '''\
             Change Link's adult voice.
         ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_sfx',
-            'distribution': [
-                ('link', 1),
-                ('feminine', 1),
-                ('silent', 1),
-            ]
-        }
     ),
     Combobox(
         name           = 'sfx_link_child',
@@ -5784,19 +5777,12 @@ setting_infos = [
             'default':       'Default',
             'feminine':      'Feminine',
             'silent':        'Silent',
+            'random-choice': 'Random Choice',
         },
         default        = 'default',
         gui_tooltip    = '''\
             Change Link's child voice.
         ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_sfx',
-            'distribution': [
-                ('link', 1),
-                ('feminine', 1),
-                ('silent', 1),
-            ]
-        }
     ),
     Checkbutton(
         name           = 'easier_fire_arrow_entry',
