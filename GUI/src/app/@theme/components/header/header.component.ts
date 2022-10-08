@@ -1,5 +1,6 @@
-import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { GUIGlobal } from '../../../providers/GUIGlobal';
+import {NbThemeService} from "@nebular/theme";
 
 @Component({
   selector: 'ngx-header',
@@ -10,8 +11,11 @@ export class HeaderComponent {
 
   isMaximized: boolean = false;
   platform: string = (<any>window).apiPlatform;
+  isDark = false;
 
-  constructor(private cd: ChangeDetectorRef, public global: GUIGlobal) { }
+  constructor(private cd: ChangeDetectorRef,
+              public global: GUIGlobal,
+              private themeService: NbThemeService) { }
 
   ngOnInit() {
 
@@ -52,6 +56,16 @@ export class HeaderComponent {
 
   maximize() {
     this.global.maximizeWindow();
+  }
+
+  switchTheme() {
+    if (this.isDark) {
+      this.themeService.changeTheme('ootr-default');
+      this.isDark = false;
+    } else {
+      this.themeService.changeTheme('ootr-dark');
+      this.isDark = true;
+    }
   }
 
   close() {

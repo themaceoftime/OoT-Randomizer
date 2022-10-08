@@ -38,6 +38,10 @@
   .controls {
     float: right;
     margin-top: 5px;
+
+    img {
+      cursor: pointer;
+    }
   }
 
   .controlIcon {
@@ -216,5 +220,13 @@
     .right :host ::ng-deep {
       display: none;
     }
+  }
+
+  #dark-switch {
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+    filter: invert(100);
+    -webkit-app-region: no-drag
   }
 }
