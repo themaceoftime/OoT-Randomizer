@@ -1,4 +1,4 @@
-import { Component, ViewContainerRef, ElementRef, ViewEncapsulation, Renderer2,  Inject } from '@angular/core';
+import { Component, ViewContainerRef, ElementRef, ViewEncapsulation, Renderer2, Inject } from '@angular/core';
 import { PipeTransform, Pipe } from '@angular/core';
 import { Router } from '@angular/router';
 import { DomSanitizer } from "@angular/platform-browser";
@@ -17,9 +17,12 @@ export class BypassSecurityPipe implements PipeTransform {
 
 @Component({
   selector: 'ngx-app',
-  template: `<body id="generator" class="nb-theme-default">
-    <router-outlet></router-outlet>
-  </body>`,
+  template: `
+    <body class="nb-theme-ootr-default">
+      <div id="generator">
+        <router-outlet></router-outlet>
+      </div>
+    </body>`,
   // Shadow-DOM requires code tweaks within Nebular.
   // Style interference with website is addressed by usage of selector specificity.
   encapsulation: ViewEncapsulation.None
@@ -61,11 +64,11 @@ export class AppComponent {
     const generatorBody = this.document.querySelector('body#generator');
     const outerBody = this.document.getElementsByTagName('body')[0];
 
-    if (outerBody && outerBody !== generatorBody && outerBody.classList.contains('nb-theme-default')) {
-      this.renderer.removeClass(outerBody, `nb-theme-default`);
+    if (outerBody && outerBody !== generatorBody && outerBody.classList.contains('nb-theme-ootr-default')) {
+      this.renderer.removeClass(outerBody, `nb-theme-ootr-default`);
 
-      if (generatorBody && !generatorBody.classList.contains('nb-theme-default')) {
-        this.renderer.addClass(generatorBody, `nb-theme-default`);
+      if (generatorBody && !generatorBody.classList.contains('nb-theme-ootr-default')) {
+        this.renderer.addClass(generatorBody, `nb-theme-ootr-default`);
       }
     }
   }
