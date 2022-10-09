@@ -3279,13 +3279,13 @@ setting_infos = [
     ),
     Combobox(
         name           = 'spawn_positions',
-        gui_text       = 'Randomize Overworld Spawns',
+        gui_text       = 'Shuffle Overworld Spawns',
         default        = 'off',
         choices        = {
             'off':     'Off',
             'child':   'Child Only',
             'adult':   'Adult Only',
-            'both':    'Both'
+            'both':    'Both',
         },
         gui_tooltip    = '''\
             Randomize where you start when loading

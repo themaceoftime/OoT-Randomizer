@@ -476,7 +476,7 @@
     "shuffle_overworld_entrances":             false,
     "owl_drops":                               false,
     "warp_songs":                              false,
-    "spawn_positions":                         "both",
+    "spawn_positions":                         "both", 
     "shuffle_scrubs":                          "off",
     "shopsanity":                              "off",
     "tokensanity":                             "off",
