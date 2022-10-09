@@ -1153,7 +1153,7 @@
     {
         "region_name": "LLR Talons House",
         "locations": {
-            "LLR Talons Chickens": "is_child and and (skip_child_zelda or at('Hyrule Castle Grounds', is_child and (Weird_Egg or Chicken)))"
+            "LLR Talons Chickens": "is_child and (skip_child_zelda or at('Hyrule Castle Grounds', is_child and (Weird_Egg or Chicken)))"
         }
     },
     {
