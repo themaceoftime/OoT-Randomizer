@@ -282,7 +282,7 @@
         "scene": "Sacred Forest Meadow",
         "hint": "SACRED_FOREST_MEADOW",
         "locations": {
-            "Song from Saria": "is_child and Zeldas_Letter",
+            "Song from Saria": "is_child and at('HC Garden Locations', is_child)",
             "Sheik in Forest": "is_adult",
             "SFM GS": "can_use(Hookshot) and at_night",
             "SFM Maze Gossip Stone (Lower)": "True",
@@ -1884,7 +1884,10 @@
             "Links Cow": "can_play(Eponas_Song) and is_adult and at_day"
         },
         "locations": {
-            "Song from Malon": "is_child and Zeldas_Letter and Ocarina and at_day",
+            # Malon requires:
+            #   Talk to her in Castle Grounds for her item
+            #   Wake up Talon
+            "Song from Malon": "is_child and Ocarina and at_day and (skip_child_zelda or at('Hyrule Castle Grounds', is_child and (Weird_Egg or Chicken)))",
             "LLR GS Tree": "is_child and can_bonk_tree",
             "LLR GS Rain Shed": "is_child and at_night",
             "LLR GS House Window": "can_use(Boomerang) and at_night",
@@ -1902,7 +1905,7 @@
         "region_name": "LLR Talons House",
         "scene": "LLR Talons House",
         "locations": {
-            "LLR Talons Chickens": "is_child and at_day and Zeldas_Letter"
+            "LLR Talons Chickens": "is_child and at_day and (skip_child_zelda or at('Hyrule Castle Grounds', is_child and (Weird_Egg or Chicken)))"
         },
         "exits": {
             "Lon Lon Ranch": "True"

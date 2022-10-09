@@ -171,7 +171,7 @@
         "region_name": "Sacred Forest Meadow",
         "hint": "SACRED_FOREST_MEADOW",
         "locations": {
-            "Song from Saria": "is_child and Zeldas_Letter",
+            "Song from Saria": "is_child and at('HC Garden Locations', is_child)",
             "Sheik in Forest": "is_adult",
             "SFM GS": "(can_use(Hookshot) or can_hover) and at_night and is_adult",
             "SFM Maze Gossip Stone (Lower)": "True",
@@ -1136,7 +1136,7 @@
             "Links Cow": "(can_play(Eponas_Song) or can_hover) and is_adult"
         },
         "locations": {
-            "Song from Malon": "is_child and Zeldas_Letter and Ocarina",
+            "Song from Malon": "is_child and Ocarina and at_day and (skip_child_zelda or at('Hyrule Castle Grounds', is_child and (Weird_Egg or Chicken)))",
             "LLR GS Tree": "is_child",
             "LLR GS Rain Shed": "is_child and at_night",
             "LLR GS House Window": "can_use(Boomerang) and at_night",
@@ -1153,7 +1153,7 @@
     {
         "region_name": "LLR Talons House",
         "locations": {
-            "LLR Talons Chickens": "is_child and Zeldas_Letter"
+            "LLR Talons Chickens": "is_child and and (skip_child_zelda or at('Hyrule Castle Grounds', is_child and (Weird_Egg or Chicken)))"
         }
     },
     {
