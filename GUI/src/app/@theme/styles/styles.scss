@@ -37,10 +37,6 @@
       }
     }
 
-    .themes-switcher {
-      color: nb-theme(color-basic-100) !important;
-    }
-
     .ioInput,
     .ioInputWeb,
     .numberTextInput,
@@ -50,8 +46,14 @@
       background: nb-theme(color-basic-100) !important;
     }
 
-    .record-picker .selected {
-      background-color: nb-theme(color-basic-1100) !important;
+    div.record-picker {
+      ul {
+        border-bottom: unset;
+      }
+
+      .selected {
+        background-color: nb-theme(color-basic-1100) !important;
+      }
     }
 
     nb-popover {
@@ -62,16 +64,20 @@
           border-right: 11px solid transparent;
         }
 
-        border-bottom: 11px solid nb-theme(color-basic-1100);
+        border-bottom: 11px solid nb-theme(color-warning-500);
         border-left: 11px solid transparent;
         border-right: 11px solid transparent;
       }
 
-      border: 2px solid nb-theme(color-basic-1100) !important;
+      border: 2px solid nb-theme(color-warning-500) !important;
     }
 
-    nb-card-body .selected {
-      background: nb-theme(color-basic-1100) !important;
+    nb-card-body {
+      color: nb-theme(color-basic-600);
+
+      .selected {
+        background: nb-theme(color-basic-1100) !important;
+      }
     }
 
     nb-card.select.primary {
@@ -86,9 +92,12 @@
       line-height: 0.8 !important;
     }
 
-    nb-option:hover {
-      background-color: nb-theme(color-info-500) !important;
-      color: nb-theme(color-basic-100) !important;
+    nb-option, nb-option.selected {
+      color: nb-theme(color-basic-1000) !important;
+
+      &:hover {
+        background-color: nb-theme(color-success-300) !important;
+      }
     }
 
     .textInput:focus {
@@ -322,7 +331,7 @@
 
     nb-tabset {
       ul {
-        border-bottom: 1px solid nb-theme(color-basic-800);
+        border-bottom: nb-theme(tile-border) solid nb-theme(color-basic-800);
 
         > li.tab.active {
           background-color: unset;
@@ -332,12 +341,16 @@
           }
 
           > a > span {
-            font-weight: 600;
-            color: nb-theme(color-info-500);
+            font-weight: nb-theme(menu-font-weight);
+            color: nb-theme(color-success-500);
           }
         }
 
         > li > a > span {
+          &:hover {
+            font-weight: nb-theme(menu-hover-font-weight);
+          }
+
           font-weight: 400;
           font-family: Exo;
           line-height: 15px;
@@ -351,7 +364,7 @@
     }
 
     nb-layout-header {
-      background-color: nb-theme(color-info-500);
+      background-color: nb-theme(color-warning-100);
 
       nav {
         height: 1.25em;
@@ -370,6 +383,7 @@
 
     .layout .layout-container .content .columns {
       nb-layout-column.main-content {
+        background: nb-theme(color-success-800);
         padding: 0;
       }
 
@@ -398,7 +412,7 @@
       border-radius: 3px; // TODO dark mode
 
       .options-list {
-        border: 2px solid nb-theme(color-info-500);
+        border: 2px solid nb-theme(color-success-400);
         border-radius: 3px; // TODO dark mode
 
         nb-option {
@@ -435,15 +449,22 @@
 
     [nbButton], button.btn {
       &.appearance-filled {
+        &.status-primary.headerButton {
+          background-color: nb-theme(color-info-500);
+          border-color: nb-theme(color-info-500);
+          color: nb-theme(color-success-700);
+        }
+
         &.status-success {
           &:hover {
-            background-color: nb-theme(color-basic-300);
-            border-color: nb-theme(color-basic-300);
+            background-color: nb-theme(color-warning-300);
+            border-color: nb-theme(color-warning-300);
           }
 
           bottom: 13px;
-          background-color: nb-theme(color-basic-500);
-          border-color: nb-theme(color-basic-500);
+          background-color: nb-theme(color-warning-200);
+          border-color: nb-theme(color-warning-200);
+          color: nb-theme(color-info-300);
           padding: 0.75rem 1.5rem;
           font-family: Exo;
           font-size: 1rem;
@@ -472,6 +493,12 @@
       }
     }
 
+    [nbButton].appearance-filled.status-info {
+      color: nb-theme(color-info-300);
+      background-color: nb-theme(color-info-500);
+      border-color: nb-theme(color-info-500);
+    }
+
     button.size-small.status-info.shape-rectangle {
       font-size: 0.875rem;
       font-weight: 500;
@@ -481,8 +508,8 @@
       background-color: nb-theme(color-info-500);
 
       &:hover {
-        background-color: nb-theme(color-primary-500);
-        border-color: nb-theme(color-primary-500);
+        background-color: nb-theme(color-warning-400);
+        border-color: nb-theme(color-warning-400);
       }
     }
 
@@ -497,8 +524,8 @@
       padding: 1.25rem;
       height: 40px;
       width: 100%;
-      background: nb-theme(color-info-500);
-      color: nb-theme(color-basic-100) !important;
+      background: nb-theme(color-warning-100);
+      color: nb-theme(color-success-700) !important;
 
       a {
         text-decoration: none;
@@ -536,7 +563,7 @@
 
     nb-tabset .tab.active .tab-link::before,
     nb-tabset .tab:hover .tab-link::before {
-      background-color: nb-theme(color-info-500) !important;
+      background-color: nb-theme(color-success-400) !important;
     }
 
     nb-tabset a.tab {
@@ -559,43 +586,61 @@
       text-transform: uppercase;
       margin-top: 0.5rem;
     }
+
+    mat-grid-tile.mat-grid-tile {
+      background-color: nb-theme(color-success-900);
+      border-radius: nb-theme(tile-border-radius);
+      border: nb-theme(tile-border) solid nb-theme(color-info-100);
+    }
+
+    p {
+      margin-top: 0;
+    }
+  }
+
+  //DB: Tooltip delay
+  @keyframes tooltipFadeIn {
+    0% {
+      opacity: 0;
+    }
+    75% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  //Scrollbar style for Combobox
+  .cdk-overlay-pane {
+
+    > nb-popover {
+      animation-name: tooltipFadeIn;
+      animation-duration: 600ms;
+    }
+
+    gui-tooltip > nb-card > nb-card-body {
+      background-color: nb-theme(color-success-100);
+      color: nb-theme(color-basic-1000);
+      border-radius: nb-theme(border-radius);
+    }
+  }
+
+  ::-webkit-scrollbar {
+    background: nb-theme(color-primary-200);
+    width: nb-theme(scrollbar-width);
+  }
+
+  ::-webkit-scrollbar-track {
+    background: nb-theme(color-success-1100);
+    box-shadow: 0 0 3px nb-theme(color-success-200) inset;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: nb-theme(color-primary-200);
   }
 }
 
 html {
   font-size: 14px;
-}
-
-//DB: Tooltip delay
-@keyframes tooltipFadeIn {
-  0% {
-    opacity: 0;
-  }
-  75% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.cdk-overlay-pane > nb-popover {
-  animation-name: tooltipFadeIn;
-  animation-duration: 600ms;
-}
-
-//Scrollbar style for Combobox
-.cdk-overlay-pane > nb-card > nb-card-body {
-  &::-webkit-scrollbar {
-    width: 7px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #eee;
-    box-shadow: 0px 0px 3px #dfdfdf inset;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: nb-theme(color-primary-200);
-  }
 }

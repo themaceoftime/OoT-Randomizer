@@ -17,10 +17,12 @@
   }
 
   .mat-grid-tile mat-grid-tile-footer.mat-grid-tile-footer, .mat-grid-tile mat-grid-tile-header.mat-grid-tile-header {
-    background-color: nb-theme(color-info-500);
+    background-color: nb-theme(color-success-1000);
 
     > h3 {
-      color: nb-theme(color-basic-100);
+      padding-top: nb-theme(headline-padding-top);
+      color: nb-theme(color-info-300);
+      font-weight: nb-theme(tile-header-font-weight);
     }
   }
 
@@ -2353,7 +2355,7 @@
   }
 
   .mat-slide-toggle-bar {
-    background-color: rgba(255, 255, 255, .5)
+    background-color: nb-theme(color-primary-400);
   }
 
   .mat-slider-track-background {
@@ -2373,7 +2375,7 @@
   .mat-accent .mat-slider-thumb,
   .mat-accent .mat-slider-thumb-label,
   .mat-accent .mat-slider-track-fill {
-    background-color: nb-theme(color-info-500);
+    background-color: nb-theme(color-success-300);
   }
 
   .mat-accent .mat-slider-thumb-label-text {
