@@ -409,7 +409,7 @@ _add_boss_entrances()
 priority_entrance_table = {
     'Bolero': (['DMC Central Local'], ['OwlDrop', 'WarpSong']),
     'Nocturne': (['Graveyard Warp Pad Region'], ['OwlDrop', 'Spawn', 'WarpSong']),
-    'Requiem': (['Desert Colossus', 'Desert Colossus From Spirit Lobby'], ['OwlDrop', 'Spawn' 'WarpSong']),
+    'Requiem': (['Desert Colossus', 'Desert Colossus From Spirit Lobby'], ['OwlDrop', 'Spawn', 'WarpSong']),
 }
 
 
