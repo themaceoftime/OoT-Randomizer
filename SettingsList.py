@@ -3279,7 +3279,7 @@ setting_infos = [
     ),
     Combobox(
         name           = 'spawn_positions',
-        gui_text       = 'Shuffle Overworld Spawns',
+        gui_text       = 'Randomize Overworld Spawns',
         default        = 'off',
         choices        = {
             'off':     'Off',
