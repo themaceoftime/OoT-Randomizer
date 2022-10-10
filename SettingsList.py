@@ -2862,6 +2862,18 @@ setting_infos = [
         shared         = True,
     ),
     Checkbutton(
+        name           = 'fast_tokens',
+        gui_text       = 'Fast Gold Skulltula Drops',
+        gui_tooltip    = '''\
+            Collecting Gold Skulltula Tokens does
+            not freeze the game. The text box showing the
+            collected item automatically closes. Incompatible
+            with shuffled tokens.
+        ''',
+        default        = False,
+        shared         = True
+    ),
+    Checkbutton(
         name           = 'start_with_rupees',
         gui_text       = 'Start with Max Rupees',
         gui_tooltip    = '''\
@@ -3509,6 +3521,11 @@ setting_infos = [
         gui_params     = {
             'randomize_key': 'randomize_settings',
         },
+        disable={
+            'dungeons': {'settings' : ['fast_tokens']},
+            'overworld': {'settings' : ['fast_tokens']},
+            'all': {'settings' : ['fast_tokens']},
+        }
     ),
     Combobox(
         name           = 'shuffle_mapcompass',
