@@ -54,7 +54,7 @@
       "GF HBA 1500 Points"
     ],
     "allowed_tricks": [],
-    "shuffle_child_trade": "skip_child_zelda",
+    "shuffle_child_trade": [],
     "no_escape_sequence": true,
     "no_guard_stealth": true,
     "no_epona_race": true,
@@ -65,7 +65,7 @@
     "free_scarecrow": true,
     "fast_bunny_hood": true,
     "starting_equipment": [],
-    "starting_items": [],
+    "starting_items": ["zeldas_letter"],
     "starting_songs": [],
     "start_with_rupees": true,
     "start_with_consumables": true,
@@ -109,7 +109,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "shuffle_child_trade":                     "skip_child_zelda",
+    "shuffle_child_trade":                     [],
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,
@@ -185,7 +185,8 @@
       "deku_shield"
     ],
     "starting_items":                          [
-      "ocarina"
+      "ocarina",
+      "zeldas_letter"
     ],
     "starting_songs":                          [],
     "ocarina_songs":                           "off",
@@ -225,7 +226,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "shuffle_child_trade":                     "skip_child_zelda",
+    "shuffle_child_trade":                     [],
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,
@@ -303,7 +304,8 @@
       "deku_shield"
     ],
     "starting_items":                          [
-      "ocarina"
+      "ocarina",
+      "zeldas_letter"
     ],
     "starting_songs":                          [
       "prelude"
@@ -365,7 +367,7 @@
     "big_poe_count":                           1,
     "shuffle_kokiri_sword":                    true,
     "shuffle_ocarinas":                        false,
-    "shuffle_child_trade":                     "vanilla",
+    "shuffle_child_trade":                     [],
     "shuffle_gerudo_card":                     false,
     "shuffle_song_items":                      "song",
     "shuffle_cows":                            false,
@@ -453,7 +455,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "shuffle_child_trade":                     "skip_child_zelda",
+    "shuffle_child_trade":                     [],
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,
@@ -525,7 +527,8 @@
     ],
     "starting_items":                          [
       "ocarina",
-      "lens"
+      "lens",
+      "zeldas_letter"
     ],
     "starting_songs":                          [
       "prelude"
@@ -572,7 +575,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "shuffle_child_trade":                     "skip_child_zelda",
+    "shuffle_child_trade":                     [],
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,
@@ -648,7 +651,8 @@
     "starting_items":                          [
       "ocarina",
       "farores_wind",
-      "lens"
+      "lens",
+      "zeldas_letter"
     ],
     "starting_songs":                          [],
     "ocarina_songs":                           "off",
@@ -704,7 +708,18 @@
     "shuffle_cows": true,
     "shuffle_kokiri_sword": true,
     "shuffle_ocarinas": true,
-    "shuffle_child_trade": "shuffle",
+    "shuffle_child_trade": [
+      "Weird Egg",
+      "Zeldas Letter",
+      "Keaton Mask",
+      "Skull Mask",
+      "Spooky Mask",
+      "Bunny Hood",
+      "Goron Mask",
+      "Zora Mask",
+      "Gerudo Mask",
+      "Mask of Truth"
+    ],
     "shuffle_gerudo_card": true,
     "shuffle_beans": true,
     "shuffle_medigoron_carpet_salesman": true,
@@ -950,7 +965,7 @@
     "big_poe_count":                           1,
     "shuffle_kokiri_sword":                    true,
     "shuffle_ocarinas":                        false,
-    "shuffle_child_trade":                     "vanilla",
+    "shuffle_child_trade":                     [],
     "shuffle_gerudo_card":                     false,
     "shuffle_song_items":                      "song",
     "shuffle_cows":                            false,
@@ -1036,7 +1051,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "shuffle_child_trade":                     "skip_child_zelda",
+    "shuffle_child_trade":                     [],
     "dungeon_shortcuts_choice":                "off",
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
@@ -1112,7 +1127,8 @@
     "starting_items":                          [
       "ocarina",
       "lens",
-      "farores_wind"
+      "farores_wind",
+      "zeldas_letter"
     ],
     "starting_equipment": [
       "deku_shield"
@@ -1161,7 +1177,7 @@
     "one_item_per_dungeon":                    false,
     "trials_random":                           false,
     "trials":                                  0,
-    "shuffle_child_trade":                     "skip_child_zelda",
+    "shuffle_child_trade":                     [],
     "no_escape_sequence":                      true,
     "no_guard_stealth":                        true,
     "no_epona_race":                           true,
@@ -1237,7 +1253,8 @@
     ],
     "starting_equipment":                      [],
     "starting_items":                          [
-      "ocarina"
+      "ocarina",
+      "zeldas_letter"
     ],
     "starting_songs":                          [],
     "ocarina_songs":                           "off",
