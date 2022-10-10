@@ -468,9 +468,12 @@ def get_pool_core(world):
         # Gerudo Card
         elif location.vanilla_item == 'Gerudo Membership Card':
             shuffle_item = world.settings.shuffle_gerudo_card and world.settings.gerudo_fortress != 'open'
-            if world.settings.shuffle_gerudo_card and world.settings.gerudo_fortress == 'open':
-                pending_junk_pool.append(item)
-                item = IGNORE_LOCATION
+            if world.settings.gerudo_fortress == 'open':
+                if world.settings.shuffle_gerudo_card:
+                    pending_junk_pool.append(item)
+                    item = IGNORE_LOCATION
+                else:
+                    world.state.collect(ItemFactory(item))
 
         # Bottles
         elif location.vanilla_item in ['Bottle', 'Bottle with Milk', 'Rutos Letter']:
@@ -502,11 +505,11 @@ def get_pool_core(world):
         elif location.vanilla_item == 'Small Key (Thieves Hideout)':
             shuffle_item = world.settings.shuffle_hideoutkeys != 'vanilla'
             if (world.settings.gerudo_fortress == 'open'
-                    or world.settings.gerudo_fortress == 'fast' and location.name != 'Hideout Jail Guard (1 Torch)'):
+                    or world.settings.gerudo_fortress == 'fast' and location.name != 'Hideout 1 Torch Jail Gerudo Key'):
                 item = IGNORE_LOCATION
                 shuffle_item = False
             if shuffle_item and world.settings.gerudo_fortress == 'normal' and 'Thieves Hideout' in world.settings.key_rings:
-                item = get_junk_item()[0] if location.name != 'Hideout Jail Guard (1 Torch)' else 'Small Key Ring (Thieves Hideout)'
+                item = get_junk_item()[0] if location.name != 'Hideout 1 Torch Jail Gerudo Key' else 'Small Key Ring (Thieves Hideout)'
 
         # Dungeon Items
         elif location.dungeon is not None:

@@ -1053,6 +1053,8 @@ class WorldDistribution(object):
                 if hint_area.is_dungeon and world.empty_dungeons[hint_area.dungeon_name].empty:
                     skipped_locations.append(location.name)
                     world.item_added_hint_types['barren'].append(location.item.name)
+        if world.settings.gerudo_fortress == 'open' and not world.settings.shuffle_gerudo_card:
+            skipped_locations.append('Hideout Gerudo Membership Card')
         for iter_world in worlds:
             for location in skipped_locations:
                 loc = iter_world.get_location(location)
