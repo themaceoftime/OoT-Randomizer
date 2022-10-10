@@ -348,6 +348,7 @@
             "text_shuffle",
             "damage_multiplier",
             "deadly_bonks",
+            "climb_anywhere",
             "no_collectible_hearts",
             "starting_tod",
             "blue_fire_arrows",

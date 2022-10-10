@@ -4801,6 +4801,16 @@ setting_infos = [
         ''',
         shared         = True,
     ),
+    Checkbutton(
+        name           = 'climb_anywhere',
+        gui_text       = 'Climb Anywhere',
+        gui_tooltip    = '''\
+            Make all vertical surfaces climbable and
+            most surfaces hookshot-able.
+        ''',
+        shared         = True,
+        default        = False,
+    ),
     Combobox(
         name           = 'starting_tod',
         gui_text       = 'Starting Time of Day',
