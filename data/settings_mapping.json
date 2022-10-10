@@ -209,6 +209,7 @@
           "row_span": [6,6,9],
           "settings": [
             "shuffle_mapcompass",
+            "shuffle_silver_rupees",
             "shuffle_smallkeys",
             "shuffle_hideoutkeys",
             "key_rings_choice",

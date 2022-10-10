@@ -93,6 +93,22 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     # Add it to the extended object table
     add_to_extended_object_table(rom, 0x195, keyring_obj_file)
 
+    # Build a Silver Rupee model from the Huge Rupee model
+    silver_rupee_obj_file = File({
+        'Name': 'object_gi_rupy',
+        'Start': '01914000',
+        'End': '01914800',
+    })
+    silver_rupee_obj_file.copy(rom)
+    # Update colors for the Silver Rupee variant
+    rom.write_bytes(silver_rupee_obj_file.start + 0x052C, [0xAA, 0xAA, 0xAA]) # Inner Primary Color?
+    rom.write_bytes(silver_rupee_obj_file.start + 0x0534, [0x5A, 0x5A, 0x5A]) # Inner Env Color?
+    rom.write_bytes(silver_rupee_obj_file.start + 0x05CC, [0xFF, 0xFF, 0xFF]) # Outer Primary Color?
+    rom.write_bytes(silver_rupee_obj_file.start + 0x05D4, [0xFF, 0xFF, 0xFF]) # Outer Env Color?
+    update_dmadata(rom, silver_rupee_obj_file)
+    # Add it to the extended object table
+    add_to_extended_object_table(rom, 0x196, silver_rupee_obj_file)
+
     # Create the textures for pots/crates. Note: No copyrighted material can be distributed w/ the randomizer. Because of this, patch files are used to create the new textures from the original texture in ROM.
     # Apply patches for custom textures for pots and crates and add as new files in rom
     # Crates are ci4 textures in the normal ROM but for pot/crate textures match contents were upgraded to ci8 to support more colors
@@ -1430,6 +1446,11 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             save_context.addresses['dungeon_items'][dungeon]['compass'].value = True
             save_context.addresses['dungeon_items'][dungeon]['map'].value = True
 
+    # start with silver rupees
+    if world.settings.shuffle_silver_rupees == 'remove':
+        for puzzle in world.silver_rupee_puzzles():
+            save_context.give_item(world, f'Silver Rupee ({puzzle})', float('inf'))
+
     if world.settings.shuffle_smallkeys == 'vanilla':
         if world.dungeon_mq['Spirit Temple']:
             save_context.addresses['keys']['spirit'].value = 3
@@ -1603,7 +1624,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             if locations:
                 # Location types later in the list will be preferred over earlier ones or ones not in the list.
                 # This ensures that if the region behind the boss door is a boss arena, the medallion or stone will be used.
-                priority_types = ("GS Token", "GrottoScrub", "Scrub", "Shop", "NPC", "Collectable", "Freestanding", "ActorOverride", "RupeeTower", "Pot", "Crate", "FlyingPot", "SmallCrate", "Beehive", "Chest", "Cutscene", "Song", "BossHeart", "Boss")
+                priority_types = ("GS Token", "GrottoScrub", "Scrub", "Shop", "NPC", "Collectable", "Freestanding", "SilverRupee", "ActorOverride", "RupeeTower", "Pot", "Crate", "FlyingPot", "SmallCrate", "Beehive", "Chest", "Cutscene", "Song", "BossHeart", "Boss")
                 best_type = max((location.type for location in locations), key=lambda type: priority_types.index(type) if type in priority_types else -1)
                 location = random.choice(list(filter(lambda loc: loc.type == best_type, locations)))
                 break
@@ -1741,6 +1762,20 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
             patch_crate(location, rom)
         for location in smallcrate_locations:
             patch_small_crate(location, rom)
+
+    # Patch silver rupees
+    if world.shuffle_silver_rupees:
+        if world.settings.shuffle_silver_rupees != 'remove':
+            rom.write_byte(rom.sym('CFG_DUNGEON_INFO_SILVER_RUPEES'), 1)
+        silver_rupee_locations = [location for location in world.get_locations() if location.disabled == DisableType.ENABLED and location.type == 'SilverRupee']
+        for silver_rupee_location in silver_rupee_locations:
+            patch_silver_rupee(silver_rupee_location, rom)
+
+        if world.dungeon_mq['Dodongos Cavern']: #Patch DC MQ Staircase Transition Actor to use permanent switch flag 0x1F
+            rom.write_byte(0x1F12190+15, 0x9F)
+
+        if world.dungeon_mq['Spirit Temple']: #Patch Spirit MQ Lobby front right chest to use permanent switch flag 0x1F
+            rom.write_byte(0x2b08ce4+13, 0x1F )
 
     # Write flag table data
     scene_flag_table = get_scene_flag_table(world)
@@ -2407,10 +2442,10 @@ def get_override_entry(location):
         default &= 0x1F
     elif location.type == 'ActorOverride':
         type = 2
-    elif location.type in ['Collectable', 'Freestanding', 'ActorOverride']:
-            type = 2
+    elif location.type in ['Collectable', 'Freestanding', 'ActorOverride', 'SilverRupee']:
+        type = 2
     elif location.type in ["Pot", "Crate", "FlyingPot", "SmallCrate", "RupeeTower", "Beehive"]:
-            type = 6
+        type = 6
     elif location.type == 'GS Token':
         type = 3
     elif location.type == 'Shop' and location.item.type != 'Shop':
@@ -2849,6 +2884,16 @@ def patch_beehive(location, rom: Rom):
         for address in location.address:
             rom.write_byte(address + 13, location.default)
 
+#Patches a silver rupee to be a collectible item for silver rupee shuffle
+def patch_silver_rupee(location, rom: Rom):
+    if location.address:
+        for address in location.address:
+            actor_bytes = rom.read_bytes(address, 16) #Read the actor
+            actor_bytes[0] = 0x00
+            actor_bytes[1] = 0x15 #Patch the actor to a collectible
+            actor_bytes[14] = (location.default & 0x3F) #Patch the flag
+            actor_bytes[15] = (location.default & 0xC0)
+            rom.write_bytes(address, actor_bytes)
 
 # Patch the first boss key door in ganons tower that leads to the room w/ the pots
 def patch_ganons_tower_bk_door(rom: Rom, flag):

@@ -17,9 +17,7 @@
             "Ganons Castle Forest Trial": "here(is_adult or Kokiri_Sword)",
             "Ganons Castle Water Trial": "True",
             "Ganons Castle Shadow Trial": "is_adult",
-            "Ganons Castle Fire Trial": "
-                is_adult and Goron_Tunic and Golden_Gauntlets and
-                (Longshot or Hover_Boots or (logic_fire_trial_mq and Hookshot))",
+            "Ganons Castle Fire Trial": "can_use(Goron_Tunic)",
             "Ganons Castle Light Trial": "can_use(Golden_Gauntlets)",
             "Ganons Castle Spirit Trial": "can_use(Megaton_Hammer) and (Bow or logic_rusted_switches)",
             "Ganons Castle Deku Scrubs": "logic_lens_castle_mq or can_use(Lens_of_Truth)",
@@ -64,7 +62,21 @@
             "Blue Fire": "has_bottle"
         },
         "exits": {
-            "Ganons Castle Water Trial Ending": "Blue_Fire and (Small_Key_Ganons_Castle, 3)"
+            "Ganons Castle Water Trial Second Room": "Blue_Fire and (Small_Key_Ganons_Castle, 3)"
+        }
+    },
+    {
+        "region_name": "Ganons Castle Water Trial Second Room",
+        "dungeon": "Ganons Castle",
+        "locations": {
+            "Ganons Castle MQ Water Trial Silver Rupee 1" : "True",
+            "Ganons Castle MQ Water Trial Silver Rupee 2" : "True",
+            "Ganons Castle MQ Water Trial Silver Rupee 3" : "True",
+            "Ganons Castle MQ Water Trial Silver Rupee 4" : "True",
+            "Ganons Castle MQ Water Trial Silver Rupee 5" : "True"
+        },
+        "exits": {
+            "Ganons Castle Water Trial Ending": "(Silver_Rupee_Ganons_Castle_Water_Trial, 5)"
         }
     },
     {
@@ -85,12 +97,33 @@
             "Ganons Castle MQ Shadow Trial Bomb Flower Chest": "
                 (Bow and (Hookshot or Hover_Boots)) or
                 (Hover_Boots and (logic_lens_castle_mq or can_use(Lens_of_Truth)) and
-                    (has_explosives or Progressive_Strength_Upgrade or can_use(Dins_Fire)))"
+                    (has_explosives or Progressive_Strength_Upgrade or can_use(Dins_Fire)))",
+            "Ganons Castle MQ Shadow Trial Silver Rupee 1" : "
+                (logic_lens_castle_mq or can_use(Lens_of_Truth)) and 
+                ((Bow and can_use(Hookshot)) or can_use(Hover_Boots))",
+            "Ganons Castle MQ Shadow Trial Silver Rupee 2" : "
+                (logic_lens_castle_mq or can_use(Lens_of_Truth)) and 
+                ((Bow and can_use(Hookshot)) or can_use(Hover_Boots))",
+            "Ganons Castle MQ Shadow Trial Silver Rupee 5" : "
+                (logic_lens_castle_mq or can_use(Lens_of_Truth)) and
+                ((Bow and can_use(Hookshot)) or can_use(Hover_Boots))"
         },
         "exits": {
-            "Ganons Castle Shadow Trial Ending": "
+            "Ganons Castle Shadow Trial Far Platforms": "
                 (logic_lens_castle_mq or can_use(Lens_of_Truth)) and
                 (Hover_Boots or (Bow and Hookshot and (has_fire_source or logic_shadow_trial_mq)))"
+        }
+    },
+    {
+        "region_name": "Ganons Castle Shadow Trial Far Platforms",
+        "dungeon": "Ganons Castle",
+        "locations": {
+            "Ganons Castle MQ Shadow Trial Eye Switch Chest": "Bow",
+            "Ganons Castle MQ Shadow Trial Silver Rupee 3" : "True",
+            "Ganons Castle MQ Shadow Trial Silver Rupee 4" : "True"
+        },
+        "exits": {
+            "Ganons Castle Shadow Trial Ending": "(Silver_Rupee_Ganons_Castle_Shadow_Trial, 5)"
         }
     },
     {
@@ -100,13 +133,28 @@
             "Shadow Trial Clear": "can_use(Light_Arrows)"
         },
         "locations": {
-            "Ganons Castle MQ Shadow Trial Eye Switch Chest": "Bow",
             "Ganons Castle MQ Shadow Trial Pot 1": "True",
             "Ganons Castle MQ Shadow Trial Pot 2": "True"
         }
     },
     {
         "region_name": "Ganons Castle Fire Trial",
+        "dungeon": "Ganons Castle",
+        "locations": {
+            "Ganons Castle MQ Fire Trial Silver Rupee 1": "can_use(Golden_Gauntlets)",
+            "Ganons Castle MQ Fire Trial Silver Rupee 2": "True",
+            "Ganons Castle MQ Fire Trial Silver Rupee 3": "can_use(Golden_Gauntlets)",
+            "Ganons Castle MQ Fire Trial Silver Rupee 4": "True",
+            "Ganons Castle MQ Fire Trial Silver Rupee 5": "True"
+        },
+        "exits": {
+            "Ganons Castle Fire Trial Ending": "
+                (Silver_Rupee_Ganons_Castle_Fire_Trial, 5) and can_use(Golden_Gauntlets) and
+                (Longshot or Hover_Boots or (logic_fire_trial_mq and Hookshot))"
+        }
+    },
+    {
+        "region_name": "Ganons Castle Fire Trial Ending",
         "dungeon": "Ganons Castle",
         "events": {
             "Fire Trial Clear": "can_use(Light_Arrows)"
