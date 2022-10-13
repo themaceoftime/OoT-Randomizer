@@ -165,7 +165,26 @@ ludicrous_items_extended = [
     'Silver Rupee Pouch (Ganons Castle Fire Trial)',
     'Silver Rupee Pouch (Ganons Castle Shadow Trial)',
     'Silver Rupee Pouch (Ganons Castle Water Trial)',
-    'Silver Rupee Pouch (Ganons Castle Forest Trial)'
+    'Silver Rupee Pouch (Ganons Castle Forest Trial)',
+    'Weird Egg',
+    'Chicken',
+    'Zeldas Letter',
+    'Keaton Mask',
+    'Skull Mask',
+    'Spooky Mask',
+    'Bunny Hood',
+    'Mask of Truth',
+    'Pocket Egg',
+    'Pocket Cucco',
+    'Cojiro',
+    'Odd Mushroom',
+    'Odd Potion',
+    'Poachers Saw',
+    'Broken Sword',
+    'Prescription',
+    'Eyeball Frog',
+    'Eyedrops',
+    'Claim Check'
 ]
 
 ludicrous_exclusions = [
