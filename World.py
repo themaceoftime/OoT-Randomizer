@@ -60,17 +60,17 @@ class World(object):
         self.entrance_shuffle = (
             self.shuffle_interior_entrances or settings.shuffle_grotto_entrances or self.shuffle_dungeon_entrances
             or settings.shuffle_overworld_entrances or settings.owl_drops or settings.warp_songs
-            or (settings.spawn_positions != 'off') or (settings.shuffle_bosses != 'off')
+            or settings.spawn_positions or (settings.shuffle_bosses != 'off')
         )
 
-        self.ensure_tod_access = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances or (settings.spawn_positions != 'off')
+        self.ensure_tod_access = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances or settings.spawn_positions
         self.disable_trade_revert = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances
 
         if (
             settings.open_forest == 'closed'
             and (
                 self.shuffle_special_interior_entrances or settings.shuffle_overworld_entrances
-                or settings.warp_songs or settings.spawn_positions in ('child', 'both') or (settings.shuffle_bosses != 'off')
+                or settings.warp_songs or (settings.spawn_positions and settings.spawn_positions_age in ('child', 'both')) or (settings.shuffle_bosses != 'off')
             )
         ):
             self.settings.open_forest = 'closed_deku'
