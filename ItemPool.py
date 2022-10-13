@@ -121,7 +121,26 @@ ludicrous_items_extended = [
     'Small Key Ring (Water Temple)',
     'Small Key Ring (Bottom of the Well)',
     'Small Key Ring (Gerudo Training Ground)',
-    'Magic Bean Pack'
+    'Magic Bean Pack',
+    'Weird Egg',
+    'Chicken',
+    'Zeldas Letter',
+    'Keaton Mask',
+    'Skull Mask',
+    'Spooky Mask',
+    'Bunny Hood',
+    'Mask of Truth',
+    'Pocket Egg',
+    'Pocket Cucco',
+    'Cojiro',
+    'Odd Mushroom',
+    'Odd Potion',
+    'Poachers Saw',
+    'Broken Sword',
+    'Prescription',
+    'Eyeball Frog',
+    'Eyedrops',
+    'Claim Check'
 ]
 
 ludicrous_exclusions = [

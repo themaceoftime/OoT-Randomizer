@@ -979,7 +979,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
         rom.write_byte(rom.sym('DISABLE_TIMERS'), 0x01)
         rom.write_int16s(0xB6D460, [0x0030, 0x0035, 0x0036]) # Change trade items revert table to prevent all reverts
 
-    if world.settings.adult_trade_shuffle or world.settings.item_pool_value == 'plentiful':
+    if world.settings.adult_trade_shuffle or world.settings.item_pool_value in ['plentiful', 'ludicrous']:
         rom.write_int16(rom.sym('CFG_ADULT_TRADE_SHUFFLE'), 0x0001)
         move_fado_in_lost_woods(rom)
     if world.settings.shuffle_child_trade or world.settings.logic_rules == 'glitched':
