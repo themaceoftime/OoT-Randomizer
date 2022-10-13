@@ -1,4 +1,5 @@
 #include "triforce.h"
+#include "model_text.h"
 #include "dungeon_info.h"
 #include "file_select.h"
 #include "get_items.h"
@@ -28,6 +29,7 @@ void c_init() {
     override_flags_init();
     models_init();
     init_textures();
+    //check_model_skeletons();
 }
 
 void before_game_state_update() {
@@ -41,6 +43,7 @@ void before_game_state_update() {
 void after_game_state_update() {
     draw_dungeon_info(&(z64_ctxt.gfx->overlay));
     draw_triforce_count(&(z64_ctxt.gfx->overlay));
+    draw_illegal_model_text(&(z64_ctxt.gfx->overlay));
     give_ganon_boss_key();
 }
 
