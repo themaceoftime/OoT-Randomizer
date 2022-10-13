@@ -5,7 +5,7 @@ supplementary_version = 1
 
 # Pick a unique identifier byte for your fork if you are intending to have a long-lasting branch.
 # This will be 0x00 for main releases and 0x01 for main dev.
-branch_identifier = 0x52
+branch_identifier = 0x99
 
 # URL to your branch on GitHub.
 branch_url = 'https://github.com/Roman971/OoT-Randomizer/tree/Dev-R'
@@ -14,4 +14,4 @@ branch_url = 'https://github.com/Roman971/OoT-Randomizer/tree/Dev-R'
 base_version = __version__
 
 # And finally, the completed version string. This is what is displayed and used for salting seeds.
-__version__ = f'{base_version} R-{supplementary_version}'
+__version__ = f'{base_version} M-{supplementary_version}'
