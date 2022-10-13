@@ -1,8 +1,8 @@
 import random
-from collections import OrderedDict
 from decimal import Decimal, ROUND_UP
 
 from Item import ItemFactory, ItemInfo
+from Location import DisableType, Location
 from Utils import random_choices
 
 
@@ -121,7 +121,51 @@ ludicrous_items_extended = [
     'Small Key Ring (Water Temple)',
     'Small Key Ring (Bottom of the Well)',
     'Small Key Ring (Gerudo Training Ground)',
-    'Magic Bean Pack'
+    'Magic Bean Pack',
+    'Silver Rupee (Dodongos Cavern Staircase)',
+    'Silver Rupee (Ice Cavern Spinning Blade)',
+    'Silver Rupee (Ice Cavern Push Block)',
+    'Silver Rupee (Bottom of the Well Basement)',
+    'Silver Rupee (Shadow Temple Scythe Shortcut)',
+    'Silver Rupee (Shadow Temple Invisible Blades)',
+    'Silver Rupee (Shadow Temple Huge Pit)',
+    'Silver Rupee (Shadow Temple Invisible Spikes)',
+    'Silver Rupee (Gerudo Training Ground Slopes)',
+    'Silver Rupee (Gerudo Training Ground Lava)',
+    'Silver Rupee (Gerudo Training Ground Water)',
+    'Silver Rupee (Spirit Temple Child Early Torches)',
+    'Silver Rupee (Spirit Temple Adult Boulders)',
+    'Silver Rupee (Spirit Temple Lobby and Lower Adult)',
+    'Silver Rupee (Spirit Temple Sun Block)',
+    'Silver Rupee (Spirit Temple Adult Climb)',
+    'Silver Rupee (Ganons Castle Spirit Trial)',
+    'Silver Rupee (Ganons Castle Light Trial)',
+    'Silver Rupee (Ganons Castle Fire Trial)',
+    'Silver Rupee (Ganons Castle Shadow Trial)',
+    'Silver Rupee (Ganons Castle Water Trial)',
+    'Silver Rupee (Ganons Castle Forest Trial)',
+    'Silver Rupee Pouch (Dodongos Cavern Staircase)',
+    'Silver Rupee Pouch (Ice Cavern Spinning Blade)',
+    'Silver Rupee Pouch (Ice Cavern Push Block)',
+    'Silver Rupee Pouch (Bottom of the Well Basement)',
+    'Silver Rupee Pouch (Shadow Temple Scythe Shortcut)',
+    'Silver Rupee Pouch (Shadow Temple Invisible Blades)',
+    'Silver Rupee Pouch (Shadow Temple Huge Pit)',
+    'Silver Rupee Pouch (Shadow Temple Invidible Spikes)',
+    'Silver Rupee Pouch (Gerudo Training Ground Slopes)',
+    'Silver Rupee Pouch (Gerudo Training Ground Lava)',
+    'Silver Rupee Pouch (Gerudo Training Ground Water)',
+    'Silver Rupee Pouch (Spirit Temple Child Early Torches)',
+    'Silver Rupee Pouch (Spirit Temple Adult Boulders)',
+    'Silver Rupee Pouch (Spirit Temple Lobby and Lower Adult)',
+    'Silver Rupee Pouch (Spirit Temple Sun Block)',
+    'Silver Rupee Pouch (Spirit Temple Adult Climb)',
+    'Silver Rupee Pouch (Ganons Castle Spirit Trial)',
+    'Silver Rupee Pouch (Ganons Castle Light Trial)',
+    'Silver Rupee Pouch (Ganons Castle Fire Trial)',
+    'Silver Rupee Pouch (Ganons Castle Shadow Trial)',
+    'Silver Rupee Pouch (Ganons Castle Water Trial)',
+    'Silver Rupee Pouch (Ganons Castle Forest Trial)'
 ]
 
 ludicrous_exclusions = [
@@ -417,6 +461,8 @@ def get_pool_core(world):
                 pending_junk_pool.append(f"Boss Key ({dungeon})")
         if world.settings.shuffle_ganon_bosskey in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
             pending_junk_pool.append('Boss Key (Ganons Castle)')
+        if world.settings.shuffle_silver_rupees in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
+            pending_junk_pool.extend([f"Silver Rupee ({puzzle})" for puzzle in world.silver_rupee_puzzles()])
         if world.settings.shuffle_song_items == 'any':
             pending_junk_pool.extend(song_list)
 
@@ -569,6 +615,50 @@ def get_pool_core(world):
             if shuffle_item and world.settings.gerudo_fortress == 'normal' and 'Thieves Hideout' in world.settings.key_rings:
                 item = get_junk_item()[0] if location.name != 'Hideout 1 Torch Jail Gerudo Key' else 'Small Key Ring (Thieves Hideout)'
 
+        # Freestanding Rupees and Hearts
+        elif location.type in ['ActorOverride', 'Freestanding', 'RupeeTower']:
+            if world.settings.shuffle_freestanding_items == 'all':
+                shuffle_item = True
+            elif world.settings.shuffle_freestanding_items == 'dungeons' and location.dungeon is not None:
+                shuffle_item = True
+            elif world.settings.shuffle_freestanding_items == 'overworld' and location.dungeon is None:
+                shuffle_item = True
+            else:
+                shuffle_item = False
+                location.disabled = DisableType.DISABLED
+
+        # Pots
+        elif location.type in ['Pot', 'FlyingPot']:
+            if world.settings.shuffle_pots == 'all':
+                shuffle_item = True
+            elif world.settings.shuffle_pots == 'dungeons' and location.dungeon is not None:
+                shuffle_item = True
+            elif world.settings.shuffle_pots == 'overworld' and location.dungeon is None:
+                shuffle_item = True
+            else:
+                shuffle_item = False
+                location.disabled = DisableType.DISABLED
+
+        # Crates
+        elif location.type in ['Crate', 'SmallCrate']:
+            if world.settings.shuffle_crates == 'all':
+                shuffle_item = True
+            elif world.settings.shuffle_crates == 'dungeons' and location.dungeon is not None:
+                shuffle_item = True
+            elif world.settings.shuffle_crates == 'overworld' and location.dungeon is None:
+                shuffle_item = True
+            else:
+                shuffle_item = False
+                location.disabled = DisableType.DISABLED
+
+        # Beehives
+        elif location.type == 'Beehive':
+            if world.settings.shuffle_beehives:
+                shuffle_item = True
+            else:
+                shuffle_item = False
+                location.disabled = DisableType.DISABLED
+
         # Dungeon Items
         elif location.dungeon is not None:
             dungeon = location.dungeon
@@ -598,6 +688,12 @@ def get_pool_core(world):
                 elif dungeon.name in world.settings.key_rings:
                     item = get_junk_item()[0]
                     shuffle_item = True
+            # Silver Rupee
+            elif location.type == 'SilverRupee':
+                shuffle_setting = world.settings.shuffle_silver_rupees
+                dungeon_collection = dungeon.silver_rupees
+                if shuffle_setting == 'vanilla':
+                    shuffle_item = False
             # Any other item in a dungeon.
             elif location.type in ["Chest", "NPC", "Song", "Collectable", "Cutscene", "BossHeart"]:
                 shuffle_item = True
@@ -605,7 +701,7 @@ def get_pool_core(world):
             # Handle dungeon item.
             if shuffle_setting is not None and not shuffle_item:
                 dungeon_collection.append(ItemFactory(item))
-                if shuffle_setting in ['remove', 'startwith', 'triforce']:
+                if shuffle_setting in ['remove', 'startwith']:
                     world.state.collect(dungeon_collection[-1])
                     item = get_junk_item()[0]
                     shuffle_item = True
@@ -675,7 +771,7 @@ def get_pool_core(world):
     if world.settings.shuffle_ganon_bosskey == 'on_lacs':
         placed_items['ToT Light Arrows Cutscene'] = 'Boss Key (Ganons Castle)'
 
-    if world.settings.shuffle_ganon_bosskey in ['stones', 'medallions', 'dungeons', 'tokens', 'hearts']:
+    if world.settings.shuffle_ganon_bosskey in ['stones', 'medallions', 'dungeons', 'tokens', 'hearts', 'triforce']:
         placed_items['Gift from Sages'] = 'Boss Key (Ganons Castle)'
         pool.extend(get_junk_item())
     else:

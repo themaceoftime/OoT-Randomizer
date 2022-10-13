@@ -35,7 +35,7 @@
 .headersize (0x80400000 - 0x03480000)
 
 .org 0x80400000
-.area 0x20000 //payload max memory
+.area 0x40000 //payload max memory
 PAYLOAD_START:
 
 .area 0x20, 0
@@ -106,6 +106,12 @@ RANDO_CONTEXT:
 .include "trade_quests.asm"
 .include "blue_fire_arrows.asm"
 .include "gerudo_guard.asm"
+.include "save.asm"
+.include "drop_overrides/obj_mure3.asm"
+.include "drop_overrides/bg_haka_tubo.asm"
+.include "drop_overrides/bg_spot18_basket.asm"
+.include "drop_overrides/obj_comb.asm"
+.include "drop_overrides/actor.asm"
 
 .align 0x10
 .importobj "../build/bundle.o"

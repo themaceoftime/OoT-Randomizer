@@ -300,6 +300,14 @@ logic_tricks = {
         'tooltip' : '''\
                     A carefully-timed Bombchu can hit the switch.
                     '''},
+    'Beehives with Bombchus' : {
+        'name'    : 'logic_beehives_bombchus',
+        'tags'    : ("Beehives",),
+        'tooltip' : '''\
+                    Puts breaking beehives with bombchus into logic.
+                    Using bombs is already expected on beehives that
+                    that are low enough that a bomb throw will reach.
+                    '''},
     'Windmill PoH as Adult with Nothing': {
         'name'    : 'logic_windmill_poh',
         'tags'    : ("Kakariko Village",),
@@ -314,6 +322,13 @@ logic_tricks = {
                     Hover from the base of the bridge
                     near Goron City and walk up the
                     very steep slope.
+                    '''},
+    'Zora\'s River Rupees with Jump Dive': {
+        'name'    : 'logic_zora_river_rupees',
+        'tags'    : ("Zora's River", "Freestandings",),
+        'tooltip' : '''\
+                    You can jump down onto them from
+                    above to skip needing Iron Boots.
                     '''},
     'Zora\'s Domain Entry with Cucco': {
         'name'    : 'logic_zora_with_cucco',
@@ -463,9 +478,12 @@ logic_tricks = {
         'tags'    : ("Spirit Temple", "Skulltulas",),
         'tooltip' : '''\
                     A precise jump to obtain the following as adult
-                    without needing one of Hookshot or Hover Boots:
+                    without needing one of Hover Boots, or Hookshot
+                    (in vanilla) or Song of Time (in MQ):
                     - Spirit Temple Statue Room Northeast Chest
                     - Spirit Temple GS Lobby
+                    - Spirit Temple MQ Central Chamber Top Left Pot 1
+                    - Spirit Temple MQ Central Chamber Top Left Pot 2
                     '''},
     'Spirit Temple Main Room Hookshot to Boss Platform': {
         'name'    : 'logic_spirit_platform_hookshot',
@@ -618,14 +636,15 @@ logic_tricks = {
                     Release the Bombchu with good timing so that
                     it explodes near the bottom of the pot.
                     '''},
-    'Shadow Temple MQ Invisible Blades Silver Rupees without Song of Time': {
+    'Shadow Temple MQ Invisible Blades without Song of Time': {
         'name'    : 'logic_shadow_mq_invisible_blades',
         'tags'    : ("Shadow Temple",),
         'tooltip' : '''\
                     The Like Like can be used to boost you into the
-                    silver rupee that normally requires Song of Time.
-                    This cannot be performed on OHKO since the Like
-                    Like does not boost you high enough if you die.
+                    silver rupee or recovery hearts that normally
+                    require Song of Time. This cannot be performed
+                    on OHKO since the Like Like does not boost you
+                    high enough if you die.
                     '''},
     'Shadow Temple MQ Lower Huge Pit without Fire Source': {
         'name'    : 'logic_shadow_mq_huge_pit',
@@ -964,9 +983,9 @@ logic_tricks = {
         'tags'    : ("Shadow Temple",),
         'tooltip' : '''\
                     Using precise sword slashes, Bongo Bongo can be
-                    defeated without using projectiles.  This is
+                    defeated without using projectiles. This is
                     only relevant in conjunction with Shadow Temple
-                    dungeon shortcuts or shuffled dungeon bosses.
+                    dungeon shortcuts or shuffled boss entrances.
                     '''},
     'Shadow Temple Bongo Bongo without Lens of Truth': {
         'name'    : 'logic_lens_bongo',
@@ -1095,10 +1114,10 @@ logic_tricks = {
         'tooltip' : '''\
                     A box for the blue switch can be carried over
                     by backwalking with one while the elevator is
-                    at its peak. Alternatively, you can skip transporting
-                    a box by quickly rolling from the switch and
-                    opening the door before it closes. However,
-                    the timing for this is very tight.
+                    at its peak. Alternatively, you can skip
+                    transporting a box by quickly rolling from the
+                    switch and opening the door before it closes.
+                    However, the timing for this is very tight.
                     '''},
     'Jabu Near Boss Ceiling Switch with Explosives': {
         'name'    : 'logic_jabu_near_boss_explosives',
@@ -2324,7 +2343,6 @@ setting_infos = [
         gui_tooltip    = '''\
             'Rescue One Carpenter': Only the bottom left carpenter,
             in the cell with a single torch, must be rescued.
-            This cell can be savewarped to from any room in the hideout.
             All but one of the Thieves' Hideout Keys are removed.
 
             'Open Gerudo's Fortress': The carpenters are rescued from
@@ -2559,7 +2577,8 @@ setting_infos = [
                                          'shuffle_dungeon_entrances', 'shuffle_overworld_entrances', 'owl_drops',
                                          'warp_songs', 'spawn_positions', 'mq_dungeons_mode', 'mq_dungeons_specific',
                                          'mq_dungeons_count', 'shuffle_bosses', 'dungeon_shortcuts', 'deadly_bonks',
-                                         'mix_entrance_pools', 'decouple_entrances']},
+                                         'shuffle_freestanding_items', 'shuffle_pots', 'shuffle_crates', 'shuffle_beehives',
+                                         'shuffle_silver_rupees', 'mix_entrance_pools', 'decouple_entrances']},
             'none'      : {'settings' : ['allowed_tricks', 'logic_no_night_tokens_without_suns_song', 'reachable_locations']},
         },
         shared         = True,
@@ -3061,7 +3080,7 @@ setting_infos = [
             This restricts where song items can appear.
 
             'Song Locations': Song will only appear at locations that
-            normally teach songs. In Multiworld, songs will only 
+            normally teach songs. In Multiworld, songs will only
             appear in their own world.
 
             'Dungeon Rewards': Songs appear at the end of dungeons.
@@ -3089,6 +3108,86 @@ setting_infos = [
         },
         shared         = True,
     ),
+    Combobox(
+        name           = 'shuffle_freestanding_items',
+        gui_text       = 'Shuffle Rupees & Hearts',
+        default        = 'off',
+        choices        = {
+            'off':       'Off',
+            'all':       'All',
+            'overworld': 'Overworld Only',
+            'dungeons':  'Dungeons Only',
+        },
+        gui_tooltip    = '''\
+            Shuffles freestanding rupees and recovery hearts, also shuffles:
+                Shadow Temple Spinning Pot Drop
+                All Goron Pot faces
+
+            Off: No freestanding rupees/recovery hearts are shuffled.
+            All: All Visible freestanding rupees/recovery hearts are shuffled.
+            Overworld Only: Freestanding rupees/recovery hearts in the overworld are shuffled.
+            Dungeons Only: Freestanding rupees/recovery hearts in dungeons are shuffled.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+        shared         = True,
+    ),
+    Combobox(
+        name           = 'shuffle_pots',
+        gui_text       = 'Shuffle Pots',
+        default        = 'off',
+        choices        = {
+            'off':       'Off',
+            'all':       'All',
+            'overworld': 'Overworld Only',
+            'dungeons':  'Dungeons Only',
+        },
+        gui_tooltip    = '''\
+            Shuffles pots, flying pots into the location pool.
+
+            Off: Not shuffled.
+            All: All pots/flying pots are shuffled.
+            Overworld Only: Only overworld pots/flying pots are shuffled.
+            Dungeons Only: Only dungeon pots/flying pots are shuffled.
+
+            Note: Only pots which normally drop an item are shuffled.
+            Empty pots are not shuffled. Pots containing fairies are not shuffled.
+
+            When this setting is enabled, the pots in Ganon's Tower will be
+            accessible without Ganon's Boss Key. Proceeding up the tower out
+            of the room with the pots will require Ganon's Boss Key.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+        shared         = True,
+    ),
+    Combobox(
+        name           = 'shuffle_crates',
+        gui_text       = 'Shuffle Crates',
+        default        = 'off',
+        choices        = {
+            'off':       'Off',
+            'all':       'All',
+            'overworld': 'Overworld Only',
+            'dungeons':  'Dungeons Only',
+        },
+        gui_tooltip    = '''\
+            Shuffles large and small crates into the location pool.
+
+            Off: Not shuffled.
+            All: crates are shuffled.
+            Overworld Only: Only overworld crates are shuffled.
+            Dungeons Only: Only dungeon crates are shuffled.
+
+            Note: Only crates which normally drop an item are shuffled. Empty crates are not included.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+        shared         = True,
+    ),
     Checkbutton(
         name           = 'shuffle_cows',
         gui_text       = 'Shuffle Cows',
@@ -3098,6 +3197,77 @@ setting_infos = [
             There are 9 cows, and an extra in MQ Jabu.
         ''',
         default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Checkbutton(
+        name           = 'shuffle_beehives',
+        gui_text       = 'Shuffle Beehives',
+        gui_tooltip    = '''\
+            Enabling this will let beehives drop items. Beehives will shake if they contain anything important.
+            There are 32 Beehives located in:
+                Generic Grottos (x2 per grotto)
+                2 Scrub Grottos (x1 per grotto)
+                3 Scrub Grottos (x1 per grotto)
+                DMT Cow Grotto (x1)
+                Zora's Domain (x3 child only)
+        ''',
+        default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Combobox(
+        name           = 'shuffle_silver_rupees',
+        gui_text       = 'Shuffle Silver Rupees',
+        default        = 'vanilla',
+        choices        = {
+            'remove':      'Remove',
+            'vanilla':     'Vanilla Locations',
+            'dungeon':     'Own Dungeon',
+            'regional':    'Regional',
+            'overworld':   'Overworld Only',
+            'any_dungeon': 'Any Dungeon',
+            'keysanity':    'Anywhere',
+        },
+        gui_tooltip    = '''\
+            Enabling this shuffles the Silver Rupee puzzles into to the
+            item pool.
+            Silver Rupees are grouped into sets of 5 (except for some
+            Master Quest dungeons, which have sets of other amounts), each
+            of which permanently unlocks something in a dungeon once all
+            the rupees in that set are collected. Hints will only tell you
+            the dungeon a Silver Rupee corresponds to, but upon collecting
+            it, you will be told the exact room.
+            The vanilla locations of Silver Rupees hold shuffled items.
+
+            'Remove': Silver Rupees are removed and the puzzles are
+            solved. This will add a small amount of money and
+            refill items to the pool.
+
+            'Vanilla': Silver Rupees will appear in their vanilla
+            locations. You will have to collect all of a set in one go to
+            to solve a puzzle.
+
+            'Own Dungeon': Silver Rupees can only appear
+            in their respective dungeon.
+
+            'Regional': Silver Rupees can only appear in regions near the
+            original dungeon (including the dungeon itself or other dungeons in
+            the region). <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
+
+            'Overworld Only': Silver Rupees can only appear
+            outside of dungeons.
+
+            'Any Dungeon': Silver Rupees can only appear in a
+            dungeon, but not necessarily the dungeon they are for.
+
+            'Anywhere': Silver Rupees can appear
+            anywhere in the world.
+        ''',
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -3189,7 +3359,8 @@ setting_infos = [
             into the pool of interior entrances.
 
             Note that savewarping in any room of Thieves' Hideout
-            always takes you to the first room (with 1 torch).
+            take you to the overworld spawn, which is different from
+            vanilla behavior.
 
             There is an extra heart piece on the balcony above the jail in
             Gerudo's Fortress if accessed as child. This is not shuffled.
@@ -4520,6 +4691,34 @@ setting_infos = [
         gui_params       = {
             "hide_when_disabled" : True
         },
+    ),
+    Combobox(
+        name           = 'correct_potcrate_appearances',
+        gui_text       = 'Pot & Crate Appearance Matches Contents',
+        default        = 'off',
+        choices        = {
+            'off':                'Off',
+            'textures_content':   'Texture (Match Content)',
+            'textures_unchecked': 'Texture (Unchecked)',
+        },
+        gui_tooltip    = '''\
+            If enabled, pot/crate textures will reflect its contents.
+
+            Off - Pot and crates will appear as vanilla
+
+            Texture (Match Content) - Pot and crate textures will reflect the contents.
+            Golden Pots/crates will contain major items.
+            Pots/crates with keys on them will contain small keys.
+            Pots/crates containing boss keys will use a variation of the boss key crate texture.
+            Pots/crates with a spider web on them contain Gold Skulltula tokens.
+            All other items will use the original texture.
+            The texture will revert to the original texture once the item is collected.
+
+            Texture (Unchecked) - All pots/crates containing shuffled items
+            will appear with a golden texture. The texture will revert to the
+            original texture once the item is collected.
+        ''',
+        shared         = True,
     ),
     Checkbutton(
         name           = 'invisible_chests',

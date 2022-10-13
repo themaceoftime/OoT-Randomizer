@@ -12,11 +12,12 @@ import unittest
 
 from EntranceShuffle import EntranceShuffleError
 from Fill import ShuffleError
-from Hints import HintArea
+from Hints import HintArea, buildMiscItemHints
 from Item import ItemInfo
 from ItemPool import remove_junk_items, remove_junk_ludicrous_items, ludicrous_items_base, ludicrous_items_extended, trade_items, ludicrous_exclusions
 from LocationList import location_is_viewable
 from Main import main, resolve_settings, build_world_graphs
+from Messages import Message
 from Settings import Settings, get_preset_files
 
 test_dir = os.path.join(os.path.dirname(__file__), 'tests')
@@ -26,11 +27,11 @@ os.makedirs(output_dir, exist_ok=True)
 logging.basicConfig(level=logging.INFO, filename=os.path.join(output_dir, 'LAST_TEST_LOG'), filemode='w')
 
 # items never required:
-# refills, maps, compasses, capacity upgrades, masks (not listed in logic)
+# refills, maps, compasses, capacity upgrades (not listed in logic)
 never_prefix = ['Bombs', 'Arrows', 'Rupee', 'Deku Seeds', 'Map', 'Compass']
 never_suffix = ['Capacity']
 never = {
-    'Bunny Hood', 'Recovery Heart', 'Milk', 'Ice Trap',
+    'Recovery Heart', 'Milk', 'Ice Trap',
     'Double Defense', 'Biggoron Sword', 'Giants Knife',
 } | {name for name, item in ItemInfo.items.items() if item.priority
      or any(map(name.startswith, never_prefix)) or any(map(name.endswith, never_suffix))}
@@ -285,6 +286,12 @@ class TestPlandomizer(unittest.TestCase):
             "negative-pattern-test",
             "dual-hints-custom-text",
             "dual-hints-with-upgrade",
+            "plando-freestanding-nomq",
+            "plando-freestanding-allmq",
+            "plando-potscrates-nomq",
+            "plando-potscrates-allmq",
+            "plando-beehives",
+            "plando-freestanding-pots-crates-beehives-triforcehunt",
         ]
         for filename in filenames:
             with self.subTest(filename):
@@ -499,14 +506,14 @@ class TestPlandomizer(unittest.TestCase):
     def test_fix_broken_drops(self):
         # Setting off
         distribution_file, spoiler = generate_with_plandomizer("plando-fix-broken-drops-off")
-        self.assertEqual(len([sphere for sphere in spoiler[':playthrough'].values() if 'Child Spirit Temple Deku Shield Pot' in sphere]), 0)
+        self.assertEqual(len([sphere for sphere in spoiler[':playthrough'].values() if 'Child Spirit Beyond Metal Bridges Deku Shield Pot' in sphere]), 0)
 
         # No deku shield available, fail to generate
         self.assertRaises(ShuffleError, lambda : generate_with_plandomizer("plando-fix-broken-drops-bad", max_attempts=1))
 
         # Deku shield available only via spirit shield pot
         distribution_file, spoiler = generate_with_plandomizer("plando-fix-broken-drops-good")
-        self.assertEqual(len([sphere for sphere in spoiler[':playthrough'].values() if 'Child Spirit Temple Deku Shield Pot' in sphere]), 1)
+        self.assertEqual(len([sphere for sphere in spoiler[':playthrough'].values() if 'Child Spirit Beyond Metal Bridges Deku Shield Pot' in sphere]), 1)
 
 class TestHints(unittest.TestCase):
     def test_skip_zelda(self):
@@ -576,6 +583,23 @@ class TestHints(unittest.TestCase):
         # 99 skull bridge / 100 skull gbk
         # 19 heart bridge / 20 heart gbk
         # TH
+
+    # Test that Ganondorf hints light arrows in the pots within Ganon's Tower as "those pots over there"
+    # This seems to break every time the hint system changes slightly.
+    def test_those_pots_over_there(self):
+        filename = "those_pots_over_there"
+        # Ganondorf should say "those pots over there" when light arrows are in a pot below
+        _, spoiler = generate_with_plandomizer(filename, live_copy=True)
+        world = spoiler.worlds[0]
+        location = spoiler.worlds[0].misc_hint_item_locations["ganondorf"]
+        area = HintArea.at(location, use_alt_hint=True).text(world.settings.clearer_hints, world=None if location.world.id == world.id else location.world.id + 1)
+        self.assertEqual(area, "#Ganondorf's Chamber#")
+        # Build a test message with the same ID as the ganondorf hint (0x70CC)
+        messages = [Message("Test", 0, 0x70CC, 0,0,0)]
+        buildMiscItemHints(spoiler.worlds[0], messages)
+        for message in messages:
+            if(message.id == 0x70CC): # Ganondorf hint message
+                self.assertTrue("thosepotsoverthere" in message.text.replace('\n', '').replace(' ', ''))
 
 class TestEntranceRandomizer(unittest.TestCase):
     def test_spawn_point_invalid_areas(self):

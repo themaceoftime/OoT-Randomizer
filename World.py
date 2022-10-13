@@ -50,6 +50,7 @@ class World(object):
 
         # rename a few attributes...
         self.keysanity = settings.shuffle_smallkeys in ['keysanity', 'remove', 'any_dungeon', 'overworld', 'regional']
+        self.shuffle_silver_rupees = settings.shuffle_silver_rupees != 'vanilla'
         self.check_beatable_only = settings.reachable_locations != 'all'
 
         self.shuffle_special_interior_entrances = settings.shuffle_interior_entrances == 'all'
@@ -306,9 +307,12 @@ class World(object):
         # over again after the first round through the categories.
         if len(self.goal_categories) > 0:
             self.one_hint_per_goal = True
-            goal_list1 = [goal.name for goal in list(self.goal_categories.values())[0].goals]
+            goal_list1 = []
             for category in self.goal_categories.values():
-                if goal_list1 != [goal.name for goal in category.goals]:
+                if category.name != 'door_of_time':
+                    goal_list1 = [goal.name for goal in category.goals]
+            for category in self.goal_categories.values():
+                if goal_list1 != [goal.name for goal in category.goals] and category.name != 'door_of_time':
                     self.one_hint_per_goal = False
 
         # initialize category check for first rounds of goal hints
@@ -423,7 +427,7 @@ class World(object):
         if self.settings.chicken_count_random and 'chicken_count' not in dist_keys:
             self.settings.chicken_count = random.randint(0, 7)
             self.randomized_list.append('chicken_count')
-        
+
         # Determine dungeons with shortcuts
         dungeons = ['Deku Tree', 'Dodongos Cavern', 'Jabu Jabus Belly', 'Forest Temple', 'Fire Temple', 'Water Temple', 'Shadow Temple', 'Spirit Temple']
         if (self.settings.dungeon_shortcuts_choice == 'random'):
@@ -464,7 +468,7 @@ class World(object):
         for trial in self.skipped_trials:
             if trial not in chosen_trials and trial not in dist_chosen:
                 self.skipped_trials[trial] = True
-        
+
 
         # Determine empty and MQ Dungeons (avoid having both empty & MQ dungeons unless necessary)
         mq_dungeon_pool = list(self.dungeon_mq)
@@ -486,7 +490,7 @@ class World(object):
             if len(empty_dungeon_pool) < nb_to_pick:
                 non_empty = 8 - dist_num_empty - len(empty_dungeon_pool)
                 raise RuntimeError(f"On world {self.id+1}, {dist_num_empty} dungeons are set to empty and {non_empty} to non-empty. Can't reach {self.settings.empty_dungeons_count} empty dungeons.")
-            
+
             # Prioritize non-MQ dungeons
             non_mq, mq = [], []
             for dung in empty_dungeon_pool:
@@ -512,7 +516,7 @@ class World(object):
             if len(mq_dungeon_pool) < nb_to_pick:
                 non_mq = 8 - dist_num_mq - len(mq_dungeon_pool)
                 raise RuntimeError(f"On world {self.id+1}, {dist_num_mq} dungeons are set to MQ and {non_mq} to non-MQ. Can't reach {self.settings.mq_dungeons_count} MQ dungeons.")
-       
+
             # Prioritize non-empty dungeons
             non_empty, empty = [], []
             for dung in mq_dungeon_pool:
@@ -523,7 +527,7 @@ class World(object):
             if nb_to_pick > 0:
                 for dung in random.sample(empty, nb_to_pick):
                     self.dungeon_mq[dung] = True
-            
+
         self.settings.mq_dungeons_count = list(self.dungeon_mq.values()).count(True)
         self.distribution.configure_randomized_settings(self)
 
@@ -538,6 +542,8 @@ class World(object):
                 new_region.scene = region['scene']
             if 'hint' in region:
                 new_region.hint_name = region['hint']
+            if 'alt_hint' in region:
+                new_region.alt_hint_name = region['alt_hint']
             if 'dungeon' in region:
                 new_region.dungeon = region['dungeon']
             if 'time_passes' in region:
@@ -578,14 +584,14 @@ class World(object):
                     new_exit.rule_string = rule
                     if self.settings.logic_rules != 'none':
                         self.parser.parse_spot_rule(new_exit)
-                    if new_exit.never:
-                        logging.getLogger('').debug('Dropping unreachable exit: %s', new_exit.name)
-                    else:
-                        new_region.exits.append(new_exit)
-            if 'savewarp' in region:
-                new_exit = Entrance('%s -> %s' % (new_region.name, region['savewarp']), new_region)
-                new_exit.connected_region = region['savewarp']
-                new_region.exits.append(new_exit)
+                    #if new_exit.never:
+                    #    logging.getLogger('').debug('Dropping unreachable exit: %s', new_exit.name)
+                    #else:
+                    new_region.exits.append(new_exit)
+            #if 'savewarp' in region:
+            #    new_exit = Entrance('%s -> %s' % (new_region.name, region['savewarp']), new_region)
+            #    new_exit.connected_region = region['savewarp']
+            #    new_region.exits.append(new_exit)
             self.regions.append(new_region)
 
 
@@ -1053,6 +1059,11 @@ class World(object):
         elif self.settings.shuffle_bosskeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
             itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.boss_key])
 
+        if self.settings.shuffle_silver_rupees == 'dungeon':
+            itempool.extend([item for dungeon in self.dungeons for item in dungeon.silver_rupees])
+        elif self.settings.shuffle_silver_rupees in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
+            itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.silver_rupees])
+
         if self.settings.shuffle_ganon_bosskey == 'dungeon':
             itempool.extend([item for dungeon in self.dungeons if dungeon.name == 'Ganons Castle' for item in dungeon.boss_key])
 
@@ -1072,10 +1083,26 @@ class World(object):
             itempool.extend([item for dungeon in self.dungeons if (dungeon.name != 'Ganons Castle' and not self.empty_dungeons[dungeon.name].empty) for item in dungeon.boss_key])
         if self.settings.shuffle_ganon_bosskey in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
             itempool.extend([item for dungeon in self.dungeons if dungeon.name == 'Ganons Castle' for item in dungeon.boss_key])
+        if self.settings.shuffle_silver_rupees in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
+            itempool.extend([item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.silver_rupees])
 
         for item in itempool:
             item.world = self
         return itempool
+
+
+    def silver_rupee_puzzles(self):
+        return ([
+            'Shadow Temple Scythe Shortcut', 'Shadow Temple Huge Pit', 'Shadow Temple Invisible Spikes',
+            'Gerudo Training Ground Slopes', 'Gerudo Training Ground Lava', 'Gerudo Training Ground Water',
+            'Ganons Castle Fire Trial']
+            + (['Dodongos Cavern Staircase'] if self.dungeon_mq['Dodongos Cavern'] else [])
+            + ([] if self.dungeon_mq['Ice Cavern'] else ['Ice Cavern Spinning Blade', 'Ice Cavern Push Block'])
+            + ([] if self.dungeon_mq['Bottom of the Well'] else ['Bottom of the Well Basement'])
+            + (['Shadow Temple Invisible Blades'] if self.dungeon_mq['Shadow Temple'] else [])
+            + (['Spirit Temple Lobby and Lower Adult', 'Spirit Temple Adult Climb'] if self.dungeon_mq['Spirit Temple'] else ['Spirit Temple Child Early Torches', 'Spirit Temple Adult Boulders', 'Spirit Temple Sun Block'])
+            + (['Ganons Castle Shadow Trial', 'Ganons Castle Water Trial'] if self.dungeon_mq['Ganons Castle'] else ['Ganons Castle Spirit Trial', 'Ganons Castle Light Trial', 'Ganons Castle Forest Trial'])
+        )
 
 
     def find_items(self, item):

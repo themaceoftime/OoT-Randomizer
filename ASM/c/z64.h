@@ -23,6 +23,12 @@
 
 #define Z64_ETAB_LENGTH       0x0614
 
+#define NA_BGM_SMALL_ITEM_GET 0x39
+#define NA_SE_SY_GET_RUPY     0x4803
+#define NA_SE_SY_GET_ITEM     0x4824
+
+#define OFFSETOF(structure, member) ((size_t)&(((structure *)0)->member))
+
 typedef struct
 {
   int16_t x;
@@ -540,6 +546,22 @@ typedef struct
 
 typedef struct
 {
+  /* data */
+  uint8_t   unk_00_[0x1C9EE];     /* 0x0000 */
+  uint16_t  deaths[3];            /* 0x1C9EE */
+  char      fileNames[3][8];      /* 0x1C9F4 */
+  uint16_t  healthCapacities[3];  /* 0x1CA0C */
+  uint32_t  questItems[3];        /* 0x1CA14 */
+  int16_t   n64ddFlags[3];        /* 0x1CA20 */
+  int8_t    defense[3];           /* 0x1CA26 */
+  uint8_t   unk_01_[0x0F];        /* 0x1CA29 */
+  int16_t   selectedFileIndex;    /* 0x1CA38 */
+  uint8_t   unk_02_[0x16];        /* 0x1CA3A */
+  int16_t   copyDestFileIndex;    /* 0x1CA50 */
+} z64_FileChooseContext_t;
+
+typedef struct
+{
   int32_t         entrance_index;           /* 0x0000 */
   int32_t         link_age;                 /* 0x0004 */
   char            unk_00_[0x0002];          /* 0x0008 */
@@ -547,7 +569,8 @@ typedef struct
   uint16_t        day_time;                 /* 0x000C */
   char            unk_01_[0x0002];          /* 0x000E */
   int32_t         night_flag;               /* 0x0010 */
-  char            unk_02_[0x0008];          /* 0x0014 */
+  int32_t         total_days;               /* 0x0014 */
+  int32_t         bgs_day_count;            /* 0x0018 */
   char            id[6];                    /* 0x001C */
   int16_t         deaths;                   /* 0x0022 */
   char            file_name[0x08];          /* 0x0024 */
@@ -770,16 +793,29 @@ typedef struct
                                             /* 0x1450 */
 } z64_file_t;
 
+typedef struct {
+  uint8_t *readBuff;  /* 0x00 */
+} SramContext; // size = 0x4
+
+typedef struct {
+  uint8_t data[0xBA8];
+} extended_save_data_t;
+
+typedef struct {
+  z64_file_t      original_save;
+  extended_save_data_t additional_save_data;
+} extended_sram_file_t;
+
 typedef struct
 {
-    uint8_t       sound_options;            /* 0x0000 */
-    uint8_t       z_target_options;         /* 0x0001 */
-    uint8_t       language_options;         /* 0x0002 */
-    char          verification_string[9];   /* 0x0003 */
-    char          unk_00_[0x0014];          /* 0x000C */
-    z64_file_t    primary_saves[3];         /* 0x0020 */
-    z64_file_t    backup_saves[3];          /* 0x3D10 */
-                                            /* 0x7A00 */
+    uint8_t               sound_options;           /* 0x0000 */
+    uint8_t               z_target_options;        /* 0x0001 */
+    uint8_t               language_options;        /* 0x0002 */
+    char                  verification_string[9];  /* 0x0003 */
+    char                  unk_00_[0x0014];         /* 0x000C */
+    extended_sram_file_t  primary_saves[2];        /* 0x0020 */
+    extended_sram_file_t  backup_saves[2];         /* 0x3D10 */
+                                                   /* 0x7A00 */
 } z64_sram_data_t;
 
 typedef struct
@@ -899,7 +935,7 @@ struct z64_actor_s
   uint8_t         actor_type;       /* 0x0002 */
   int8_t          room_index;       /* 0x0003 */
   uint32_t        flags;            /* 0x0004 */
-  z64_xyzf_t      pos_1;            /* 0x0008 */
+  z64_xyzf_t      pos_init;         /* 0x0008 */
   z64_rot_t       rot_init;         /* 0x0014 */
   char            unk_01_[0x0002];  /* 0x001A */
   uint16_t        variable;         /* 0x001C */
@@ -907,12 +943,11 @@ struct z64_actor_s
   char            navi_tgt_dist;    /* 0x001F */
   uint16_t        sound_effect;     /* 0x0020 */
   char            unk_03_[0x0002];  /* 0x0022 */
-  z64_xyzf_t      pos_2;            /* 0x0024 */
-  char            unk_04_[0x0002];  /* 0x0030 */
-  uint16_t        xz_dir;           /* 0x0032 */
-  char            unk_05_[0x0004];  /* 0x0034 */
-  z64_xyzf_t      pos_3;            /* 0x0038 */
-  z64_rot_t       rot_1;            /* 0x0044 */
+  z64_xyzf_t      pos_world;        /* 0x0024 */
+  z64_rot_t       rot_world;        /* 0x0030 */
+  char            unk_04_[0x0002];  /* 0x0036 */
+  z64_xyzf_t      pos_focus;        /* 0x0038 */
+  z64_rot_t       rot_focus;        /* 0x0044 */
   char            unk_06_[0x0002];  /* 0x004A */
   float           unk_07_;          /* 0x004C */
   z64_xyzf_t      scale;            /* 0x0050 */
@@ -943,7 +978,8 @@ struct z64_actor_s
   int16_t         frozen;           /* 0x0110 */
   char            unk_11_[0x0003];  /* 0x0112 */
   uint8_t         active;           /* 0x0115 */
-  char            unk_12_[0x0002];  /* 0x0116 */
+  char            dropFlag;         /* 0x0116 */
+  char            unk_12_;          /* 0x0117 */
   z64_actor_t    *parent;           /* 0x0118 */
   z64_actor_t    *child;            /* 0x011C */
   z64_actor_t    *prev;             /* 0x0120 */
@@ -985,6 +1021,18 @@ typedef struct
   int16_t      drop_distance;        /* 0x0886 */
                                      /* 0x0888 */
 } z64_link_t;
+
+typedef struct DynaPolyActor {
+  z64_actor_t  actor;    /* 0x000 */
+  int32_t      bgId;     /* 0x14C */
+  float        unk_150;  /* 0x150 */
+  float        unk_154;  /* 0x154 */
+  int16_t      unk_158;  /* 0x158 */  // y rotation?
+  uint16_t     unk_15A;  /* 0x15A */
+  uint32_t     unk_15C;  /* 0x15C */
+  uint8_t      unk_160;  /* 0x160 */
+  int16_t      unk_162;  /* 0x162 */
+} DynaPolyActor; // size = 0x164
 
 typedef struct
 {
@@ -1438,21 +1486,86 @@ typedef struct
 
 struct EnItem00;
 
-typedef void(*EnItem00ActionFunc)(struct EnItem00*, z64_game_t*);
+typedef void(*EnItem00ActionFunc)(struct EnItem00 *, z64_game_t *);
 
 typedef struct EnItem00 {
-	z64_actor_t actor;
-	EnItem00ActionFunc actionFunc;
-	uint16_t collectibleFlag;
-	uint16_t getItemId;
-	uint16_t unk_154;
-	uint16_t unk_156;
-	uint16_t unk_158;
-	uint16_t timeToLive; //0x15A
-	float scale;
+  z64_actor_t actor;
+  EnItem00ActionFunc actionFunc;
+  uint16_t collectibleFlag;
+  uint16_t getItemId;
+  uint16_t unk_154;
+  uint16_t unk_156;
+  uint16_t unk_158;
+  uint16_t timeToLive; //0x15A
+  float scale;
 } EnItem00;
 
+typedef enum {
+    /* 0x00 */ ITEM00_RUPEE_GREEN,
+    /* 0x01 */ ITEM00_RUPEE_BLUE,
+    /* 0x02 */ ITEM00_RUPEE_RED,
+    /* 0x03 */ ITEM00_HEART,
+    /* 0x04 */ ITEM00_BOMBS_A,
+    /* 0x05 */ ITEM00_ARROWS_SINGLE,
+    /* 0x06 */ ITEM00_HEART_PIECE,
+    /* 0x07 */ ITEM00_HEART_CONTAINER,
+    /* 0x08 */ ITEM00_ARROWS_SMALL,
+    /* 0x09 */ ITEM00_ARROWS_MEDIUM,
+    /* 0x0A */ ITEM00_ARROWS_LARGE,
+    /* 0x0B */ ITEM00_BOMBS_B,
+    /* 0x0C */ ITEM00_NUTS,
+    /* 0x0D */ ITEM00_STICK,
+    /* 0x0E */ ITEM00_MAGIC_LARGE,
+    /* 0x0F */ ITEM00_MAGIC_SMALL,
+    /* 0x10 */ ITEM00_SEEDS,
+    /* 0x11 */ ITEM00_SMALL_KEY,
+    /* 0x12 */ ITEM00_FLEXIBLE,
+    /* 0x13 */ ITEM00_RUPEE_ORANGE,
+    /* 0x14 */ ITEM00_RUPEE_PURPLE,
+    /* 0x15 */ ITEM00_SHIELD_DEKU,
+    /* 0x16 */ ITEM00_SHIELD_HYLIAN,
+    /* 0x17 */ ITEM00_TUNIC_ZORA,
+    /* 0x18 */ ITEM00_TUNIC_GORON,
+    /* 0x19 */ ITEM00_BOMBS_SPECIAL
+} Item00Type;
+
+typedef struct EnGSwitch
+{
+  /* 0x0000 */ z64_actor_t actor;
+  /* 0x014C */ void *actionFunc;   // EnGSwitchActionFunc
+  /* 0x0150 */ int16_t type;
+  /* 0x0152 */ int16_t silverCount;
+  /* 0x0154 */ int16_t switchFlag;
+  /* 0x0156 */ int16_t killTimer;
+  /* 0x0158 */ int16_t colorIdx;
+  /* 0x015A */ int16_t broken;
+  /* 0x015C */ int16_t numEffects;
+  /* 0x015E */ int16_t objId;
+  /* 0x0160 */ int16_t index;      // first or second rupee in two-rupee patterns
+  /* 0x0162 */ int16_t delayTimer; // delay between the two blue rupees appearing
+  /* 0x0164 */ int16_t waitTimer;  // time rupee waits before retreating
+  /* 0x0166 */ int16_t moveMode;   // Type of movement in the shooting gallery
+  /* 0x0168 */ int16_t moveState;  // Appear or retreat (for blue rupees and the stationary green one)
+  /* 0x016A */ int16_t noteIndex;
+  /* 0x016C */ z64_xyzf_t targetPos;
+  /* 0x0178 */ int8_t objIndex;
+  /* 0x017C */ uint8_t collider[0x4C];  // ColliderCylinder
+  /* 0x01C8 */ uint8_t effects[0x1130]; // EnGSwitchEffect[100]
+} EnGSwitch; // size = 0x12F8
+
+/* helper macros */
+#define LINK_IS_ADULT (z64_file.link_age == 0)
+#define SLOT(item) gItemSlots[item]
+#define INV_CONTENT(item) z64_file.items[SLOT(item)]
+
 /* dram addresses */
+#define z64_EnItem00Action_addr                 0x800127E0
+#define z64_ActorKill_addr                      0x80020EB4
+#define z64_Message_GetState_addr               0x800DD464
+#define z64_SetCollectibleFlags_addr            0x8002071C
+#define z64_GetCollectibleFlags_addr            0x800206E8
+#define z64_Audio_PlaySoundGeneral_addr         0x800C806C
+#define z64_Audio_PlayFanFare_addr              0x800C69A0
 #define z64_osSendMesg_addr                     0x80001E20
 #define z64_osRecvMesg_addr                     0x80002030
 #define z64_osCreateMesgQueue_addr              0x80004220
@@ -1509,6 +1622,14 @@ typedef struct EnItem00 {
 #define Rupees_ChangeBy_addr                    0x800721CC
 #define Message_ContinueTextbox_addr            0x800DCE80
 #define PlaySFX_addr                            0x800646F0
+#define SsSram_ReadWrite_addr                   0x80091474
+#define z64_memcopy_addr                        0x80057030
+#define z64_bzero_addr                          0x80002E80
+#define z64_Item_DropCollectible_addr           0x80013678
+#define z64_Item_DropCollectible2_addr          0x800138B0
+#define z64_Gfx_DrawDListOpa_addr               0x80028048
+#define z64_Math_SinS_addr                      0x800636C4
+#define z64_Rand_ZeroOne_addr                   0x800CDCCC
 
 /* rom addresses */
 #define z64_icon_item_static_vaddr              0x007BD000
@@ -1532,6 +1653,13 @@ typedef struct EnItem00 {
 #define z64_ctxt_game_size                      0x00012518
 
 /* function prototypes */
+typedef void(*z64_EnItem00ActionFunc)(struct EnItem00 *, z64_game_t *);
+typedef void(*z64_ActorKillFunc)(z64_actor_t *);
+typedef uint8_t(*z64_Message_GetStateFunc)(uint8_t *);
+typedef void(*z64_Flags_SetCollectibleFunc)(z64_game_t *game, uint32_t flag);
+typedef int32_t (*z64_Flags_GetCollectibleFunc)(z64_game_t *game, uint32_t flag);
+typedef void(*z64_Audio_PlaySoundGeneralFunc)(uint16_t sfxId, void *pos, uint8_t token, float *freqScale, float *a4, uint8_t *reverbAdd);
+typedef void(*z64_Audio_PlayFanFareFunc)(uint16_t);
 typedef void (*z64_DrawActors_proc)       (z64_game_t *game, void *actor_ctxt);
 typedef void (*z64_DeleteActor_proc)      (z64_game_t *game, void *actor_ctxt,
                                            z64_actor_t *actor);
@@ -1559,12 +1687,18 @@ typedef void(*z64_LinkDamage_proc)        (z64_game_t *ctxt, z64_link_t *link,
                                            uint16_t unk_02);
 typedef void(*z64_LinkInvincibility_proc) (z64_link_t *link, uint8_t frames);
 typedef float *(*z64_GetMatrixStackTop_proc)();
-
-typedef int32_t(*z64_ObjectSpawn_proc)    (z64_obj_ctxt_t *object_ctx, int16_t object_id);
-typedef int32_t(*z64_ObjectIndex_proc)    (z64_obj_ctxt_t *object_ctx, int16_t object_id);
+typedef void (*SsSram_ReadWrite_proc)(uint32_t addr, void *dramAddr, size_t size, uint32_t direction);
+typedef void *(*z64_memcopy_proc)(void *dest, void *src, uint32_t size);
+typedef void (*z64_bzero_proc)(void *__s, uint32_t __n);
+typedef EnItem00 *(*z64_Item_DropCollectible_proc)(z64_game_t *globalCtx, z64_xyzf_t *spawnPos, int16_t params);
+typedef void (*z64_Gfx_DrawDListOpa_proc)(z64_game_t *game, z64_gfx_t *dlist);
+typedef float (*z64_Math_SinS_proc)(int16_t angle);
 
 typedef int32_t(*z64_ActorSetLinkIncomingItemId_proc) (z64_actor_t *actor, z64_game_t *game,
                                                        int32_t get_item_id, float xz_range, float y_range);
+typedef int32_t(*z64_ObjectSpawn_proc)    (z64_obj_ctxt_t* object_ctx, int16_t object_id);
+typedef int32_t(*z64_ObjectIndex_proc)    (z64_obj_ctxt_t* object_ctx, int16_t object_id);
+typedef float (*z64_Rand_ZeroOne_proc)();
 
 typedef void(*Interface_LoadItemIcon1_proc) (z64_game_t *game, uint16_t button);
 
@@ -1601,6 +1735,13 @@ typedef void(*PlaySFX_proc) (uint16_t sfxId);
 
 
 /* functions */
+#define z64_ActorKill               ((z64_ActorKillFunc)    z64_ActorKill_addr)
+#define z64_MessageGetState         ((z64_Message_GetStateFunc)z64_Message_GetState_addr)
+#define z64_SetCollectibleFlags     ((z64_Flags_SetCollectibleFunc)z64_SetCollectibleFlags_addr)
+#define z64_Flags_GetCollectible    ((z64_Flags_GetCollectibleFunc)z64_GetCollectibleFlags_addr)
+#define z64_Audio_PlaySoundGeneral  ((z64_Audio_PlaySoundGeneralFunc)z64_Audio_PlaySoundGeneral_addr)
+#define z64_Audio_PlayFanFare       ((z64_Audio_PlayFanFareFunc)z64_Audio_PlayFanFare_addr)
+
 #define z64_osSendMesg          ((osSendMesg_t)       z64_osSendMesg_addr)
 #define z64_osRecvMesg          ((osRecvMesg_t)       z64_osRecvMesg_addr)
 #define z64_osCreateMesgQueue   ((osCreateMesgQueue_t)                        \
@@ -1639,7 +1780,16 @@ typedef void(*PlaySFX_proc) (uint16_t sfxId);
 
 #define Message_ContinueTextbox ((Message_ContinueTextbox_proc)Message_ContinueTextbox_addr)
 
-#define PlaySFX ((PlaySFX_proc)PlaySFX_addr)
+#define PlaySFX                 ((PlaySFX_proc)PlaySFX_addr)
+
+#define SsSram_ReadWrite          ((SsSram_ReadWrite_proc)SsSram_ReadWrite_addr)
+#define z64_memcopy               ((z64_memcopy_proc)z64_memcopy_addr)
+#define z64_bzero                 ((z64_bzero_proc)z64_bzero_addr)
+#define z64_Item_DropCollectible  ((z64_Item_DropCollectible_proc)z64_Item_DropCollectible_addr)
+#define z64_Item_DropCollectible2 ((z64_Item_DropCollectible_proc)z64_Item_DropCollectible2_addr)
+#define z64_Gfx_DrawDListOpa      ((z64_Gfx_DrawDListOpa_proc)z64_Gfx_DrawDListOpa_addr)
+#define z64_Math_SinS             ((z64_Math_SinS_proc)z64_Math_SinS_addr)
+#define z64_Rand_ZeroOne          ((z64_Rand_ZeroOne_proc)z64_Rand_ZeroOne_addr)
 
 /* macros */
 #define GET_ITEMGETINF(flag) (z64_file.item_get_inf[(flag) >> 4] & (1 << ((flag) & 0xF)))
