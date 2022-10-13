@@ -9,7 +9,7 @@ from enum import Enum
 import itertools
 
 from HintList import getHint, getMulti, getHintGroup, getUpgradeHintList, hintExclusions, misc_item_hint_table
-from Item import Item, MakeEventItem
+from Item import Item, ItemInfo, MakeEventItem
 from Messages import COLOR_MAP, update_message_by_id
 from Region import Region
 from Search import Search
@@ -374,13 +374,15 @@ class HintArea(Enum):
 
     @classmethod
     def for_dungeon(cls, dungeon_name: str):
-        if '(' in dungeon_name and ')' in dungeon_name:
+        if '(' in dungeon_name and ')' in dungeon_name and 'Silver Rupee' not in dungeon_name:
             # A dungeon item name was passed in - get the name of the dungeon from it.
             dungeon_name = dungeon_name[dungeon_name.index('(') + 1:dungeon_name.index(')')]
+        if 'Silver Rupee' in dungeon_name:
+            dungeon_name = ItemInfo.items[dungeon_name].dungeon
 
         if dungeon_name == "Thieves Hideout":
             # Special case for Thieves' Hideout - change this if it gets its own hint area.
-            return HintArea.GERUDO_FORTRESS
+            return HintArea.THIEVES_HIDEOUT
 
         for hint_area in cls:
             if hint_area.dungeon_name == dungeon_name:
