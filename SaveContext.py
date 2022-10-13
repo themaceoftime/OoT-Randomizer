@@ -832,7 +832,7 @@ class SaveContext():
                         'silver_rupees_spirit'      : Address(0xD4 + 0x1C * 0x0D + 0x04, mask=0x00000800),
                         'silver_rupees_forest'      : Address(0xD4 + 0x1C * 0x0D + 0x04, mask=0x00004000),
                         'silver_rupees_light'       : Address(0xD4 + 0x1C * 0x0D + 0x04, mask=0x00040000),
-                        'silver_rupees_shadow'      : Address(0xD4 + 0x1C * 0x0D + 0x04, mask=0x08000000),
+                        'silver_rupees_shadow'      : Address(0xD4 + 0x1C * 0x0D + 0x04, mask=0x00000800),
                     },
                 },
             },
