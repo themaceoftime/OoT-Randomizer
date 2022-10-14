@@ -1,31 +1,42 @@
-# Custom Models
-
-Save the .ZOBJ file of the desired model in `data/Models/Adult` or `data/Models/Child`. The file must be in .ZOBJ format (the compressed .PAK files are not compatible), but most Modloader64 models will work. Exceptions are models which are larger than the base Link models (the randomizer will give an error message) and those created on the new pipeline (technically load but the textures get wonky). Please see notes regarding known model files that are floating around [in this spreadsheet](https://docs.google.com/spreadsheets/d/1xbJnYw8lGR_qAkpvOQXlzvSUobWdX6phTm1SRbXy4TQ/edit#gid=1223582726) before asking why a model doesn't work.
-
-Once the models are saved, the program may be opened and the model(s) selected under the `Cosmetics` tab.
-
-If the model's skeleton is similar enough to Link, the randomizer will use Link's skeleton. If it is substantially different, then a note will be placed on the pause screen to make it clear that the skeleton was changed.
-
-# Alternate Voices
-
-New sfx were created by Maple and Shiroaelli on the ZOoTR discord to replace the adult and child voices, respectively. Completely silent options are also available for both ages.
-
------------------------------
-
 # OoTRandomizer
 
 This is a randomizer for _The Legend of Zelda: Ocarina of Time_ for the Nintendo 64.
 
 **WARNING:** This branch is a modified version of the randomizer. It is **not** officially supported and may be **very unstable**.
 Please refrain from asking questions and from reporting issues in the main Randomizer Discord when using this branch.
-Instead, you can open an issue on this fork [here](https://github.com/Roman971/OoT-Randomizer/issues) or contact me directly on discord (Roman#7295) for any help, report or request.
+Instead, you can open an issue on this fork [here](https://github.com/mracsys/OoT-Randomizer/issues) or contact me directly on discord (mracsys#5846) for any help, report, or request.
 
 Differences between this branch and the main Dev branch (on [Testrunner's Fork](https://github.com/TestRunnerSRL/OoT-Randomizer/tree/Dev)):
 * Various GUI tweaks and improvements along with setting tooltip/option changes
-* 2 new advanced ER settings: "Mixed Entrance Pools" and "Decouple Entrances"
-* Picking up Gold Skulltula Tokens in non-Tokensanity displays a self-closing textbox which no longer freezes the player.
-* "Bombchus In Logic" is improved to include bombchu drops (from grass, pots, etc) that start dropping once you have found Bombchus.
-* New cosmetic setting to randomize the color of some additional equipment and items.
+* Features from [Roman971](https://github.com/Roman971/OoT-Randomizer)'s branch:
+  * 2 new advanced ER settings: "Mixed Entrance Pools" and "Decouple Entrances"
+  * "Fast Tokens" setting makes picking up Gold Skulltula Tokens no longer freeze the player and display a self-closing textbox.
+  * "Bombchus In Logic" is improved to include bombchu drops (from grass, pots, etc) that start dropping once you have found Bombchus.
+  * New cosmetic setting to randomize the color of some additional equipment and items.
+* "Climb Anywhere" setting allows climbing on almost any vertical surface and hookshotting any surface.
+* "Silver Rupee Shuffle" setting adds silver rupees from dungeon puzzles to the item pool. (credit [Realrob](https://github.com/rrealmuto/OoT-Randomizer/tree/rebase_silver_rupee) and [Fenhl](https://github.com/fenhl/OoT-Randomizer/tree/silver-rupee-menu-integration))
+* The following open PRs on the main branch:
+  * TestRunnerSRL/OoT-Randomizer#1472
+  * TestRunnerSRL/OoT-Randomizer#1529
+  * TestRunnerSRL/OoT-Randomizer#1553
+  * TestRunnerSRL/OoT-Randomizer#1558
+  * TestRunnerSRL/OoT-Randomizer#1605
+  * TestRunnerSRL/OoT-Randomizer#1616
+    * Includes hideout savewarp changes discussed in fenhl/OoT-Randomizer#7
+  * TestRunnerSRL/OoT-Randomizer#1710
+  * TestRunnerSRL/OoT-Randomizer#1726
+  * TestRunnerSRL/OoT-Randomizer#1732
+
+## Hidden Menus
+
+Holding different D-pad directions on the pause menu will show the following information:
+* Right: Dungeon Vanilla/MQ Identification
+* Down: Medallion and Stone Locations
+* Right: Dungeon Keys available and (collected), Silver Rupees collected
+
+Holding the A button on the pause menu will show all of this information on one screen.
+
+Silver Rupee count colors match the colors in the item description shown when picking them up. Order from left to right roughly aligns with the order the silver rupee puzzles are encountered in each dungeon.
 
 ## Index
 
@@ -68,6 +79,20 @@ In a nutshell the differences are:
 Please follow [the guides on our wiki](https://wiki.ootrandomizer.com/index.php?title=Setup#Emulators) carefully to ensure a stable game experience and that
 [the settings requirements for races](https://wiki.ootrandomizer.com/index.php?title=Racing#Emulator_Settings_Requirements) are met. OoTR can also be run on
 an N64 using an [EverDrive](https://wiki.ootrandomizer.com/index.php?title=Everdrive), or on [Wii Virtual Console](https://wiki.ootrandomizer.com/index.php?title=Wii_Virtual_Console). For questions and tech support we kindly refer you to our [Discord](https://discord.gg/q6m6kzK).
+
+## Custom Models
+
+Save the .ZOBJ file of the desired model in `data/Models/Adult` or `data/Models/Child`. The file must be in .ZOBJ format (the compressed .PAK files are not compatible), but most Modloader64 models will work. Exceptions are models which are larger than the base Link models (the randomizer will give an error message) and those created on the new pipeline (technically load but the textures get wonky). Please see notes regarding known model files that are floating around [in this spreadsheet](https://docs.google.com/spreadsheets/d/1xbJnYw8lGR_qAkpvOQXlzvSUobWdX6phTm1SRbXy4TQ/edit#gid=1223582726) before asking why a model doesn't work.
+
+Once the models are saved, the program may be opened and the model(s) selected under the `Cosmetics` tab.
+
+If the model's skeleton is similar enough to Link, the randomizer will use Link's skeleton. If it is substantially different, then a note will be placed on the pause screen to make it clear that the skeleton was changed.
+
+Custom models can be found in the [OoT Online repository](https://github.com/hylian-modding/Z64-CustomPlayerModels/tree/master/oot/PlayAsPackages)
+
+## Alternate Voices
+
+New sfx were created by Maple and Shiroaelli on the ZOoTR discord to replace the adult and child voices, respectively. Completely silent options are also available for both ages.
 
 ## General Description
 
