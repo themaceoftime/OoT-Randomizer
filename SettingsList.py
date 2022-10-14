@@ -3564,17 +3564,44 @@ setting_infos = [
         name           = 'spawn_positions',
         gui_text       = 'Randomize Overworld Spawns',
         gui_tooltip    = '''\
-            Randomize where you start as Child or Adult when loading
-            a save in the Overworld. This means you may not necessarily
-            spawn inside Link's House or Temple of Time.
+            Randomize where you start when loading
+            a save in the Overworld.
 
             This stays consistent after saving and loading the game again.
         ''',
         default        = False,
+        disable        = {
+            False : {'settings' : ['spawn_positions_age']}
+        },
         shared         = True,
         gui_params     = {
-            'randomize_key': 'randomize_settings',
+            'randomize_key': 'randomize_settings'
+        }
+    ),
+    Combobox(
+        name           = 'spawn_positions_age',
+        gui_text       = 'Spawns to Randomize',
+        default        = 'both',
+        disable        = {
         },
+        choices        = {
+            'child':   'Child Only',
+            'adult':   'Adult Only',
+            'both':    'Both'
+        },
+        gui_tooltip    ='''\
+            'Child Only': Child overworld spawn will be randomized.
+            Adult Link will spawn in Temple of Time.
+            
+            'Adult Only': Adult overworld spawn will be randomized.
+            Child Link will spawn in Link's House.
+
+            'Both': Overworld spawn for both ages will be randomized.
+        ''',
+        disabled_default = 'both',
+        gui_params     = {
+            'hide_when_disabled': True
+        }
     ),
     Combobox(
         name           = 'shuffle_scrubs',

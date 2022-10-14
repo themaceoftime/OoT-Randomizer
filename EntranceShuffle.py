@@ -490,6 +490,10 @@ def shuffle_random_entrances(worlds):
 
         if worlds[0].settings.spawn_positions:
             one_way_entrance_pools['Spawn'] = world.get_shufflable_entrances(type='Spawn')
+            if worlds[0].settings.spawn_positions_age == 'adult':
+                one_way_entrance_pools['Spawn'].remove(world.get_entrance('Child Spawn -> KF Links House'))
+            elif worlds[0].settings.spawn_positions_age == 'child':
+                one_way_entrance_pools['Spawn'].remove(world.get_entrance('Adult Spawn -> Temple of Time'))
 
         if worlds[0].settings.warp_songs:
             one_way_entrance_pools['WarpSong'] = world.get_shufflable_entrances(type='WarpSong')

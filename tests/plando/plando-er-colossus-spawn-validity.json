@@ -5,6 +5,7 @@
     "shuffle_overworld_entrances":             false,
     "warp_songs":                              false,
     "spawn_positions":                         true,
+    "spawn_positions_age":                     "both",
     "starting_items":                          [
       "ocarina"
     ],

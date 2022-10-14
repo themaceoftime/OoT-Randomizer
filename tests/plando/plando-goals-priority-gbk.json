@@ -50,6 +50,7 @@
     "owl_drops":                               false,
     "warp_songs":                              false,
     "spawn_positions":                         true,
+    "spawn_positions_age":                     "both",
     "shuffle_scrubs":                          "off",
     "shopsanity":                              "off",
     "tokensanity":                             "off",
