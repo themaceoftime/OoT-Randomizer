@@ -3283,7 +3283,7 @@ setting_infos = [
         multiple_select = True,
         choices         = {
             'child': 'Child',
-            'adult': 'Adult'
+            'adult': 'Adult',
         },
         gui_tooltip    = '''\
             Randomize where you start when loading
@@ -3301,8 +3301,8 @@ setting_infos = [
         default        = [],
         shared         = True,
         gui_params     = {
-            'randomize_key': 'randomize_settings'
-        }
+            'randomize_key': 'randomize_settings',
+        },
     ),
     Combobox(
         name           = 'shuffle_scrubs',
