@@ -1,5 +1,5 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
-import { GUIGlobal } from '../../../providers/GUIGlobal';
+import {Component, ChangeDetectorRef} from '@angular/core';
+import {GUIGlobal} from '../../../providers/GUIGlobal';
 import {NbThemeService} from "@nebular/theme";
 
 @Component({
@@ -20,6 +20,7 @@ export class HeaderComponent {
   ngOnInit() {
 
     if (this.global.getGlobalVar('electronAvailable')) {
+      this.initTheme();
 
       this.global.isWindowMaximized().then(res => {
         this.isMaximized = res;
@@ -62,13 +63,23 @@ export class HeaderComponent {
     if (this.isDark) {
       this.themeService.changeTheme('ootr-default');
       this.isDark = false;
+      this.global.generator_settingsMap["theme"] = 'ootr-default';
     } else {
       this.themeService.changeTheme('ootr-dark');
       this.isDark = true;
+      this.global.generator_settingsMap["theme"] = 'ootr-dark';
     }
+    this.global.saveCurrentSettingsToFile();
   }
 
   close() {
     this.global.closeWindow();
+  }
+
+  private initTheme() {
+    if (this.global.generator_settingsMap && this.global.generator_settingsMap["theme"]) {
+      this.themeService.changeTheme(this.global.generator_settingsMap["theme"]);
+      this.isDark = 'ootr-dark' === this.global.generator_settingsMap["theme"];
+    }
   }
 }
