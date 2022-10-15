@@ -1,18 +1,17 @@
 rand_seed_truth_spinner:
-    addiu   sp, sp, -0x18
-    sw      ra, 0x04(sp)
-    sw      a0, 0x08(sp)
-
+    addiu   sp, sp, -0x20
+    sw      t0, 0x14(sp)
+    sw      a0, 0x18(sp)
+    sw      ra, 0x1C(sp)
+    
     jal     seed_rng
     nop
 
-    lw      a0, 0x08(sp)
-    lw      ra, 0x04(sp)
-    addiu   sp, sp, 0x18
-
-    ; Displaced instructions
+    ; Displaced instruction
     lh      v0, 0x00B6(s0)
-    lui     t0, hi(0x80A30C04)
 
+    lw      t0, 0x14(sp)
+    lw      a0, 0x18(sp)
+    lw      ra, 0x1C(sp)
     jr      ra
-    nop
+    addiu   sp, sp, 0x20
