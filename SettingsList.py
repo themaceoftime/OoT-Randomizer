@@ -3277,47 +3277,31 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
-    Checkbutton(
+    Combobox(
         name           = 'spawn_positions',
         gui_text       = 'Randomize Overworld Spawns',
+        multiple_select = True,
+        choices         = {
+            'child': 'Child',
+            'adult': 'Adult'
+        },
         gui_tooltip    = '''\
             Randomize where you start when loading
-            a save in the Overworld.
+            a save in the Overworld. This means you may not necessarily
+            spawn inside Link's House or Temple of Time.
+
+            'Child': Child overworld spawn will be randomized.
+            
+            'Adult': Adult overworld spawn will be randomized.
+
+            Selecting both options will randomize both spawns.
 
             This stays consistent after saving and loading the game again.
         ''',
-        default        = False,
-        disable        = {
-            False : {'settings' : ['spawn_positions_age']}
-        },
+        default        = [],
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings'
-        }
-    ),
-    Combobox(
-        name           = 'spawn_positions_age',
-        gui_text       = 'Spawns to Randomize',
-        default        = 'both',
-        disable        = {
-        },
-        choices        = {
-            'child':   'Child Only',
-            'adult':   'Adult Only',
-            'both':    'Both'
-        },
-        gui_tooltip    ='''\
-            'Child Only': Child overworld spawn will be randomized.
-            Adult Link will spawn in Temple of Time.
-            
-            'Adult Only': Adult overworld spawn will be randomized.
-            Child Link will spawn in Link's House.
-
-            'Both': Overworld spawn for both ages will be randomized.
-        ''',
-        disabled_default = 'both',
-        gui_params     = {
-            'hide_when_disabled': True
         }
     ),
     Combobox(

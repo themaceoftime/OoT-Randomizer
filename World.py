@@ -70,7 +70,7 @@ class World(object):
             settings.open_forest == 'closed'
             and (
                 self.shuffle_special_interior_entrances or settings.shuffle_overworld_entrances
-                or settings.warp_songs or (settings.spawn_positions and settings.spawn_positions_age in ('child', 'both')) or (settings.shuffle_bosses != 'off')
+                or settings.warp_songs or 'child' in settings.spawn_positions or (settings.shuffle_bosses != 'off')
             )
         ):
             self.settings.open_forest = 'closed_deku'
