@@ -8,7 +8,7 @@ supplementary_version = 1
 branch_identifier = 0x99
 
 # URL to your branch on GitHub.
-branch_url = 'https://github.com/Roman971/OoT-Randomizer/tree/Dev-R'
+branch_url = 'https://github.com/mracsys/OoT-Randomizer/tree/Dev-M'
 
 # This is named __version__ at the top for compatability with older versions trying to version check.
 base_version = __version__
