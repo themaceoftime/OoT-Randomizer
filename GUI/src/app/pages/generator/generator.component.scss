@@ -158,13 +158,9 @@ nb-card-body {
 
 //One line combobox (e.g. Navi color options)
 :host .oLCBLabelFirst {
-  width: 248px;
+  width: 160px;
   left: 0px;
   text-align: left;
-
-  @media (max-width: 1536px) {
-    width: 160px;
-  }
 
   @media (max-width: 1248px) {
     width: 110px;

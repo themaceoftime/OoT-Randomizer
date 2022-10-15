@@ -200,6 +200,7 @@ body#generator {
         font-family: Exo;
 
         position: relative;
+        min-width: auto;
         width: 100%;
         text-align: start;
         overflow: hidden;
@@ -265,13 +266,27 @@ body#generator {
     }
 
     &.numberTextInput {
+      &.numberTextInputSmall {
+        max-width: 50px;
+      }
+
+      &.numberTextInputMedium {
+        max-width: 115px;
+      }
+
       position: relative;
       left: 15px;
       max-width: 36px;
       min-width: 30px;
       width: auto;
       text-align: center;
+      padding-top: 0.15rem;
+      padding-bottom: 0.15rem;
     }
+  }
+
+  p.subheaderLabel {
+    margin-top: 0;
   }
 
   nb-tabset {
