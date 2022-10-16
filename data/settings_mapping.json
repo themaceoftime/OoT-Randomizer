@@ -179,8 +179,7 @@
             "decouple_entrances",
             "owl_drops",
             "warp_songs",
-            "spawn_positions",
-            "spawn_positions_age"
+            "spawn_positions"
           ]
         },
         {

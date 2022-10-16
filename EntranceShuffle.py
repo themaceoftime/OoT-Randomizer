@@ -490,9 +490,9 @@ def shuffle_random_entrances(worlds):
 
         if worlds[0].settings.spawn_positions:
             one_way_entrance_pools['Spawn'] = world.get_shufflable_entrances(type='Spawn')
-            if worlds[0].settings.spawn_positions_age == 'adult':
+            if 'child' not in worlds[0].settings.spawn_positions:
                 one_way_entrance_pools['Spawn'].remove(world.get_entrance('Child Spawn -> KF Links House'))
-            elif worlds[0].settings.spawn_positions_age == 'child':
+            elif 'adult' not in worlds[0].settings.spawn_positions:
                 one_way_entrance_pools['Spawn'].remove(world.get_entrance('Adult Spawn -> Temple of Time'))
 
         if worlds[0].settings.warp_songs:
@@ -917,7 +917,7 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
             if impas_front_entrance is not None and impas_back_entrance is not None and not same_hint_area(impas_front_entrance, impas_back_entrance):
                 raise EntranceShuffleError('Kak Impas House entrances are not in the same hint area')
 
-    if (world.shuffle_special_interior_entrances or world.settings.shuffle_overworld_entrances or world.settings.spawn_positions) and \
+    if (world.shuffle_special_interior_entrances or world.settings.shuffle_overworld_entrances or any(spawn in world.settings.spawn_positions for spawn in ['child', 'adult'])) and \
        (entrance_placed == None or entrance_placed.type in ['SpecialInterior', 'Overworld', 'Spawn', 'WarpSong', 'OwlDrop']):
         # At least one valid starting region with all basic refills should be reachable without using any items at the beginning of the seed
         # Note this creates new empty states rather than reuse the worlds' states (which already have starting items)
