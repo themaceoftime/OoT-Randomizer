@@ -3060,6 +3060,6 @@ skip_GS_BGS_text:
 
 ; Truth spinner seeding RNG
 ; Replaces:
-;   lh      v0, 0x00B6(s0)
-.orga 0xDB9DEC
-    jal rand_seed_truth_spinner
+;   jal     func_800CDCCC
+.orga 0xDB9E14
+    jal     rand_seed_truth_spinner

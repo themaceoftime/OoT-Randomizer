@@ -2307,8 +2307,11 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     save_context.write_save_table(rom)
 
     # Write numeric seed truncated to 32 bits for rng seeding
-    rom.write_int32(rom.sym('SEED'), spoiler.settings.numeric_seed & 0xFFFFFFFF)
-
+    # Overwritten with new seed every time a new rng value is generated
+    rom.write_int32(rom.sym('RNG_SEED_INT'), spoiler.settings.numeric_seed & 0xFFFFFFFF)
+    # Static initial seed value for one-time random actions like the Hylian Shield discount
+    rom.write_int32(rom.sym('RANDOMIZER_RNG_SEED'), spoiler.settings.numeric_seed & 0xFFFFFFFF)
+    
     return rom
 
 
