@@ -87,7 +87,7 @@ const ENTRY_COMPONENTS = [];
 const NB_THEME_PROVIDERS = [
   ...NbThemeModule.forRoot(
     {
-      name: 'default',
+      name: 'ootr-default',
     },
   ).providers,
   ...NbSidebarModule.forRoot().providers,

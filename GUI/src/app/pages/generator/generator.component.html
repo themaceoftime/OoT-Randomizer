@@ -1,5 +1,5 @@
 <div class="pageContainer">
-  <nb-card [ngClass]="{webLayout: !global.getGlobalVar('electronAvailable')}" [nbSpinner]="generatorBusy" nbSpinnerStatus="danger" nbSpinnerSize="large" nbSpinnerMessage="Please wait...">
+  <nb-card [ngClass]="{webLayout: !global.getGlobalVar('electronAvailable')}" [nbSpinner]="generatorBusy" nbSpinnerStatus="info" nbSpinnerSize="large" nbSpinnerMessage="Please wait...">
     <nb-card-body *ngIf="global.getGlobalVar('appReady')">
       <nb-tabset *ngIf="global.getGlobalVar('generatorSettingsArray') && global.getGlobalVar('generatorSettingsArray').length > 0" #refTabSet class="settingsTabset" fullWidth>
         <nb-tab *ngFor="let tab of getTabList(false); index as tabIndex" [disabled]="!global.generator_tabsVisibilityMap[tab.name]" [tabTitle]="tab.text" [active]="tabIndex==0" [nbSpinner]="settingsBusy" nbSpinnerStatus="primary" nbSpinnerSize="medium" nbSpinnerMessage="">
