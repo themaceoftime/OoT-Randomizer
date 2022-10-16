@@ -18,7 +18,7 @@
     "remove_items":          [
         { "item": "Zeldas Lullaby", "types": ["goal"] }
     ],
-    "dungeon_woth_limit": 2,
+    "dungeons_woth_limit":   2,
     "named_items_required":  true,
     "vague_named_items":     false,
     "use_default_goals":     true,
