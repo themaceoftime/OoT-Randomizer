@@ -4,7 +4,7 @@
     "description":           "Hint Distribution for the S6 Tournament. 5 Goal hints, 7 Sometimes hints, 8 Always hints (including Skull Mask and Sheik in Kakariko).",
     "add_locations":         [
         { "location": "Deku Theater Skull Mask", "types": ["always"] },
-        { "location": "Sheik in Kakariko", "types": ["always"]}
+        { "location": "Sheik in Kakariko", "types": ["always"] }
     ],
     "remove_locations":      [
         { "location": "Ganons Castle Shadow Trial Golden Gauntlets Chest", "types": ["sometimes"] },
