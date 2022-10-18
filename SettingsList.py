@@ -3277,17 +3277,28 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
-    Checkbutton(
+    Combobox(
         name           = 'spawn_positions',
         gui_text       = 'Randomize Overworld Spawns',
+        multiple_select = True,
+        choices         = {
+            'child': 'Child',
+            'adult': 'Adult',
+        },
         gui_tooltip    = '''\
-            Randomize where you start as Child or Adult when loading
+            Randomize where you start when loading
             a save in the Overworld. This means you may not necessarily
             spawn inside Link's House or Temple of Time.
 
+            'Child': Child overworld spawn will be randomized.
+            
+            'Adult': Adult overworld spawn will be randomized.
+
+            Selecting both options will randomize both spawns.
+
             This stays consistent after saving and loading the game again.
         ''',
-        default        = False,
+        default        = [],
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
