@@ -28,8 +28,8 @@ export class GeneratorComponent implements OnInit {
 
   tooltipComponent = GUITooltip;
 
-  @ViewChild('refTabSet', { static: false }) tabSet: NbTabsetComponent;
-  @ViewChild('refTabFooter', { static: false }) tabSetFooter: NbTabsetComponent;
+  @ViewChild('refTabSet') tabSet: NbTabsetComponent;
+  @ViewChild('refTabFooter') tabSetFooter: NbTabsetComponent;
   activeTab: string = "";
   activeFooterTab: string = "";
   settingsLocked: boolean = false;
@@ -519,7 +519,7 @@ export class GeneratorComponent implements OnInit {
     }
   }
 
-  savePreset(refPresetSelect: NbSelectComponent<string>) {
+  savePreset(refPresetSelect: NbSelectComponent) {
 
     let targetPreset = this.global.generator_presets[this.global.generator_settingsMap["presets"]];
 

@@ -1,10 +1,11 @@
-import { Injectable, HostBinding, EventEmitter, Output } from '@angular/core';
+import { Injectable, HostBinding, EventEmitter, Output, Directive } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { ProgressWindow } from '../pages/generator/progressWindow/progressWindow.component';
 
 import * as post from 'post-robot';
 
+@Directive()
 @Injectable()
 export class GUIGlobal {
 

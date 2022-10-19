@@ -408,33 +408,29 @@
       }
     }
 
-    div.options-list-container {
+    nb-option-list {
+      border: 2px solid nb-theme(color-success-400);
       border-radius: 3px; // TODO dark mode
 
-      .options-list {
-        border: 2px solid nb-theme(color-success-400);
-        border-radius: 3px; // TODO dark mode
+      nb-option {
+        background-color: nb-theme(color-basic-700);
+        padding: 0.75rem 1.5rem;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
 
-        nb-option {
-          background-color: nb-theme(color-basic-700);
-          padding: 0.75rem 1.5rem;
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          user-select: none;
+        &:hover {
+          background-color: nb-theme(color-info-500);
+          color: nb-theme(color-basic-100);
+        }
 
-          &:hover {
-            background-color: nb-theme(color-info-500);
-            color: nb-theme(color-basic-100);
-          }
+        &.selected {
+          background-color: nb-theme(color-basic-1100);
+          color: nb-theme(color-basic-100);
+        }
 
-          &.selected {
-            background-color: nb-theme(color-basic-1100);
-            color: nb-theme(color-basic-100);
-          }
-
-          [nbInput].size-small:not(.input-full-width) {
-            max-width: inherit;
-          }
+        [nbInput].size-small:not(.input-full-width) {
+          max-width: inherit;
         }
       }
     }
@@ -471,7 +467,7 @@
           font-weight: 500;
         }
 
-        &.status-primary {
+        &.status-primary, &.status-basic {
           &:disabled {
             background-color: nb-theme(color-basic-200);
             border-color: nb-theme(color-basic-200);
@@ -481,7 +477,7 @@
           border-color: nb-theme(color-basic-300);
         }
 
-        &.size-medium.status-primary.shape-rectangle {
+        &.size-medium.status-primary.shape-rectangle, &.size-medium.status-basic.shape-rectangle {
           font-family: Exo;
           font-weight: 500;
           font-size: 14px;
