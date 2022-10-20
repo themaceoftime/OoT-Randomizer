@@ -1066,7 +1066,7 @@ export class GUIGlobal {
   generateSeedElectron(progressWindowRef: ProgressWindow, fromPatchFile: boolean = false, useStaticSeed: string = "") { //Electron only
     var self = this;
 
-    return new Promise(function (resolve, reject) {
+    return new Promise<void>(function (resolve, reject) {
 
       let settingsMap = self.createSettingsFileObject(fromPatchFile, false, false, true);
 
