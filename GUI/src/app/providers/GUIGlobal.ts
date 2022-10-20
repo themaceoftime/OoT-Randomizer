@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ProgressWindow } from '../pages/generator/progressWindow/progressWindow.component';
 
 import * as post from 'post-robot';
+import {GuiEvent} from "./GuiEvent";
 
 @Directive()
 @Injectable()
@@ -23,7 +24,7 @@ export class GUIGlobal {
 
   @HostBinding('class.indigo-pink') materialStyleIndigo: boolean = true;
 
-  @Output() globalEmitter: EventEmitter<object> = new EventEmitter();
+  @Output() globalEmitter: EventEmitter<GuiEvent> = new EventEmitter();
 
   constructor(private http: HttpClient) {
     this.globalVars = new Map<string, any>([
