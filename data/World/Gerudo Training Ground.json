@@ -101,7 +101,7 @@
             "Gerudo Training Ground Boulder Room Silver Rupee Top Left": "True"
         },
         "exits": {
-            "Gerudo Training Ground Heavy Block Room": "(Silver_Rupee_Gerudo_Training_Ground_Slopes, 5)"
+            "Gerudo Training Ground Heavy Block Room": "(Silver_Rupee_Gerudo_Training_Ground_Slopes, 5) and (can_use(Hookshot) or logic_gtg_without_hookshot)"
         }
     },
     {

@@ -141,14 +141,14 @@
         "locations": {
             "Spirit Temple Map Chest": "
                 (is_child and Sticks and
-                    (Small_Key_Spirit_Temple, 5) and (Silver_Rupee_Spirit_Temple_Sun_Block, 5)) or
+                    (Small_Key_Spirit_Temple, 5)) or
                 (is_adult and (has_fire_source or (logic_spirit_map_chest and Bow)) and
                     ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts)) or
                 ((can_use(Dins_Fire) or (((Magic_Meter and Fire_Arrows) or logic_spirit_map_chest) and Bow and Sticks)) and
                     (has_explosives or ((Small_Key_Spirit_Temple, 2) and bombchus_in_logic and not entrance_shuffle)))",
             "Spirit Temple Sun Block Room Chest": "
                 (is_child and Sticks and
-                    (Small_Key_Spirit_Temple, 5)) or
+                    (Small_Key_Spirit_Temple, 5) and (Silver_Rupee_Spirit_Temple_Sun_Block, 5)) or
                 (is_adult and (has_fire_source or (logic_spirit_sun_chest and Bow and (Silver_Rupee_Spirit_Temple_Sun_Block, 5))) and
                     ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts)) or
                 ((can_use(Dins_Fire) or (((Magic_Meter and Fire_Arrows) or (logic_spirit_sun_chest and (Silver_Rupee_Spirit_Temple_Sun_Block, 5))) and Bow and Sticks)) and

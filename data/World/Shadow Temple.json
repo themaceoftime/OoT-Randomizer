@@ -72,7 +72,7 @@
             "Shadow Temple Huge Pit Silver Rupee Center Back" : "True"
         },
         "exits": {
-            "Shadow Temple Falling Spikes" : "(Silver_Rupee_Shadow_Temple_Huge_Pit, 5)",
+            "Shadow Temple Falling Spikes": "(Silver_Rupee_Shadow_Temple_Huge_Pit, 5)",
             "Shadow Temple Invisible Spikes": "
                 (Small_Key_Shadow_Temple, 2) and (logic_lens_shadow_platform or can_use(Lens_of_Truth))"
         }

@@ -88,8 +88,8 @@
         "locations": {
             "Shadow Temple MQ Invisible Blades Visible Chest": "(Silver_Rupee_Shadow_Temple_Invisible_Blades, 10)",
             "Shadow Temple MQ Invisible Blades Invisible Chest": "(Silver_Rupee_Shadow_Temple_Invisible_Blades, 10)",
-            "Shadow Temple MQ Invisible Blades Recovery Heart 1": "True",
-            "Shadow Temple MQ Invisible Blades Recovery Heart 2": "True",
+            "Shadow Temple MQ Invisible Blades Recovery Heart 1": "can_play(Song_of_Time)",
+            "Shadow Temple MQ Invisible Blades Recovery Heart 2": "can_play(Song_of_Time)",
             "Shadow Temple MQ Invisible Blades Silver Rupee 1" : "logic_lens_shadow_mq_invisible_blades or can_use(Lens_of_Truth) or can_use(Nayrus_Love)",
             "Shadow Temple MQ Invisible Blades Silver Rupee 2" : "logic_lens_shadow_mq_invisible_blades or can_use(Lens_of_Truth) or can_use(Nayrus_Love)",
             "Shadow Temple MQ Invisible Blades Silver Rupee 3" : "logic_lens_shadow_mq_invisible_blades or can_use(Lens_of_Truth) or can_use(Nayrus_Love)",
