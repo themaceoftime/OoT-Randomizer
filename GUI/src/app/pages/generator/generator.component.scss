@@ -232,6 +232,10 @@
       font-weight: 400;
       padding: nb-theme(tile-padding);
 
+      ::ng-deep button span {
+        font-size: 0.8rem;
+      }
+
       ::ng-deep span, p, div {
 
         white-space: pre-line;

@@ -43,60 +43,52 @@ import { TextInputWindow } from './pages/generator/textInputWindow/textInputWind
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    BypassSecurityPipe,
-    ProgressWindow,
-    DialogWindow,
-    ErrorDetailsWindow,
-    ConfirmationWindow,
-    TextInputWindow
-  ],
-  entryComponents: [
-    AppComponent,
-    ProgressWindow,
-    DialogWindow,
-    ErrorDetailsWindow,
-    ConfirmationWindow,
-    TextInputWindow
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CdkTableModule,
-    ThemeModule.forRoot(),
-    NbDialogModule.forRoot(),
-    NbEvaIconsModule
-  ],
-  exports: [
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatRadioModule,
-    MatSelectModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatTableModule
-  ],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ],
-  providers: [
-    { provide: APP_BASE_HREF, useValue: '/' },
-    GUIGlobal
-  ]
+    declarations: [
+        AppComponent,
+        BypassSecurityPipe,
+        ProgressWindow,
+        DialogWindow,
+        ErrorDetailsWindow,
+        ConfirmationWindow,
+        TextInputWindow
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CdkTableModule,
+        ThemeModule.forRoot(),
+        NbDialogModule.forRoot(),
+        NbEvaIconsModule
+    ],
+    exports: [
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatGridListModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatRadioModule,
+        MatSelectModule,
+        MatSliderModule,
+        MatSlideToggleModule,
+        MatTableModule
+    ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+    ],
+    providers: [
+        { provide: APP_BASE_HREF, useValue: '/' },
+        GUIGlobal
+    ]
 })
 export class AppModule {
 

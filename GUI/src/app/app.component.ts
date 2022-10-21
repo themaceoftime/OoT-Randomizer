@@ -5,6 +5,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 
 import { GUIGlobal } from './providers/GUIGlobal';
 import { DOCUMENT } from "@angular/common";
+import { OOTR_THEME, ThemeSwitcher } from "./providers/theme-switcher.service";
 
 @Pipe({ name: 'bypassSecurity' })
 export class BypassSecurityPipe implements PipeTransform {
@@ -18,11 +19,10 @@ export class BypassSecurityPipe implements PipeTransform {
 @Component({
   selector: 'ngx-app',
   template: `
-    <body class="nb-theme-ootr-default">
-      <div id="generator">
+      <div id="generator" class="${OOTR_THEME.DEFAULT}">
         <router-outlet></router-outlet>
       </div>
-    </body>`,
+  `,
   // Shadow-DOM requires code tweaks within Nebular.
   // Style interference with website is addressed by usage of selector specificity.
   encapsulation: ViewEncapsulation.None
@@ -36,6 +36,7 @@ export class AppComponent {
               private global: GUIGlobal,
               private readonly renderer: Renderer2,
               @Inject(DOCUMENT) private readonly document: Document,
+              private readonly themeSwitcher: ThemeSwitcher,
   ) {
     global.globalInit(elm.nativeElement.id);
     this.observeInitialization();
@@ -50,7 +51,7 @@ export class AppComponent {
     this.changes = new MutationObserver((mutations: MutationRecord[]) => {
       mutations.forEach((mutation: MutationRecord) => {
         if (this.isInitializationDone(mutation, outerBody)) {
-          this.fixNebularThemingScope();
+          this.themeSwitcher.initTheme();
         }
       });
     });
@@ -58,19 +59,6 @@ export class AppComponent {
     this.changes.observe(outerBody, {
       attributeFilter: ['class'],
     });
-  }
-
-  private fixNebularThemingScope() {
-    const generatorBody = this.document.querySelector('body#generator');
-    const outerBody = this.document.getElementsByTagName('body')[0];
-
-    if (outerBody && outerBody !== generatorBody && outerBody.classList.contains('nb-theme-ootr-default')) {
-      this.renderer.removeClass(outerBody, `nb-theme-ootr-default`);
-
-      if (generatorBody && !generatorBody.classList.contains('nb-theme-ootr-default')) {
-        this.renderer.addClass(generatorBody, `nb-theme-ootr-default`);
-      }
-    }
   }
 
   private isInitializationDone(mutation: MutationRecord, outerBody: HTMLBodyElement) {

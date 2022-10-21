@@ -200,14 +200,13 @@
     width: 40px;
     color: transparent;
     font-size: 2em;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M0 64l192 192v192l128-32V256L512 64H0z"/></svg>');
+    background-image: nb-theme(filter-icon);
     background-repeat: no-repeat;
     background-position: center center;
     opacity: .2;
     top: -30px;
     left: calc(100% - 21px);
     position: relative;
-    filter: invert(nb-theme(filter-icon-inversion))
   }
 
   .tagFilterSelect {

@@ -34,40 +34,36 @@ import { ResponsiveColsDirective } from '../../directives/responsiveCols.directi
 import { GUITooltip } from './guiTooltip/guiTooltip.component';
 
 @NgModule({
-  imports: [
-    ThemeModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatRadioModule,
-    MatSelectModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatTableModule,
-    FlexLayoutModule,
-    ColorPickerModule,
-    ngfModule
-  ],
-  declarations: [
-    GeneratorComponent,
-    ResponsiveColsDirective,
-    GUITooltip,
-    GUIListboxModule
-  ],
-  entryComponents: [
-    GUITooltip,
-    GUIListboxModule
-  ],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ]
+    imports: [
+        ThemeModule,
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatGridListModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatRadioModule,
+        MatSelectModule,
+        MatSliderModule,
+        MatSlideToggleModule,
+        MatTableModule,
+        FlexLayoutModule,
+        ColorPickerModule,
+        ngfModule
+    ],
+    declarations: [
+        GeneratorComponent,
+        ResponsiveColsDirective,
+        GUITooltip,
+        GUIListboxModule
+    ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+    ]
 })
 export class GeneratorModule { }

@@ -1,9 +1,8 @@
-// @nebular theming framework
-@import "~@nebular/theme/styles/theming";
-// @nebular out of the box themes
-@import "~@nebular/theme/styles/themes";
+@forward '@nebular/theme/styles/theming';
+@use '@nebular/theme/styles/theming' as *;
+@use '@nebular/theme/styles/themes/default';
 
 @import "theme.ootr-default";
 @import "theme.ootr-dark";
-// which themes you what to enable (empty to enable all)
+
 $nb-enabled-themes: (ootr-default, ootr-dark);

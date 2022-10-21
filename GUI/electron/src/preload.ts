@@ -145,12 +145,12 @@ post.on('browseForFile', function (event) {
   if (!data || typeof (data) != "object" || Object.keys(data).length != 1 || !data["fileTypes"] || typeof (data["fileTypes"]) != "object")
     return false;
 
-  return electron.remote.dialog.showOpenDialog({ filters: data.fileTypes, properties: ["openFile", "treatPackageAsDirectory"]});
+  return electron.remote.dialog.showOpenDialogSync({ filters: data.fileTypes, properties: ["openFile", "treatPackageAsDirectory"]});
 });
 
 
 post.on('browseForDirectory', function (event) {
-  return electron.remote.dialog.showOpenDialog({ properties: ["openDirectory", "createDirectory", "treatPackageAsDirectory"] });
+  return electron.remote.dialog.showOpenDialogSync({ properties: ["openDirectory", "createDirectory", "treatPackageAsDirectory"] });
 });
 
 post.on('createAndOpenPath', function (event) {
