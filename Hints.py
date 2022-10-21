@@ -8,7 +8,7 @@ import json
 from enum import Enum
 import itertools
 
-from HintList import getHint, getMulti, getHintGroup, getUpgradeHintList, hintExclusions, misc_item_hint_table
+from HintList import getHint, getMulti, getHintGroup, getUpgradeHintList, hintExclusions, misc_item_hint_table, misc_location_hint_table
 from Item import Item, MakeEventItem
 from Messages import COLOR_MAP, update_message_by_id
 from Region import Region
@@ -1591,6 +1591,19 @@ def buildMiscItemHints(world, messages):
                 text = text.replace(find, replace)
 
             update_message_by_id(messages, data['id'], str(GossipText(text, ['Green'], prefix='')))
+
+
+def buildMiscLocationHints(world, messages):
+    for hint_type, data in misc_location_hint_table.items():
+        if hint_type in world.settings.misc_hints:
+            location = world.misc_hint_locations[hint_type]
+            if hint_type in world.misc_hint_location_items:
+                item = world.misc_hint_location_items[hint_type]
+                text = data['location_text'].format(item=getHint(getItemGenericName(item), world.settings.clearer_hints).text)
+        else:
+            text = data['location_fallback']
+
+        update_message_by_id(messages, data['id'], str(GossipText(text, ['Green'], prefix='')), 0x23)
 
 
 def get_raw_text(string):
