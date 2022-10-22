@@ -1,11 +1,11 @@
 import { Component, ViewContainerRef, ElementRef, ViewEncapsulation, Renderer2, Inject } from '@angular/core';
 import { PipeTransform, Pipe } from '@angular/core';
 import { Router } from '@angular/router';
-import { DomSanitizer } from "@angular/platform-browser";
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { GUIGlobal } from './providers/GUIGlobal';
-import { DOCUMENT } from "@angular/common";
-import { OOTR_THEME, ThemeSwitcher } from "./providers/theme-switcher.service";
+import { DOCUMENT } from '@angular/common';
+import { OOTR_THEME, ThemeSwitcher } from './providers/theme-switcher.service';
 
 @Pipe({ name: 'bypassSecurity' })
 export class BypassSecurityPipe implements PipeTransform {
@@ -17,6 +17,8 @@ export class BypassSecurityPipe implements PipeTransform {
 }
 
 @Component({
+  // keep ngx-app as name for websites backwards compatibility
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ngx-app',
   template: `
       <div id="generator" class="${OOTR_THEME.DEFAULT}">

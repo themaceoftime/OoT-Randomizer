@@ -1,14 +1,14 @@
-import { Injectable, HostBinding, EventEmitter, Output, Directive } from '@angular/core';
+import { Injectable, HostBinding, EventEmitter, Output, Directive, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { ProgressWindow } from '../pages/generator/progressWindow/progressWindow.component';
+import { ProgressWindowComponent } from '../pages/generator/progressWindow/progressWindow.component';
 
 import * as post from 'post-robot';
-import {GuiEvent} from "./GuiEvent";
+import {GuiEvent} from './GuiEvent';
 
 @Directive()
 @Injectable()
-export class GUIGlobal {
+export class GUIGlobal implements OnDestroy {
 
   //Globals for GUI HTML
   public generator_tabsVisibilityMap: Object = {};
@@ -1063,7 +1063,7 @@ export class GUIGlobal {
     }
   }
 
-  generateSeedElectron(progressWindowRef: ProgressWindow, fromPatchFile: boolean = false, useStaticSeed: string = "") { //Electron only
+  generateSeedElectron(progressWindowRef: ProgressWindowComponent, fromPatchFile: boolean = false, useStaticSeed: string = "") { //Electron only
     var self = this;
 
     return new Promise<void>(function (resolve, reject) {

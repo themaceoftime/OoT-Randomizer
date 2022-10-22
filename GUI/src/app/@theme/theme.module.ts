@@ -42,7 +42,7 @@ import {
 import {
   GUILayoutComponent
 } from './layouts';
-import {ThemeSwitcher} from "../providers/theme-switcher.service";
+import {ThemeSwitcher} from '../providers/theme-switcher.service';
 
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
 

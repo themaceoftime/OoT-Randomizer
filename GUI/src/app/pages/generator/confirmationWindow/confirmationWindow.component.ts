@@ -21,12 +21,12 @@ import { NbDialogRef } from '@nebular/theme';
   `,
   styleUrls: ['./confirmationWindow.scss'],
 })
-export class ConfirmationWindow {
+export class ConfirmationWindowComponent {
 
   @Input() dialogHeader: string = "Confirmation";
   @Input() dialogMessage: string = "";
 
-  constructor(protected ref: NbDialogRef<ConfirmationWindow>) {
+  constructor(protected ref: NbDialogRef<ConfirmationWindowComponent>) {
   }
 
   closeDialogYes() {

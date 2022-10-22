@@ -22,11 +22,11 @@ import { GUIGlobal } from '../../../providers/GUIGlobal';
   `,
   styleUrls: ['./errorDetailsWindow.scss'],
 })
-export class ErrorDetailsWindow {
+export class ErrorDetailsWindowComponent {
 
   @Input() errorMessage: string = "";
 
-  constructor(protected ref: NbDialogRef<ErrorDetailsWindow>, public global: GUIGlobal) {
+  constructor(protected ref: NbDialogRef<ErrorDetailsWindowComponent>, public global: GUIGlobal) {
   }
 
   closeDialog() {

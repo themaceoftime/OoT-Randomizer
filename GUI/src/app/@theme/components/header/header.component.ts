@@ -1,13 +1,13 @@
-import {ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {GUIGlobal} from '../../../providers/GUIGlobal';
-import {ThemeSwitcher} from "../../../providers/theme-switcher.service";
+import {ThemeSwitcher} from '../../../providers/theme-switcher.service';
 
 @Component({
-  selector: 'ngx-header',
+  selector: 'ootr-header',
   styleUrls: ['./header.component.scss'],
   templateUrl: './header.component.html',
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
   isMaximized: boolean = false;
   platform: string = (<any>window).apiPlatform;

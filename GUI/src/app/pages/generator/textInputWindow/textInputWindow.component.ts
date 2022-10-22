@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { NbDialogRef } from '@nebular/theme';
 
 @Component({
@@ -22,7 +22,7 @@ import { NbDialogRef } from '@nebular/theme';
   `,
   styleUrls: ['./textInputWindow.scss'],
 })
-export class TextInputWindow {
+export class TextInputWindowComponent implements OnInit {
 
   @Input() dialogHeader: string = "Enter name";
   @Input() dialogMessage: string = "";
@@ -31,7 +31,7 @@ export class TextInputWindow {
 
   @ViewChild("inputBar", { static: true }) inputBarRef: ElementRef;
 
-  constructor(protected ref: NbDialogRef<TextInputWindow>) {
+  constructor(protected ref: NbDialogRef<TextInputWindowComponent>) {
   }
 
   ngOnInit() {

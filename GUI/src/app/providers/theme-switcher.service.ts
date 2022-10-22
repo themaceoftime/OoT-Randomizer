@@ -1,6 +1,6 @@
-import {Inject, Injectable, Renderer2, RendererFactory2} from "@angular/core";
-import {DOCUMENT} from "@angular/common";
-import {GUIGlobal} from "./GUIGlobal";
+import {Inject, Injectable, Renderer2, RendererFactory2} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+import {GUIGlobal} from './GUIGlobal';
 
 export enum OOTR_THEME {
   DEFAULT = 'nb-theme-ootr-default',

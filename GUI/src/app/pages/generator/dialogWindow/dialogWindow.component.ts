@@ -20,12 +20,12 @@ import { NbDialogRef } from '@nebular/theme';
   `,
   styleUrls: ['./dialogWindow.scss'],
 })
-export class DialogWindow {
+export class DialogWindowComponent {
 
   @Input() dialogHeader: string = "Info";
   @Input() dialogMessage: string = "";
 
-  constructor(protected ref: NbDialogRef<DialogWindow>) {
+  constructor(protected ref: NbDialogRef<DialogWindowComponent>) {
   }
 
   closeDialog() {
