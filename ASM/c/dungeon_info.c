@@ -118,10 +118,10 @@ void draw_background(z64_disp_buf_t *db, int bg_left, int bg_top, int bg_width, 
 
 // skip dungeons with no keys or silver rupees
 int d_right_dungeon_idx(int i) {
-    int dungeon_idx = i + 2; // skip Free & Deku
+    int dungeon_idx = i + 1; // skip Free & Deku
     if (!CFG_DUNGEON_INFO_SILVER_RUPEES || !CFG_DUNGEON_IS_MQ[DODONGO_ID]) dungeon_idx++; // skip DC
-    if (dungeon_idx >= 3) dungeon_idx++; // skip Jabu
-    if (dungeon_idx >= 10 && (!CFG_DUNGEON_INFO_SILVER_RUPEES || CFG_DUNGEON_IS_MQ[ICE_ID])) dungeon_idx++; // skip Ice
+    if (dungeon_idx >= 2) dungeon_idx++; // skip Jabu
+    if (dungeon_idx >= 9 && (!CFG_DUNGEON_INFO_SILVER_RUPEES || CFG_DUNGEON_IS_MQ[ICE_ID])) dungeon_idx++; // skip Ice
     return dungeon_idx;
 }
 
