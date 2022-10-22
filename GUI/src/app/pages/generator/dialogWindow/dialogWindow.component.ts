@@ -6,7 +6,7 @@ import { NbDialogRef } from '@nebular/theme';
     <nb-card class="dialog-window">
       <nb-card-header>
       {{ dialogHeader }}
-      <button nbButton class="headerButton" size="xsmall" (click)="closeDialog()">X</button>
+      <button nbButton class="headerButton" size="xsmall" status="danger" (click)="closeDialog()">X</button>
       </nb-card-header>
       <nb-card-body>
         {{ dialogMessage }}

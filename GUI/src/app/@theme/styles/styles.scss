@@ -41,11 +41,16 @@
 
       .ioInput,
       .ioInputWeb,
-      .numberTextInput,
-      .footerInput,
-      .footerInputWeb,
-      .footerInputShort {
+      .numberTextInput {
         background: nb-theme(color-basic-100) !important;
+      }
+
+      [nbInput].status-basic {
+        &.footerInput, &.footerInput:hover,
+        &.footerInputWeb, &.footerInputWeb:hover,
+        &.footerInputShort, &.footerInputShort:hover {
+          background-color: nb-theme(color-warning-700);
+        }
       }
 
       div.record-picker {
@@ -263,6 +268,8 @@
             line-height: 1.25;
             border-radius: 0.75rem;
             background-color: nb-theme(color-warning-900);
+            border-color: nb-theme(color-warning-900);
+            color: nb-theme(color-success-700);
 
             &:hover {
               opacity: 0.9;
@@ -412,7 +419,7 @@
 
       nb-option-list {
         border: 2px solid nb-theme(color-success-400);
-        border-radius: 3px; // TODO dark mode
+        border-radius: nb-theme(dropdown-border-radius);
 
         nb-option {
           background-color: nb-theme(color-basic-700);
@@ -437,12 +444,15 @@
         }
       }
 
-      .form-control.ng-untouched.ng-pristine.ng-valid.size-medium.status-basic.shape-rectangle {
-        border-radius: 0.17rem;
-        padding: 0.75rem 1.125rem;
-        height: 28px;
-        margin: 1px 0px 9px 0px;
-        background-color: white;
+      .form-control.ng-pristine.ng-valid.size-medium.status-basic.shape-rectangle {
+        &.ng-untouched, &.ng-touched {
+          border-radius: 0.17rem;
+          padding: 0.75rem 1.125rem;
+          height: 28px;
+          margin: 1px 0 9px 0;
+          background-color: white;
+          border: 0;
+        }
       }
 
       [nbButton], button.btn {
@@ -522,7 +532,7 @@
         padding: 1.25rem;
         height: 40px;
         width: 100%;
-        background: nb-theme(color-warning-100);
+        background: nb-theme(color-warning-800);
         color: nb-theme(color-success-700) !important;
 
         a {
@@ -594,6 +604,20 @@
       p {
         margin-top: 0;
       }
+
+      ::-webkit-scrollbar {
+        background: nb-theme(color-primary-200);
+        width: nb-theme(scrollbar-width);
+      }
+
+      ::-webkit-scrollbar-track {
+        background: nb-theme(color-success-1100);
+        box-shadow: 0 0 3px nb-theme(color-success-200) inset;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: nb-theme(color-primary-200);
+      }
     }
 
     //DB: Tooltip delay
@@ -622,20 +646,6 @@
         color: nb-theme(color-basic-1000);
         border-radius: nb-theme(border-radius);
       }
-    }
-
-    ::-webkit-scrollbar {
-      background: nb-theme(color-primary-200);
-      width: nb-theme(scrollbar-width);
-    }
-
-    ::-webkit-scrollbar-track {
-      background: nb-theme(color-success-1100);
-      box-shadow: 0 0 3px nb-theme(color-success-200) inset;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: nb-theme(color-primary-200);
     }
   }
 }

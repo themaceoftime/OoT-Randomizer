@@ -52,9 +52,9 @@ $nb-themes: nb-register-theme(
       color-warning-400: #093970,
       color-warning-500: #06A77D,
       color-warning-600: #ffffff,
-      color-warning-700: unset,
-      color-warning-800: unset,
-      color-warning-900: unset,
+      color-warning-700: #ffffff,
+      color-warning-800: #052f5f,
+      color-warning-900: #d12,
 
       color-primary-focus: color-primary-700,
       color-primary-hover: color-primary-300,
@@ -115,6 +115,8 @@ $nb-themes: nb-register-theme(
       padding-top-nb-tab: 1.25rem,
       headline-padding-top: 0,
       spinner-background-color: rgba(255, 255, 255, 0.3),
+      layout-background-color: background-basic-color-1,
+      dropdown-border-radius: 3px,
     ),
     ootr-default,
     default

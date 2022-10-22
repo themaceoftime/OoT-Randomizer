@@ -29,19 +29,11 @@ import { GUIGlobal } from '../../../providers/GUIGlobal';
 export class GUILayoutComponent implements OnDestroy, OnInit {
 
   private alive = true;
-  currentTheme: string;
 
   platform: string = (<any>window).apiPlatform;
   isMaximized: boolean = false
 
-  constructor(protected themeService: NbThemeService, public global: GUIGlobal) {
-
-    this.themeService.getJsTheme()
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(theme => {
-        this.currentTheme = theme.name;
-    });
-  }
+  constructor(public global: GUIGlobal) { }
 
   ngOnInit() {
 
