@@ -18,14 +18,12 @@ Differences between this branch and the main Dev branch (on [Testrunner's Fork](
 * The following open PRs on the main branch:
   * TestRunnerSRL/OoT-Randomizer#1472
   * TestRunnerSRL/OoT-Randomizer#1529
-  * TestRunnerSRL/OoT-Randomizer#1553
   * TestRunnerSRL/OoT-Randomizer#1558
   * TestRunnerSRL/OoT-Randomizer#1605
   * TestRunnerSRL/OoT-Randomizer#1616
     * Includes hideout savewarp changes discussed in fenhl/OoT-Randomizer#7
   * TestRunnerSRL/OoT-Randomizer#1710
   * TestRunnerSRL/OoT-Randomizer#1726
-  * TestRunnerSRL/OoT-Randomizer#1732
 
 ## Hidden Menus
 
@@ -80,19 +78,6 @@ Please follow [the guides on our wiki](https://wiki.ootrandomizer.com/index.php?
 [the settings requirements for races](https://wiki.ootrandomizer.com/index.php?title=Racing#Emulator_Settings_Requirements) are met. OoTR can also be run on
 an N64 using an [EverDrive](https://wiki.ootrandomizer.com/index.php?title=Everdrive), or on [Wii Virtual Console](https://wiki.ootrandomizer.com/index.php?title=Wii_Virtual_Console). For questions and tech support we kindly refer you to our [Discord](https://discord.gg/q6m6kzK).
 
-## Custom Models
-
-Save the .ZOBJ file of the desired model in `data/Models/Adult` or `data/Models/Child`. The file must be in .ZOBJ format (the compressed .PAK files are not compatible), but most Modloader64 models will work. Exceptions are models which are larger than the base Link models (the randomizer will give an error message) and those created on the new pipeline (technically load but the textures get wonky). Please see notes regarding known model files that are floating around [in this spreadsheet](https://docs.google.com/spreadsheets/d/1xbJnYw8lGR_qAkpvOQXlzvSUobWdX6phTm1SRbXy4TQ/edit#gid=1223582726) before asking why a model doesn't work.
-
-Once the models are saved, the program may be opened and the model(s) selected under the `Cosmetics` tab.
-
-If the model's skeleton is similar enough to Link, the randomizer will use Link's skeleton. If it is substantially different, then a note will be placed on the pause screen to make it clear that the skeleton was changed.
-
-Custom models can be found in the [OoT Online repository](https://github.com/hylian-modding/Z64-CustomPlayerModels/tree/master/oot/PlayAsPackages)
-
-## Alternate Voices
-
-New sfx were created by Maple and Shiroaelli on the ZOoTR discord to replace the adult and child voices, respectively. Completely silent options are also available for both ages.
 
 ## General Description
 
@@ -132,6 +117,18 @@ A comprehensive list can be found [here](https://wiki.ootrandomizer.com/index.ph
 Caveat: Plandomizer settings will override most settings in the main OoTR generator settings, particularly list-based settings like enabled tricks or starting inventory. For example, if the Plandomizer distribution file contains an empty list of starting items, and the generator settings include additional starting equipment, the player will start with none of them instead. You will have to edit the Plandomizer file to change such settings, or **delete** completely the line in the Plandomizer file with the given setting to allow the main generator to alter the setting.
 
 See [the Plandomizer wiki page](https://wiki.ootrandomizer.com/index.php?title=Plandomizer) for full details.
+
+#### Custom Models
+
+Save the .ZOBJ file of the desired model in `data/Models/Adult` or `data/Models/Child`. The file must be in .ZOBJ format (the compressed .PAK files are not compatible), but most Modloader64 models will work. Exceptions are models which are larger than the base Link models (the randomizer will give an error message) and those created on the new pipeline (technically load but the textures get wonky). Please see notes regarding known model files that are floating around [in this spreadsheet](https://docs.google.com/spreadsheets/d/1xbJnYw8lGR_qAkpvOQXlzvSUobWdX6phTm1SRbXy4TQ/edit#gid=1223582726) before asking why a model doesn't work.
+
+Once the models are saved, the program may be opened and the model(s) selected under the `Cosmetics` tab.
+
+Custom models can be found in the [OoT Online repository](https://github.com/hylian-modding/Z64-CustomPlayerModels/tree/master/oot/PlayAsPackages)
+
+#### Alternate Voices
+
+New sfx were created by Maple and Shiroaelli on the ZOoTR discord to replace the adult and child voices, respectively. Completely silent options are also available for both ages.
 
 ### Known issues
 
@@ -180,6 +177,8 @@ issue. You should always Hard Reset to avoid this issue entirely.
   * The Adult earliest and latest trade item settings have been combined into a multiselect `Adult Trade Sequence Item` which allows you to choose whatever items you wish as the starting item for the adult trade quest.
   * New setting `Minor Items in Big/Gold chests` places shields and bombchus in major item chests when any `Chest Appearance Matches Contents` setting is enabled along with it.
   * New setting `Fix Broken Drops` adds a magic jar drop in GTG and a pot that drops a deku shield in Spirit Temple. These spawns were present in the code already but would not actually spawn due to the respective objects not being loaded.
+  * New settings `Adult Link Model` and `Child Link Model` allow you to select a .zobj model file to replace Link's look in-game. For more details see the [Custom Models section](#Custom-Models)
+  * New section under SFX labeled `Link` has options `Adult Voice` and `Child Voice`, allowing you to choose to either silence Link or change the voice to feminine to match your chosen player model. Adult and child female voices provided by Maple and shiroaeli in the Discord, respectively.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
