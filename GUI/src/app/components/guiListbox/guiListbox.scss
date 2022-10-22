@@ -95,6 +95,8 @@ div.record-picker {
 }
 
 .record-picker label {
+  display: inline-block;
+  line-height: 1.25;
   cursor: pointer;
   font-weight: inherit;
   font-size: 14px;
