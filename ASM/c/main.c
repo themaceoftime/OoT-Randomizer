@@ -43,7 +43,7 @@ void before_game_state_update() {
 void after_game_state_update() {
     draw_dungeon_info(&(z64_ctxt.gfx->overlay));
     draw_triforce_count(&(z64_ctxt.gfx->overlay));
-    draw_illegal_model_text(&(z64_ctxt.gfx->overlay));
+    //draw_illegal_model_text(&(z64_ctxt.gfx->overlay));
     give_ganon_boss_key();
 }
 
