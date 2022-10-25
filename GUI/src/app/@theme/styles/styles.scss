@@ -29,22 +29,6 @@
     animation-name: tooltipFadeIn;
     animation-duration: 600ms;
   }
-  //Scrollbar style for Combobox
-  .cdk-overlay-pane > nb-card > nb-card-body {
-    &::-webkit-scrollbar {
-      width: 7px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: #eee;
-      box-shadow: 0px 0px 3px #dfdfdf inset;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #337ab7;
-    }
-  }
-  //@include bootstrap-rtl();
 }
 
 html {
@@ -238,18 +222,93 @@ body#generator {
     background-color: white;
   }
 
-  input.size-small.status-basic.shape-rectangle {
-    @media (max-width: 550px) {
-      width: calc(100% - 115px);
+  nb-dialog-container {
+    input.size-small.status-basic.shape-rectangle {
+      line-height: unset;
+      padding: 0.375rem 1.125rem;
     }
 
+    nb-card-header {
+      border: 0;
+      padding: 1.25rem;
+      font-family: Exo;
+      font-size: 1.125rem;
+      font-weight: 600;
+
+      button[nbbutton] {
+        padding: 0.5rem 1.25rem;
+        font-size: 0.75rem;
+      }
+    }
+
+    nb-card-footer {
+      border: 0;
+      padding: 1.25rem;
+    }
+
+    .footerButtonWrapper {
+      padding: 0;
+      font-family: Exo;
+      font-size: 1.125rem;
+      font-weight: 600;
+
+      button[nbbutton], button[nbbutton].shape-rectangle {
+        line-height: 1.3rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+
+        &.status-danger, &.status-info, &.status-primary {
+          padding: 0.75rem 1.5rem;
+          background-image: unset;
+          box-shadow: unset;
+        }
+      }
+    }
+
+    nb-card-body {
+      font-family: Roboto, "Helvetica Neue", sans-serif;
+    }
+
+    button[nbbutton] {
+      font-family: Exo;
+      font-weight: 500;
+      font-size: 0.875rem;
+      background-image: unset;
+
+      &.status-danger {
+        font-size: 0.875rem;
+        line-height: 1.25;
+        border-radius: 0.75rem;
+        background-color: nb-theme(color-warning-900);
+
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+
+      &.appearance-hero.status-primary {
+        background-color: nb-theme(color-basic-500);
+        border-radius: 0.75rem;
+        text-shadow: none;
+        border: none;
+        line-height: calc((1rem * 1.25) + 4px);
+        padding: 0.625rem 1.5rem;
+        box-shadow: unset;
+
+        &:hover {
+          background-color: nb-theme(color-basic-300);
+        }
+      }
+    }
+  }
+
+  input.size-small.status-basic.shape-rectangle {
     font-family: Roboto, "Helvetica Neue", sans-serif;
     border-radius: 0.17rem;
     font-size: 0.875rem;
     padding: 0.1rem 1.125rem;
     position: relative;
-    left: 0px;
-    width: calc(100% - 265px);
+    left: 0;
     max-width: unset;
     border: 2px solid #dadfe6;
     text-align: left;
@@ -305,7 +364,6 @@ body#generator {
       }
 
       > li > a > span {
-        font-size: 1.125rem;
         font-weight: 400;
         font-family: Exo;
         line-height: 15px;
@@ -365,8 +423,11 @@ body#generator {
   }
 
   div.options-list-container {
+    border-radius: 3px;
+
     .options-list {
       border: 2px solid nb-theme(color-info-500);
+      border-radius: 3px;
 
       nb-option {
         background-color: nb-theme(color-basic-700);
@@ -408,7 +469,6 @@ body#generator {
           border-color: nb-theme(color-basic-300);
         }
 
-        position: absolute;
         bottom: 13px;
         background-color: nb-theme(color-basic-500);
         border-color: nb-theme(color-basic-500);
@@ -446,6 +506,7 @@ body#generator {
     padding: 0.275rem 1.5rem;
     font-family: Exo;
     letter-spacing: 0.4px;
+    background-color: nb-theme(color-info-500);
 
     &:hover {
       background-color: nb-theme(color-primary-500);
@@ -520,10 +581,24 @@ body#generator {
     padding: 1rem 1rem 0.6rem 1rem;
     color: #d0cfd3;
     font-family: Exo;
-    font-size: 0.85rem;
+    font-size: 1.125rem;
     font-weight: 700;
     line-height: 1rem;
     text-transform: uppercase;
     margin-top: 0.5rem;
+  }
+
+  ::-webkit-scrollbar {
+    background: #337ab7;
+    width: nb-theme(scrollbar-width);
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #ffffff;
+    box-shadow: 0 0 3px #808080 inset;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #337ab7;
   }
 }

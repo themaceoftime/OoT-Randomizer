@@ -347,6 +347,11 @@ mat-grid-tile div .numberTextInput {
   position: relative;
   top: -7px;
   min-width: 100%;
+  pointer-events: none; //Reduces the clickable part to just the visible slider itself
+
+  ::ng-deep .mat-slider-wrapper {
+    pointer-events: auto;
+  }
 }
 
 .ioInputLabel {
