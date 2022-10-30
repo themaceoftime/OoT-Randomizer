@@ -430,7 +430,7 @@
                 (logic_lab_diving and Iron_Boots and can_use(Hookshot))",
             "LH GS Lab Crate": "
                 Iron_Boots and can_use(Hookshot) and
-                ((not deadly_bonks) or Fairy or (can_use(Nayrus_Love) and shuffle_interior_entrances == 'off'))"
+                (deadly_bonks != 'ohko' or Fairy or (can_use(Nayrus_Love) and shuffle_interior_entrances == 'off'))"
         },
         "exits": {
             "Lake Hylia": "True"
