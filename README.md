@@ -212,6 +212,7 @@ issue. You should always Hard Reset to avoid this issue entirely.
 * Corrected some goal hint colors.
 * Triforce Piece model has been updated so that it is shinier and centered.
 * Goal hints are now selected based on their category rather than their parent goal.
+* New plando item groups available: `#Map`, `#Compass`, `#BossKey`, and `#SmallKey` for placing a random one of these dungeon items in a specific location.
 
 ### 6.2
 
