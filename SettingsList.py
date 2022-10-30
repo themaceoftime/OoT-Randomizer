@@ -4581,6 +4581,11 @@ setting_infos = [
             'dampe_diary': "Dampé's Diary (Hookshot)",
             'ganondorf':   'Ganondorf (Light Arrows)',
             'warp_songs':  'Warp Songs',
+            '10_skulltulas':  'House of Skulltula: 10',
+            '20_skulltulas':  'House of Skulltula: 20',
+            '30_skulltulas':  'House of Skulltula: 30',
+            '40_skulltulas':  'House of Skulltula: 40',
+            '50_skulltulas':  'House of Skulltula: 50',
         },
         gui_tooltip    = '''\
             This setting adds some hints at locations
@@ -4611,6 +4616,10 @@ setting_infos = [
             Playing a warp song will tell you where
             it leads. (If warp song destinations
             are vanilla, this is always enabled.)
+
+            Talking to a cursed House of Skulltula 
+            resident will tell you the reward they will 
+            give you for removing their curse.
         ''',
         shared         = True,
         default        = ['altar', 'ganondorf', 'warp_songs'],
