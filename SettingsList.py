@@ -4907,9 +4907,10 @@ setting_infos = [
         shared         = False,
         cosmetic       = True,
         gui_tooltip    = '''\
-            Shows menus on the pause screen for dungeon keys,
-            rewards, and Vanilla/MQ info. This info is also available
-            by holding the A button on the pause screen.
+            Shows separated menus on the pause screen for dungeon
+            keys, rewards, and Vanilla/MQ info. If disabled, these
+            menus are still available by holding the A button and
+            one of the D-Pad directions on the pause screen.
         ''',
         default        = True,
     ),
