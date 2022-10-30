@@ -4902,6 +4902,18 @@ setting_infos = [
         default        = True,
     ),
     Checkbutton(
+        name           = 'dpad_dungeon_menu',
+        gui_text       = 'Display D-Pad Dungeon Info',
+        shared         = False,
+        cosmetic       = True,
+        gui_tooltip    = '''\
+            Shows menus on the pause screen for dungeon keys,
+            rewards, and Vanilla/MQ info. This info is also available
+            by holding the A button on the pause screen.
+        ''',
+        default        = True,
+    ),
+    Checkbutton(
         name           = 'correct_model_colors',
         gui_text       = 'Item Model Colors Match Cosmetics',
         shared         = False,

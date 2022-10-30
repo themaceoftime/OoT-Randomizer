@@ -58,7 +58,7 @@ void draw_dpad() {
         sprite_load(db, &dpad_sprite, 0, 1);
         sprite_draw(db, &dpad_sprite, 0, 271, 64, 16, 16);
 
-        if (CAN_DRAW_DUNGEON_INFO) {
+        if (CAN_DRAW_DUNGEON_INFO && CFG_DPAD_DUNGEON_INFO_ENABLE) {
             // Zora sapphire on D-down
             sprite_load(db, &stones_sprite, 2, 1);
             sprite_draw(db, &stones_sprite, 0, 273, 77, 12, 12);
