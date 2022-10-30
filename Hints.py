@@ -573,6 +573,25 @@ def get_goal_hint(spoiler, world, checked):
     goal = random.choice(location_reverse_map[location])
     goal.weight = 0
 
+    # Make sure this wasn't the last hintable location for other goals.
+    # If so, set weights to zero. This is important for one-hint-per-goal.
+    # Locations are unique per-category, so we don't have to check the others.
+    for other_goal in goals:
+        if zero_weights or other_goal.weight > 0:
+            goal_locations = list(filter(lambda location:
+                location[0].name not in checked
+                and location[0].name not in world.hint_exclusions
+                and location[0].name not in world.hint_type_overrides['goal']
+                and location[0].item.name not in world.item_hint_type_overrides['goal']
+                and location[0].item.name not in unHintableWothItems,
+                other_goal.required_locations))
+            if not goal_locations:
+                other_goal.weight = 0
+                # Replace randomly chosen goal with the goal that has all its locations
+                # hinted without being directly hinted itself.
+                if world.one_hint_per_goal:
+                    goal = other_goal
+
     location_text = HintArea.at(location).text(world.settings.clearer_hints)
     if world_id == world.id:
         player_text = "the"
