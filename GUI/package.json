@@ -142,7 +142,7 @@
     "karma-jasmine-html-reporter": "1.5.0",
     "ngx-color-picker": "https://github.com/dragonbane0/ngx-color-picker/tarball/7471e8595e5bf508813c5f6b1964e53ac9902448",
     "normalize.css": "6.0.0",
-    "pace-progress": "https://github.com/dragonbane0/pace/tarball/bcbd25563bf6193b223f856dc1668c0705fd8710",
+    "pace-js": "1.2.4",
     "protractor": "7.0.0",
     "roboto-fontface": "0.8.0",
     "rxjs": "6.6.7",

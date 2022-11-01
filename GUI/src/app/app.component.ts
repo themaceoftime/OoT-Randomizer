@@ -30,7 +30,6 @@ export class BypassSecurityPipe implements PipeTransform {
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
-  private changes: MutationObserver;
 
   constructor(public viewContainerRef: ViewContainerRef,
               private elm: ElementRef,
@@ -40,30 +39,52 @@ export class AppComponent {
               @Inject(DOCUMENT) private readonly document: Document,
               private readonly themeSwitcher: ThemeSwitcher,
   ) {
+    this.global.globalEmitter.subscribe(eventObj => {
+      if (eventObj?.name === 'init_finished') {
+        this.themeSwitcher.initTheme();
+        this.fixInitialization();
+      }
+    });
+
     global.globalInit(elm.nativeElement.id);
-    this.observeInitialization();
 
     //Route manually at the start to avoid URL changes in the browser
     this.router.navigate(['/pages/generator'], { skipLocationChange: true });
   }
 
-  private observeInitialization(): void {
-    const outerBody = this.document.getElementsByTagName('body')[0];
+  private fixInitialization() {
+    const body = this.document.getElementsByTagName('body')[0];
 
-    this.changes = new MutationObserver((mutations: MutationRecord[]) => {
-      mutations.forEach((mutation: MutationRecord) => {
-        if (this.isInitializationDone(mutation, outerBody)) {
-          this.themeSwitcher.initTheme();
-        }
-      });
-    });
+    if (!body?.classList?.value?.includes('pace-done')) {
+      const paceProgressTag = this.document.getElementsByClassName('pace-progress')[0];
+      const initDestroyTimeOutPace = () => {
+        let counter = 0;
 
-    this.changes.observe(outerBody, {
-      attributeFilter: ['class'],
-    });
+        const refreshIntervalId = setInterval(() => {
+          const progress = paceProgressTag.getAttribute("data-progress-text");
+
+          if (["99%", "100%"].includes(progress)) {
+            counter++;
+          }
+
+          if (counter > 50) {
+            clearInterval(refreshIntervalId);
+            this.finishPace();
+          }
+        }, 100);
+      };
+      initDestroyTimeOutPace.bind(this)();
+    }
   }
 
-  private isInitializationDone(mutation: MutationRecord, outerBody: HTMLBodyElement) {
-    return mutation.attributeName === 'class' && outerBody.classList.contains('pace-done');
+  private finishPace(): void {
+    const body = this.document.getElementsByTagName('body')[0];
+
+    body?.classList?.value
+      ?.split(' ')
+      .filter(c => c.startsWith('pace'))
+      .forEach(c => this.renderer.removeClass(body, c));
+
+    this.renderer.addClass(body, 'pace-done');
   }
 }
