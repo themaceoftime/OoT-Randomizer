@@ -39,6 +39,54 @@ typedef struct Limb {
   int z;
 } Limb;
 
+Limb adultSkeleton[] = {
+  {0xFFC7, 0x0D31, 0x0000}, // Limb 0
+  {0x0000, 0x0000, 0x0000}, // Limb 1
+  {0x03B1, 0x0000, 0x0000}, // Limb 2
+  {0xFE71, 0x0045, 0xFF07}, // Limb 3
+  {0x051A, 0x0000, 0x0000}, // Limb 4
+  {0x04E8, 0x0005, 0x000B}, // Limb 5
+  {0xFE74, 0x004C, 0x0108}, // Limb 6
+  {0x0518, 0x0000, 0x0000}, // Limb 7
+  {0x04E9, 0x0006, 0x0003}, // Limb 8
+  {0x0000, 0x0015, 0xFFF9}, // Limb 9
+  {0x0570, 0xFEFD, 0x0000}, // Limb 10
+  {0xFED6, 0xFD44, 0x0000}, // Limb 11
+  {0x0000, 0x0000, 0x0000}, // Limb 12
+  {0x040F, 0xFF54, 0x02A8}, // Limb 13
+  {0x0397, 0x0000, 0x0000}, // Limb 14
+  {0x02F2, 0x0000, 0x0000}, // Limb 15
+  {0x040F, 0xFF53, 0xFD58}, // Limb 16
+  {0x0397, 0x0000, 0x0000}, // Limb 17
+  {0x02F2, 0x0000, 0x0000}, // Limb 18
+  {0x03D2, 0xFD4C, 0x0156}, // Limb 19
+  {0x0000, 0x0000, 0x0000}, // Limb 20
+};
+
+Limb childSkeleton[] = {
+  {0x0000, 0x0948, 0x0000}, // Limb 0
+  {0xFFFC, 0xFF98, 0x0000}, // Limb 1
+  {0x025F, 0x0000, 0x0000}, // Limb 2
+  {0xFF54, 0x0032, 0xFF42}, // Limb 3
+  {0x02B9, 0x0000, 0x0000}, // Limb 4
+  {0x0339, 0x0005, 0x000B}, // Limb 5
+  {0xFF56, 0x0039, 0x00C0}, // Limb 6
+  {0x02B7, 0x0000, 0x0000}, // Limb 7
+  {0x0331, 0x0008, 0x0004}, // Limb 8
+  {0x0000, 0xFF99, 0xFFF9}, // Limb 9
+  {0x03E4, 0xFF37, 0xFFFF}, // Limb 10
+  {0xFE93, 0xFD62, 0x0000}, // Limb 11
+  {0x0000, 0x0000, 0x0000}, // Limb 12
+  {0x02B8, 0xFF51, 0x01D2}, // Limb 13
+  {0x0245, 0x0000, 0x0000}, // Limb 14
+  {0x0202, 0x0000, 0x0000}, // Limb 15
+  {0x02B8, 0xFF51, 0xFE21}, // Limb 16
+  {0x0241, 0x0000, 0x0000}, // Limb 17
+  {0x020D, 0x0000, 0x0000}, // Limb 18
+  {0x0291, 0xFDF5, 0x016F}, // Limb 19
+  {0x0000, 0x0000, 0x0000}, // Limb 20
+};
+
 const int endianVal = 1;
 uint32_t EndianSwap32(uint32_t val) {
   bool smallEndian = ((*(char*)&endianVal) != 0);
@@ -68,76 +116,112 @@ uint32_t EndianSwap16(uint16_t val) {
   return val;
 }
 
-// bool check_skeleton(int hierarchy, int address, Limb* skeleton) {
-//   // Get what the hierarchy pointer points to (pointer to limb 0)
-//   int limbPointer = EndianSwap32(*(int*)(rom + address + hierarchy)) & 0x00FFFFFF;
-//   // Get the limb this points to
-//   int limb = EndianSwap32(*(int*)(rom + address + limbPointer)) & 0x00FFFFFF;
-//   // Go through each limb in the table
-//   bool hasVanillaSkeleton = true;
-//   for (int i = 0; i < 21; i++) {
-//     int offset = limb + i * 0x10;
-//     // X, Y, Z components are 2 bytes each
-//     int limbX = EndianSwap16(*(uint16_t*)(rom + address + offset));
-//     int limbY = EndianSwap16(*(uint16_t*)(rom + address + offset + 2));
-//     int limbZ = EndianSwap16(*(uint16_t*)(rom + address + offset + 4));
-//     int skeletonX = skeleton[i].x;
-//     int skeletonY = skeleton[i].y;
-//     int skeletonZ = skeleton[i].z;
-//     // Check if the X, Y, and Z components all match
-//     if (limbX != skeletonX || limbY != skeletonY || limbZ != skeletonZ) {
-//       return false;
-//     }
-//   }
-//   return true;
-// }
+// Gets the model data
+z64_mem_obj_t FindModelData() {
+  for (int i = 0; i < 19; i++) {
+    z64_mem_obj_t obj = z64_game.obj_ctxt.objects[i];
+    // 0x14 = obj_link_boy, 0x15 = obj_link_child
+    if (obj.id == 0x14) { 
+      return obj;
+    }
+    else if (obj.id == 0x15) { 
+      return obj;
+    }
+  }
+  return z64_game.obj_ctxt.objects[0]; //Will be checked and rejected in calling function
+}
 
-// // Finds the address of the model's hierarchy so we can write the hierarchy pointer
-// // Based on
-// // https://github.com/hylian-modding/Z64Online/blob/master/src/Z64Online/common/cosmetics/UniversalAliasTable.ts
-// // function findHierarchy()
-// int FindHierarchy(uint8_t* zobj, int zobjlen, const char* agestr) {
-//   // Scan until we find a segmented pointer which is 0x0C or 0x10 more than
-//   // the preceeding data and loop until something that's not a segmented pointer is found
-//   // then return the position of the last segemented pointer.
-//   for (int i = 0; i < zobjlen; i += 4) {
-//     if (zobj[i] == 0x06) {
+// Finds the address of the model's hierarchy so we can write the hierarchy pointer
+// Based on
+// https://github.com/hylian-modding/Z64Online/blob/master/src/Z64Online/common/cosmetics/UniversalAliasTable.ts
+// function findHierarchy()
+int FindHierarchy(z64_mem_obj_t model, int size) {
+  // Scan until we find a segmented pointer which is 0x0C or 0x10 more than
+  // the preceeding data and loop until something that's not a segmented pointer is found
+  // then return the position of the last segemented pointer.
+  char* data = (char*)model.data;
+  for (int i = 0; i < size; i += 4) {
+    if (data[i] == 0x06) {
+      int possible = EndianSwap32(*(int*)(data + i)) & 0x00FFFFFF;
  
-//       int possible = EndianSwap32(*(int*)(zobj + i)) & 0x00FFFFFF;
- 
-//       if (possible < zobjlen) {
-//         int possible2 = EndianSwap32(*(int*)(zobj + i - 4)) & 0x00FFFFFF;
-//         int diff = possible - possible2;
-//         if ((diff == 0x0C) || (diff == 0x10)) {
-//           int pos = i + 4;
-//           int count = 1;
-//           while (zobj[pos] == 0x06) {
-//             pos += 4;
-//             count += 1;
-//           }
-//           uint8_t a = zobj[pos];
-//           if (a != count) {
-//             continue;
-//           }
- 
-//           // printf("[C]FindHierarchy returns pos: %i, possible1: %X, possible2: %X\n", pos - 4,
-//           // possible, possible2);
-//           return pos - 4;
-//         }
-//       }
-//     }
-//   }
+      if (possible < size) {
+        int possible2 = EndianSwap32(*(int*)(data + i - 4)) & 0x00FFFFFF;
+        int diff = possible - possible2;
+        if ((diff == 0x0C) || (diff == 0x10)) {
+          int pos = i + 4;
+          int count = 1;
+          while (data[pos] == 0x06) {
+            pos += 4;
+            count += 1;
+          }
+          uint8_t a = data[pos];
+          if (a != count) {
+            continue;
+          }
 
-// void check_model_skeletons() {
-//   // Get the hierarchy pointer for child and adult
-//   //Not sure how best to do this part, maybe the hierarchy address can be stored somewhere?
-//   //int childHierarchy = FindHierarchy(zobj, zobjlen, agestr);
-//   //int adultHierarchy = FindHierarchy(zobj, zobjlen, agestr);
+          return pos - 4;
+        }
+      }
+    }
+  }
+  return -1;
+}
 
-//   bool childIsVanilla = check_skeleton(childHierarchy, childRomAddress, childSkeleton);
-//   bool adultIsVanilla = check_skeleton(adultHierarchy, adultRomAddress, adultSkeleton);
+bool check_skeleton(z64_mem_obj_t model, int hierarchy, Limb* skeleton) {
+  char* data = (char*)model.data;
+  // Get what the hierarchy pointer points to (pointer to limb 0)
+  int limbPointer = EndianSwap32(*(int*)(data + hierarchy)) & 0x00FFFFFF;
+  // Get the limb this points to
+  int limb = EndianSwap32(*(int*)(data + limbPointer)) & 0x00FFFFFF;
+  // Go through each limb in the table
+  bool hasVanillaSkeleton = true;
+  for (int i = 1; i < 21; i++) {
+    int offset = limb + i * 0x10;
+    // X, Y, Z components are 2 bytes each
+    int limbX = EndianSwap16(*(uint16_t*)(data + offset));
+    int limbY = EndianSwap16(*(uint16_t*)(data + offset + 2));
+    int limbZ = EndianSwap16(*(uint16_t*)(data + offset + 4));
+    int skeletonX = skeleton[i].x;
+    int skeletonY = skeleton[i].y;
+    int skeletonZ = skeleton[i].z;
+    // Check if the X, Y, and Z components all match
+    if (limbX != skeletonX || limbY != skeletonY || limbZ != skeletonZ) {
+      return false;
+    }
+  }
+  return true;
+}
 
-//   if (!childIsVanilla || !adultIsVanilla) {
-//     illegal_model = 1;
-//   }
-// }
+void check_model_skeletons() {
+  if (illegal_model) {
+    return; //If it's already been marked illegal, no need to run code again
+  }
+
+  // Get the model's data
+  z64_mem_obj_t model = FindModelData();
+
+  //Decide which skeleton to use
+  Limb* skeleton;
+  if (model.id == 0x14) {
+    skeleton = adultSkeleton;
+  }
+  else if (model.id == 0x15) {
+    skeleton = childSkeleton;
+  }
+  else { //Safety if model file isn't found for some reason
+    return;
+  }
+  z64_object_table_t obj_file = z64_object_table[model.id];
+  int size = obj_file.vrom_end - obj_file.vrom_start;
+
+  // Get the hierarchy pointer
+  int hierarchy = FindHierarchy(model, size);
+  if (hierarchy == -1) { //Safety if hierarchy is not found
+    return;
+  }
+
+  //Check if the skeleton matches vanilla
+  if (!check_skeleton(model, hierarchy, skeleton)) {
+    illegal_model = 1;
+  }
+}
