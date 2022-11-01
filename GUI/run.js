@@ -344,6 +344,7 @@ async function main(commandLine) {
 
     //Verify node_modules
     if (["./node_modules",
+        "./node_modules/.bin",
         "./node_modules/@angular",
         "./node_modules/electron",
         "./node_modules/commander",
