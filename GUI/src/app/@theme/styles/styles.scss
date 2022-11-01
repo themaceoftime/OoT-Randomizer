@@ -31,7 +31,7 @@
         .columns {
           //Web
           [nbButton].footerGenerateButton.appearance-filled.status-success {
-            bottom: 3px;
+            bottom: 8px;
           }
 
           top: 0px;
@@ -398,6 +398,16 @@
 
         nb-layout-column {
           padding: 0 2.25rem 0;
+        }
+      }
+
+      .webLayout {
+        nb-card {
+          height: 100%;
+        }
+
+        .settingsTabset {
+          height: 72%;
         }
       }
 

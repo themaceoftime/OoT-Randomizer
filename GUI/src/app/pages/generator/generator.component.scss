@@ -5,32 +5,16 @@
     height: 100%;
   }
 
-  nb-card { //Electron
-    height: 97%;
+  nb-card {
+    height: 97%; // Web is defined in styles.scss
     overflow: inherit;
-  }
-
-  .webLayout { //Web
-    nb-card {
-      height: 100%;
-    }
-
-    .settingsTabset {
-      height: 72%;
-    }
-  }
-
-  nb-card {
     line-height: 1.25;
-  }
-
-  nb-card {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-  }
 
-  nb-card-body {
-    padding: 0;
+    nb-card-body {
+      padding: 0;
+    }
   }
 
   ::ng-deep .tabset {
