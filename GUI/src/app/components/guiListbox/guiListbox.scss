@@ -36,6 +36,10 @@
     margin: 0;
     padding: 0 0 1px 0;
     height: 100%;
+
+    &.over {
+      background-color: unset !important;
+    }
   }
 
   .record-picker li {
