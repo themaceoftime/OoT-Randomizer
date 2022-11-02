@@ -131,6 +131,34 @@ z64_mem_obj_t FindModelData() {
   return z64_game.obj_ctxt.objects[0]; //Will be checked and rejected in calling function
 }
 
+//Search the model for the playas footer to find its stopping point
+//This tells us where to stop searching for the hierarchy pointer
+int FindSize(z64_mem_obj_t model, int maxsize) {
+  char* data = (char*)model.data;
+  const char* searchString = "!PlayAsManifest0";
+  const int searchLen = 16;
+  int searchIndex = 0;
+
+  for (int i = 0; i < maxsize; i++) {
+    // Byte matches next byte in string
+    if (data[i] == searchString[searchIndex]) {
+      searchIndex += 1;
+ 
+      // All bytes have been found, so a match
+      if (searchIndex == searchLen) {
+        return i; //Return the address of the footer within the model data
+      }
+    }
+    // Match has been broken, reset to start of string
+    else {
+      searchIndex = 0;
+    }
+  }
+ 
+  //If the footer was not found, then return max size (should only happen with a vanilla model)
+  return maxsize;
+}
+
 // Finds the address of the model's hierarchy so we can write the hierarchy pointer
 // Based on
 // https://github.com/hylian-modding/Z64Online/blob/master/src/Z64Online/common/cosmetics/UniversalAliasTable.ts
@@ -211,8 +239,13 @@ void check_model_skeletons() {
   else { //Safety if model file isn't found for some reason
     return;
   }
+
+  //Get the maximum possible size of the object file by checking the object table
   z64_object_table_t obj_file = z64_object_table[model.id];
-  int size = obj_file.vrom_end - obj_file.vrom_start;
+  int maxsize = obj_file.vrom_end - obj_file.vrom_start;
+
+  //Get the actual length of the model data by checking for the footer (or lack thereof)
+  int size = FindSize(model, maxsize);
 
   // Get the hierarchy pointer
   int hierarchy = FindHierarchy(model, size);
