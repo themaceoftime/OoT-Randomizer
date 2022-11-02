@@ -1,7 +1,10 @@
 #include "model_text.h"
 #include <stdbool.h>
 
-uint16_t illegal_model = 0;
+uint16_t illegal_model = false;
+
+bool adult_safe = false;
+bool child_safe = false;
 
 void draw_illegal_model_text(z64_disp_buf_t *db) {
 
@@ -87,35 +90,6 @@ Limb childSkeleton[] = {
   {0x0000, 0x0000, 0x0000}, // Limb 20
 };
 
-const int endianVal = 1;
-uint32_t EndianSwap32(uint32_t val) {
-  bool smallEndian = ((*(char*)&endianVal) != 0);
-  if (smallEndian) {
-    uint32_t new_val = 0;
-    for (int i = 0; i < 4; i++) {
-      new_val <<= 8;
-      new_val |= (val & 0x00FF);
-      val = val >> 8;
-    }
-    return new_val;
-  }
-  return val;
-}
- 
-uint32_t EndianSwap16(uint16_t val) {
-  bool smallEndian = ((*(char*)&endianVal) != 0);
-  if (smallEndian) {
-    uint16_t new_val = 0;
-    for (int i = 0; i < 2; i++) {
-      new_val <<= 8;
-      new_val |= (val & 0x00FF);
-      val = val >> 8;
-    }
-    return new_val;
-  }
-  return val;
-}
-
 // Gets the model data
 z64_mem_obj_t FindModelData() {
   for (int i = 0; i < 19; i++) {
@@ -170,10 +144,10 @@ int FindHierarchy(z64_mem_obj_t model, int size) {
   char* data = (char*)model.data;
   for (int i = 0; i < size; i += 4) {
     if (data[i] == 0x06) {
-      int possible = EndianSwap32(*(int*)(data + i)) & 0x00FFFFFF;
+      int possible = *(int*)(data + i) & 0x00FFFFFF;
  
       if (possible < size) {
-        int possible2 = EndianSwap32(*(int*)(data + i - 4)) & 0x00FFFFFF;
+        int possible2 = *(int*)(data + i - 4) & 0x00FFFFFF;
         int diff = possible - possible2;
         if ((diff == 0x0C) || (diff == 0x10)) {
           int pos = i + 4;
@@ -198,17 +172,17 @@ int FindHierarchy(z64_mem_obj_t model, int size) {
 bool check_skeleton(z64_mem_obj_t model, int hierarchy, Limb* skeleton) {
   char* data = (char*)model.data;
   // Get what the hierarchy pointer points to (pointer to limb 0)
-  int limbPointer = EndianSwap32(*(int*)(data + hierarchy)) & 0x00FFFFFF;
+  int limbPointer = *(int*)(data + hierarchy) & 0x00FFFFFF;
   // Get the limb this points to
-  int limb = EndianSwap32(*(int*)(data + limbPointer)) & 0x00FFFFFF;
+  int limb = *(int*)(data + limbPointer) & 0x00FFFFFF;
   // Go through each limb in the table
   bool hasVanillaSkeleton = true;
   for (int i = 1; i < 21; i++) {
     int offset = limb + i * 0x10;
     // X, Y, Z components are 2 bytes each
-    int limbX = EndianSwap16(*(uint16_t*)(data + offset));
-    int limbY = EndianSwap16(*(uint16_t*)(data + offset + 2));
-    int limbZ = EndianSwap16(*(uint16_t*)(data + offset + 4));
+    int limbX = *(uint16_t*)(data + offset);
+    int limbY = *(uint16_t*)(data + offset + 2);
+    int limbZ = *(uint16_t*)(data + offset + 4);
     int skeletonX = skeleton[i].x;
     int skeletonY = skeleton[i].y;
     int skeletonZ = skeleton[i].z;
@@ -221,8 +195,10 @@ bool check_skeleton(z64_mem_obj_t model, int hierarchy, Limb* skeleton) {
 }
 
 void check_model_skeletons() {
-  if (illegal_model) {
-    return; //If it's already been marked illegal, no need to run code again
+  //If it's already been marked illegal, no need to run code again
+  //Or, if both models have been found to be safe, no need to check either
+  if (illegal_model || (adult_safe && child_safe)) {
+    return;
   }
 
   // Get the model's data
@@ -232,9 +208,17 @@ void check_model_skeletons() {
   Limb* skeleton;
   if (model.id == 0x14) {
     skeleton = adultSkeleton;
+    //If we already know adult is safe, no need to continue
+    if (adult_safe) {
+      return;
+    }
   }
   else if (model.id == 0x15) {
     skeleton = childSkeleton;
+    //If we already know child is safe, no need to continue
+    if (child_safe) {
+      return;
+    }
   }
   else { //Safety if model file isn't found for some reason
     return;
@@ -256,5 +240,11 @@ void check_model_skeletons() {
   //Check if the skeleton matches vanilla
   if (!check_skeleton(model, hierarchy, skeleton)) {
     illegal_model = 1;
+  }
+  else if (model.id == 0x14) {
+    adult_safe = true;
+  }
+  else if (model.id == 0x15) {
+    child_safe = true;
   }
 }
