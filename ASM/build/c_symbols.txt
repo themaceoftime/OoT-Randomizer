@@ -85,7 +85,7 @@ SYMBOL TABLE:
 00000048 l       .rodata.cst4	00000000 $LC1
 00000044 l       .rodata.cst4	00000000 $LC0
 00000000 l    df *ABS*	00000000 rainbow.c
-00000258 l     O .rodata	00000015 cycle_colors
+0000025c l     O .rodata	00000015 cycle_colors
 00000000 l       .rodata.cst8	00000000 $LC0
 0000004c l       .rodata.cst4	00000000 $LC1
 00000050 l       .rodata.cst4	00000000 $LC2
@@ -129,6 +129,7 @@ SYMBOL TABLE:
 000081a4 g     F .text	00000014 hookshot_upgrade
 00008688 g     F .text	000000a4 update_sword_trail_colors
 000045b0 g     F .text	0000004c lookup_override
+00000094 g     O .sdata	00000004 text_height
 000082cc g     F .text	0000001c stick_upgrade
 000024b4 g     O .data	000000fc adultSkeleton
 00000010 g     O .data	00000018 medals
@@ -277,6 +278,7 @@ SYMBOL TABLE:
 000059d4 g     F .text	000000a4 draw_gi_sold_out
 00000218 g     O .data	00000010 stones_sprite
 00000000         *UND*	00000000 OUTGOING_KEY
+00000098 g     O .sdata	00000004 text_width
 000000d4 g     O .data	00000014 extern_ctxt
 00008364 g     F .text	0000001c bombs_to_rupee
 00000028 g     O .sdata	00000004 text_cursor_inner_max

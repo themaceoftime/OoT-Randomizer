@@ -6,6 +6,9 @@ uint16_t illegal_model = false;
 bool adult_safe = false;
 bool child_safe = false;
 
+const int text_width = 5;
+const int text_height = 10;
+
 void draw_illegal_model_text(z64_disp_buf_t *db) {
 
     // Only draw when paused
@@ -14,24 +17,25 @@ void draw_illegal_model_text(z64_disp_buf_t *db) {
     }
     
     // Setup draw location
-    int str_len = 38;
-    int total_w = str_len * font_sprite.tile_w;
-    int draw_x = Z64_SCREEN_WIDTH / 2 - total_w / 2;
-    int draw_y_text = 5;
+    int str_len = 41;
+    int total_w = str_len * text_width;
+    int draw_x = (Z64_SCREEN_WIDTH * .5) - total_w / 2;
+    int draw_y_text = 9;
 
     // Create collected/required string
     char text[str_len + 1];
-    strncpy(text, "Race advisory:irregular model skeleton\0", str_len + 1);
+    strncpy(text, "Racing advisory: irregular model skeleton\0", str_len + 1);
 
     // Call setup display list
     gSPDisplayList(db->p++, &setup_db);
     gDPPipeSync(db->p++);
     gDPSetCombineMode(db->p++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
-    gDPSetPrimColor(db->p++, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+    gDPSetPrimColor(db->p++, 0, 0, 0xD7, 0x16, 0x0D, 0xFF);
 
-    text_print(text, draw_x, draw_y_text);
+    //Set text to print and flush it
+    text_print_size(text, draw_x, draw_y_text, text_width);
+    text_flush_size(db, text_width, text_height, 0, 0);
 
-    text_flush(db);
     gDPFullSync(db->p++);
     gSPEndDisplayList(db->p++);
 }
