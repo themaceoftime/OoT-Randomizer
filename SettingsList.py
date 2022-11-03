@@ -3296,17 +3296,28 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
-    Checkbutton(
+    Combobox(
         name           = 'spawn_positions',
         gui_text       = 'Randomize Overworld Spawns',
+        multiple_select = True,
+        choices         = {
+            'child': 'Child',
+            'adult': 'Adult',
+        },
         gui_tooltip    = '''\
-            Randomize where you start as Child or Adult when loading
+            Randomize where you start when loading
             a save in the Overworld. This means you may not necessarily
             spawn inside Link's House or Temple of Time.
 
+            'Child': Child overworld spawn will be randomized.
+            
+            'Adult': Adult overworld spawn will be randomized.
+
+            Selecting both options will randomize both spawns.
+
             This stays consistent after saving and loading the game again.
         ''',
-        default        = False,
+        default        = [],
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -4570,6 +4581,11 @@ setting_infos = [
             'dampe_diary': "Dampé's Diary (Hookshot)",
             'ganondorf':   'Ganondorf (Light Arrows)',
             'warp_songs':  'Warp Songs',
+            '10_skulltulas':  'House of Skulltula: 10',
+            '20_skulltulas':  'House of Skulltula: 20',
+            '30_skulltulas':  'House of Skulltula: 30',
+            '40_skulltulas':  'House of Skulltula: 40',
+            '50_skulltulas':  'House of Skulltula: 50',
         },
         gui_tooltip    = '''\
             This setting adds some hints at locations
@@ -4600,6 +4616,10 @@ setting_infos = [
             Playing a warp song will tell you where
             it leads. (If warp song destinations
             are vanilla, this is always enabled.)
+
+            Talking to a cursed House of Skulltula 
+            resident will tell you the reward they will 
+            give you for removing their curse.
         ''',
         shared         = True,
         default        = ['altar', 'ganondorf', 'warp_songs'],
@@ -4887,6 +4907,19 @@ setting_infos = [
         gui_tooltip    = '''\
             Shows an additional HUD element displaying
             current available options on the D-Pad.
+        ''',
+        default        = True,
+    ),
+    Checkbutton(
+        name           = 'dpad_dungeon_menu',
+        gui_text       = 'Display D-Pad Dungeon Info',
+        shared         = False,
+        cosmetic       = True,
+        gui_tooltip    = '''\
+            Shows separated menus on the pause screen for dungeon
+            keys, rewards, and Vanilla/MQ info. If disabled, these
+            menus are still available by holding the A button and
+            one of the D-Pad directions on the pause screen.
         ''',
         default        = True,
     ),
