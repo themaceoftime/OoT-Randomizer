@@ -594,6 +594,7 @@ def get_goal_hint(spoiler, world, checked):
         if not goal_locations:
             # Replace randomly chosen goal with the goal that has all its locations
             # hinted without being directly hinted itself.
+            other_goal.weight = 0
             goal = other_goal
 
     # Goal weight to zero mitigates double hinting this goal
