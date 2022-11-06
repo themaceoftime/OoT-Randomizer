@@ -14,7 +14,7 @@ console.log("Test Mode:", testMode);
 var platform = os.platform();
 console.log("Platform:", platform);
 
-var pythonPath = commander.python ? commander.python : platform == "win32" ? "py" : "python3";
+var pythonPath = commander.python ? '"' + commander.python + '"' : platform == "win32" ? "py" : "python3";
 var pythonSourcePath = path.normalize(electron.remote.app.isPackaged ? electron.remote.app.getAppPath() + "/python/" : electron.remote.app.getAppPath() + "/../");
 var pythonGeneratorPath = pythonSourcePath + "OoTRandomizer.py";
 
