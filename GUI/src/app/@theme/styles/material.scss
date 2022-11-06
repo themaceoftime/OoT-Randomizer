@@ -696,12 +696,14 @@
   }
 
   .cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
-    opacity: 1
+    opacity: 0.4;
+    background-color: nb-theme(backdrop-popup);
   }
 
   @media screen and (-ms-high-contrast: active) {
     .cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
-      opacity: .6
+      opacity: .9;
+      background-color: nb-theme(backdrop-popup);
     }
   }
 

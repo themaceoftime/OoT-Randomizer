@@ -168,7 +168,7 @@
             line-height: 1.25;
             border-radius: 0.75rem;
             color: nb-theme(color-basic-100);
-            font-weight: 500;
+            font-weight: nb-theme(picker-font-weight);
             font-family: Exo;
 
             position: relative;
@@ -226,6 +226,7 @@
           button[nbbutton] {
             padding: 0.5rem 1.25rem;
             font-size: 0.75rem;
+            box-shadow: unset;
           }
         }
 
@@ -240,12 +241,27 @@
           font-size: 1.125rem;
           font-weight: 600;
 
-          button[nbbutton], button[nbbutton].shape-rectangle {
-            line-height: 1.3rem;
+          button[nbbutton].shape-rectangle {
+            line-height: 1.0rem;
             padding: 0.75rem 1.5rem;
             font-size: 0.875rem;
 
-            &.status-danger, &.status-info, &.status-primary {
+            &.status-basic, &.status-primary {
+              background-color: nb-theme(color-warning-200);
+              border-color: nb-theme(color-warning-200);
+
+              &:hover {
+                background-color: nb-theme(color-warning-300);
+                border-color: nb-theme(color-warning-300);
+              }
+
+              &.yes {
+                background-color: nb-theme(color-warning-200);
+                border: nb-theme(color-warning-200);
+              }
+            }
+
+            &.status-danger {
               padding: 0.75rem 1.5rem;
               background-image: unset;
               box-shadow: unset;
@@ -273,20 +289,6 @@
 
             &:hover {
               opacity: 0.9;
-            }
-          }
-
-          &.appearance-hero.status-primary {
-            background-color: nb-theme(color-basic-500);
-            border-radius: 0.75rem;
-            text-shadow: none;
-            border: none;
-            line-height: calc((1rem * 1.25) + 4px);
-            padding: 0.625rem 1.5rem;
-            box-shadow: unset;
-
-            &:hover {
-              background-color: nb-theme(color-basic-300);
             }
           }
         }
@@ -490,13 +492,19 @@
           }
 
           &.status-primary, &.status-basic {
-            &:disabled {
+            color: nb-theme(color-info-300);
+            background-color: nb-theme(color-warning-200);
+            border-color: nb-theme(color-warning-200);
+
+            &:disabled, &:hover:disabled {
               background-color: nb-theme(color-basic-200);
               border-color: nb-theme(color-basic-200);
             }
 
-            background-color: nb-theme(color-basic-300);
-            border-color: nb-theme(color-basic-300);
+            &:hover {
+              background-color: nb-theme(color-warning-300);
+              border-color: nb-theme(color-warning-300);
+            }
           }
 
           &.size-medium.status-primary.shape-rectangle, &.size-medium.status-basic.shape-rectangle {
@@ -515,6 +523,7 @@
         color: nb-theme(color-info-300);
         background-color: nb-theme(color-info-500);
         border-color: nb-theme(color-info-500);
+        box-shadow: none;
       }
 
       button.size-small.status-info.shape-rectangle {
@@ -528,6 +537,22 @@
         &:hover {
           background-color: nb-theme(color-warning-400);
           border-color: nb-theme(color-warning-400);
+        }
+      }
+
+      div.dual-list > div.listbox > div.buttonBox > button[nbButton].btn.appearance-filled.status-basic.size-medium.shape-rectangle {
+        color: nb-theme(color-basic-100);
+        background-color: nb-theme(color-basic-500);
+        border-color: nb-theme(color-basic-500);
+
+        &:disabled, &:hover:disabled {
+          background-color: nb-theme(color-basic-200);
+          border-color: nb-theme(color-basic-200);
+        }
+
+        &:hover {
+          background-color: nb-theme(color-basic-300);
+          border-color: nb-theme(color-basic-300);
         }
       }
 
@@ -592,18 +617,18 @@
         }
       }
 
-    nb-tabset a.tab-link {
-      background-color: transparent;
-      cursor: pointer;
-      padding: 1rem 1rem 0.6rem 1rem;
-      color: nb-theme(color-basic-1000);
-      font-family: Exo;
-      font-size: 1.125rem;
-      font-weight: 700;
-      line-height: 1rem;
-      text-transform: uppercase;
-      margin-top: 0.5rem;
-    }
+      nb-tabset a.tab-link {
+        background-color: transparent;
+        cursor: pointer;
+        padding: 1rem 1rem 0.6rem 1rem;
+        color: nb-theme(color-basic-1000);
+        font-family: Exo;
+        font-size: 1.125rem;
+        font-weight: 700;
+        line-height: 1rem;
+        text-transform: uppercase;
+        margin-top: 0.5rem;
+      }
 
       mat-grid-tile.mat-grid-tile {
         background-color: nb-theme(color-success-900);
