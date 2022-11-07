@@ -243,6 +243,7 @@ conditional_sometimes = {
     'Kak 30 Gold Skulltula Reward':             lambda world: '30_skulltulas' not in world.settings.misc_hints,
     'Kak 40 Gold Skulltula Reward':             lambda world: '40_skulltulas' not in world.settings.misc_hints,
     'Kak 50 Gold Skulltula Reward':             lambda world: '50_skulltulas' not in world.settings.misc_hints,
+    'ZR Frogs in the Rain':                     lambda world: not world.settings.shuffle_frog_song_rupees,
 
     # Conditional dual hints
     'GV Pieces of Heart Ledges':                lambda world: not world.settings.shuffle_cows and world.settings.tokensanity not in ['overworld', 'all'],
