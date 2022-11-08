@@ -384,30 +384,28 @@
           ]
         },
         {
-          "name": "playermodels_section_electron",
+          "name": "playermodels_section_generator",
           "text": "Player Models",
-          "exclude_from_web": true,
-          "app_type": ["generator", "patcher"],
+          "app_type": ["generator"],
           "col_span": 2,
           "row_span": [2,2,2],
           "settings": [
             "model_adult",
             "model_adult_filepicker",
             "model_child",
-            "model_child_filepicker"
+            "model_child_filepicker",
+            "model_unavailable_msg"
           ]
         },
         {
-          "name": "playermodels_section_web",
+          "name": "playermodels_section_patcher",
           "text": "Player Models",
           "exclude_from_electron": true,
           "app_type": ["patcher"],
           "col_span": 2,
           "row_span": [2,2,2],
           "settings": [
-            "model_adult",
             "model_adult_filepicker",
-            "model_child",
             "model_child_filepicker"
           ]
         },
@@ -477,7 +475,7 @@
           "name": "sfx_main_section",
           "is_sfx": true,
           "col_span": 4,
-          "row_span": [1,1,1],
+          "row_span": [2,1,1],
           "settings": [
             "randomize_all_sfx"
           ]
@@ -486,8 +484,8 @@
           "name": "generalsfx_section",
           "text": "General",
           "is_sfx": true,
-          "col_span": 2,
-          "row_span": [6,6,12],
+          "col_span": 1,
+          "row_span": [6,6,11],
           "settings": [
             "background_music",
             "disable_battle_music",
@@ -504,8 +502,8 @@
           "name": "menusfx_section",
           "text": "Menu",
           "is_sfx": true,
-          "col_span": 2,
-          "row_span": [6,6,3],
+          "col_span": 1,
+          "row_span": [6,6,11],
           "settings": [
             "sfx_menu_cursor",
             "sfx_menu_select"
@@ -515,19 +513,34 @@
           "name": "npcsfx_section",
           "text": "NPC",
           "is_sfx": true,
-          "col_span": 2,
-          "row_span": [6,6,3],
+          "col_span": 1,
+          "row_span": [6,6,11],
           "settings": [
             "sfx_navi_overworld",
             "sfx_navi_enemy"
           ]
         },
         {
-          "name": "linksfx_section",
+          "name": "linksfx_section_generator",
           "text": "Link",
+          "app_type": ["generator"],
           "is_sfx": true,
-          "col_span": 2,
-          "row_span": [6,6,6],
+          "col_span": 1,
+          "row_span": [6,6,11],
+          "settings": [
+            "sfx_link_adult",
+            "sfx_link_child",
+            "sfx_link_unavailable_msg"
+          ]
+        },
+        {
+          "name": "linksfx_section_patcher",
+          "text": "Link",
+          "exclude_from_electron": true,
+          "app_type": ["patcher"],
+          "is_sfx": true,
+          "col_span": 1,
+          "row_span": [6,6,11],
           "settings": [
             "sfx_link_adult",
             "sfx_link_child"
