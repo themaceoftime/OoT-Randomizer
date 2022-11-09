@@ -1,5 +1,6 @@
 #Much of this is heavily inspired from and/or based on az64's / Deathbasket's MM randomizer
 
+import itertools
 import random
 import os
 from Utils import compare_version, data_path
@@ -89,8 +90,9 @@ ocarina_sequence_ids = [
     ("Song of Storms", 0x49)
 ]
 
+
 # Represents the information associated with a sequence, aside from the sequence data itself
-class TableEntry(object):
+class Sequence(object):
     def __init__(self, name, cosmetic_name, type = 0x0202, instrument_set = 0x03, replaces = -1, vanilla_id = -1):
         self.name = name
         self.cosmetic_name = cosmetic_name
@@ -101,19 +103,25 @@ class TableEntry(object):
 
 
     def copy(self):
-        copy = TableEntry(self.name, self.cosmetic_name, self.type, self.instrument_set, self.replaces, self.vanilla_id)
+        copy = Sequence(self.name, self.cosmetic_name, self.type, self.instrument_set, self.replaces, self.vanilla_id)
         return copy
 
 
 # Represents actual sequence data, along with metadata for the sequence data block
-class Sequence(object):
+class SequenceData(object):
     def __init__(self):
         self.address = -1
         self.size = -1
         self.data = []
 
 
-def process_sequences(rom, sequences, target_sequences, disabled_source_sequences, disabled_target_sequences, ids, seq_type = 'bgm'):
+def process_sequences(rom, ids, seq_type='bgm', disabled_source_sequences=None, disabled_target_sequences=None, include_custom=True, sequences=None, target_sequences=None, groups=None):
+    disabled_source_sequences = [] if disabled_source_sequences is None else disabled_source_sequences
+    disabled_target_sequences = {} if disabled_target_sequences is None else disabled_target_sequences
+    sequences = {} if sequences is None else sequences
+    target_sequences = {} if target_sequences is None else target_sequences
+    groups = {} if groups is None else groups
+
     # Process vanilla music data
     for bgm in ids:
         # Get sequence metadata
@@ -124,14 +132,17 @@ def process_sequences(rom, sequences, target_sequences, disabled_source_sequence
         id = bgm[1]
 
         # Create new sequences
-        seq = TableEntry(name, cosmetic_name, type, instrument_set, vanilla_id = id)
-        target = TableEntry(name, cosmetic_name, type, instrument_set, replaces = id)
+        seq = Sequence(name, cosmetic_name, type, instrument_set, vanilla_id = id)
+        target = Sequence(name, cosmetic_name, type, instrument_set, replaces = id)
 
         # Special handling for file select/fairy fountain
         if seq.vanilla_id != 0x57 and cosmetic_name not in disabled_source_sequences:
-            sequences.append(seq)
+            sequences[seq.cosmetic_name] = seq
         if cosmetic_name not in disabled_target_sequences:
-            target_sequences.append(target)
+            target_sequences[target.cosmetic_name] = target
+
+    if not include_custom:
+        return sequences, target_sequences, groups
 
     # If present, load the file containing custom music to exclude
     try:
@@ -152,7 +163,7 @@ def process_sequences(rom, sequences, target_sequences, disabled_source_sequence
                 continue
 
             # Find meta file and check if corresponding seq file exists
-            if fname.endswith('.meta') and os.path.isfile(os.path.join(dirpath, fname.split('.')[0] + '.seq')):
+            if fname.endswith('.meta') and os.path.isfile(os.path.join(dirpath, f'{fname[:-5]}.seq')):
                 # Read meta info
                 try:
                     with open(os.path.join(dirpath, fname), 'r') as stream:
@@ -164,52 +175,54 @@ def process_sequences(rom, sequences, target_sequences, disabled_source_sequence
 
                 # Create new sequence, checking third line for correct type
                 if (len(lines) > 2 and (lines[2].lower() == seq_type.lower() or lines[2] == '')) or (len(lines) <= 2 and seq_type == 'bgm'):
-                    seq = TableEntry(os.path.join(dirpath, fname.split('.')[0]), lines[0], instrument_set = int(lines[1], 16))
+                    seq = Sequence(os.path.join(dirpath, fname.split('.')[0]), lines[0], instrument_set = int(lines[1], 16))
 
                     if seq.instrument_set < 0x00 or seq.instrument_set > 0x25:
-                        raise Exception('Sequence instrument must be in range [0x00, 0x25]')
+                        raise Exception(f'{seq.name}: Sequence instrument must be in range [0x00, 0x25]')
+                    if seq.cosmetic_name == "None":
+                        raise Exception(f'{seq.name}: Sequences should not be named "None" as that is used for disabled music.')
+                    if seq.cosmetic_name in sequences:
+                        raise Exception(f'{seq.name} Sequence names should be unique. Duplicate sequence name: {seq.cosmetic_name}')
 
                     if seq.cosmetic_name not in disabled_source_sequences:
-                        sequences.append(seq)
+                        sequences[seq.cosmetic_name] = seq
 
-    return sequences, target_sequences
+                    if len(lines) >= 4:
+                        seq_groups = lines[3].split(',')
+                        for group in seq_groups:
+                            group = group.strip()
+                            if group not in groups:
+                                groups[group] = []
+                            groups[group].append(seq.cosmetic_name)
+
+    return sequences, target_sequences, groups
 
 
 def shuffle_music(log, source_sequences, target_sequences, music_mapping, type="music"):
     sequences = []
-    sequence_ids = []
-    sequence_dict = {}
     favorites = log.src_dict.get('bgm_groups', {}).get('favorites', []).copy()
 
     if not source_sequences:
         raise Exception(f"Not enough custom {type} ({len(source_sequences)}) to omit base Ocarina of Time sequences ({len(target_sequences)}).")
 
-    for sequence in source_sequences:
-        if sequence.cosmetic_name == "None":
-            raise Exception('Sequences should not be named "None" as that is used for disabled music. Sequence with improper name: %s' % sequence.name)
-        if sequence.cosmetic_name in sequence_dict:
-            raise Exception('Sequence names should be unique. Duplicate sequence name: %s' % sequence.cosmetic_name)
-        sequence_dict[sequence.cosmetic_name] = sequence
-        if sequence.cosmetic_name not in music_mapping.values():
-            sequence_ids.append(sequence.cosmetic_name)
-
     # Shuffle the sequences
+    sequence_ids = [name for name in source_sequences.keys() if name not in music_mapping.values()]
     random.shuffle(sequence_ids)
     sequence_ids.sort(key=lambda name: name not in favorites)
-    del sequence_ids[len([target_sequence for target_sequence in target_sequences if target_sequence.cosmetic_name not in music_mapping]):]
+    del sequence_ids[len([name for name in target_sequences.keys() if name not in music_mapping]):]
     random.shuffle(sequence_ids)
 
     refill_needed = False
-    for target_sequence in target_sequences:
+    for name, target_sequence in target_sequences.items():
         if target_sequence.cosmetic_name not in music_mapping:
             # If we've run out of sequences to place, refill sequence_ids
             if not sequence_ids:
                 refill_needed = True
-                sequence_ids = [sequence.cosmetic_name for sequence in source_sequences]
+                sequence_ids = [name for name in source_sequences.keys()]
                 random.shuffle(sequence_ids)
-            sequence = sequence_dict[sequence_ids.pop()].copy()
+            sequence = source_sequences[sequence_ids.pop()].copy()
         else:
-            sequence = sequence_dict[music_mapping[target_sequence.cosmetic_name]].copy()
+            sequence = source_sequences[music_mapping[target_sequence.cosmetic_name]].copy()
         sequences.append(sequence)
         sequence.replaces = target_sequence.replaces
         log.bgm[target_sequence.cosmetic_name] = sequence.cosmetic_name
@@ -225,7 +238,7 @@ def rebuild_sequences(rom, sequences):
 
     for i in range(0x6E):
         # Create new sequence object, an entry for the audio sequence
-        entry = Sequence()
+        entry = SequenceData()
         # Get the address for the entry's pointer table entry
         entry_address = 0xB89AE0 + (i * 0x10)
         # Extract the info from the pointer table entry
@@ -237,7 +250,7 @@ def rebuild_sequences(rom, sequences):
             entry.data = rom.read_bytes(entry.address + 0x029DE0, entry.size)
         else:
             s = [seq for seq in sequences if seq.replaces == i]
-            if s != [] and entry.address > 0 and entry.address < 128:
+            if s and entry.address > 0 and entry.address < 128:
                 s = s.pop()
                 if s.replaces != 0x28:
                     s.replaces = entry.address
@@ -255,7 +268,7 @@ def rebuild_sequences(rom, sequences):
     new_audio_sequence = []
 
     for i in range(0x6E):
-        new_entry = Sequence()
+        new_entry = SequenceData()
         # If sequence size is 0, the address doesn't matter and it doesn't effect the current address
         if old_sequences[i].size == 0:
             new_entry.address = old_sequences[i].address
@@ -264,7 +277,7 @@ def rebuild_sequences(rom, sequences):
             new_entry.address = address
 
         s = [seq for seq in sequences if seq.replaces == i]
-        if s != []:
+        if s:
             assert len(s) == 1
             s = s.pop()
             # If we are using a vanilla sequence, get its data from old_sequences
@@ -342,52 +355,11 @@ def rebuild_sequences(rom, sequences):
             rom.write_byte(base, j.instrument_set)
 
 
-def shuffle_pointers_table(rom, log, ids, music_mapping, disabled_source_sequences, disabled_target_sequences):
-    # Read in all the Music data
-    bgm_data = {}
-    bgm_ids = []
-    favorites = log.src_dict.get('bgm_groups', {}).get('favorites', []).copy()
-
-    for bgm in ids:
-        bgm_sequence = rom.read_bytes(0xB89AE0 + (bgm[1] * 0x10), 0x10)
-        bgm_instrument = rom.read_int16(0xB89910 + 0xDD + (bgm[1] * 2))
-        bgm_data[bgm[0]] = (bgm[0], bgm_sequence, bgm_instrument)
-        if bgm[0] not in music_mapping.values():
-            bgm_ids.append(bgm[0])
-
-    # shuffle data
-    random.shuffle(bgm_ids)
-    bgm_ids.sort(key=lambda name: 10 if name in disabled_source_sequences else 1 if name not in favorites else 0)
-    del bgm_ids[len([bgm for bgm in ids if bgm[0] not in disabled_target_sequences]):]
-    random.shuffle(bgm_ids)
-
-    # Write Music data back in random ordering
-    for bgm in ids:
-        if bgm[0] in disabled_target_sequences:
-            continue
-        if music_mapping.get(bgm[0], '') in bgm_data:
-            bgm_name = music_mapping[bgm[0]]
-        else:
-            bgm_name = bgm_ids.pop()
-        bgm_name, bgm_sequence, bgm_instrument = bgm_data[bgm_name]
-        rom.write_bytes(0xB89AE0 + (bgm[1] * 0x10), bgm_sequence)
-        rom.write_int16(0xB89910 + 0xDD + (bgm[1] * 2), bgm_instrument)
-        log.bgm[bgm[0]] = bgm_name
-
-    # Write Fairy Fountain instrument to File Select (uses same track but different instrument set pointer for some reason)
-    rom.write_int16(0xB89910 + 0xDD + (0x57 * 2), rom.read_int16(0xB89910 + 0xDD + (0x28 * 2)))
-
-
 def randomize_music(rom, settings, log):
-    sequences = []
-    target_sequences = []
-    fanfare_sequences = []
-    fanfare_target_sequences = []
-    disabled_target_sequences = {}
-
-    # Make sure we aren't operating directly on these.
+    shuffled_sequences = shuffled_fanfare_sequences = []
+    sequences = fanfare_sequences = target_sequences = target_fanfare_sequences = bgm_groups = fanfare_groups = {}
     disabled_source_sequences = log.src_dict.get('bgm_groups', {}).get('exclude', []).copy()
-    groups = log.src_dict.get('bgm_groups', {}).get('groups', {}).copy()
+    disabled_target_sequences = {}
     music_mapping = log.src_dict.get('bgm', {}).copy()
     bgm_ids = bgm_sequence_ids.copy()
     ff_ids = fanfare_sequence_ids.copy()
@@ -412,31 +384,6 @@ def randomize_music(rom, settings, log):
     # Include ocarina songs in fanfare pool if checked
     if settings.ocarina_fanfares or ocarina_mapped:
         ff_ids.extend(ocarina_sequence_ids)
-
-    # Handle music plando groups.
-    for target, source in music_mapping.items():
-        if isinstance(source, list):
-            random.shuffle(source)
-            source = music_mapping[target] = source.pop()
-
-        if not source.startswith('#'):
-            continue
-        group_name = source[1:]
-        group = groups.get(group_name, None)
-
-        # Check if group exists.
-        if group is None:
-            continue
-
-        # Check if we need to refill this group from the source dictionary.
-        if not group:
-            groups[group_name] = log.src_dict.get('bgm_groups', {}).get('groups', {}).get(group_name, []).copy()
-            group = groups[group_name]
-            if not group:
-                continue
-
-        random.shuffle(group)
-        music_mapping[target] = group.pop()
 
     # Flag sequence locations that are set to off for disabling.
     disabled_ids = []
@@ -465,26 +412,56 @@ def randomize_music(rom, settings, log):
         if bgm[0] not in music_mapping:
             music_mapping[bgm[0]] = bgm[0]
 
-    if custom_sequences_enabled:
-        if settings.background_music in ['random', 'random_custom_only'] or bgm_mapped:
-            process_sequences(rom, sequences, target_sequences, disabled_source_sequences, disabled_target_sequences, bgm_ids)
-            if settings.background_music == 'random_custom_only':
-                sequences = [seq for seq in sequences if seq.cosmetic_name not in [x[0] for x in bgm_ids] or seq.cosmetic_name in music_mapping.values()]
-            sequences = shuffle_music(log, sequences, target_sequences, music_mapping)
+    # Grab our lists of sequences.
+    if settings.background_music in ['random', 'random_custom_only'] or bgm_mapped:
+        sequences, target_sequences, bgm_groups = process_sequences(rom, bgm_ids, 'bgm', disabled_source_sequences, disabled_target_sequences, custom_sequences_enabled)
+        if settings.background_music == 'random_custom_only':
+            sequences = {name: seq for name, seq in sequences.items() if name not in [x[0] for x in bgm_ids] or name in music_mapping.values()}
 
-        if settings.fanfares in ['random', 'random_custom_only'] or ff_mapped or ocarina_mapped:
-            process_sequences(rom, fanfare_sequences, fanfare_target_sequences, disabled_source_sequences, disabled_target_sequences, ff_ids, 'fanfare')
-            if settings.fanfares == 'random_custom_only':
-                fanfare_sequences = [seq for seq in fanfare_sequences if seq.cosmetic_name not in [x[0] for x in fanfare_sequence_ids] or seq.cosmetic_name in music_mapping.values()]
-            fanfare_sequences = shuffle_music(log, fanfare_sequences, fanfare_target_sequences, music_mapping, "fanfares")
+    if settings.fanfares in ['random', 'random_custom_only'] or ff_mapped or ocarina_mapped:
+        fanfare_sequences, target_fanfare_sequences, fanfare_groups = process_sequences(rom, ff_ids, 'fanfare', disabled_source_sequences, disabled_target_sequences, custom_sequences_enabled)
+        if settings.fanfares == 'random_custom_only':
+            fanfare_sequences = {name: seq for name, seq in fanfare_sequences.items() if name not in [x[0] for x in fanfare_sequence_ids] or name in music_mapping.values()}
 
-        rebuild_sequences(rom, sequences + fanfare_sequences)
-    else:
-        if settings.background_music in ['random', 'random_custom_only'] or bgm_mapped:
-            shuffle_pointers_table(rom, log, bgm_ids, music_mapping, disabled_source_sequences, disabled_target_sequences)
+    # Handle groups.
+    valid_sequences = [n for n in itertools.chain(sequences.keys(), fanfare_sequences.keys())]
+    plando_groups = {n: s for n, s in log.src_dict.get('bgm_groups', {}).get('groups', {}).items()}
+    groups_full = {n: [ns for ns in s if ns in valid_sequences] for n, s in itertools.chain(fanfare_groups.items(), bgm_groups.items(), plando_groups.items())}
+    groups = {n: s.copy() for n, s in groups_full.items()}
+    for target, source in music_mapping.copy().items():
+        if isinstance(source, list):
+            random.shuffle(source)
+            source = music_mapping[target] = source.pop()
 
-        if settings.fanfares in ['random', 'random_custom_only'] or ff_mapped or ocarina_mapped:
-            shuffle_pointers_table(rom, log, ff_ids, music_mapping, disabled_source_sequences, disabled_target_sequences)
+        group = group_name = None
+        if source.startswith('#'):
+            group_name = source[1:]
+            group = groups.get(group_name, None)
+
+        # Check if group exists.
+        if group is not None:
+            # Check if we need to refill this group from the source dictionary.
+            if not group:
+                groups[group_name] = groups_full.get(group_name, []).copy()
+                group = groups[group_name]
+
+            if group:
+                random.shuffle(group)
+                source = music_mapping[target] = group.pop()
+
+        # Check if mapped sequence exists.
+        if source not in valid_sequences:
+            del music_mapping[target]
+            log.errors.append(f"Sequence '{source}' mapped to '{target}' was not found.")
+
+    # Shuffle the sequences.
+    if sequences and target_sequences:
+        shuffled_sequences = shuffle_music(log, sequences, target_sequences, music_mapping)
+    if fanfare_sequences and target_fanfare_sequences:
+        shuffled_fanfare_sequences = shuffle_music(log, fanfare_sequences, target_fanfare_sequences, music_mapping, "fanfares")
+
+    # Patch the randomized sequences into the ROM.
+    rebuild_sequences(rom, shuffled_sequences + shuffled_fanfare_sequences)
 
     if disabled_target_sequences:
         disable_music(rom, log, disabled_target_sequences.values())
