@@ -23,7 +23,7 @@ extern uint8_t MW_SEND_OWN_ITEMS;
 extern override_key_t OUTGOING_KEY;
 extern uint16_t OUTGOING_ITEM;
 extern uint16_t OUTGOING_PLAYER;
-uint16_t drop_collectible_override_flag = 0;
+uint16_t drop_collectible_override_flag = 0; // Flag used by hacks in Item_DropCollectible to override the item being dropped. Set it to the flag for the overridden item.
 
 override_t active_override = { 0 };
 int active_override_is_outgoing = 0;

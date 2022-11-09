@@ -2778,6 +2778,8 @@ def patch_actor_override(location, rom: Rom):
         for address in addresses:
             rom.write_bytes(address, patch)
 
+# Patch rupee towers (circular patterns of rupees) to include their flag in their actor initialization data z rotation.
+# Also used for goron pot, shadow spinning pots
 def patch_rupee_tower(location, rom: Rom):
     flag = location.default
     if(isinstance(location.default, tuple)):
