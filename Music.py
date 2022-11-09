@@ -171,11 +171,11 @@ def process_sequences(rom, ids, seq_type='bgm', disabled_source_sequences=None, 
                     # Strip newline(s)
                     lines = [line.rstrip() for line in lines]
                 except FileNotFoundError as ex:
-                    raise FileNotFoundError('No meta file for: "' + fname + '". This should never happen')
+                    raise FileNotFoundError(f'No meta file for: "{fname}". This should never happen')
 
                 # Create new sequence, checking third line for correct type
                 if (len(lines) > 2 and (lines[2].lower() == seq_type.lower() or lines[2] == '')) or (len(lines) <= 2 and seq_type == 'bgm'):
-                    seq = Sequence(os.path.join(dirpath, fname.split('.')[0]), lines[0], instrument_set = int(lines[1], 16))
+                    seq = Sequence(os.path.join(dirpath, fname[:-5]), lines[0], instrument_set = int(lines[1], 16))
 
                     if seq.instrument_set < 0x00 or seq.instrument_set > 0x25:
                         raise Exception(f'{seq.name}: Sequence instrument must be in range [0x00, 0x25]')
@@ -233,6 +233,7 @@ def shuffle_music(log, source_sequences, target_sequences, music_mapping, type="
 
 
 def rebuild_sequences(rom, sequences):
+    replacement_dict = {seq.replaces: seq for seq in sequences}
     # List of sequences (actual sequence data objects) containing the vanilla sequence data
     old_sequences = []
 
@@ -249,11 +250,10 @@ def rebuild_sequences(rom, sequences):
         if entry.size > 0:
             entry.data = rom.read_bytes(entry.address + 0x029DE0, entry.size)
         else:
-            s = [seq for seq in sequences if seq.replaces == i]
-            if s and entry.address > 0 and entry.address < 128:
-                s = s.pop()
-                if s.replaces != 0x28:
-                    s.replaces = entry.address
+            seq = replacement_dict.get(i, None)
+            if seq and 0 < entry.address < 128:
+                if seq.replaces != 0x28:
+                    seq.replaces = entry.address
                 else:
                     # Special handling for file select/fairy fountain
                     entry.data = old_sequences[0x57].data
@@ -276,25 +276,23 @@ def rebuild_sequences(rom, sequences):
         else:
             new_entry.address = address
 
-        s = [seq for seq in sequences if seq.replaces == i]
-        if s:
-            assert len(s) == 1
-            s = s.pop()
+        seq = replacement_dict.get(i, None)
+        if seq:
             # If we are using a vanilla sequence, get its data from old_sequences
-            if s.vanilla_id != -1:
-                new_entry.size = old_sequences[s.vanilla_id].size
-                new_entry.data = old_sequences[s.vanilla_id].data
+            if seq.vanilla_id != -1:
+                new_entry.size = old_sequences[seq.vanilla_id].size
+                new_entry.data = old_sequences[seq.vanilla_id].data
             else:
                 # Read sequence info
                 try:
-                    with open(s.name + '.seq', 'rb') as stream:
+                    with open(f'{seq.name}.seq', 'rb') as stream:
                         new_entry.data = bytearray(stream.read())
                     new_entry.size = len(new_entry.data)
                     if new_entry.size <= 0x10:
-                        raise Exception('Invalid sequence file "' + s.name + '.seq"')
+                        raise Exception(f'Invalid sequence file "{seq.name}.seq"')
                     new_entry.data[1] = 0x20
                 except FileNotFoundError as ex:
-                    raise FileNotFoundError('No sequence file for: "' + s.name + '"')
+                    raise FileNotFoundError(f'No sequence file for: "{seq.name}"')
         else:
             new_entry.size = old_sequences[i].size
             new_entry.data = old_sequences[i].data
@@ -311,45 +309,41 @@ def rebuild_sequences(rom, sequences):
             # Increment the current address by the size of the new sequence
             address += new_entry.size
 
+    new_address = 0x029DE0
     # Check if the new audio sequence is larger than the vanilla one
     if address > 0x04F690:
         # Zero out the old audio sequence
         rom.buffer[0x029DE0 : 0x029DE0 + 0x04F690] = [0] * 0x04F690
 
-        # Append new audio sequence
+        # Find free space and update dmatable
         new_address = rom.free_space()
-        rom.write_bytes(new_address, new_audio_sequence)
-
-        #Update dmatable
         rom.update_dmadata_record(0x029DE0, new_address, new_address + address)
 
-    else:
-        # Write new audio sequence file
-        rom.write_bytes(0x029DE0, new_audio_sequence)
+    # Write new audio sequence file
+    rom.write_bytes(new_address, new_audio_sequence)
 
     # Update pointer table
     for i in range(0x6E):
         rom.write_int32(0xB89AE0 + (i * 0x10), new_sequences[i].address)
         rom.write_int32(0xB89AE0 + (i * 0x10) + 0x04, new_sequences[i].size)
-        s = [seq for seq in sequences if seq.replaces == i]
-        if s != []:
-            assert len(s) == 1
-            s = s.pop()
-            rom.write_int16(0xB89AE0 + (i * 0x10) + 0x08, s.type)
+        seq = [seq for seq in sequences if seq.replaces == i]
+        if seq:
+            assert len(seq) == 1
+            seq = seq.pop()
+            rom.write_int16(0xB89AE0 + (i * 0x10) + 0x08, seq.type)
 
     # Update instrument sets
     for i in range(0x6E):
         base = 0xB89911 + 0xDD + (i * 2)
-        j = -1
         if new_sequences[i].size == 0:
             try:
                 j = [seq for seq in sequences if seq.replaces == new_sequences[i].address].pop()
-            except:
+            except IndexError:
                 j = -1
         else:
             try:
                 j = [seq for seq in sequences if seq.replaces == i].pop()
-            except:
+            except IndexError:
                 j = -1
         if j != -1:
             rom.write_byte(base, j.instrument_set)
