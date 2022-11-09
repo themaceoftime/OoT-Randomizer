@@ -170,6 +170,13 @@ class Rom(BigStream):
         self.force_patch.extend([0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x35, 0x36, 0x37])
 
 
+    def read_version_bytes(self):
+        version_bytes = self.read_bytes(0x19, 5)
+        if version_bytes[0] == 0:
+            version_bytes = self.read_bytes(0x35, 3)
+        return version_bytes
+
+
     def read_rom(self, file):
         # "Reads rom into bytearray"
         try:
