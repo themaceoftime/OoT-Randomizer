@@ -326,26 +326,15 @@ def rebuild_sequences(rom, sequences):
     for i in range(0x6E):
         rom.write_int32(0xB89AE0 + (i * 0x10), new_sequences[i].address)
         rom.write_int32(0xB89AE0 + (i * 0x10) + 0x04, new_sequences[i].size)
-        seq = [seq for seq in sequences if seq.replaces == i]
+        seq = replacement_dict.get(i, None)
         if seq:
-            assert len(seq) == 1
-            seq = seq.pop()
             rom.write_int16(0xB89AE0 + (i * 0x10) + 0x08, seq.type)
 
     # Update instrument sets
     for i in range(0x6E):
         base = 0xB89911 + 0xDD + (i * 2)
-        if new_sequences[i].size == 0:
-            try:
-                j = [seq for seq in sequences if seq.replaces == new_sequences[i].address].pop()
-            except IndexError:
-                j = -1
-        else:
-            try:
-                j = [seq for seq in sequences if seq.replaces == i].pop()
-            except IndexError:
-                j = -1
-        if j != -1:
+        j = replacement_dict.get(i if new_sequences[i].size else new_sequences[i].address, None)
+        if j:
             rom.write_byte(base, j.instrument_set)
 
 
@@ -435,7 +424,9 @@ def randomize_music(rom, settings, log):
             groups_alias = ff_groups
             sequences_alias = fanfare_sequences
         else:
-            raise Exception("Something bad happened here.")
+            log.error.append(f'Target sequence "{target}" from plando file is invalid.')
+            del music_mapping[target]
+            continue
 
         if isinstance(source, list):
             random.shuffle(source)
