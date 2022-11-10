@@ -348,17 +348,20 @@ def randomize_music(rom, settings, log):
     ff_ids = {bgm[0]: bgm for bgm in fanfare_sequence_ids}
     ocarina_ids = {bgm[0]: bgm for bgm in ocarina_sequence_ids}
 
-    # If not creating patch file, shuffle audio sequences. Otherwise, shuffle pointer table
-    # If generating from patch, also do a version check to make sure custom sequences are supported.
+    # If generating a patch file, disallow custom sequences.
     custom_sequences_enabled = not settings.disable_custom_music
+    if not custom_sequences_enabled and (settings.background_music == 'random_custom_only' or settings.fanfares == 'random_custom_only'):
+        log.errors.append("Custom music is disabled when creating patch files. Only randomizing vanilla music.")
+
+    # If generating from patch, do a version check to make sure custom sequences are supported.
     if settings.patch_file != '':
         rom_version_bytes = rom.read_version_bytes()
         rom_version = f'{rom_version_bytes[0]}.{rom_version_bytes[1]}.{rom_version_bytes[2]}'
         if compare_version(rom_version, '4.11.13') < 0:
+            rom.write_bytes(0xB2E82C, [0x3C, 0x05, 0x80, 0x01, 0x8C, 0xA5, 0xB1, 0x88])  # Load Audioseq using dmadata
+            rom.write_bytes(0xB2E854, [0x3C, 0x05, 0x80, 0x01, 0x8C, 0xA5, 0xB1, 0x98])  # Load Audiotable using dmadata
             log.errors.append("Custom music is not supported by this patch version. Only randomizing vanilla music.")
             custom_sequences_enabled = False
-    elif not custom_sequences_enabled and (settings.background_music == 'random_custom_only' or settings.fanfares == 'random_custom_only'):
-        log.errors.append("Custom music is disabled when creating patch files. Only randomizing vanilla music.")
 
     # Check if we have mapped music for BGM, Fanfares, or Ocarina Fanfares
     bgm_mapped = any(name in music_mapping for name in bgm_ids)

@@ -172,8 +172,10 @@ class Rom(BigStream):
 
     def read_version_bytes(self):
         version_bytes = self.read_bytes(0x19, 5)
-        if version_bytes[0] == 0:
-            version_bytes = self.read_bytes(0x35, 3)
+        secondary_version_bytes = self.read_bytes(0x35, 3)
+        for i in range(3):
+            if secondary_version_bytes[i] != version_bytes[i]:
+                return secondary_version_bytes
         return version_bytes
 
 
