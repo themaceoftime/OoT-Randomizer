@@ -7,7 +7,7 @@ from Utils import compare_version, data_path
 
 
 # Format: (Title, Sequence ID)
-bgm_sequence_ids = [
+bgm_sequence_ids = (
     ("Hyrule Field", 0x02),
     ("Dodongos Cavern", 0x18),
     ("Kakariko Adult", 0x19),
@@ -55,9 +55,9 @@ bgm_sequence_ids = [
     ("Ganon Battle", 0x65),
     ("Fire Boss", 0x6B),
     ("Mini-game", 0x6C)
-]
+)
 
-fanfare_sequence_ids = [
+fanfare_sequence_ids = (
     ("Game Over", 0x20),
     ("Boss Defeated", 0x21),
     ("Item Get", 0x22),
@@ -73,9 +73,9 @@ fanfare_sequence_ids = [
     ("Zelda Turns Around", 0x51),
     ("Master Sword", 0x53),
     ("Door of Time", 0x59)
-]
+)
 
-ocarina_sequence_ids = [
+ocarina_sequence_ids = (
     ("Prelude of Light", 0x25),
     ("Bolero of Fire", 0x33),
     ("Minuet of Forest", 0x34),
@@ -88,7 +88,7 @@ ocarina_sequence_ids = [
     ("Sun's Song", 0x47),
     ("Song of Time", 0x48),
     ("Song of Storms", 0x49)
-]
+)
 
 
 # Represents the information associated with a sequence, aside from the sequence data itself
@@ -355,8 +355,9 @@ def randomize_music(rom, settings, log):
     disabled_source_sequences = log.src_dict.get('bgm_groups', {}).get('exclude', []).copy()
     disabled_target_sequences = {}
     music_mapping = log.src_dict.get('bgm', {}).copy()
-    bgm_ids = bgm_sequence_ids.copy()
-    ff_ids = fanfare_sequence_ids.copy()
+    bgm_ids = {bgm[0]: bgm for bgm in bgm_sequence_ids}
+    ff_ids = {bgm[0]: bgm for bgm in fanfare_sequence_ids}
+    ocarina_ids = {bgm[0]: bgm for bgm in ocarina_sequence_ids}
 
     # If not creating patch file, shuffle audio sequences. Otherwise, shuffle pointer table
     # If generating from patch, also do a version check to make sure custom sequences are supported.
@@ -371,22 +372,19 @@ def randomize_music(rom, settings, log):
         log.errors.append("Custom music is disabled when creating patch files. Only randomizing vanilla music.")
 
     # Check if we have mapped music for BGM, Fanfares, or Ocarina Fanfares
-    bgm_mapped = any(bgm[0] in music_mapping for bgm in bgm_ids)
-    ff_mapped = any(ff[0] in music_mapping for ff in ff_ids)
-    ocarina_mapped = any(ocarina[0] in music_mapping for ocarina in ocarina_sequence_ids)
-
-    # Include ocarina songs in fanfare pool if checked
-    if settings.ocarina_fanfares or ocarina_mapped:
-        ff_ids.extend(ocarina_sequence_ids)
+    bgm_mapped = any(name in music_mapping for name in bgm_ids)
+    ff_mapped = any(name in music_mapping for name in ff_ids)
+    ocarina_mapped = any(name in music_mapping for name in ocarina_ids)
 
     # Flag sequence locations that are set to off for disabling.
     disabled_ids = []
     if settings.background_music == 'off':
-        disabled_ids += [music_id for music_id in bgm_ids]
+        disabled_ids += [music_id for music_id in bgm_ids.values()]
     if settings.fanfares == 'off':
-        disabled_ids += [music_id for music_id in ff_ids]
-        disabled_ids += [music_id for music_id in ocarina_sequence_ids]
-    for bgm in [music_id for music_id in bgm_ids + ff_ids + ocarina_sequence_ids]:
+        disabled_ids += [music_id for music_id in ff_ids.values()]
+        if settings.ocarina_fanfares:
+            disabled_ids += [music_id for music_id in ocarina_ids.values()]
+    for bgm in itertools.chain(bgm_ids.values(), ff_ids.values(), ocarina_ids.values()):
         if music_mapping.get(bgm[0], '') == "None":
             disabled_target_sequences[bgm[0]] = bgm
     for bgm in disabled_ids:
@@ -397,32 +395,48 @@ def randomize_music(rom, settings, log):
     # Map music to itself if music is set to normal.
     normal_ids = []
     if settings.background_music == 'normal' and bgm_mapped:
-        normal_ids += [music_id for music_id in bgm_ids]
+        normal_ids += [music_id for music_id in bgm_ids.values()]
     if settings.fanfares == 'normal' and (ff_mapped or ocarina_mapped):
-        normal_ids += [music_id for music_id in ff_ids]
-    if not settings.ocarina_fanfares and settings.fanfares == 'normal' and ocarina_mapped:
-        normal_ids += [music_id for music_id in ocarina_sequence_ids]
+        normal_ids += [music_id for music_id in ff_ids.values()]
+    if settings.fanfares == 'normal' and ocarina_mapped:
+        normal_ids += [music_id for music_id in ocarina_ids.values()]
     for bgm in normal_ids:
         if bgm[0] not in music_mapping:
             music_mapping[bgm[0]] = bgm[0]
 
+    # Include ocarina songs in fanfare pool if checked
+    if settings.ocarina_fanfares or ocarina_mapped:
+        ff_ids.update(ocarina_ids)
+
     # Grab our lists of sequences.
     if settings.background_music in ['random', 'random_custom_only'] or bgm_mapped:
-        sequences, target_sequences, bgm_groups = process_sequences(rom, bgm_ids, 'bgm', disabled_source_sequences, disabled_target_sequences, custom_sequences_enabled)
+        sequences, target_sequences, bgm_groups = process_sequences(rom, bgm_ids.values(), 'bgm', disabled_source_sequences, disabled_target_sequences, custom_sequences_enabled)
         if settings.background_music == 'random_custom_only':
-            sequences = {name: seq for name, seq in sequences.items() if name not in [x[0] for x in bgm_ids] or name in music_mapping.values()}
+            sequences = {name: seq for name, seq in sequences.items() if name not in bgm_ids or name in music_mapping.values()}
 
     if settings.fanfares in ['random', 'random_custom_only'] or ff_mapped or ocarina_mapped:
-        fanfare_sequences, target_fanfare_sequences, fanfare_groups = process_sequences(rom, ff_ids, 'fanfare', disabled_source_sequences, disabled_target_sequences, custom_sequences_enabled)
+        fanfare_sequences, target_fanfare_sequences, fanfare_groups = process_sequences(rom, ff_ids.values(), 'fanfare', disabled_source_sequences, disabled_target_sequences, custom_sequences_enabled)
         if settings.fanfares == 'random_custom_only':
-            fanfare_sequences = {name: seq for name, seq in fanfare_sequences.items() if name not in [x[0] for x in fanfare_sequence_ids] or name in music_mapping.values()}
+            fanfare_sequences = {name: seq for name, seq in fanfare_sequences.items() if name not in ff_ids or name in music_mapping.values()}
 
     # Handle groups.
-    valid_sequences = [n for n in itertools.chain(sequences.keys(), fanfare_sequences.keys())]
     plando_groups = {n: s for n, s in log.src_dict.get('bgm_groups', {}).get('groups', {}).items()}
-    groups_full = {n: [ns for ns in s if ns in valid_sequences] for n, s in itertools.chain(fanfare_groups.items(), bgm_groups.items(), plando_groups.items())}
-    groups = {n: s.copy() for n, s in groups_full.items()}
+    bgm_groups_full = {n: [ns for ns in s if ns in sequences] for n, s in itertools.chain(bgm_groups.items(), plando_groups.items())}
+    ff_groups_full = {n: [ns for ns in s if ns in fanfare_sequences] for n, s in itertools.chain(fanfare_groups.items(), plando_groups.items())}
+    bgm_groups = {n: s.copy() for n, s in bgm_groups_full.items()}
+    ff_groups = {n: s.copy() for n, s in ff_groups_full.items()}
     for target, source in music_mapping.copy().items():
+        if target in bgm_ids:
+            groups_full_alias = bgm_groups_full
+            groups_alias = bgm_groups
+            sequences_alias = sequences
+        elif target in ff_ids:
+            groups_full_alias = ff_groups_full
+            groups_alias = ff_groups
+            sequences_alias = fanfare_sequences
+        else:
+            raise Exception("Something bad happened here.")
+
         if isinstance(source, list):
             random.shuffle(source)
             source = music_mapping[target] = source.pop()
@@ -430,21 +444,21 @@ def randomize_music(rom, settings, log):
         group = group_name = None
         if source.startswith('#'):
             group_name = source[1:]
-            group = groups.get(group_name, None)
+            group = groups_alias.get(group_name, None)
 
         # Check if group exists.
         if group is not None:
             # Check if we need to refill this group from the source dictionary.
             if not group:
-                groups[group_name] = groups_full.get(group_name, []).copy()
-                group = groups[group_name]
+                groups_alias[group_name] = groups_full_alias.get(group_name, []).copy()
+                group = groups_alias[group_name]
 
             if group:
                 random.shuffle(group)
                 source = music_mapping[target] = group.pop()
 
         # Check if mapped sequence exists.
-        if source not in valid_sequences:
+        if source not in sequences_alias:
             del music_mapping[target]
             log.errors.append(f"Sequence '{source}' mapped to '{target}' was not found.")
 
