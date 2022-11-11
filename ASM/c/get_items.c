@@ -101,7 +101,7 @@ override_key_t get_override_search_key(z64_actor_t *actor, uint8_t scene, uint8_
         uint16_t flag = item->actor.rot_init.y;
         if(flag > 0) 
         {
-            flag += curr_scene_setup << 14;
+            flag |= curr_scene_setup << 14;
             if (scene == 0x19) {
                 scene = 0x0A;
             }
