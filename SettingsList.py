@@ -2204,10 +2204,11 @@ setting_infos = [
             wish to dive right in. Uses base glitchless logic. Most timesavers (See the tab "Other") 
             are enabled and the world is more open after leaving Kokiri Forest.
 
-            Hell Mode enables every setting to provide maximum randomness, but still uses glitchless
-            logic to ensure a beatable seed. However, be aware that all glitchless "tricks" are enabled
-            which have the potential to require the player to perform difficult techniques. 
-            Expect a long playthrough, even with good note-taking.
+            Hell Mode is designed to be as frustrating an experience as possible, with every setting enabled
+            to provide maximum randomness as well as things like one-hit-KO, one-bonk-KO and max ice traps.
+            It still uses glitchless logic to ensure a beatable seed. However, be aware that all glitchless 
+            "tricks" are enabled which have the potential to require the player to perform difficult techniques. 
+            Expect a long and painful playthrough, even with good note-taking.
 
             The other presets are for racing and/or tournaments. 
 
