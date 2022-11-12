@@ -2030,11 +2030,11 @@ setting_infos = [
         gui_tooltip    = '''\
             Select a setting preset to apply.
 
-            Default/Beginner is aimed at those familiar with vanilla who desire a similar progression.
+            Default/Beginner is aimed at those familiar with the vanilla game who desire a similar progression.
             Uses base glitchless logic. No timesavers (See the tab "Other") are enabled in this preset 
             and the world begins closed. Expect a long playthrough.
 
-            Easy Mode is aimed and those who have perhaps seen a few randomizer runs previously and/or 
+            Easy Mode is aimed at those who have perhaps seen a few randomizer runs previously and/or 
             wish to dive right in. Uses base glitchless logic. Most timesavers (See the tab "Other") 
             are enabled and the world is more open after leaving Kokiri Forest.
 
