@@ -144,7 +144,11 @@ issue. You should always Hard Reset to avoid this issue entirely.
   * New setting `Fix Broken Drops` adds a magic jar drop in GTG and a pot that drops a deku shield in Spirit Temple. These spawns were present in the code already but would not actually spawn due to the respective objects not being loaded.
   * New settings `Adult Link Model` and `Child Link Model` allow you to select a .zobj model file to replace Link's look in-game. For more details see the [Custom Models section](#Custom-Models)
   * New section under SFX labeled `Link` has options `Adult Voice` and `Child Voice`, allowing you to choose to either silence Link or change the voice to feminine to match your chosen player model. Adult and child female voices provided by Maple and shiroaeli in the Discord, respectively.
-   * New Misc. Hints for each of the Skulltula rewards makes it so each of the cursed family members who give a randomized reward will tell you what the reward is before being rescued. This precludes those locations from being conditional always hints.
+  * New Misc. Hints for each of the Skulltula rewards makes it so each of the cursed family members who give a randomized reward will tell you what the reward is before being rescued. This precludes those locations from being conditional always hints.
+  * New setting `Shuffle Rupees & Hearts` which allows you to shuffle freestanding rupees and recovery hearts in the world.
+  * New settings `Shuffle Pots` and `Shuffle Crates` which allows you to shuffle items from pots and crates that normally drop an item.
+  * New setting `Pot & Crate Appearance Matches Contents` which changes the pot/crate texture when using one of the above settings, similar to `Chest Appearance Matches Contents`.
+  * New setting `Shuffle Beehives` which allows beehives found in certain grottos to drop an item.
 
 * **Gameplay**
   * Shortened the animation for equipping magic arrows.
