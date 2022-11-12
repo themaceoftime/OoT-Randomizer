@@ -2025,30 +2025,9 @@ setting_infos = [
     ),
 
     # GUI Settings
-    Setting_Info('presets',           str, "", "Presetinput", False, {},
-        default        = "[New Preset]",
-        gui_tooltip    = '''\
-            Select a setting preset to apply.
 
-            Default/Beginner is aimed at those familiar with the vanilla game who desire a similar progression.
-            Uses base glitchless logic. No timesavers (See the tab "Other") are enabled in this preset 
-            and the world begins closed. Expect a long playthrough.
+    # ROM Options
 
-            Easy Mode is aimed at those who have perhaps seen a few randomizer runs previously and/or 
-            wish to dive right in. Uses base glitchless logic. Most timesavers (See the tab "Other") 
-            are enabled and the world is more open after leaving Kokiri Forest.
-
-            Hell Mode enables every setting to provide maximum randomness, but still uses glitchless
-            logic to ensure a beatable seed. However, be aware that all glitchless "tricks" are enabled
-            which have the potential to require the player to perform difficult techniques. 
-            Expect a long playthrough, even with good note-taking.
-
-            The other presets are for racing and/or tournaments. 
-
-            After a preset is loaded, the settings can be viewed/changed in the other tabs before
-            generating a seed.
-            ''',
-    ),
     Setting_Info('open_output_dir',   str, "Open Output Directory", "Button", False, {},
         gui_params = {
             'function' : "openOutputDir",
@@ -2209,6 +2188,33 @@ setting_infos = [
             "hide_when_disabled" : True,
         }
     ),
+    Setting_Info('presets',           str, "", "Presetinput", False, {},
+        default        = "[New Preset]",
+        gui_tooltip    = '''\
+            Select a setting preset to apply.
+
+            Default/Beginner is aimed at those familiar with the vanilla game who desire a similar progression.
+            Uses base glitchless logic. No timesavers (See the tab "Other") are enabled in this preset 
+            and the world begins closed. Expect a long playthrough.
+
+            Easy Mode is aimed at those who have perhaps seen a few randomizer runs previously and/or 
+            wish to dive right in. Uses base glitchless logic. Most timesavers (See the tab "Other") 
+            are enabled and the world is more open after leaving Kokiri Forest.
+
+            Hell Mode enables every setting to provide maximum randomness, but still uses glitchless
+            logic to ensure a beatable seed. However, be aware that all glitchless "tricks" are enabled
+            which have the potential to require the player to perform difficult techniques. 
+            Expect a long playthrough, even with good note-taking.
+
+            The other presets are for racing and/or tournaments. 
+
+            After a preset is loaded, the settings can be viewed/changed in the other tabs before
+            generating a seed.
+            ''',
+    ),
+
+    # Main Rules (and "Guarantee Reachable Locations")
+
     Checkbutton(
         name           = 'randomize_settings',
         gui_text       = 'Randomize Main Rule Settings',
@@ -2235,6 +2241,876 @@ setting_infos = [
         },
         shared         = True,
     ),
+    Combobox(
+        name           = 'logic_rules',
+        gui_text       = 'Logic Rules',
+        default        = 'glitchless',
+        choices        = {
+            'glitchless': 'Glitchless',
+            'glitched':   'Glitched',
+            'none':       'No Logic',
+        },
+        gui_tooltip    = '''\
+            Logic provides guiding sets of rules for world generation
+            which the Randomizer uses to ensure the generated seeds 
+            are beatable.
+
+            'Glitchless': No glitches are required, but may require 
+            some minor tricks. Add minor tricks to consider for logic
+            in the 'Detailed Logic' tab.
+
+            'Glitched': Movement-oriented glitches are likely required.
+            No locations excluded.
+
+            'No Logic': Maximize randomization, All locations are 
+            considered available. MAY BE IMPOSSIBLE TO BEAT.
+        ''',
+        disable        = {
+            'glitchless': {'settings' : ['tricks_list_msg']},
+            'glitched'  : {'settings' : ['allowed_tricks', 'shuffle_interior_entrances', 'shuffle_grotto_entrances',
+                                         'shuffle_dungeon_entrances', 'shuffle_overworld_entrances', 'owl_drops',
+                                         'warp_songs', 'spawn_positions', 'mq_dungeons_mode', 'mq_dungeons_specific',
+                                         'mq_dungeons_count', 'shuffle_bosses', 'dungeon_shortcuts', 'deadly_bonks', 
+                                         'shuffle_freestanding_items', 'shuffle_pots', 'shuffle_crates', 'shuffle_beehives']},
+            'none'      : {'settings' : ['allowed_tricks', 'logic_no_night_tokens_without_suns_song', 'reachable_locations']},
+        },
+        shared         = True,
+    ),
+    Combobox(
+        name           = 'reachable_locations',
+        gui_text       = 'Guarantee Reachable Locations',
+        default        = 'all',
+        choices        = {
+            'all':      'All',
+            'goals':    'All Goals',
+            'beatable': 'Required Only',
+        },
+        gui_tooltip    = '''\
+            This determines which items and locations are guaranteed to be reachable.
+
+            'All': The randomizer will guarantee that every item is obtainable and every location is reachable.
+
+            'All Goals': The randomizer will guarantee that every goal item is obtainable, not just the amount required
+            to beat the game, but otherwise behaves like 'Required Only'.
+            Goal items are the items required for the rainbow bridge and/or Ganon's Boss Key, so for example if the bridge is
+            set to 1 Medallion and Ganon's Boss Key to 1 Gold Skulltula Token, all 6 Medallions and all 100 Tokens will
+            be obtainable. In Triforce Hunt, this will instead guarantee that all Triforce Pieces can be obtained. Hint
+            distributions that define custom goals or remove the default goals will affect item placement as well.
+
+            'Required Only': Only items and locations required to beat the game will be guaranteed reachable.
+        ''',
+        gui_params={
+            "hide_when_disabled": True,
+        },
+        shared         = True
+    ),
+
+
+
+    Checkbutton(
+        name           = 'triforce_hunt',
+        gui_text       = 'Triforce Hunt',
+        gui_tooltip    = '''\
+            Pieces of the Triforce have been scattered around the world. 
+            Find some of them to beat the game.
+
+            Game is saved on completion, and Ganon's Castle key is given
+            if beating the game again is desired.
+        ''',
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+        disable        = {
+            True  : {'settings' : ['shuffle_ganon_bosskey', 'ganon_bosskey_stones', 'ganon_bosskey_medallions', 'ganon_bosskey_rewards', 'ganon_bosskey_tokens', 'ganon_bosskey_hearts']},
+            False : {'settings' : ['triforce_count_per_world', 'triforce_goal_per_world']}
+        },
+    ),
+    Scale(
+        name           = 'triforce_count_per_world',
+        gui_text       = 'Triforces Per World',
+        default        = 30,
+        min            = 1,
+        max            = 999,
+        shared         = True,
+        gui_tooltip    = '''\
+            Select the amount of Triforce Pieces placed in each world.
+            Each world will have the same number of triforces.
+
+            A good number to choose is 1.5 times the amount of
+            Triforce Pieces required per world, for example 30
+            Triforces placed with a goal of 20. Higher ratios will
+            result in easier and shorter seeds, while a ratio closer
+            to 1 will generally be longer and more difficult.
+        ''',
+        gui_params     = {
+            "hide_when_disabled": True,
+            'web:max': 200,
+            'electron:max': 200,
+        },
+    ),
+    Scale(
+        name           = 'triforce_goal_per_world',
+        gui_text       = 'Required Triforces Per World',
+        default        = 20,
+        min            = 1,
+        max            = 999,
+        shared         = True,
+        gui_tooltip    = '''\
+            Select the amount of Triforce Pieces required to beat the game.
+
+            In multiworld, the required amount will be per world collectively. 
+            For example, if this is set to 20 in a 2 player multiworld, players 
+            need 40 total, but one player could obtain 30 and the other 10. 
+        ''',
+        gui_params     = {
+            "hide_when_disabled": True,
+            'web:max': 100,
+            'electron:max': 100,
+        },
+    ),
+    Combobox(
+        name           = 'lacs_condition',
+        gui_text       = 'LACS Condition',
+        default        = 'vanilla',
+        choices        = {
+            'vanilla':    "Vanilla",
+            'stones':     "Stones",
+            'medallions': "Medallions",
+            'dungeons':   "Dungeons",
+            'tokens':     "Tokens",
+            'hearts':     "Hearts",
+        },
+        gui_tooltip    = '''\
+            Sets the condition for the Light Arrow Cutscene
+            check to give you the item from Zelda.
+            
+            'Vanilla': Shadow and Spirit Medallions.
+            'Stones': A configurable amount of Spiritual Stones.
+            'Medallions': A configurable amount of Medallions.
+            'Dungeons': A configurable amount of Dungeon Rewards.
+            'Tokens': A configurable amount of Gold Skulltula Tokens.
+            'Hearts': A configurable amount of hearts.
+        ''',
+        shared         = True,
+        disable        = {
+            '!stones':  {'settings': ['lacs_stones']},
+            '!medallions':  {'settings': ['lacs_medallions']},
+            '!dungeons':  {'settings': ['lacs_rewards']},
+            '!tokens':  {'settings': ['lacs_tokens']},
+            '!hearts':  {'settings': ['lacs_hearts']},
+        },
+        gui_params     = {
+            'optional': True,
+            'distribution': [
+                ('vanilla',    1),
+                ('medallions', 1),
+                ('stones',     1),
+                ('dungeons',   1),
+            ],
+        },
+    ),
+    Scale(
+        name           = 'lacs_medallions',
+        gui_text       = "Medallions Required for LACS",
+        default        = 6,
+        min            = 1,
+        max            = 6,
+        gui_tooltip    = '''\
+            Select the amount of Medallions required to trigger the Light Arrow Cutscene.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            'optional': True,
+            "hide_when_disabled": True,
+            'distribution': [(6, 1)],
+        },
+    ),
+    Scale(
+        name           = 'lacs_stones',
+        gui_text       = "Spiritual Stones Required for LACS",
+        default        = 3,
+        min            = 1,
+        max            = 3,
+        gui_tooltip    = '''\
+            Select the amount of Spiritual Stones required to trigger the Light Arrow Cutscene.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            'optional': True,
+            "hide_when_disabled": True,
+            'distribution': [(3, 1)],
+        },
+    ),
+    Scale(
+        name           = 'lacs_rewards',
+        gui_text       = "Dungeon Rewards Required for LACS",
+        default        = 9,
+        min            = 1,
+        max            = 9,
+        gui_tooltip    = '''\
+            Select the amount of Dungeon Rewards (Medallions and Spiritual Stones)
+            required to trigger the Light Arrow Cutscene.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            'optional': True,
+            "hide_when_disabled": True,
+            'distribution': [(9, 1)],
+        },
+    ),
+    Scale(
+        name           = 'lacs_tokens',
+        gui_text       = "Gold Skulltula Tokens Required for LACS",
+        default        = 100,
+        min            = 1,
+        max            = 999,
+        gui_tooltip    = '''\
+            Select the amount of Gold Skulltula Tokens
+            required to trigger the Light Arrow Cutscene.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            'optional': True,
+            "hide_when_disabled": True,
+            'web:max': 100,
+            'electron:max': 100,
+        },
+    ),
+    Scale(
+        name           = 'lacs_hearts',
+        gui_text       = "Hearts Required for LACS",
+        default        = 20,
+        min            = 4,
+        max            = 20,
+        gui_tooltip    = '''\
+            Select the amount of hearts
+            required to trigger the Light Arrow Cutscene.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            'optional': True,
+            "hide_when_disabled": True,
+        },
+    ),
+    Combobox(
+        name           = 'bridge',
+        gui_text       = 'Rainbow Bridge Requirement',
+        default        = 'medallions',
+        choices        = {
+            'open':       'Always Open',
+            'vanilla':    'Vanilla Requirements',
+            'stones':	  'Spiritual Stones',
+            'medallions': 'Medallions',
+            'dungeons':   'Dungeons',
+            'tokens':     'Gold Skulltula Tokens',
+            'hearts':     'Hearts',
+            'random':     'Random'
+        },
+        gui_tooltip    = '''\
+            'Always Open': Rainbow Bridge is always present.
+            'Vanilla Requirements': Spirit/Shadow Medallions and Light Arrows.
+            'Spiritual Stones': A configurable amount of Spiritual Stones.
+            'Medallions': A configurable amount of Medallions.
+            'Dungeons': A configurable amount of Dungeon Rewards.
+            'Gold Skulltula Tokens': A configurable amount of Gold Skulltula Tokens.
+            'Hearts': A configurable amount of hearts.
+            'Random': A random Rainbow Bridge requirement excluding Gold Skulltula Tokens.
+        ''',
+        shared         = True,
+        disable        = {
+            '!stones':     {'settings': ['bridge_stones']},
+            '!medallions': {'settings': ['bridge_medallions']},
+            '!dungeons':   {'settings': ['bridge_rewards']},
+            '!tokens':     {'settings': ['bridge_tokens']},
+            '!hearts':     {'settings': ['bridge_hearts']},
+        },
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+            'distribution':  [
+                ('open',       1),
+                ('vanilla',    1),
+                ('stones',     1),
+                ('medallions', 1),
+                ('dungeons',   1),
+            ],
+        },
+    ),
+    Scale(
+        name           = 'bridge_medallions',
+        gui_text       = "Medallions Required for Bridge",
+        default        = 6,
+        min            = 1,
+        max            = 6,
+        gui_tooltip    = '''\
+            Select the amount of Medallions required to spawn the rainbow bridge.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(6, 1)],
+        },
+    ),
+    Scale(
+        name           = 'bridge_stones',
+        gui_text       = "Spiritual Stones Required for Bridge",
+        default        = 3,
+        min            = 1,
+        max            = 3,
+        gui_tooltip    = '''\
+            Select the amount of Spiritual Stones required to spawn the rainbow bridge.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(3, 1)],
+        },
+    ),
+    Scale(
+        name           = 'bridge_rewards',
+        gui_text       = "Dungeon Rewards Required for Bridge",
+        default        = 9,
+        min            = 1,
+        max            = 9,
+        gui_tooltip    = '''\
+            Select the amount of Dungeon Rewards (Medallions and Spiritual Stones)
+            required to spawn the rainbow bridge.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(9, 1)],
+        },
+    ),
+    Scale(
+        name           = 'bridge_tokens',
+        gui_text       = "Skulltulas Required for Bridge",
+        default        = 100,
+        min            = 1,
+        max            = 999,
+        gui_tooltip    = '''\
+            Select the amount of Gold Skulltula Tokens required to spawn the rainbow bridge.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            'hide_when_disabled': True,
+            'web:max': 100,
+            'electron:max': 100,
+        },
+    ),
+    Scale(
+        name           = 'bridge_hearts',
+        gui_text       = "Hearts Required for Bridge",
+        default        = 20,
+        min            = 4,
+        max            = 20,
+        gui_tooltip    = '''\
+            Select the amount of hearts required to spawn the rainbow bridge.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
+    ),
+    Checkbutton(
+        name           = 'trials_random',
+        gui_text       = 'Random Number of Ganon\'s Trials',
+        gui_tooltip    = '''\
+            Sets a random number of trials to enter Ganon's Tower.
+        ''',
+        shared         = True,
+        disable        = {
+            True : {'settings' : ['trials']}
+        },
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+            'distribution':  [
+                (True, 1),
+            ]
+        },
+    ),
+    Scale(
+        name           = 'trials',
+        gui_text       = "Ganon's Trials Count",
+        default        = 6,
+        min            = 0,
+        max            = 6,
+        gui_tooltip    = '''\
+            Trials are randomly selected. If hints are
+            enabled, then there will be hints for which
+            trials need to be completed.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+    ),
+    Combobox(
+        name           = 'shuffle_ganon_bosskey',
+        gui_text       = 'Ganon\'s Boss Key',
+        default        = 'dungeon',
+        disabled_default = 'triforce',
+        choices        = {
+            'remove':          "Remove (Keysy)",
+            'vanilla':         "Vanilla Location",
+            'dungeon':         "Own Dungeon",
+            'regional':        "Regional",
+            'overworld':       "Overworld Only",
+            'any_dungeon':     "Any Dungeon",
+            'keysanity':       "Anywhere (Keysanity)",
+            'on_lacs':         "Light Arrow Cutscene",
+            'stones':          "Stones",
+            'medallions':      "Medallions",
+            'dungeons':        "Dungeons",
+            'tokens':          "Tokens",
+            'hearts':          "Hearts",
+        },
+        gui_tooltip    = '''\
+            'Remove': Ganon's Castle Boss Key is removed
+            and the boss door in Ganon's Tower starts unlocked.
+            
+            'Vanilla': Ganon's Castle Boss Key will appear in 
+            the vanilla location.
+            
+            'Own Dungeon': Ganon's Castle Boss Key can only appear
+            inside Ganon's Castle.
+            
+            'Regional': Ganon's Castle Boss Key can only appear
+            in Hyrule Field, Lon Lon Ranch, Market, Temple of Time, Hyrule Castle,
+            (Outside) Ganon's Castle, and Inside Ganon's Castle.
+            
+            'Overworld Only': Ganon's Castle Boss Key can only appear
+            outside of dungeons.
+            
+            'Any Dungeon': Ganon's Castle Boss Key can only appear
+            inside of a dungeon, but not necessarily Ganon's Castle.
+
+            'Anywhere': Ganon's Castle Boss Key can appear
+            anywhere in the world.
+
+            'Light Arrow Cutscene': Ganon's Castle Boss Key will
+            appear on the Light Arrow Cutscene.
+            
+            'Stones': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Spiritual Stones.
+            
+            'Medallions': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Medallions.
+                        
+            'Dungeons': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Dungeon Rewards.
+            
+            'Tokens': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of Gold Skulltula Tokens.
+
+            'Hearts': Ganon's Castle Boss Key will be awarded
+            when reaching the target number of hearts.
+        ''',
+        shared         = True,
+        disable        = {
+            '!stones':  {'settings': ['ganon_bosskey_stones']},
+            '!medallions':  {'settings': ['ganon_bosskey_medallions']},
+            '!dungeons':  {'settings': ['ganon_bosskey_rewards']},
+            '!tokens':  {'settings': ['ganon_bosskey_tokens']},
+            '!hearts':  {'settings': ['ganon_bosskey_hearts']},
+        },
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+            'distribution': [
+                ('remove',          4),
+                ('dungeon',         2),
+                ('vanilla',         2),
+                ('keysanity',       4),
+                ('on_lacs',         1)
+            ],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_medallions',
+        gui_text       = "Medallions Required for Ganon's BK",
+        default        = 6,
+        min            = 1,
+        max            = 6,
+        gui_tooltip    = '''\
+            Select the amount of Medallions required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(6, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_stones',
+        gui_text       = "Spiritual Stones Required for Ganon's BK",
+        default        = 3,
+        min            = 1,
+        max            = 3,
+        gui_tooltip    = '''\
+            Select the amount of Spiritual Stones required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(3, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_rewards',
+        gui_text       = "Dungeon Rewards Required for Ganon's BK",
+        default        = 9,
+        min            = 1,
+        max            = 9,
+        gui_tooltip    = '''\
+            Select the amount of Dungeon Rewards (Medallions and Spiritual Stones)
+            required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "randomize_key": "randomize_settings",
+            "hide_when_disabled": True,
+            'distribution': [(9, 1)],
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_tokens',
+        gui_text       = "Gold Skulltula Tokens Required for Ganon's BK",
+        default        = 100,
+        min            = 1,
+        max            = 999,
+        gui_tooltip    = '''\
+            Select the amount of Gold Skulltula Tokens
+            required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "hide_when_disabled": True,
+            'web:max': 100,
+            'electron:max': 100,
+        },
+    ),
+    Scale(
+        name           = 'ganon_bosskey_hearts',
+        gui_text       = "Hearts Required for Ganon's BK",
+        default        = 20,
+        min            = 4,
+        max            = 20,
+        gui_tooltip    = '''\
+            Select the amount of hearts
+            required to receive Ganon's Castle Boss Key.
+        ''',
+        shared         = True,
+        disabled_default = 0,
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
+    ),
+    Combobox(
+        name           = 'shuffle_bosskeys',
+        gui_text       = 'Boss Keys',
+        default        = 'dungeon',
+        choices        = {
+            'remove':      'Remove (Keysy)',
+            'vanilla':     'Vanilla Locations',
+            'dungeon':     'Own Dungeon',
+            'regional':    'Regional',
+            'overworld':   'Overworld Only',
+            'any_dungeon': 'Any Dungeon',
+            'keysanity':   'Anywhere (Keysanity)',
+        },
+        gui_tooltip    = '''\
+            'Remove': Boss Keys are removed. All locked
+            doors in dungeons will be unlocked. An easier
+            mode.
+
+            'Vanilla': Boss Keys will appear in their 
+            vanilla locations.
+
+            'Own Dungeon': Boss Keys can only appear in their
+            respective dungeon.
+            
+            'Regional': Boss Keys can only appear in regions
+            near the original dungeon (including the dungeon
+            itself or other dungeons in the region).
+            <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
+            
+            'Overworld Only': Boss Keys can only appear outside
+            of dungeons. You may need to enter a dungeon without
+            the boss key to get items required to find the key
+            in the overworld.
+            
+            'Any Dungeon': Boss Keys can only appear inside
+            of any dungeon, but won't necessarily be in the
+            dungeon that the key is for. A difficult mode since
+            it is more likely to need to enter a dungeon
+            multiple times.
+
+            'Anywhere': Boss Keys can appear
+            anywhere in the world. A difficult mode since
+            it is more likely to need to enter a dungeon
+            multiple times.
+
+            Try different combination out, such as:
+            'Small Keys: Dungeon' + 'Boss Keys: Anywhere'
+            for a milder Keysanity experience.
+
+            Regardless of the selected option, boss keys from
+            pre-completed dungeons won't be placed outside their
+            respective dungeons and boss keys from other dungeons
+            won't be placed inside pre-completed dungeons.
+        ''',
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Combobox(
+        name           = 'shuffle_smallkeys',
+        gui_text       = 'Small Keys',
+        default        = 'dungeon',
+        choices        = {
+            'remove':      'Remove (Keysy)',
+            'vanilla':     'Vanilla Locations',
+            'dungeon':     'Own Dungeon',
+            'regional':    'Regional',
+            'overworld':   'Overworld Only',
+            'any_dungeon': 'Any Dungeon',
+            'keysanity':   'Anywhere (Keysanity)',
+        },
+        gui_tooltip    = '''\
+            'Remove': Small Keys are removed. All locked doors in dungeons
+            will be unlocked. An easier mode.
+
+            'Vanilla': Small Keys will appear in their vanilla locations. You start
+            with 3 keys in Spirit Temple MQ because the vanilla key layout is
+            not beatable in logic. You start with 2 keys in Vanilla/MQ Shadow
+            Temple with its dungeon shortcut enabled to prevent softlocks.
+
+            'Own Dungeon': Small Keys can only appear in their respective
+            dungeon. If Fire Temple is not a Master Quest dungeon, the door to
+            the Boss Key chest will be unlocked.
+            
+            'Regional': Small Keys can only appear
+            in regions near the original dungeon (including
+            the dungeon itself or other dungeons in the region).
+            <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
+            
+            'Overworld Only': Small Keys can only appear outside
+            of dungeons. You may need to enter a dungeon multiple
+            times to gain items to access the overworld locations
+            with the keys required to finish a dungeon.
+            
+            'Any Dungeon': Small Keys can only appear inside of any dungeon, but
+            won't necessarily be in the dungeon that the key is for. A difficult mode
+            since it is more likely to need to enter a dungeon multiple times.
+
+            'Anywhere': Small Keys can appear anywhere in the world. A difficult
+            mode since it is more likely to need to enter a dungeon multiple times.
+
+            Try different combination out, such as:
+            'Small Keys: Dungeon' + 'Boss Keys: Anywhere'
+            for a milder Keysanity experience.
+
+            Regardless of the selected option, small keys from pre-completed dungeons
+            won't be placed outside their respective dungeons and small keys from
+            other dungeons won't be placed inside pre-completed dungeons.
+        ''',
+        disable        = {
+            'any_dungeon': {'settings': ['one_item_per_dungeon']}
+        },
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Combobox(
+        name           = 'shuffle_hideoutkeys',
+        gui_text       = 'Thieves\' Hideout Keys',
+        default        = 'vanilla',
+        disabled_default = 'remove',
+        choices        = {
+            'vanilla':     "Vanilla Locations",
+            'fortress':    "Gerudo Fortress Region",
+            'regional':    "Regional",
+            'overworld':   "Overworld Only",
+            'any_dungeon': "Any Dungeon",
+            'keysanity':   "Anywhere (Keysanity)",
+        },
+        gui_tooltip    = '''\
+            "Vanilla": Thieves' Hideout Keys will appear in their
+            vanilla location, dropping from fighting Gerudo guards
+            that attack when trying to free the jailed carpenters.
+            
+            "Regional": Thieves' Hideout Keys can only appear in
+            Gerudo Valley, Gerudo Fortress, Thieves' Hideout, Gerudo
+            Training Ground, Haunted Wasteland, Desert Colossus, or
+            Spirit Temple.
+            
+            "Overworld Only": Thieves' Hideout Keys can only appear
+            outside of dungeons.
+            
+            "Any Dungeon": Thieves' Hideout Keys can only appear
+            inside of dungeons.
+
+            "Anywhere": Thieves' Hideout Keys can appear anywhere
+            in the world.
+        ''',
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+            'option_remove': ['fortress'],
+        },
+    ),
+    Combobox(
+        name           = 'key_rings_choice',
+        gui_text       = 'Key Rings Mode',
+        default        = 'off',
+        choices        = {
+            'off':       'Off',
+            'choice':    'Choose dungeons',
+            'all':       'All dungeons',
+            'random':    'Random dungeons'
+        },
+        gui_tooltip     = '''\
+            Selected dungeons will have all of their keys found 
+            at once in a ring rather than individually. 
+
+            For example, instead of shuffling 5 Forest Temple 
+            small keys into the pool, you will find a single
+            key ring which will give you all 5 keys at once.
+
+            Selecting key ring for dungeons will have no effect
+            if Small Keys are set to Remove or Vanilla.
+
+            Selecting key ring for Thieves' Hideout will have 
+            no effect if Thieves' Hideout keys are in vanilla 
+            locations or Gerudo's Fortress is set to Rescue
+            One Carpenter.
+        ''',
+        shared         = True,
+        disable={
+            'off': {'settings' : ['key_rings']},
+            'all': {'settings' : ['key_rings']},
+            'random': {'settings' : ['key_rings']},
+        },
+    ),
+    Combobox(
+        name            = 'key_rings',
+        multiple_select = True,
+        gui_text        = 'Key Rings',
+        choices         = {
+            'Thieves Hideout':        "Thieves' Hideout",
+            'Forest Temple':          "Forest Temple",
+            'Fire Temple':            "Fire Temple",
+            'Water Temple':           "Water Temple",
+            'Shadow Temple':          "Shadow Temple",
+            'Spirit Temple':          "Spirit Temple",
+            'Bottom of the Well':     "Bottom of the Well",
+            'Gerudo Training Ground': "Gerudo Training Ground",
+            'Ganons Castle':          "Ganon's Castle"
+        },
+        default         = [],
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
+        gui_tooltip    = '''\
+            Select areas with keyring instead of multiple keys
+        ''',
+        shared          = True,
+    ),
+    Combobox(
+        name           = 'shuffle_mapcompass',
+        gui_text       = 'Maps & Compasses',
+        default        = 'dungeon',
+        choices        = {
+            'remove':      'Remove',
+            'startwith':   'Start With',
+            'vanilla':     'Vanilla Locations',
+            'dungeon':     'Own Dungeon',
+            'regional':    'Regional',
+            'overworld':   'Overworld Only',
+            'any_dungeon': 'Any Dungeon',
+            'keysanity':   'Anywhere',
+        },
+        gui_tooltip    = '''\
+            'Remove': Maps and Compasses are removed.
+            This will add a small amount of money and refill items to the pool.
+
+            'Start With': Maps and Compasses are given to you from the start.
+            This will add a small amount of money and refill items to the pool.
+
+            'Vanilla': Maps and Compasses will appear in their vanilla locations.
+
+            'Own Dungeon': Maps and Compasses can only appear in their respective
+            dungeon.
+            
+            'Regional': Maps and Compasses can only appear in regions near the
+            original dungeon (including the dungeon itself or other dungeons in
+            the region). <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
+            
+            'Overworld Only': Maps and Compasses can only appear
+            outside of dungeons.
+
+            'Any Dungeon': Maps and Compasses can only appear in a dungeon, but
+            not necessarily the dungeon they are for.            
+
+            'Anywhere': Maps and Compasses can appear anywhere in the world.
+
+            Setting 'Remove', 'Start With', 'Overworld', or 'Anywhere' will add 2
+            more possible locations to each Dungeons. This makes dungeons more
+            profitable, especially Ice Cavern, Water Temple, and Jabu Jabu's Belly.
+            
+            Regardless of the selected option, maps and compasses from pre-completed
+            dungeons won't be placed outside their respective dungeons and maps and
+            compasses from other dungeons won't be placed inside pre-completed dungeons.
+        ''',
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Checkbutton(
+        name           = 'enhance_map_compass',
+        gui_text       = 'Maps and Compasses Give Information',
+        gui_tooltip    = '''\
+            Gives the Map and Compass extra functionality.
+            Map will tell if a dungeon is vanilla or Master Quest.
+            Compass will tell what medallion or stone is within.
+            The Temple of Time Altar will no longer provide
+            information on the location of medallions and stones.
+
+            'Maps/Compasses: Remove': The dungeon information is
+            not available anywhere in the game.
+
+            'Maps/Compasses: Start With': The dungeon information
+            is available immediately from the dungeon menu.
+        ''',
+        default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),  
+
+
+
     Combobox(
         name           = 'open_forest',
         gui_text       = 'Forest',
@@ -2380,356 +3256,6 @@ setting_infos = [
         },
     ),
     Combobox(
-        name           = 'bridge',
-        gui_text       = 'Rainbow Bridge Requirement',
-        default        = 'medallions',
-        choices        = {
-            'open':       'Always Open',
-            'vanilla':    'Vanilla Requirements',
-            'stones':	  'Spiritual Stones',
-            'medallions': 'Medallions',
-            'dungeons':   'Dungeons',
-            'tokens':     'Gold Skulltula Tokens',
-            'hearts':     'Hearts',
-            'random':     'Random'
-        },
-        gui_tooltip    = '''\
-            'Always Open': Rainbow Bridge is always present.
-            'Vanilla Requirements': Spirit/Shadow Medallions and Light Arrows.
-            'Spiritual Stones': A configurable amount of Spiritual Stones.
-            'Medallions': A configurable amount of Medallions.
-            'Dungeons': A configurable amount of Dungeon Rewards.
-            'Gold Skulltula Tokens': A configurable amount of Gold Skulltula Tokens.
-            'Hearts': A configurable amount of hearts.
-            'Random': A random Rainbow Bridge requirement excluding Gold Skulltula Tokens.
-        ''',
-        shared         = True,
-        disable        = {
-            '!stones':     {'settings': ['bridge_stones']},
-            '!medallions': {'settings': ['bridge_medallions']},
-            '!dungeons':   {'settings': ['bridge_rewards']},
-            '!tokens':     {'settings': ['bridge_tokens']},
-            '!hearts':     {'settings': ['bridge_hearts']},
-        },
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-            'distribution':  [
-                ('open',       1),
-                ('vanilla',    1),
-                ('stones',     1),
-                ('medallions', 1),
-                ('dungeons',   1),
-            ],
-        },
-    ),
-    Scale(
-        name           = 'bridge_medallions',
-        gui_text       = "Medallions Required for Bridge",
-        default        = 6,
-        min            = 1,
-        max            = 6,
-        gui_tooltip    = '''\
-            Select the amount of Medallions required to spawn the rainbow bridge.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            "randomize_key": "randomize_settings",
-            "hide_when_disabled": True,
-            'distribution': [(6, 1)],
-        },
-    ),
-    Scale(
-        name           = 'bridge_stones',
-        gui_text       = "Spiritual Stones Required for Bridge",
-        default        = 3,
-        min            = 1,
-        max            = 3,
-        gui_tooltip    = '''\
-            Select the amount of Spiritual Stones required to spawn the rainbow bridge.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            "randomize_key": "randomize_settings",
-            "hide_when_disabled": True,
-            'distribution': [(3, 1)],
-        },
-    ),
-    Scale(
-        name           = 'bridge_rewards',
-        gui_text       = "Dungeon Rewards Required for Bridge",
-        default        = 9,
-        min            = 1,
-        max            = 9,
-        gui_tooltip    = '''\
-            Select the amount of Dungeon Rewards (Medallions and Spiritual Stones)
-            required to spawn the rainbow bridge.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            "randomize_key": "randomize_settings",
-            "hide_when_disabled": True,
-            'distribution': [(9, 1)],
-        },
-    ),
-    Scale(
-        name           = 'bridge_tokens',
-        gui_text       = "Skulltulas Required for Bridge",
-        default        = 100,
-        min            = 1,
-        max            = 999,
-        gui_tooltip    = '''\
-            Select the amount of Gold Skulltula Tokens required to spawn the rainbow bridge.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            'hide_when_disabled': True,
-            'web:max': 100,
-            'electron:max': 100,
-        },
-    ),
-    Scale(
-        name           = 'bridge_hearts',
-        gui_text       = "Hearts Required for Bridge",
-        default        = 20,
-        min            = 4,
-        max            = 20,
-        gui_tooltip    = '''\
-            Select the amount of hearts required to spawn the rainbow bridge.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            "hide_when_disabled": True,
-        },
-    ),
-    Checkbutton(
-        name           = 'triforce_hunt',
-        gui_text       = 'Triforce Hunt',
-        gui_tooltip    = '''\
-            Pieces of the Triforce have been scattered around the world. 
-            Find some of them to beat the game.
-
-            Game is saved on completion, and Ganon's Castle key is given
-            if beating the game again is desired.
-        ''',
-        shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
-        disable        = {
-            True  : {'settings' : ['shuffle_ganon_bosskey', 'ganon_bosskey_stones', 'ganon_bosskey_medallions', 'ganon_bosskey_rewards', 'ganon_bosskey_tokens', 'ganon_bosskey_hearts']},
-            False : {'settings' : ['triforce_count_per_world', 'triforce_goal_per_world']}
-        },
-    ),
-    Scale(
-        name           = 'triforce_count_per_world',
-        gui_text       = 'Triforces Per World',
-        default        = 30,
-        min            = 1,
-        max            = 999,
-        shared         = True,
-        gui_tooltip    = '''\
-            Select the amount of Triforce Pieces placed in each world.
-            Each world will have the same number of triforces.
-
-            A good number to choose is 1.5 times the amount of
-            Triforce Pieces required per world, for example 30
-            Triforces placed with a goal of 20. Higher ratios will
-            result in easier and shorter seeds, while a ratio closer
-            to 1 will generally be longer and more difficult.
-        ''',
-        gui_params     = {
-            "hide_when_disabled": True,
-            'web:max': 200,
-            'electron:max': 200,
-        },
-    ),
-    Scale(
-        name           = 'triforce_goal_per_world',
-        gui_text       = 'Required Triforces Per World',
-        default        = 20,
-        min            = 1,
-        max            = 999,
-        shared         = True,
-        gui_tooltip    = '''\
-            Select the amount of Triforce Pieces required to beat the game.
-
-            In multiworld, the required amount will be per world collectively. 
-            For example, if this is set to 20 in a 2 player multiworld, players 
-            need 40 total, but one player could obtain 30 and the other 10. 
-        ''',
-        gui_params     = {
-            "hide_when_disabled": True,
-            'web:max': 100,
-            'electron:max': 100,
-        },
-    ),
-    Combobox(
-        name           = 'logic_rules',
-        gui_text       = 'Logic Rules',
-        default        = 'glitchless',
-        choices        = {
-            'glitchless': 'Glitchless',
-            'glitched':   'Glitched',
-            'none':       'No Logic',
-        },
-        gui_tooltip    = '''\
-            Logic provides guiding sets of rules for world generation
-            which the Randomizer uses to ensure the generated seeds 
-            are beatable.
-
-            'Glitchless': No glitches are required, but may require 
-            some minor tricks. Add minor tricks to consider for logic
-            in the 'Detailed Logic' tab.
-
-            'Glitched': Movement-oriented glitches are likely required.
-            No locations excluded.
-
-            'No Logic': Maximize randomization, All locations are 
-            considered available. MAY BE IMPOSSIBLE TO BEAT.
-        ''',
-        disable        = {
-            'glitchless': {'settings' : ['tricks_list_msg']},
-            'glitched'  : {'settings' : ['allowed_tricks', 'shuffle_interior_entrances', 'shuffle_grotto_entrances',
-                                         'shuffle_dungeon_entrances', 'shuffle_overworld_entrances', 'owl_drops',
-                                         'warp_songs', 'spawn_positions', 'mq_dungeons_mode', 'mq_dungeons_specific',
-                                         'mq_dungeons_count', 'shuffle_bosses', 'dungeon_shortcuts', 'deadly_bonks', 
-                                         'shuffle_freestanding_items', 'shuffle_pots', 'shuffle_crates', 'shuffle_beehives']},
-            'none'      : {'settings' : ['allowed_tricks', 'logic_no_night_tokens_without_suns_song', 'reachable_locations']},
-        },
-        shared         = True,
-    ),
-    Combobox(
-        name           = 'reachable_locations',
-        gui_text       = 'Guarantee Reachable Locations',
-        default        = 'all',
-        choices        = {
-            'all':      'All',
-            'goals':    'All Goals',
-            'beatable': 'Required Only',
-        },
-        gui_tooltip    = '''\
-            This determines which items and locations are guaranteed to be reachable.
-
-            'All': The randomizer will guarantee that every item is obtainable and every location is reachable.
-
-            'All Goals': The randomizer will guarantee that every goal item is obtainable, not just the amount required
-            to beat the game, but otherwise behaves like 'Required Only'.
-            Goal items are the items required for the rainbow bridge and/or Ganon's Boss Key, so for example if the bridge is
-            set to 1 Medallion and Ganon's Boss Key to 1 Gold Skulltula Token, all 6 Medallions and all 100 Tokens will
-            be obtainable. In Triforce Hunt, this will instead guarantee that all Triforce Pieces can be obtained. Hint
-            distributions that define custom goals or remove the default goals will affect item placement as well.
-
-            'Required Only': Only items and locations required to beat the game will be guaranteed reachable.
-        ''',
-        gui_params={
-            "hide_when_disabled": True,
-        },
-        shared         = True
-    ),
-    Checkbutton(
-        name           = 'bombchus_in_logic',
-        gui_text       = 'Bombchus Are Considered in Logic',
-        gui_tooltip    = '''\
-            Bombchus are properly considered in logic.
-
-            The first Bombchu pack will always be 20.
-            Subsequent packs will be 5 or 10 based on
-            how many you have.
-
-            Bombchus can be purchased for 60/99/180
-            rupees once they have been found.
-
-            Bombchu Bowling opens with Bombchus.
-            Bombchus are available at Kokiri Shop
-            and the Bazaar. Bombchu refills cannot
-            be bought until Bombchus have been obtained.
-        ''',
-        default        = False,
-        shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
-    ),
-    Checkbutton(
-        name           = 'one_item_per_dungeon',
-        gui_text       = 'Dungeons Have One Major Item',
-        gui_tooltip    = '''\
-            Dungeons have exactly one major item.
-            This naturally makes each dungeon similar in value
-            rather than vary based on shuffled locations.
-
-            Spirit Temple Colossus hands count as part
-            of the dungeon. Spirit Temple has TWO items
-            to match vanilla distribution.
-
-            Boss Keys and Fortress Keys only count as
-            major items if they are shuffled Anywhere
-            (Keysanity) or in Any Dungeon, and Small
-            Keys only count as major items if they are
-            shuffled Anywhere (Keysanity). This setting
-            is disabled if Small Keys are shuffled in
-            Any Dungeon.
-
-            GS Tokens only count as major items if the
-            bridge or Ganon Boss Key requirements are
-            set to "GS Tokens".
-
-            Heart Containers and Pieces of Heart only
-            count as major items if the bridge or Ganon
-            Boss Key requirements are set to "Hearts".
-
-            Bombchus only count as major items if they
-            are considered in logic.
-
-            Pre-completed dungeons (if any) won't have
-            a major item.
-
-            This setting has potential to conflict with
-            other randomizer settings. Should seeds continuously
-            fail to generate, consider turning this option off.
-        ''',
-        shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
-    ),
-    Checkbutton(
-        name           = 'trials_random',
-        gui_text       = 'Random Number of Ganon\'s Trials',
-        gui_tooltip    = '''\
-            Sets a random number of trials to enter Ganon's Tower.
-        ''',
-        shared         = True,
-        disable        = {
-            True : {'settings' : ['trials']}
-        },
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-            'distribution':  [
-                (True, 1),
-            ]
-        },
-    ),
-    Scale(
-        name           = 'trials',
-        gui_text       = "Ganon's Trials Count",
-        default        = 6,
-        min            = 0,
-        max            = 6,
-        gui_tooltip    = '''\
-            Trials are randomly selected. If hints are
-            enabled, then there will be hints for which
-            trials need to be completed.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-    ),
-    Combobox(
         name           = 'dungeon_shortcuts_choice',
         gui_text       = 'Dungeon Boss Shortcuts Mode',
         default        = 'off',
@@ -2803,486 +3329,199 @@ setting_infos = [
         ''',
         shared          = True,
     ),
-    Checkbutton(
-        name           = 'no_escape_sequence',
-        gui_text       = 'Skip Tower Escape Sequence',
-        gui_tooltip    = '''\
-            The tower escape sequence between
-            Ganondorf and Ganon will be skipped.
-        ''',
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'no_guard_stealth',
-        gui_text       = 'Skip Child Stealth',
-        gui_tooltip    = '''\
-            The crawlspace into Hyrule Castle goes
-            straight to Zelda, skipping the guards.
-        ''',
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'no_epona_race',
-        gui_text       = 'Skip Epona Race',
-        gui_tooltip    = '''\
-            Epona can be summoned with Epona's Song
-            without needing to race Ingo.
-        ''',
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'skip_some_minigame_phases',
-        gui_text       = 'Skip Some Minigame Phases',
-        gui_tooltip    = '''\
-            Awards all eligible prizes after the first attempt for
-            Dampe Race and Gerudo Horseback Archery.
 
-            Dampe will start with the second race so you can finish 
-            the race in under a minute and get both rewards at once. 
-            You still get the first reward from the chest even if you 
-            don't complete the race in under a minute.
 
-            Both rewards at the Gerudo Horseback Archery will be 
-            available from the first time you play the minigame. 
-            This means you can get both rewards at once if you get 
-            1500 points in a single attempt.
-        ''',
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'useful_cutscenes',
-        gui_text       = 'Enable Specific Glitch-Useful Cutscenes',
-        gui_tooltip    = '''\
-            The cutscenes of the Poes in Forest Temple and Darunia in
-            Fire Temple will not be skipped. These cutscenes are useful
-            in glitched gameplay only and do not provide any timesave
-            for glitchless playthroughs.
-        ''',
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'complete_mask_quest',
-        gui_text       = 'Complete Mask Quest',
-        gui_tooltip    = '''\
-            Once the Happy Mask Shop is opened,
-            all masks will be available to be borrowed.
-        ''',
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'fast_chests',
-        gui_text       = 'Fast Chest Cutscenes',
-        gui_tooltip    = '''\
-            All chest animations are fast. If disabled,
-            the animation time is slow for major items.
-        ''',
-        default        = True,
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'logic_no_night_tokens_without_suns_song',
-        gui_text       = 'Nighttime Skulltulas Expect Sun\'s Song',
-        gui_tooltip    = '''\
-            GS Tokens that can only be obtained
-            during the night expect you to have Sun's
-            Song to collect them. This prevents needing
-            to wait until night for some locations.
-        ''',
-        gui_params={
-            "hide_when_disabled": True,
-        },
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'free_scarecrow',
-        gui_text       = 'Free Scarecrow\'s Song',
-        gui_tooltip    = '''\
-            Pulling out the Ocarina near a
-            spot at which Pierre can spawn will
-            do so, without needing the song.
-        ''',
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'fast_bunny_hood',
-        gui_text       = 'Fast Bunny Hood',
-        gui_tooltip    = '''\
-            The Bunny Hood mask behaves like it does
-            in Majora's Mask and makes you go 1.5× faster.
-        ''',
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'start_with_rupees',
-        gui_text       = 'Start with Max Rupees',
-        gui_tooltip    = '''\
-            Start the game with a full wallet.
-            Wallet upgrades will also fill the wallet.
-        ''',
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'start_with_consumables',
-        gui_text       = 'Start with Consumables',
-        gui_tooltip    = '''\
-            Start the game with maxed out Deku Sticks and Deku Nuts.
-        ''',
-        shared         = True,
-    ),
-    Scale(
-        name           = 'starting_hearts',
-        gui_text       = "Starting Hearts",
-        default        = 3,
-        min            = 3,
-        max            = 20,
-        gui_tooltip    = '''\
-            Start the game with the selected number of hearts.
-            Heart Containers and Pieces of Heart are removed
-            from the item pool in equal proportion.
-        ''',
-        disabled_default = 1,
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'plant_beans',
-        gui_text       = 'Plant Magic Beans',
-        gui_tooltip    = '''\
-            Enabling this plants all 10 magic beans in soft soil
-            causing the bean plants to be available as adult. You
-            can still get beans normally.
-        ''',
-        default        = False,
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'chicken_count_random',
-        gui_text       = 'Random Cucco Count',
-        gui_tooltip    = '''\
-            Anju will give a reward for collecting a random
-            number of Cuccos.
-        ''',
-        disable        = {
-            True : {'settings' : ['chicken_count']}
-        },
-        shared         = True,
-    ),
-    Scale(
-        name           = 'chicken_count',
-        gui_text       = 'Cucco Count',
-        default        = 7,
-        min            = 0,
-        max            = 7,
-        gui_tooltip    = '''\
-            Anju will give a reward for turning
-            in the chosen number of Cuccos.
-        ''',
-        shared         = True,
-        gui_params     = {
-            'no_line_break': True,
-        },
-    ),
-    Checkbutton(
-        name           = 'big_poe_count_random',
-        gui_text       = 'Random Big Poe Target Count',
-        gui_tooltip    = '''\
-            The Poe buyer will give a reward for turning
-            in a random number of Big Poes.
-        ''',
-        disable        = {
-            True : {'settings' : ['big_poe_count']}
-        },
-        shared         = True,
-    ),
-    Scale(
-        name           = 'big_poe_count',
-        gui_text       = "Big Poe Target Count",
-        default        = 10,
-        min            = 1,
-        max            = 10,
-        gui_tooltip    = '''\
-            The Poe buyer will give a reward for turning
-            in the chosen number of Big Poes.
-        ''',
-        disabled_default = 1,
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'shuffle_kokiri_sword',
-        gui_text       = 'Shuffle Kokiri Sword',
-        gui_tooltip    = '''\
-            Enabling this shuffles the Kokiri Sword into the pool.
 
-            This will require extensive use of sticks until the
-            sword is found.
+    Combobox(
+        name           = 'starting_age',
+        gui_text       = 'Starting Age',
+        default        = 'child',
+        choices        = {
+            'child':  'Child',
+            'adult':  'Adult',
+            'random': 'Random',
+        },
+        gui_tooltip    = '''\
+            Choose which age Link will start as.
+
+            Starting as adult means you start with
+            the master sword in your inventory.
+
+            Only the child option is compatible with
+            Closed Forest.
         ''',
-        default        = True,
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
-        },
-    ),
-    Checkbutton(
-        name           = 'shuffle_ocarinas',
-        gui_text       = 'Shuffle Ocarinas',
-        gui_tooltip    = '''\
-            Enabling this shuffles the Fairy Ocarina and the Ocarina
-            of Time into the pool.
-
-            This will require finding an Ocarina before being able
-            to play songs.
-        ''',
-        default        = False,
-        shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
+            'distribution': [
+                ('random', 1),
+            ],
+        }
     ),
     Combobox(
-        name           = 'shuffle_child_trade',
-        gui_text       = 'Shuffle Child Trade Item',
+        name           = 'mq_dungeons_mode',
+        gui_text       = 'MQ Dungeon Mode',
         default        = 'vanilla',
         choices        = {
-            'vanilla':          'Vanilla Locations',
-            'shuffle':          'Shuffle Weird Egg',
-            'skip_child_zelda': 'Skip Child Zelda',
-            },
+            'vanilla':    "Vanilla",
+            'mq':         "Master Quest",
+            'specific':   "Specific Dungeons",
+            'count':      "Count",
+            'random':     "Completely Random",
+        },
         gui_tooltip    = '''\
-            This changes the beginning of the child trade quest.
-            
-            'Vanilla Locations': Weird Egg is found from Malon outside
-            of Hyrule Castle and the child trade quest continues normally.
-            
-            'Shuffle Weird Egg': The Weird Egg is shuffled into the item pool
-            and Malon gives a randomized item. This will require finding the
-            Weird Egg to talk to Zelda in Hyrule Castle, which in turn locks
-            rewards from Impa, Saria, Malon, and Talon, as well as the Happy
-            Mask sidequest.
-            
-            'Skip Child Zelda': Start having already met Zelda and obtained
-            Zelda's Letter along with the item from Impa.
-            Supersedes "Skip Child Stealth" since the whole sequence is skipped.
+            'Vanilla': All dungeons will be the original versions.
+            'Master Quest': All dungeons will be the MQ versions.
+            'Specific Dungeons': Choose which specific dungeons will be MQ versions.
+            'Count': Choose how many MQ dungeons will be randomly chosen.
+            'Completely Random': Each dungeon will vanilla or MQ at random.
         ''',
+        shared         = True,
+        disable        = {
+            'vanilla':  {'settings': ['mq_dungeons_count', 'mq_dungeons_specific']},
+            'mq':       {'settings': ['mq_dungeons_count', 'mq_dungeons_specific']},
+            'specific': {'settings': ['mq_dungeons_count']},
+            'count':    {'settings': ['mq_dungeons_specific']},
+            'random':   {'settings': ['mq_dungeons_count', 'mq_dungeons_specific']},
+        },
         gui_params     = {
-            'randomize_key': 'randomize_settings',
-            'distribution':  [
-                ('vanilla', 1),
-                ('shuffle', 1),
-                ('skip_child_zelda', 1),
+            'distribution': [
+                ('random', 1),
             ],
         },
-        shared         = True,
     ),
-    Checkbutton(
-        name           = 'shuffle_gerudo_card',
-        gui_text       = "Shuffle Gerudo Card",
+    Combobox(
+        name            = 'mq_dungeons_specific',
+        multiple_select = True,
+        gui_text        = 'MQ Dungeons',
+        choices         = {
+            'Deku Tree':              "Deku Tree",
+            'Dodongos Cavern':        "Dodongo's Cavern",
+            'Jabu Jabus Belly':       "Jabu Jabu's Belly",
+            'Forest Temple':          "Forest Temple",
+            'Fire Temple':            "Fire Temple",
+            'Water Temple':           "Water Temple",
+            'Shadow Temple':          "Shadow Temple",
+            'Spirit Temple':          "Spirit Temple",
+            'Bottom of the Well':     "Bottom of the Well",
+            'Ice Cavern':             "Ice Cavern",
+            'Gerudo Training Ground': "Gerudo Training Ground",
+            'Ganons Castle':          "Ganon's Castle",
+        },
+        default         = [],
+        gui_tooltip     = '''\
+            Select the specific dungeons you would
+            like the Master Quest version of.
+            The unselected dungeons will be
+            the original version.
+        ''',
+        shared          = True,
+        gui_params     = {
+            "hide_when_disabled": True,
+        },
+    ),
+    Scale(
+        name           = 'mq_dungeons_count',
+        gui_text       = "MQ Dungeon Count",
+        default        = 0,
+        min            = 0,
+        max            = 12,
         gui_tooltip    = '''\
-            Enabling this shuffles the Gerudo Card into the item pool.
-
-            The Gerudo Card is required to enter the Gerudo Training Ground
-            and prevents the guards from throwing you in jail.
+            Specify the number of Master Quest
+            dungeons to appear in the game.
         ''',
         shared         = True,
         gui_params     = {
-            'randomize_key': 'randomize_settings',
+            "hide_when_disabled": True,
         },
     ),
     Combobox(
-        name           = 'shuffle_song_items',
-        gui_text       = 'Shuffle Songs',
-        default        = 'song',
+        name           = 'empty_dungeons_mode',
+        gui_text       = 'Pre-completed Dungeons Mode',
+        default        = 'none',
         choices        = {
-            'song':    'Song Locations',
-            'dungeon': 'Dungeon Rewards',
-            'any':     'Anywhere',
-            },
+            'none':       'Off',
+            'specific':   'Specific Dungeons',
+            'count':      'Count',
+        },
         gui_tooltip    = '''\
-            This restricts where song items can appear.
+            Pre-completed dungeons are dungeons guaranteed to be barren and whose
+            dungeon rewards are given for free to the player before the beginning
+            of the game. This setting only applies to dungeons with dungeon rewards
+            (blue warps).
 
-            'Song Locations': Song will only appear at locations that
-            normally teach songs. In Multiworld, songs will only
-            appear in their own world.
+            - 'None': No dungeon will be pre-completed. Some dungeons may still be
+            randomly rolled with no major items, but their dungeon rewards won't
+            be given for free.
+            - 'Specific Dungeons': Choose which specific dungeons will be pre-completed.
+            - 'Count': Choose how many pre-completed dungeons will be randomly chosen.
 
-            'Dungeon Rewards': Songs appear at the end of dungeons.
-            For major dungeons, they will be at the boss heart
-            container location. The remaining 4 songs are placed at:
+            A same dungeon won't be both MQ and pre-completed unless it has been
+            explicitly specified as such or unless it is the only way to fulfill both MQ and
+            pre-completed selected settings.
 
-            - Zelda's Lullaby Location
-            - Ice Cavern's Serenade of Water Location
-            - Bottom of the Well's Lens of Truth Location
-            - Gerudo Training Ground's Ice Arrow Location
+            Pre-completed dungeons won't contain major items even if "Dungeons Have
+            One Major Item" is on.
 
-            If some dungeons are pre-completed, songs that would have
-            been located inside these dungeons are given for free along
-            with the free dungeon rewards.
+            Regardless of "Shuffle Dungeon Items" settings, dungeon items from
+            pre-completed dungeons won't be placed outside their respective dungeons
+            and dungeon items from other dungeons won't be placed inside pre-completed
+            dungeons.
 
-            'Anywhere': Songs can appear in any location.
+            If "Shuffle Songs" is set to "Dungeon rewards", then songs that would have
+            been placed in pre-completed dungeons are given for free along with the
+            free dungeon rewards.
         ''',
+        shared         = True,
+        disable        = {
+            '!specific': {'settings': ['empty_dungeons_specific']},
+            '!count':    {'settings': ['empty_dungeons_count']}
+        },
         gui_params     = {
-            'randomize_key': 'randomize_settings',
             'distribution':  [
-                ('song', 2),
-                ('dungeon', 1),
-                ('any', 1),
+                ('none', 1)
             ],
-        },
-        shared         = True,
+        },   
     ),
     Combobox(
-        name           = 'shuffle_freestanding_items',
-        gui_text       = 'Shuffle Rupees & Hearts',
-        default        = 'off',
-        choices        = {
-            'off':       'Off',
-            'all':       'All',
-            'overworld': 'Overworld Only',
-            'dungeons':  'Dungeons Only',
+        name            = 'empty_dungeons_specific',
+        multiple_select = True,
+        gui_text        = 'Pre-completed Dungeons',
+        choices         = {
+            'Deku Tree':              "Deku Tree",
+            'Dodongos Cavern':        "Dodongo's Cavern",
+            'Jabu Jabus Belly':       "Jabu Jabu's Belly",
+            'Forest Temple':          "Forest Temple",
+            'Fire Temple':            "Fire Temple",
+            'Water Temple':           "Water Temple",
+            'Shadow Temple':          "Shadow Temple",
+            'Spirit Temple':          "Spirit Temple"
         },
-        gui_tooltip    = '''\
-            Shuffles freestanding rupees and recovery hearts, also shuffles:
-                Shadow Temple Spinning Pot Drop
-                All Goron Pot faces
-
-            Off: No freestanding rupees/recovery hearts are shuffled.
-            All: All Visible freestanding rupees/recovery hearts are shuffled.
-            Overworld Only: Freestanding rupees/recovery hearts in the overworld are shuffled.
-            Dungeons Only: Freestanding rupees/recovery hearts in dungeons are shuffled.
+        default         = [],
+        gui_tooltip     = '''\
+            Select the specific dungeons you would
+            like to be pre-completed.
         ''',
+        shared          = True,
         gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
-        shared         = True,
-    ),
-    Combobox(
-        name           = 'shuffle_pots',
-        gui_text       = 'Shuffle Pots',
-        default        = 'off',
-        choices        = {
-            'off':       'Off',
-            'all':       'All',
-            'overworld': 'Overworld Only',
-            'dungeons':  'Dungeons Only',
-        },
-        gui_tooltip    = '''\
-            Shuffles pots, flying pots into the location pool.
-
-            Off: Not shuffled.
-            All: All pots/flying pots are shuffled.
-            Overworld Only: Only overworld pots/flying pots are shuffled.
-            Dungeons Only: Only dungeon pots/flying pots are shuffled.
-
-            Note: Only pots which normally drop an item are shuffled.
-            Empty pots are not shuffled. Pots containing fairies are not shuffled.
-
-            When this setting is enabled, the pots in Ganon's Tower will be
-            accessible without Ganon's Boss Key. Proceeding up the tower out
-            of the room with the pots will require Ganon's Boss Key.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
-        shared         = True,
-    ),
-    Combobox(
-        name           = 'shuffle_crates',
-        gui_text       = 'Shuffle Crates',
-        default        = 'off',
-        choices        = {
-            'off':       'Off',
-            'all':       'All',
-            'overworld': 'Overworld Only',
-            'dungeons':  'Dungeons Only',
-        },
-        gui_tooltip    = '''\
-            Shuffles large and small crates into the location pool.
-
-            Off: Not shuffled.
-            All: crates are shuffled.
-            Overworld Only: Only overworld crates are shuffled.
-            Dungeons Only: Only dungeon crates are shuffled.
-
-            Note: Only crates which normally drop an item are shuffled. Empty crates are not included.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'shuffle_cows',
-        gui_text       = 'Shuffle Cows',
-        gui_tooltip    = '''\
-            Enabling this will let cows give you items
-            upon performing Epona's song in front of them.
-            There are 9 cows, and an extra in MQ Jabu.
-        ''',
-        default        = False,
-        shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
+            "hide_when_disabled": True,
         },
     ),
-    Checkbutton(
-        name           = 'shuffle_beehives',
-        gui_text       = 'Shuffle Beehives',
+    Scale(
+        name           = 'empty_dungeons_count',
+        gui_text       = "Pre-completed Dungeon Count",
+        default        = 2,
+        min            = 1,
+        max            = 8,
         gui_tooltip    = '''\
-            Enabling this will let beehives drop items. Beehives will shake if they contain anything important.
-            There are 32 Beehives located in:
-                Generic Grottos (x2 per grotto)
-                2 Scrub Grottos (x1 per grotto)
-                3 Scrub Grottos (x1 per grotto)
-                DMT Cow Grotto (x1)
-                Zora's Domain (x3 child only)
+            Specify the number of pre-completed
+            dungeons to appear in the game.
         ''',
-        default        = False,
         shared         = True,
         gui_params     = {
-            'randomize_key': 'randomize_settings',
+            "hide_when_disabled": True,
         },
-    ),
-    Checkbutton(
-        name           = 'shuffle_beans',
-        gui_text       = 'Shuffle Magic Beans',
-        gui_tooltip    = '''\
-            Enabling this adds a pack of 10 beans to the item pool
-            and changes the Magic Bean Salesman to sell a random
-            item once at the price of 60 Rupees.
-        ''',
-        default        = False,
-        shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
-    ),
-    Checkbutton(
-        name           = 'shuffle_medigoron_carpet_salesman',
-        gui_text       = 'Shuffle Medigoron & Carpet Salesman',
-        gui_tooltip    = '''\
-            Enabling this adds a Giant's Knife and a pack of Bombchus 
-            to the item pool and changes both Medigoron and the 
-            Haunted Wasteland Carpet Salesman to sell a random item 
-            once at the price of 200 Rupees.
-        ''',
-        default        = False,
-        shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
-    ),
-    Checkbutton(
-        name           = 'shuffle_frog_song_rupees',
-        gui_text       = 'Shuffle Frog Song Rupees',
-        gui_tooltip    = '''\
-            Enabling this adds 5 Purple Rupees to the item pool 
-            and shuffles the rewards from playing Zelda's Lullaby,
-            Epona's Song, Saria's Song, Sun's Song, and Song of Time
-            to the frogs in Zora's River.
-        ''',
-        default        = False,
-        shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
-    ),
+    ),    
     Combobox(
         name           = 'shuffle_interior_entrances',
         gui_text       = 'Shuffle Interior Entrances',
@@ -3456,41 +3695,119 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
-    Combobox(
-        name           = 'shuffle_scrubs',
-        gui_text       = 'Scrub Shuffle',
-        default        = 'off',
-        choices        = {
-            'off':     'Off',
-            'low':     'On (Affordable)',
-            'regular': 'On (Expensive)',
-            'random':  'On (Random Prices)',
-        },
+
+
+
+    Checkbutton(
+        name           = 'bombchus_in_logic',
+        gui_text       = 'Bombchus Are Considered in Logic',
         gui_tooltip    = '''\
-            'Off': Only the 3 Scrubs that give one-time
-            items in the vanilla game (PoH, Deku Nut
-            capacity, and Deku Stick capacity) will
-            have random items.
+            Bombchus are properly considered in logic.
 
-            'Affordable': All Scrub prices will be
-            reduced to 10 rupees each.
+            The first Bombchu pack will always be 20.
+            Subsequent packs will be 5 or 10 based on
+            how many you have.
 
-            'Expensive': All Scrub prices will be
-            their vanilla prices. This will require
-            spending over 1000 rupees on Scrubs.
+            Bombchus can be purchased for 60/99/180
+            rupees once they have been found.
 
-            'Random Prices': All Scrub prices will be
-            between 0-99 rupees. This will on average
-            be very, very expensive overall.
+            Bombchu Bowling opens with Bombchus.
+            Bombchus are available at Kokiri Shop
+            and the Bazaar. Bombchu refills cannot
+            be bought until Bombchus have been obtained.
+        ''',
+        default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Checkbutton(
+        name           = 'one_item_per_dungeon',
+        gui_text       = 'Dungeons Have One Major Item',
+        gui_tooltip    = '''\
+            Dungeons have exactly one major item.
+            This naturally makes each dungeon similar in value
+            rather than vary based on shuffled locations.
+
+            Spirit Temple Colossus hands count as part
+            of the dungeon. Spirit Temple has TWO items
+            to match vanilla distribution.
+
+            Boss Keys and Fortress Keys only count as
+            major items if they are shuffled Anywhere
+            (Keysanity) or in Any Dungeon, and Small
+            Keys only count as major items if they are
+            shuffled Anywhere (Keysanity). This setting
+            is disabled if Small Keys are shuffled in
+            Any Dungeon.
+
+            GS Tokens only count as major items if the
+            bridge or Ganon Boss Key requirements are
+            set to "GS Tokens".
+
+            Heart Containers and Pieces of Heart only
+            count as major items if the bridge or Ganon
+            Boss Key requirements are set to "Hearts".
+
+            Bombchus only count as major items if they
+            are considered in logic.
+
+            Pre-completed dungeons (if any) won't have
+            a major item.
+
+            This setting has potential to conflict with
+            other randomizer settings. Should seeds continuously
+            fail to generate, consider turning this option off.
         ''',
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
+        },
+    ),
+
+
+
+    Combobox(
+        name           = 'shuffle_song_items',
+        gui_text       = 'Shuffle Songs',
+        default        = 'song',
+        choices        = {
+            'song':    'Song Locations',
+            'dungeon': 'Dungeon Rewards',
+            'any':     'Anywhere',
+            },
+        gui_tooltip    = '''\
+            This restricts where song items can appear.
+
+            'Song Locations': Song will only appear at locations that
+            normally teach songs. In Multiworld, songs will only
+            appear in their own world.
+
+            'Dungeon Rewards': Songs appear at the end of dungeons.
+            For major dungeons, they will be at the boss heart
+            container location. The remaining 4 songs are placed at:
+
+            - Zelda's Lullaby Location
+            - Ice Cavern's Serenade of Water Location
+            - Bottom of the Well's Lens of Truth Location
+            - Gerudo Training Ground's Ice Arrow Location
+
+            If some dungeons are pre-completed, songs that would have
+            been located inside these dungeons are given for free along
+            with the free dungeon rewards.
+
+            'Anywhere': Songs can appear in any location.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
             'distribution':  [
-                ('off', 1),
-                ('low', 1),
+                ('song', 2),
+                ('dungeon', 1),
+                ('any', 1),
             ],
         },
+        shared         = True,
     ),
     Combobox(
         name           = 'shopsanity',
@@ -3616,579 +3933,163 @@ setting_infos = [
         },
     ),
     Combobox(
-        name           = 'shuffle_mapcompass',
-        gui_text       = 'Maps & Compasses',
-        default        = 'dungeon',
+        name           = 'shuffle_scrubs',
+        gui_text       = 'Scrub Shuffle',
+        default        = 'off',
         choices        = {
-            'remove':      'Remove',
-            'startwith':   'Start With',
-            'vanilla':     'Vanilla Locations',
-            'dungeon':     'Own Dungeon',
-            'regional':    'Regional',
-            'overworld':   'Overworld Only',
-            'any_dungeon': 'Any Dungeon',
-            'keysanity':   'Anywhere',
+            'off':     'Off',
+            'low':     'On (Affordable)',
+            'regular': 'On (Expensive)',
+            'random':  'On (Random Prices)',
         },
         gui_tooltip    = '''\
-            'Remove': Maps and Compasses are removed.
-            This will add a small amount of money and refill items to the pool.
+            'Off': Only the 3 Scrubs that give one-time
+            items in the vanilla game (PoH, Deku Nut
+            capacity, and Deku Stick capacity) will
+            have random items.
 
-            'Start With': Maps and Compasses are given to you from the start.
-            This will add a small amount of money and refill items to the pool.
+            'Affordable': All Scrub prices will be
+            reduced to 10 rupees each.
 
-            'Vanilla': Maps and Compasses will appear in their vanilla locations.
+            'Expensive': All Scrub prices will be
+            their vanilla prices. This will require
+            spending over 1000 rupees on Scrubs.
 
-            'Own Dungeon': Maps and Compasses can only appear in their respective
-            dungeon.
-            
-            'Regional': Maps and Compasses can only appear in regions near the
-            original dungeon (including the dungeon itself or other dungeons in
-            the region). <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
-            
-            'Overworld Only': Maps and Compasses can only appear
-            outside of dungeons.
-
-            'Any Dungeon': Maps and Compasses can only appear in a dungeon, but
-            not necessarily the dungeon they are for.            
-
-            'Anywhere': Maps and Compasses can appear anywhere in the world.
-
-            Setting 'Remove', 'Start With', 'Overworld', or 'Anywhere' will add 2
-            more possible locations to each Dungeons. This makes dungeons more
-            profitable, especially Ice Cavern, Water Temple, and Jabu Jabu's Belly.
-            
-            Regardless of the selected option, maps and compasses from pre-completed
-            dungeons won't be placed outside their respective dungeons and maps and
-            compasses from other dungeons won't be placed inside pre-completed dungeons.
+            'Random Prices': All Scrub prices will be
+            between 0-99 rupees. This will on average
+            be very, very expensive overall.
         ''',
         shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
+            'distribution':  [
+                ('off', 1),
+                ('low', 1),
+            ],
         },
     ),
     Combobox(
-        name           = 'shuffle_smallkeys',
-        gui_text       = 'Small Keys',
-        default        = 'dungeon',
-        choices        = {
-            'remove':      'Remove (Keysy)',
-            'vanilla':     'Vanilla Locations',
-            'dungeon':     'Own Dungeon',
-            'regional':    'Regional',
-            'overworld':   'Overworld Only',
-            'any_dungeon': 'Any Dungeon',
-            'keysanity':   'Anywhere (Keysanity)',
-        },
-        gui_tooltip    = '''\
-            'Remove': Small Keys are removed. All locked doors in dungeons
-            will be unlocked. An easier mode.
-
-            'Vanilla': Small Keys will appear in their vanilla locations. You start
-            with 3 keys in Spirit Temple MQ because the vanilla key layout is
-            not beatable in logic. You start with 2 keys in Vanilla/MQ Shadow
-            Temple with its dungeon shortcut enabled to prevent softlocks.
-
-            'Own Dungeon': Small Keys can only appear in their respective
-            dungeon. If Fire Temple is not a Master Quest dungeon, the door to
-            the Boss Key chest will be unlocked.
-            
-            'Regional': Small Keys can only appear
-            in regions near the original dungeon (including
-            the dungeon itself or other dungeons in the region).
-            <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
-            
-            'Overworld Only': Small Keys can only appear outside
-            of dungeons. You may need to enter a dungeon multiple
-            times to gain items to access the overworld locations
-            with the keys required to finish a dungeon.
-            
-            'Any Dungeon': Small Keys can only appear inside of any dungeon, but
-            won't necessarily be in the dungeon that the key is for. A difficult mode
-            since it is more likely to need to enter a dungeon multiple times.
-
-            'Anywhere': Small Keys can appear anywhere in the world. A difficult
-            mode since it is more likely to need to enter a dungeon multiple times.
-
-            Try different combination out, such as:
-            'Small Keys: Dungeon' + 'Boss Keys: Anywhere'
-            for a milder Keysanity experience.
-
-            Regardless of the selected option, small keys from pre-completed dungeons
-            won't be placed outside their respective dungeons and small keys from
-            other dungeons won't be placed inside pre-completed dungeons.
-        ''',
-        disable        = {
-            'any_dungeon': {'settings': ['one_item_per_dungeon']}
-        },
-        shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-        },
-    ),
-    Combobox(
-        name           = 'shuffle_hideoutkeys',
-        gui_text       = 'Thieves\' Hideout Keys',
+        name           = 'shuffle_child_trade',
+        gui_text       = 'Shuffle Child Trade Item',
         default        = 'vanilla',
-        disabled_default = 'remove',
         choices        = {
-            'vanilla':     "Vanilla Locations",
-            'fortress':    "Gerudo Fortress Region",
-            'regional':    "Regional",
-            'overworld':   "Overworld Only",
-            'any_dungeon': "Any Dungeon",
-            'keysanity':   "Anywhere (Keysanity)",
-        },
+            'vanilla':          'Vanilla Locations',
+            'shuffle':          'Shuffle Weird Egg',
+            'skip_child_zelda': 'Skip Child Zelda',
+            },
         gui_tooltip    = '''\
-            "Vanilla": Thieves' Hideout Keys will appear in their
-            vanilla location, dropping from fighting Gerudo guards
-            that attack when trying to free the jailed carpenters.
+            This changes the beginning of the child trade quest.
             
-            "Regional": Thieves' Hideout Keys can only appear in
-            Gerudo Valley, Gerudo Fortress, Thieves' Hideout, Gerudo
-            Training Ground, Haunted Wasteland, Desert Colossus, or
-            Spirit Temple.
+            'Vanilla Locations': Weird Egg is found from Malon outside
+            of Hyrule Castle and the child trade quest continues normally.
             
-            "Overworld Only": Thieves' Hideout Keys can only appear
-            outside of dungeons.
+            'Shuffle Weird Egg': The Weird Egg is shuffled into the item pool
+            and Malon gives a randomized item. This will require finding the
+            Weird Egg to talk to Zelda in Hyrule Castle, which in turn locks
+            rewards from Impa, Saria, Malon, and Talon, as well as the Happy
+            Mask sidequest.
             
-            "Any Dungeon": Thieves' Hideout Keys can only appear
-            inside of dungeons.
-
-            "Anywhere": Thieves' Hideout Keys can appear anywhere
-            in the world.
+            'Skip Child Zelda': Start having already met Zelda and obtained
+            Zelda's Letter along with the item from Impa.
+            Supersedes "Skip Child Stealth" since the whole sequence is skipped.
         ''',
-        shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
-            'option_remove': ['fortress'],
+            'distribution':  [
+                ('vanilla', 1),
+                ('shuffle', 1),
+                ('skip_child_zelda', 1),
+            ],
         },
+        shared         = True,
     ),
     Combobox(
-        name           = 'key_rings_choice',
-        gui_text       = 'Key Rings Mode',
+        name           = 'shuffle_freestanding_items',
+        gui_text       = 'Shuffle Rupees & Hearts',
         default        = 'off',
         choices        = {
             'off':       'Off',
-            'choice':    'Choose dungeons',
-            'all':       'All dungeons',
-            'random':    'Random dungeons'
-        },
-        gui_tooltip     = '''\
-            Selected dungeons will have all of their keys found 
-            at once in a ring rather than individually. 
-
-            For example, instead of shuffling 5 Forest Temple 
-            small keys into the pool, you will find a single
-            key ring which will give you all 5 keys at once.
-
-            Selecting key ring for dungeons will have no effect
-            if Small Keys are set to Remove or Vanilla.
-
-            Selecting key ring for Thieves' Hideout will have 
-            no effect if Thieves' Hideout keys are in vanilla 
-            locations or Gerudo's Fortress is set to Rescue
-            One Carpenter.
-        ''',
-        shared         = True,
-        disable={
-            'off': {'settings' : ['key_rings']},
-            'all': {'settings' : ['key_rings']},
-            'random': {'settings' : ['key_rings']},
-        },
-    ),
-    Combobox(
-        name            = 'key_rings',
-        multiple_select = True,
-        gui_text        = 'Key Rings',
-        choices         = {
-            'Thieves Hideout':        "Thieves' Hideout",
-            'Forest Temple':          "Forest Temple",
-            'Fire Temple':            "Fire Temple",
-            'Water Temple':           "Water Temple",
-            'Shadow Temple':          "Shadow Temple",
-            'Spirit Temple':          "Spirit Temple",
-            'Bottom of the Well':     "Bottom of the Well",
-            'Gerudo Training Ground': "Gerudo Training Ground",
-            'Ganons Castle':          "Ganon's Castle"
-        },
-        default         = [],
-        gui_params     = {
-            "hide_when_disabled": True,
+            'all':       'All',
+            'overworld': 'Overworld Only',
+            'dungeons':  'Dungeons Only',
         },
         gui_tooltip    = '''\
-            Select areas with keyring instead of multiple keys
+            Shuffles freestanding rupees and recovery hearts, also shuffles:
+                Shadow Temple Spinning Pot Drop
+                All Goron Pot faces
+
+            Off: No freestanding rupees/recovery hearts are shuffled.
+            All: All Visible freestanding rupees/recovery hearts are shuffled.
+            Overworld Only: Freestanding rupees/recovery hearts in the overworld are shuffled.
+            Dungeons Only: Freestanding rupees/recovery hearts in dungeons are shuffled.
         ''',
-        shared          = True,
-    ),
-    Combobox(
-        name           = 'shuffle_bosskeys',
-        gui_text       = 'Boss Keys',
-        default        = 'dungeon',
-        choices        = {
-            'remove':      'Remove (Keysy)',
-            'vanilla':     'Vanilla Locations',
-            'dungeon':     'Own Dungeon',
-            'regional':    'Regional',
-            'overworld':   'Overworld Only',
-            'any_dungeon': 'Any Dungeon',
-            'keysanity':   'Anywhere (Keysanity)',
-        },
-        gui_tooltip    = '''\
-            'Remove': Boss Keys are removed. All locked
-            doors in dungeons will be unlocked. An easier
-            mode.
-
-            'Vanilla': Boss Keys will appear in their 
-            vanilla locations.
-
-            'Own Dungeon': Boss Keys can only appear in their
-            respective dungeon.
-            
-            'Regional': Boss Keys can only appear in regions
-            near the original dungeon (including the dungeon
-            itself or other dungeons in the region).
-            <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
-            
-            'Overworld Only': Boss Keys can only appear outside
-            of dungeons. You may need to enter a dungeon without
-            the boss key to get items required to find the key
-            in the overworld.
-            
-            'Any Dungeon': Boss Keys can only appear inside
-            of any dungeon, but won't necessarily be in the
-            dungeon that the key is for. A difficult mode since
-            it is more likely to need to enter a dungeon
-            multiple times.
-
-            'Anywhere': Boss Keys can appear
-            anywhere in the world. A difficult mode since
-            it is more likely to need to enter a dungeon
-            multiple times.
-
-            Try different combination out, such as:
-            'Small Keys: Dungeon' + 'Boss Keys: Anywhere'
-            for a milder Keysanity experience.
-
-            Regardless of the selected option, boss keys from
-            pre-completed dungeons won't be placed outside their
-            respective dungeons and boss keys from other dungeons
-            won't be placed inside pre-completed dungeons.
-        ''',
-        shared         = True,
         gui_params     = {
             'randomize_key': 'randomize_settings',
         },
+        shared         = True,
     ),
     Combobox(
-        name           = 'shuffle_ganon_bosskey',
-        gui_text       = 'Ganon\'s Boss Key',
-        default        = 'dungeon',
-        disabled_default = 'triforce',
+        name           = 'shuffle_pots',
+        gui_text       = 'Shuffle Pots',
+        default        = 'off',
         choices        = {
-            'remove':          "Remove (Keysy)",
-            'vanilla':         "Vanilla Location",
-            'dungeon':         "Own Dungeon",
-            'regional':        "Regional",
-            'overworld':       "Overworld Only",
-            'any_dungeon':     "Any Dungeon",
-            'keysanity':       "Anywhere (Keysanity)",
-            'on_lacs':         "Light Arrow Cutscene",
-            'stones':          "Stones",
-            'medallions':      "Medallions",
-            'dungeons':        "Dungeons",
-            'tokens':          "Tokens",
-            'hearts':          "Hearts",
+            'off':       'Off',
+            'all':       'All',
+            'overworld': 'Overworld Only',
+            'dungeons':  'Dungeons Only',
         },
         gui_tooltip    = '''\
-            'Remove': Ganon's Castle Boss Key is removed
-            and the boss door in Ganon's Tower starts unlocked.
-            
-            'Vanilla': Ganon's Castle Boss Key will appear in 
-            the vanilla location.
-            
-            'Own Dungeon': Ganon's Castle Boss Key can only appear
-            inside Ganon's Castle.
-            
-            'Regional': Ganon's Castle Boss Key can only appear
-            in Hyrule Field, Lon Lon Ranch, Market, Temple of Time, Hyrule Castle,
-            (Outside) Ganon's Castle, and Inside Ganon's Castle.
-            
-            'Overworld Only': Ganon's Castle Boss Key can only appear
-            outside of dungeons.
-            
-            'Any Dungeon': Ganon's Castle Boss Key can only appear
-            inside of a dungeon, but not necessarily Ganon's Castle.
+            Shuffles pots, flying pots into the location pool.
 
-            'Anywhere': Ganon's Castle Boss Key can appear
-            anywhere in the world.
+            Off: Not shuffled.
+            All: All pots/flying pots are shuffled.
+            Overworld Only: Only overworld pots/flying pots are shuffled.
+            Dungeons Only: Only dungeon pots/flying pots are shuffled.
 
-            'Light Arrow Cutscene': Ganon's Castle Boss Key will
-            appear on the Light Arrow Cutscene.
-            
-            'Stones': Ganon's Castle Boss Key will be awarded
-            when reaching the target number of Spiritual Stones.
-            
-            'Medallions': Ganon's Castle Boss Key will be awarded
-            when reaching the target number of Medallions.
-                        
-            'Dungeons': Ganon's Castle Boss Key will be awarded
-            when reaching the target number of Dungeon Rewards.
-            
-            'Tokens': Ganon's Castle Boss Key will be awarded
-            when reaching the target number of Gold Skulltula Tokens.
+            Note: Only pots which normally drop an item are shuffled.
+            Empty pots are not shuffled. Pots containing fairies are not shuffled.
 
-            'Hearts': Ganon's Castle Boss Key will be awarded
-            when reaching the target number of hearts.
+            When this setting is enabled, the pots in Ganon's Tower will be
+            accessible without Ganon's Boss Key. Proceeding up the tower out
+            of the room with the pots will require Ganon's Boss Key.
         ''',
-        shared         = True,
-        disable        = {
-            '!stones':  {'settings': ['ganon_bosskey_stones']},
-            '!medallions':  {'settings': ['ganon_bosskey_medallions']},
-            '!dungeons':  {'settings': ['ganon_bosskey_rewards']},
-            '!tokens':  {'settings': ['ganon_bosskey_tokens']},
-            '!hearts':  {'settings': ['ganon_bosskey_hearts']},
-        },
         gui_params     = {
             'randomize_key': 'randomize_settings',
-            'distribution': [
-                ('remove',          4),
-                ('dungeon',         2),
-                ('vanilla',         2),
-                ('keysanity',       4),
-                ('on_lacs',         1)
-            ],
         },
-    ),
-    Scale(
-        name           = 'ganon_bosskey_medallions',
-        gui_text       = "Medallions Required for Ganon's BK",
-        default        = 6,
-        min            = 1,
-        max            = 6,
-        gui_tooltip    = '''\
-            Select the amount of Medallions required to receive Ganon's Castle Boss Key.
-        ''',
         shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            "randomize_key": "randomize_settings",
-            "hide_when_disabled": True,
-            'distribution': [(6, 1)],
-        },
-    ),
-    Scale(
-        name           = 'ganon_bosskey_stones',
-        gui_text       = "Spiritual Stones Required for Ganon's BK",
-        default        = 3,
-        min            = 1,
-        max            = 3,
-        gui_tooltip    = '''\
-            Select the amount of Spiritual Stones required to receive Ganon's Castle Boss Key.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            "randomize_key": "randomize_settings",
-            "hide_when_disabled": True,
-            'distribution': [(3, 1)],
-        },
-    ),
-    Scale(
-        name           = 'ganon_bosskey_rewards',
-        gui_text       = "Dungeon Rewards Required for Ganon's BK",
-        default        = 9,
-        min            = 1,
-        max            = 9,
-        gui_tooltip    = '''\
-            Select the amount of Dungeon Rewards (Medallions and Spiritual Stones)
-            required to receive Ganon's Castle Boss Key.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            "randomize_key": "randomize_settings",
-            "hide_when_disabled": True,
-            'distribution': [(9, 1)],
-        },
-    ),
-    Scale(
-        name           = 'ganon_bosskey_tokens',
-        gui_text       = "Gold Skulltula Tokens Required for Ganon's BK",
-        default        = 100,
-        min            = 1,
-        max            = 999,
-        gui_tooltip    = '''\
-            Select the amount of Gold Skulltula Tokens
-            required to receive Ganon's Castle Boss Key.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            "hide_when_disabled": True,
-            'web:max': 100,
-            'electron:max': 100,
-        },
-    ),
-    Scale(
-        name           = 'ganon_bosskey_hearts',
-        gui_text       = "Hearts Required for Ganon's BK",
-        default        = 20,
-        min            = 4,
-        max            = 20,
-        gui_tooltip    = '''\
-            Select the amount of hearts
-            required to receive Ganon's Castle Boss Key.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            "hide_when_disabled": True,
-        },
     ),
     Combobox(
-        name           = 'lacs_condition',
-        gui_text       = 'LACS Condition',
-        default        = 'vanilla',
+        name           = 'shuffle_crates',
+        gui_text       = 'Shuffle Crates',
+        default        = 'off',
         choices        = {
-            'vanilla':    "Vanilla",
-            'stones':     "Stones",
-            'medallions': "Medallions",
-            'dungeons':   "Dungeons",
-            'tokens':     "Tokens",
-            'hearts':     "Hearts",
+            'off':       'Off',
+            'all':       'All',
+            'overworld': 'Overworld Only',
+            'dungeons':  'Dungeons Only',
         },
         gui_tooltip    = '''\
-            Sets the condition for the Light Arrow Cutscene
-            check to give you the item from Zelda.
-            
-            'Vanilla': Shadow and Spirit Medallions.
-            'Stones': A configurable amount of Spiritual Stones.
-            'Medallions': A configurable amount of Medallions.
-            'Dungeons': A configurable amount of Dungeon Rewards.
-            'Tokens': A configurable amount of Gold Skulltula Tokens.
-            'Hearts': A configurable amount of hearts.
+            Shuffles large and small crates into the location pool.
+
+            Off: Not shuffled.
+            All: crates are shuffled.
+            Overworld Only: Only overworld crates are shuffled.
+            Dungeons Only: Only dungeon crates are shuffled.
+
+            Note: Only crates which normally drop an item are shuffled. Empty crates are not included.
         ''',
-        shared         = True,
-        disable        = {
-            '!stones':  {'settings': ['lacs_stones']},
-            '!medallions':  {'settings': ['lacs_medallions']},
-            '!dungeons':  {'settings': ['lacs_rewards']},
-            '!tokens':  {'settings': ['lacs_tokens']},
-            '!hearts':  {'settings': ['lacs_hearts']},
-        },
         gui_params     = {
-            'optional': True,
-            'distribution': [
-                ('vanilla',    1),
-                ('medallions', 1),
-                ('stones',     1),
-                ('dungeons',   1),
-            ],
+            'randomize_key': 'randomize_settings',
         },
-    ),
-    Scale(
-        name           = 'lacs_medallions',
-        gui_text       = "Medallions Required for LACS",
-        default        = 6,
-        min            = 1,
-        max            = 6,
-        gui_tooltip    = '''\
-            Select the amount of Medallions required to trigger the Light Arrow Cutscene.
-        ''',
         shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            'optional': True,
-            "hide_when_disabled": True,
-            'distribution': [(6, 1)],
-        },
-    ),
-    Scale(
-        name           = 'lacs_stones',
-        gui_text       = "Spiritual Stones Required for LACS",
-        default        = 3,
-        min            = 1,
-        max            = 3,
-        gui_tooltip    = '''\
-            Select the amount of Spiritual Stones required to trigger the Light Arrow Cutscene.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            'optional': True,
-            "hide_when_disabled": True,
-            'distribution': [(3, 1)],
-        },
-    ),
-    Scale(
-        name           = 'lacs_rewards',
-        gui_text       = "Dungeon Rewards Required for LACS",
-        default        = 9,
-        min            = 1,
-        max            = 9,
-        gui_tooltip    = '''\
-            Select the amount of Dungeon Rewards (Medallions and Spiritual Stones)
-            required to trigger the Light Arrow Cutscene.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            'optional': True,
-            "hide_when_disabled": True,
-            'distribution': [(9, 1)],
-        },
-    ),
-    Scale(
-        name           = 'lacs_tokens',
-        gui_text       = "Gold Skulltula Tokens Required for LACS",
-        default        = 100,
-        min            = 1,
-        max            = 999,
-        gui_tooltip    = '''\
-            Select the amount of Gold Skulltula Tokens
-            required to trigger the Light Arrow Cutscene.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            'optional': True,
-            "hide_when_disabled": True,
-            'web:max': 100,
-            'electron:max': 100,
-        },
-    ),
-    Scale(
-        name           = 'lacs_hearts',
-        gui_text       = "Hearts Required for LACS",
-        default        = 20,
-        min            = 4,
-        max            = 20,
-        gui_tooltip    = '''\
-            Select the amount of hearts
-            required to trigger the Light Arrow Cutscene.
-        ''',
-        shared         = True,
-        disabled_default = 0,
-        gui_params     = {
-            'optional': True,
-            "hide_when_disabled": True,
-        },
     ),
     Checkbutton(
-        name           = 'enhance_map_compass',
-        gui_text       = 'Maps and Compasses Give Information',
+        name           = 'shuffle_cows',
+        gui_text       = 'Shuffle Cows',
         gui_tooltip    = '''\
-            Gives the Map and Compass extra functionality.
-            Map will tell if a dungeon is vanilla or Master Quest.
-            Compass will tell what medallion or stone is within.
-            The Temple of Time Altar will no longer provide
-            information on the location of medallions and stones.
-
-            'Maps/Compasses: Remove': The dungeon information is
-            not available anywhere in the game.
-
-            'Maps/Compasses: Start With': The dungeon information
-            is available immediately from the dungeon menu.
+            Enabling this will let cows give you items
+            upon performing Epona's song in front of them.
+            There are 9 cows, and an extra in MQ Jabu.
         ''',
         default        = False,
         shared         = True,
@@ -4196,169 +4097,129 @@ setting_infos = [
             'randomize_key': 'randomize_settings',
         },
     ),
-    Combobox(
-        name           = 'mq_dungeons_mode',
-        gui_text       = 'MQ Dungeon Mode',
-        default        = 'vanilla',
-        choices        = {
-            'vanilla':    "Vanilla",
-            'mq':         "Master Quest",
-            'specific':   "Specific Dungeons",
-            'count':      "Count",
-            'random':     "Completely Random",
-        },
+    Checkbutton(
+        name           = 'shuffle_beehives',
+        gui_text       = 'Shuffle Beehives',
         gui_tooltip    = '''\
-            'Vanilla': All dungeons will be the original versions.
-            'Master Quest': All dungeons will be the MQ versions.
-            'Specific Dungeons': Choose which specific dungeons will be MQ versions.
-            'Count': Choose how many MQ dungeons will be randomly chosen.
-            'Completely Random': Each dungeon will vanilla or MQ at random.
+            Enabling this will let beehives drop items. Beehives will shake if they contain anything important.
+            There are 32 Beehives located in:
+                Generic Grottos (x2 per grotto)
+                2 Scrub Grottos (x1 per grotto)
+                3 Scrub Grottos (x1 per grotto)
+                DMT Cow Grotto (x1)
+                Zora's Domain (x3 child only)
         ''',
+        default        = False,
         shared         = True,
-        disable        = {
-            'vanilla':  {'settings': ['mq_dungeons_count', 'mq_dungeons_specific']},
-            'mq':       {'settings': ['mq_dungeons_count', 'mq_dungeons_specific']},
-            'specific': {'settings': ['mq_dungeons_count']},
-            'count':    {'settings': ['mq_dungeons_specific']},
-            'random':   {'settings': ['mq_dungeons_count', 'mq_dungeons_specific']},
-        },
         gui_params     = {
-            'distribution': [
-                ('random', 1),
-            ],
+            'randomize_key': 'randomize_settings',
         },
     ),
-    Combobox(
-        name            = 'mq_dungeons_specific',
-        multiple_select = True,
-        gui_text        = 'MQ Dungeons',
-        choices         = {
-            'Deku Tree':              "Deku Tree",
-            'Dodongos Cavern':        "Dodongo's Cavern",
-            'Jabu Jabus Belly':       "Jabu Jabu's Belly",
-            'Forest Temple':          "Forest Temple",
-            'Fire Temple':            "Fire Temple",
-            'Water Temple':           "Water Temple",
-            'Shadow Temple':          "Shadow Temple",
-            'Spirit Temple':          "Spirit Temple",
-            'Bottom of the Well':     "Bottom of the Well",
-            'Ice Cavern':             "Ice Cavern",
-            'Gerudo Training Ground': "Gerudo Training Ground",
-            'Ganons Castle':          "Ganon's Castle",
-        },
-        default         = [],
-        gui_tooltip     = '''\
-            Select the specific dungeons you would
-            like the Master Quest version of.
-            The unselected dungeons will be
-            the original version.
-        ''',
-        shared          = True,
-        gui_params     = {
-            "hide_when_disabled": True,
-        },
-    ),
-    Scale(
-        name           = 'mq_dungeons_count',
-        gui_text       = "MQ Dungeon Count",
-        default        = 0,
-        min            = 0,
-        max            = 12,
+    Checkbutton(
+        name           = 'shuffle_kokiri_sword',
+        gui_text       = 'Shuffle Kokiri Sword',
         gui_tooltip    = '''\
-            Specify the number of Master Quest
-            dungeons to appear in the game.
+            Enabling this shuffles the Kokiri Sword into the pool.
+
+            This will require extensive use of sticks until the
+            sword is found.
+        ''',
+        default        = True,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Checkbutton(
+        name           = 'shuffle_ocarinas',
+        gui_text       = 'Shuffle Ocarinas',
+        gui_tooltip    = '''\
+            Enabling this shuffles the Fairy Ocarina and the Ocarina
+            of Time into the pool.
+
+            This will require finding an Ocarina before being able
+            to play songs.
+        ''',
+        default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Checkbutton(
+        name           = 'shuffle_gerudo_card',
+        gui_text       = "Shuffle Gerudo Card",
+        gui_tooltip    = '''\
+            Enabling this shuffles the Gerudo Card into the item pool.
+
+            The Gerudo Card is required to enter the Gerudo Training Ground
+            and prevents the guards from throwing you in jail.
         ''',
         shared         = True,
         gui_params     = {
-            "hide_when_disabled": True,
+            'randomize_key': 'randomize_settings',
         },
     ),
-    Combobox(
-        name           = 'empty_dungeons_mode',
-        gui_text       = 'Pre-completed Dungeons Mode',
-        default        = 'none',
-        choices        = {
-            'none':       'Off',
-            'specific':   'Specific Dungeons',
-            'count':      'Count',
-        },
+    Checkbutton(
+        name           = 'shuffle_beans',
+        gui_text       = 'Shuffle Magic Beans',
         gui_tooltip    = '''\
-            Pre-completed dungeons are dungeons guaranteed to be barren and whose
-            dungeon rewards are given for free to the player before the beginning
-            of the game. This setting only applies to dungeons with dungeon rewards
-            (blue warps).
-
-            - 'None': No dungeon will be pre-completed. Some dungeons may still be
-            randomly rolled with no major items, but their dungeon rewards won't
-            be given for free.
-            - 'Specific Dungeons': Choose which specific dungeons will be pre-completed.
-            - 'Count': Choose how many pre-completed dungeons will be randomly chosen.
-
-            A same dungeon won't be both MQ and pre-completed unless it has been
-            explicitly specified as such or unless it is the only way to fulfill both MQ and
-            pre-completed selected settings.
-
-            Pre-completed dungeons won't contain major items even if "Dungeons Have
-            One Major Item" is on.
-
-            Regardless of "Shuffle Dungeon Items" settings, dungeon items from
-            pre-completed dungeons won't be placed outside their respective dungeons
-            and dungeon items from other dungeons won't be placed inside pre-completed
-            dungeons.
-
-            If "Shuffle Songs" is set to "Dungeon rewards", then songs that would have
-            been placed in pre-completed dungeons are given for free along with the
-            free dungeon rewards.
+            Enabling this adds a pack of 10 beans to the item pool
+            and changes the Magic Bean Salesman to sell a random
+            item once at the price of 60 Rupees.
         ''',
-        shared         = True,
-        disable        = {
-            '!specific': {'settings': ['empty_dungeons_specific']},
-            '!count':    {'settings': ['empty_dungeons_count']}
-        },
-        gui_params     = {
-            'distribution':  [
-                ('none', 1)
-            ],
-        },   
-    ),
-    Combobox(
-        name            = 'empty_dungeons_specific',
-        multiple_select = True,
-        gui_text        = 'Pre-completed Dungeons',
-        choices         = {
-            'Deku Tree':              "Deku Tree",
-            'Dodongos Cavern':        "Dodongo's Cavern",
-            'Jabu Jabus Belly':       "Jabu Jabu's Belly",
-            'Forest Temple':          "Forest Temple",
-            'Fire Temple':            "Fire Temple",
-            'Water Temple':           "Water Temple",
-            'Shadow Temple':          "Shadow Temple",
-            'Spirit Temple':          "Spirit Temple"
-        },
-        default         = [],
-        gui_tooltip     = '''\
-            Select the specific dungeons you would
-            like to be pre-completed.
-        ''',
-        shared          = True,
-        gui_params     = {
-            "hide_when_disabled": True,
-        },
-    ),
-    Scale(
-        name           = 'empty_dungeons_count',
-        gui_text       = "Pre-completed Dungeon Count",
-        default        = 2,
-        min            = 1,
-        max            = 8,
-        gui_tooltip    = '''\
-            Specify the number of pre-completed
-            dungeons to appear in the game.
-        ''',
+        default        = False,
         shared         = True,
         gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Checkbutton(
+        name           = 'shuffle_medigoron_carpet_salesman',
+        gui_text       = 'Shuffle Medigoron & Carpet Salesman',
+        gui_tooltip    = '''\
+            Enabling this adds a Giant's Knife and a pack of Bombchus 
+            to the item pool and changes both Medigoron and the 
+            Haunted Wasteland Carpet Salesman to sell a random item 
+            once at the price of 200 Rupees.
+        ''',
+        default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+    Checkbutton(
+        name           = 'shuffle_frog_song_rupees',
+        gui_text       = 'Shuffle Frog Song Rupees',
+        gui_tooltip    = '''\
+            Enabling this adds 5 Purple Rupees to the item pool 
+            and shuffles the rewards from playing Zelda's Lullaby,
+            Epona's Song, Saria's Song, Sun's Song, and Song of Time
+            to the frogs in Zora's River.
+        ''',
+        default        = False,
+        shared         = True,
+        gui_params     = {
+            'randomize_key': 'randomize_settings',
+        },
+    ),
+
+    # Detailed Logic (except "Guarantee Reachable Locations")
+
+    Checkbutton(
+        name           = 'logic_no_night_tokens_without_suns_song',
+        gui_text       = 'Nighttime Skulltulas Expect Sun\'s Song',
+        gui_tooltip    = '''\
+            GS Tokens that can only be obtained
+            during the night expect you to have Sun's
+            Song to collect them. This prevents needing
+            to wait until night for some locations.
+        ''',
+        gui_params={
             "hide_when_disabled": True,
         },
+        shared         = True,
     ),
     Setting_Info(
         name           = 'disabled_locations',
@@ -4420,45 +4281,9 @@ setting_infos = [
         },
         choices        = {},
     ),
-    Combobox(
-        name           = 'adult_trade_start',
-        multiple_select= True,
-        gui_text       = 'Adult Trade Sequence Items',
-        default        = ['Pocket Egg', 'Pocket Cucco', 'Cojiro', 'Odd Mushroom', 'Poachers Saw',
-                          'Broken Sword', 'Prescription', 'Eyeball Frog', 'Eyedrops', 'Claim Check'],
-        choices        = {
-            'Pocket Egg':   'Pocket Egg',
-            'Pocket Cucco': 'Pocket Cucco',
-            'Cojiro':       'Cojiro',
-            'Odd Mushroom': 'Odd Mushroom',
-            #'Odd Potion':   'Odd Potion',
-            'Poachers Saw': "Poacher's Saw",
-            'Broken Sword': 'Broken Sword',
-            'Prescription': 'Prescription',
-            'Eyeball Frog': 'Eyeball Frog',
-            'Eyedrops':     'Eyedrops',
-            'Claim Check':  'Claim Check',
-        },
-        gui_tooltip    = '''\
-            Select the items that can appear to start the adult trade sequence.
-            If none are selected, it will function as if all are selected.
-        ''',
-        shared         = True,
-    ),
-    Checkbutton(
-        name           = 'fix_broken_drops',
-        gui_text       = 'Fix Broken Drops',
-        gui_tooltip    = '''\
-            Enabling this fixes drops that are broken in the vanilla game.
-
-            There is a deku shield drop from a pot in the Spirit Temple child
-            side Anubis room that does not appear in the vanilla game, and
-            logic might require you to get a deku shield this way. There is a
-            magic jar on top of the Gerudo Training Ground eye statue that does
-            not always refill your magic in the vanilla game.
-        ''',
-        shared         = True,
-    ),
+    
+    # Starting Inventory
+    
     Setting_Info(
         name           = 'starting_equipment',
         type           = list,
@@ -4471,6 +4296,20 @@ setting_infos = [
         default        = [],
         gui_tooltip    = '''\
             Begin the game with the selected equipment.
+        ''',
+    ),
+    Setting_Info(
+        name           = 'starting_songs',
+        type           = list,
+        gui_text       = "Starting Songs",
+        gui_type       = "SearchBox",
+        shared         = True,
+        choices        = {
+            key: value.guitext for key, value in StartingItems.songs.items()
+        },
+        default        = [],
+        gui_tooltip    = '''\
+            Begin the game with the selected songs already learnt.
         ''',
     ),
     Setting_Info(
@@ -4492,20 +4331,238 @@ setting_infos = [
             is converted to a regular Bottle.
         ''',
     ),
-    Setting_Info(
-        name           = 'starting_songs',
-        type           = list,
-        gui_text       = "Starting Songs",
-        gui_type       = "SearchBox",
-        shared         = True,
-        choices        = {
-            key: value.guitext for key, value in StartingItems.songs.items()
-        },
-        default        = [],
+    Checkbutton(
+        name           = 'start_with_consumables',
+        gui_text       = 'Start with Consumables',
         gui_tooltip    = '''\
-            Begin the game with the selected songs already learnt.
+            Start the game with maxed out Deku Sticks and Deku Nuts.
         ''',
+        shared         = True,
     ),
+    Checkbutton(
+        name           = 'start_with_rupees',
+        gui_text       = 'Start with Max Rupees',
+        gui_tooltip    = '''\
+            Start the game with a full wallet.
+            Wallet upgrades will also fill the wallet.
+        ''',
+        shared         = True,
+    ),
+    Scale(
+        name           = 'starting_hearts',
+        gui_text       = "Starting Hearts",
+        default        = 3,
+        min            = 3,
+        max            = 20,
+        gui_tooltip    = '''\
+            Start the game with the selected number of hearts.
+            Heart Containers and Pieces of Heart are removed
+            from the item pool in equal proportion.
+        ''',
+        disabled_default = 1,
+        shared         = True,
+    ),
+    
+    # Other
+    
+    Checkbutton(
+        name           = 'no_escape_sequence',
+        gui_text       = 'Skip Tower Escape Sequence',
+        gui_tooltip    = '''\
+            The tower escape sequence between
+            Ganondorf and Ganon will be skipped.
+        ''',
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'no_guard_stealth',
+        gui_text       = 'Skip Child Stealth',
+        gui_tooltip    = '''\
+            The crawlspace into Hyrule Castle goes
+            straight to Zelda, skipping the guards.
+        ''',
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'no_epona_race',
+        gui_text       = 'Skip Epona Race',
+        gui_tooltip    = '''\
+            Epona can be summoned with Epona's Song
+            without needing to race Ingo.
+        ''',
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'skip_some_minigame_phases',
+        gui_text       = 'Skip Some Minigame Phases',
+        gui_tooltip    = '''\
+            Awards all eligible prizes after the first attempt for
+            Dampe Race and Gerudo Horseback Archery.
+
+            Dampe will start with the second race so you can finish 
+            the race in under a minute and get both rewards at once. 
+            You still get the first reward from the chest even if you 
+            don't complete the race in under a minute.
+
+            Both rewards at the Gerudo Horseback Archery will be 
+            available from the first time you play the minigame. 
+            This means you can get both rewards at once if you get 
+            1500 points in a single attempt.
+        ''',
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'complete_mask_quest',
+        gui_text       = 'Complete Mask Quest',
+        gui_tooltip    = '''\
+            Once the Happy Mask Shop is opened,
+            all masks will be available to be borrowed.
+        ''',
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'useful_cutscenes',
+        gui_text       = 'Enable Specific Glitch-Useful Cutscenes',
+        gui_tooltip    = '''\
+            The cutscenes of the Poes in Forest Temple and Darunia in
+            Fire Temple will not be skipped. These cutscenes are useful
+            in glitched gameplay only and do not provide any timesave
+            for glitchless playthroughs.
+        ''',
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'fast_chests',
+        gui_text       = 'Fast Chest Cutscenes',
+        gui_tooltip    = '''\
+            All chest animations are fast. If disabled,
+            the animation time is slow for major items.
+        ''',
+        default        = True,
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'free_scarecrow',
+        gui_text       = 'Free Scarecrow\'s Song',
+        gui_tooltip    = '''\
+            Pulling out the Ocarina near a
+            spot at which Pierre can spawn will
+            do so, without needing the song.
+        ''',
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'fast_bunny_hood',
+        gui_text       = 'Fast Bunny Hood',
+        gui_tooltip    = '''\
+            The Bunny Hood mask behaves like it does
+            in Majora's Mask and makes you go 1.5× faster.
+        ''',
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'plant_beans',
+        gui_text       = 'Plant Magic Beans',
+        gui_tooltip    = '''\
+            Enabling this plants all 10 magic beans in soft soil
+            causing the bean plants to be available as adult. You
+            can still get beans normally.
+        ''',
+        default        = False,
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'chicken_count_random',
+        gui_text       = 'Random Cucco Count',
+        gui_tooltip    = '''\
+            Anju will give a reward for collecting a random
+            number of Cuccos.
+        ''',
+        disable        = {
+            True : {'settings' : ['chicken_count']}
+        },
+        shared         = True,
+    ),
+    Scale(
+        name           = 'chicken_count',
+        gui_text       = 'Cucco Count',
+        default        = 7,
+        min            = 0,
+        max            = 7,
+        gui_tooltip    = '''\
+            Anju will give a reward for turning
+            in the chosen number of Cuccos.
+        ''',
+        shared         = True,
+        gui_params     = {
+            'no_line_break': True,
+        },
+    ),
+    Checkbutton(
+        name           = 'big_poe_count_random',
+        gui_text       = 'Random Big Poe Target Count',
+        gui_tooltip    = '''\
+            The Poe buyer will give a reward for turning
+            in a random number of Big Poes.
+        ''',
+        disable        = {
+            True : {'settings' : ['big_poe_count']}
+        },
+        shared         = True,
+    ),
+    Scale(
+        name           = 'big_poe_count',
+        gui_text       = "Big Poe Target Count",
+        default        = 10,
+        min            = 1,
+        max            = 10,
+        gui_tooltip    = '''\
+            The Poe buyer will give a reward for turning
+            in the chosen number of Big Poes.
+        ''',
+        disabled_default = 1,
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'easier_fire_arrow_entry',
+        gui_text       = 'Easier Fire Arrow Entry',
+        gui_tooltip    = '''\
+            It is possible to open the Shadow Temple entrance
+            by lighting the torches with Fire Arrows, but
+            can be difficult to light all 24 torches in time.
+            Enabling this setting allows you to reduce the
+            number of torches that need to be lit to open
+            the entrance, making it easier to perform
+            Fire Arrow Entry.
+
+            Note that this setting does not affect logic.
+            Whether it's used or not, the trick "Shadow Temple
+            Entry with Fire Arrows" must be enabled for it to be
+            in logic.
+        ''',
+        disable        = {
+            False : {'settings' : ['fae_torch_count']}
+        },
+        shared         = True,
+    ),
+    Scale(
+        name           = 'fae_torch_count',
+        gui_text       = 'Fire Arrow Entry Torch Count',
+        default        = 3,
+        min            = 1,
+        max            = 23,
+        gui_tooltip    = '''\
+            The entrance to Shadow Temple will open
+            after the chosen number of torches are lit.
+        ''',
+        shared         = True,
+        gui_params     = {
+            "hide_when_disabled": True,
+        }
+    ),
+
+
+
     Combobox(
         name           = 'ocarina_songs',
         gui_text       = 'Randomize Ocarina Song Notes',
@@ -4576,6 +4633,16 @@ setting_infos = [
             "hide_when_disabled" : True
         },
     ),
+    Checkbutton(
+        name           = 'invisible_chests',
+        gui_text       = 'Invisible Chests',
+        gui_tooltip    = '''\
+            Chests will be only be visible with
+            the Lens of Truth. Lens is not logically
+            required for normally visible chests.
+        ''',
+        shared         = True,
+    ),    
     Combobox(
         name           = 'correct_potcrate_appearances',
         gui_text       = 'Pot & Crate Appearance Matches Contents',
@@ -4605,16 +4672,6 @@ setting_infos = [
         shared         = True,
     ),
     Checkbutton(
-        name           = 'invisible_chests',
-        gui_text       = 'Invisible Chests',
-        gui_tooltip    = '''\
-            Chests will be only be visible with
-            the Lens of Truth. Lens is not logically
-            required for normally visible chests.
-        ''',
-        shared         = True,
-    ),
-    Checkbutton(
         name           = 'clearer_hints',
         gui_text       = 'Clearer Hints',
         gui_tooltip    = '''\
@@ -4623,18 +4680,6 @@ setting_infos = [
         ''',
         shared         = True,
         default        = True,
-    ),
-    Checkbutton(
-        name           = 'no_collectible_hearts',
-        gui_text       = 'Hero Mode',
-        gui_tooltip    = '''\
-            No recovery hearts will drop from 
-            enemies or objects.
-            (You might still find some freestanding
-            or in chests depending on other settings.)
-        ''',
-        default        = False,
-        shared         = True,
     ),
     Combobox(
         name           = 'hints',
@@ -4713,27 +4758,6 @@ setting_infos = [
     ),
     Setting_Info('hint_dist_user',    dict, None, None, True, {}),
     Combobox(
-        name           = 'text_shuffle',
-        gui_text       = 'Text Shuffle',
-        default        = 'none',
-        choices        = {
-            'none':         'No Text Shuffled',
-            'except_hints': 'Shuffled except Important Text',
-            'complete':     'All Text Shuffled',
-        },
-        gui_tooltip    = '''\
-            Will make things confusing for comedic value.
-
-            'Shuffled except Important Text': For when
-            you want comedy but don't want to impact
-            gameplay. Text that has an impact on gameplay
-            is not shuffled. This includes all hint text,
-            key text, Good Deal! items sold in shops, random
-            price scrubs, chicken count and poe count.
-        ''',
-        shared         = True,
-    ),
-    Combobox(
         name            = 'misc_hints',
         multiple_select = True,
         gui_text        = 'Misc. Hints',
@@ -4786,93 +4810,25 @@ setting_infos = [
         default        = ['altar', 'ganondorf', 'warp_songs'],
     ),
     Combobox(
-        name           = 'ice_trap_appearance',
-        gui_text       = 'Ice Trap Appearance',
-        default        = 'major_only',
+        name           = 'text_shuffle',
+        gui_text       = 'Text Shuffle',
+        default        = 'none',
         choices        = {
-            'major_only': 'Major Items Only',
-            'junk_only':  'Junk Items Only',
-            'anything':   'Anything',
+            'none':         'No Text Shuffled',
+            'except_hints': 'Shuffled except Important Text',
+            'complete':     'All Text Shuffled',
         },
         gui_tooltip    = '''\
-            Changes the categories of items Ice Traps may
-            appear as, both when freestanding and when in
-            chests with Chest Size Matches Contents enabled. 
+            Will make things confusing for comedic value.
 
-            'Major Items Only': Ice Traps appear as Major
-            Items (and in large chests if CSMC enabled).
-
-            'Junk Items Only': Ice Traps appear as Junk
-            Items (and in small chests if CSMC enabled).
-
-            'Anything': Ice Traps may appear as anything.
+            'Shuffled except Important Text': For when
+            you want comedy but don't want to impact
+            gameplay. Text that has an impact on gameplay
+            is not shuffled. This includes all hint text,
+            key text, Good Deal! items sold in shops, random
+            price scrubs, chicken count and poe count.
         ''',
         shared         = True,
-    ),
-    Combobox(
-        name           = 'junk_ice_traps',
-        gui_text       = 'Ice Traps',
-        default        = 'normal',
-        choices        = {
-            'off':       'No Ice Traps',
-            'normal':    'Normal Ice Traps',
-            'on':        'Extra Ice Traps',
-            'mayhem':    'Ice Trap Mayhem',
-            'onslaught': 'Ice Trap Onslaught',
-        },
-        gui_tooltip    = '''\
-            'Off': All Ice Traps are removed.
-
-            'Normal': Only Ice Traps from the base item pool
-            are placed.
-
-            'Extra Ice Traps': Chance to add extra Ice Traps
-            when junk items are added to the itempool.
-
-            'Ice Trap Mayhem': All added junk items will
-            be Ice Traps.
-
-            'Ice Trap Onslaught': All junk items will be
-            replaced by Ice Traps, even those in the
-            base pool.
-        ''',
-        shared         = True,
-    ),
-    Combobox(
-        name           = 'item_pool_value',
-        gui_text       = 'Item Pool',
-        default        = 'balanced',
-        choices        = {
-            'ludicrous': 'Ludicrous',
-            'plentiful': 'Plentiful',
-            'balanced':  'Balanced',
-            'scarce':    'Scarce',
-            'minimal':   'Minimal'
-        },
-        gui_tooltip    = '''\
-            'Ludicrous': Every item in the game is a major
-            item. Incompatible with one major item per dungeon.
-
-            'Plentiful': One additional copy of each major 
-            item is added.
-
-            'Balanced': Original item pool.
-
-            'Scarce': An extra copy of major item upgrades 
-            that are not required to open location checks 
-            is removed (e.g. Bow upgrade, Magic upgrade). 
-            Heart Containers are removed as well. Number
-            of Bombchu items is reduced.
-
-            'Minimal': All major item upgrades not used to 
-            open location checks are removed. All health 
-            upgrades are removed. Only one Bombchu item is 
-            available.
-        ''',
-        shared         = True,
-        disable        = {
-            'ludicrous':  {'settings': ['one_item_per_dungeon']}
-        }
     ),
     Combobox(
         name           = 'damage_multiplier',
@@ -4911,6 +4867,18 @@ setting_infos = [
         ''',
         shared         = True,
     ),
+    Checkbutton(
+        name           = 'no_collectible_hearts',
+        gui_text       = 'Hero Mode',
+        gui_tooltip    = '''\
+            No recovery hearts will drop from 
+            enemies or objects.
+            (You might still find some freestanding
+            or in chests depending on other settings.)
+        ''',
+        default        = False,
+        shared         = True,
+    ),    
     Combobox(
         name           = 'starting_tod',
         gui_text       = 'Starting Time of Day',
@@ -4935,32 +4903,151 @@ setting_infos = [
         ''',
         shared         = True,
     ),
-    Combobox(
-        name           = 'starting_age',
-        gui_text       = 'Starting Age',
-        default        = 'child',
-        choices        = {
-            'child':  'Child',
-            'adult':  'Adult',
-            'random': 'Random',
-        },
+    Checkbutton(
+        name           = 'blue_fire_arrows',
+        gui_text       = 'Blue Fire Arrows',
         gui_tooltip    = '''\
-            Choose which age Link will start as.
+            Ice arrows gain the power of blue fire.
+            They can be used to melt red ice
+            and break the mud walls in Dodongo's Cavern.
+        ''',
+        default        = False,
+        shared         = True,
+    ),
+    Checkbutton(
+        name           = 'fix_broken_drops',
+        gui_text       = 'Fix Broken Drops',
+        gui_tooltip    = '''\
+            Enabling this fixes drops that are broken in the vanilla game.
 
-            Starting as adult means you start with
-            the master sword in your inventory.
-
-            Only the child option is compatible with
-            Closed Forest.
+            There is a deku shield drop from a pot in the Spirit Temple child
+            side Anubis room that does not appear in the vanilla game, and
+            logic might require you to get a deku shield this way. There is a
+            magic jar on top of the Gerudo Training Ground eye statue that does
+            not always refill your magic in the vanilla game.
         ''',
         shared         = True,
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-            'distribution': [
-                ('random', 1),
-            ],
+    ),
+
+
+
+    Combobox(
+        name           = 'item_pool_value',
+        gui_text       = 'Item Pool',
+        default        = 'balanced',
+        choices        = {
+            'ludicrous': 'Ludicrous',
+            'plentiful': 'Plentiful',
+            'balanced':  'Balanced',
+            'scarce':    'Scarce',
+            'minimal':   'Minimal'
+        },
+        gui_tooltip    = '''\
+            'Ludicrous': Every item in the game is a major
+            item. Incompatible with one major item per dungeon.
+
+            'Plentiful': One additional copy of each major 
+            item is added.
+
+            'Balanced': Original item pool.
+
+            'Scarce': An extra copy of major item upgrades 
+            that are not required to open location checks 
+            is removed (e.g. Bow upgrade, Magic upgrade). 
+            Heart Containers are removed as well. Number
+            of Bombchu items is reduced.
+
+            'Minimal': All major item upgrades not used to 
+            open location checks are removed. All health 
+            upgrades are removed. Only one Bombchu item is 
+            available.
+        ''',
+        shared         = True,
+        disable        = {
+            'ludicrous':  {'settings': ['one_item_per_dungeon']}
         }
     ),
+    Combobox(
+        name           = 'junk_ice_traps',
+        gui_text       = 'Ice Traps',
+        default        = 'normal',
+        choices        = {
+            'off':       'No Ice Traps',
+            'normal':    'Normal Ice Traps',
+            'on':        'Extra Ice Traps',
+            'mayhem':    'Ice Trap Mayhem',
+            'onslaught': 'Ice Trap Onslaught',
+        },
+        gui_tooltip    = '''\
+            'Off': All Ice Traps are removed.
+
+            'Normal': Only Ice Traps from the base item pool
+            are placed.
+
+            'Extra Ice Traps': Chance to add extra Ice Traps
+            when junk items are added to the itempool.
+
+            'Ice Trap Mayhem': All added junk items will
+            be Ice Traps.
+
+            'Ice Trap Onslaught': All junk items will be
+            replaced by Ice Traps, even those in the
+            base pool.
+        ''',
+        shared         = True,
+    ),
+    Combobox(
+        name           = 'ice_trap_appearance',
+        gui_text       = 'Ice Trap Appearance',
+        default        = 'major_only',
+        choices        = {
+            'major_only': 'Major Items Only',
+            'junk_only':  'Junk Items Only',
+            'anything':   'Anything',
+        },
+        gui_tooltip    = '''\
+            Changes the categories of items Ice Traps may
+            appear as, both when freestanding and when in
+            chests with Chest Size Matches Contents enabled. 
+
+            'Major Items Only': Ice Traps appear as Major
+            Items (and in large chests if CSMC enabled).
+
+            'Junk Items Only': Ice Traps appear as Junk
+            Items (and in small chests if CSMC enabled).
+
+            'Anything': Ice Traps may appear as anything.
+        ''',
+        shared         = True,
+    ),
+    Combobox(
+        name           = 'adult_trade_start',
+        multiple_select= True,
+        gui_text       = 'Adult Trade Sequence Items',
+        default        = ['Pocket Egg', 'Pocket Cucco', 'Cojiro', 'Odd Mushroom', 'Poachers Saw',
+                          'Broken Sword', 'Prescription', 'Eyeball Frog', 'Eyedrops', 'Claim Check'],
+        choices        = {
+            'Pocket Egg':   'Pocket Egg',
+            'Pocket Cucco': 'Pocket Cucco',
+            'Cojiro':       'Cojiro',
+            'Odd Mushroom': 'Odd Mushroom',
+            #'Odd Potion':   'Odd Potion',
+            'Poachers Saw': "Poacher's Saw",
+            'Broken Sword': 'Broken Sword',
+            'Prescription': 'Prescription',
+            'Eyeball Frog': 'Eyeball Frog',
+            'Eyedrops':     'Eyedrops',
+            'Claim Check':  'Claim Check',
+        },
+        gui_tooltip    = '''\
+            Select the items that can appear to start the adult trade sequence.
+            If none are selected, it will function as if all are selected.
+        ''',
+        shared         = True,
+    ),
+
+    # Cosmetics
+
     Combobox(
         name           = 'default_targeting',
         gui_text       = 'Default Targeting Option',
@@ -4971,6 +5058,777 @@ setting_infos = [
             'hold':   'Hold',
             'switch': 'Switch',
         },
+    ),
+    Checkbutton(
+        name           = 'display_dpad',
+        gui_text       = 'Display D-Pad HUD',
+        shared         = False,
+        cosmetic       = True,
+        gui_tooltip    = '''\
+            Shows an additional HUD element displaying
+            current available options on the D-Pad.
+        ''',
+        default        = True,
+    ),
+    Checkbutton(
+        name           = 'dpad_dungeon_menu',
+        gui_text       = 'Display D-Pad Dungeon Info',
+        shared         = False,
+        cosmetic       = True,
+        gui_tooltip    = '''\
+            Shows separated menus on the pause screen for dungeon
+            keys, rewards, and Vanilla/MQ info. If disabled, these
+            menus are still available by holding the A button and
+            one of the D-Pad directions on the pause screen.
+        ''',
+        default        = True,
+    ),
+    Checkbutton(
+        name           = 'correct_model_colors',
+        gui_text       = 'Item Model Colors Match Cosmetics',
+        shared         = False,
+        cosmetic       = True,
+        gui_tooltip    = '''\
+            In-game models for items such as Heart Containers have
+            colors matching the colors chosen for cosmetic settings.
+            Heart and magic drop icons also have matching colors.
+
+            Tunic colors are excluded from this to prevent not being 
+            able to discern freestanding Tunics from each other.
+        ''',
+        default        = False,
+    ),
+    Checkbutton(
+        name           = 'randomize_all_cosmetics',
+        gui_text       = 'Randomize All Cosmetics',
+        shared         = False,
+        cosmetic       = True,
+        gui_tooltip    = '''\
+            Randomize all cosmetics settings.
+        ''',
+        default        = False,
+        disable    = {
+            True : {'sections' : [ "equipment_color_section", "ui_color_section", "misc_color_section" ]
+            }
+        }
+    ),
+    Combobox(
+        name           = 'model_adult',
+        gui_text       = 'Adult Link Model',
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_model_choices(0),
+        gui_tooltip    = '''\
+            Link's model will be replaced by the model selected. 
+            To add more model options, save the .zobj file to 
+            data/Models/Adult.
+            Cosmetics options might not be applied when a 
+            custom model is in use.
+            Caution: Any changes to Link's skeleton have the potential 
+            to affect gameplay in significant ways and so are disallowed 
+            for all recorded Racetime races. A note will appear at the top 
+            of the pause screen if this is the case.
+        ''',
+        default        = 'Default',
+        gui_params     = {
+            "hide_when_disabled": True,
+        }
+    ),
+    Setting_Info('model_adult_filepicker', str, "Adult Link Model", "Fileinput", False, {},
+        gui_params = {
+            "file_types": [
+                {
+                  "name": "Z64 Model Files",
+                  "extensions": [ "zobj" ]
+                },
+                {
+                  "name": "All Files",
+                  "extensions": [ "*" ]
+                }
+            ],
+            "hide_when_disabled": True,
+    }),
+    Combobox(
+        name           = 'model_child',
+        gui_text       = 'Child Link Model',
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_model_choices(1),
+        gui_tooltip    = '''\
+            Link's model will be replaced by the model selected. 
+            To add more model options, save the .zobj file to 
+            data/Models/Child.
+            Cosmetics options might not be applied when a 
+            custom model is in use.           
+            Caution: Any changes to Link's skeleton have the potential 
+            to affect gameplay in significant ways and so are disallowed 
+            for all recorded Racetime races. A note will appear at the top 
+            of the pause screen if this is the case.
+        ''',
+        default        = 'Default',
+        gui_params     = {
+            "hide_when_disabled": True,
+        }
+    ),
+    Setting_Info('model_child_filepicker', str, "Child Link Model", "Fileinput", False, {},
+        gui_params = {
+            "file_types": [
+                {
+                  "name": "Z64 Model Files",
+                  "extensions": [ "zobj" ]
+                },
+                {
+                  "name": "All Files",
+                  "extensions": [ "*" ]
+                }
+            ],
+            "hide_when_disabled": True,
+    }),
+    Setting_Info(
+        name           = 'model_unavailable_msg',
+        type           = str,
+        gui_text       = "Models can only be customized when patching.",
+        gui_type       = "Textbox",
+        shared         = False,
+        gui_params     = {
+            "hide_when_disabled": True
+        },
+        choices        = {},
+    ),    
+    Setting_Info(
+        name           = 'kokiri_color',
+        type           = str,
+        gui_text       = "Kokiri Tunic",
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_tunic_color_options(),
+        default        = 'Kokiri Green',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'goron_color',
+        type           = str,
+        gui_text       = "Goron Tunic",
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_tunic_color_options(),
+        default        = 'Goron Red',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'zora_color',
+        type           = str,
+        gui_text       = "Zora Tunic",
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_tunic_color_options(),
+        default        = 'Zora Blue',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'silver_gauntlets_color',
+        type           = str,
+        gui_text       = 'Silver Gauntlets Color',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_gauntlet_color_options(),
+        default        = 'Silver',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'golden_gauntlets_color',
+        type           = str,
+        gui_text       = 'Golden Gauntlets Color',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_gauntlet_color_options(),
+        default        = 'Gold',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'mirror_shield_frame_color',
+        type           = str,
+        gui_text       = 'Mirror Shield Frame Color',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_shield_frame_color_options(),
+        default        = 'Red',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'heart_color',
+        type           = str,
+        gui_text       = 'Heart Color',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_heart_color_options(),
+        default        = 'Red',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'magic_color',
+        type           = str,
+        gui_text       = 'Magic Color',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_magic_color_options(),
+        default        = 'Green',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'a_button_color',
+        type           = str,
+        gui_text       = 'A Button Color',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_a_button_color_options(),
+        default        = 'N64 Blue',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'b_button_color',
+        type           = str,
+        gui_text       = 'B Button Color',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_b_button_color_options(),
+        default        = 'N64 Green',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'c_button_color',
+        type           = str,
+        gui_text       = 'C Button Color',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_c_button_color_options(),
+        default        = 'Yellow',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'start_button_color',
+        type           = str,
+        gui_text       = 'Start Button Color',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_start_button_color_options(),
+        default        = 'N64 Red',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'navi_color_default_inner',
+        type           = str,
+        gui_text       = "Navi Idle Inner",
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_navi_color_options(),
+        default        = 'White',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'no_line_break' : True,
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'navi_color_default_outer',
+        type           = str,
+        gui_text       = "Outer",
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_navi_color_options(True),
+        default        = '[Same as Inner]',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'navi_color_enemy_inner',
+        type           = str,
+        gui_text       = 'Navi Targeting Enemy Inner',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_navi_color_options(),
+        default        = 'Yellow',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'no_line_break' : True,
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'navi_color_enemy_outer',
+        type           = str,
+        gui_text       = 'Outer',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_navi_color_options(True),
+        default        = '[Same as Inner]',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'navi_color_npc_inner',
+        type           = str,
+        gui_text       = 'Navi Targeting NPC Inner',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_navi_color_options(),
+        default        = 'Light Blue',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'no_line_break' : True,
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'navi_color_npc_outer',
+        type           = str,
+        gui_text       = 'Outer',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_navi_color_options(True),
+        default        = '[Same as Inner]',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'navi_color_prop_inner',
+        type           = str,
+        gui_text       = 'Navi Targeting Prop Inner',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_navi_color_options(),
+        default        = 'Green',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'no_line_break' : True,
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'navi_color_prop_outer',
+        type           = str,
+        gui_text       = 'Outer',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_navi_color_options(True),
+        default        = '[Same as Inner]',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'bombchu_trail_color_inner',
+        type           = str,
+        gui_text       = 'Bombchu Trail Inner',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_bombchu_trail_color_options(),
+        default        = 'Red',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'no_line_break' : True,
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'bombchu_trail_color_outer',
+        type           = str,
+        gui_text       = 'Outer',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_bombchu_trail_color_options(True),
+        default        = '[Same as Inner]',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'boomerang_trail_color_inner',
+        type           = str,
+        gui_text       = 'Boomerang Trail Inner',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_boomerang_trail_color_options(),
+        default        = 'Yellow',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'no_line_break' : True,
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'boomerang_trail_color_outer',
+        type           = str,
+        gui_text       = 'Outer',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_boomerang_trail_color_options(True),
+        default        = '[Same as Inner]',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'sword_trail_color_inner',
+        type           = str,
+        gui_text       = 'Sword Trail Inner',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_sword_trail_color_options(),
+        default        = 'White',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'no_line_break' : True,
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Setting_Info(
+        name           = 'sword_trail_color_outer',
+        type           = str,
+        gui_text       = 'Outer',
+        gui_type       = "Combobox",
+        shared         = False,
+        cosmetic       = True,
+        choices        = get_sword_trail_color_options(True),
+        default        = '[Same as Inner]',
+        gui_tooltip    = '''\
+            'Random Choice': Choose a random
+            color from this list of colors.
+            'Completely Random': Choose a random
+            color from any color the N64 can draw.
+            'Rainbow': Cycle through a color rainbow.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                ('Completely Random', 1),
+            ]
+        }
+    ),
+    Combobox(
+        name           = 'sword_trail_duration',
+        gui_text       = 'Sword Trail Duration',
+        shared         = False,
+        cosmetic       = True,
+        choices        = {
+            4: 'Default',
+            10: 'Long',
+            15: 'Very Long',
+            20: 'Lightsaber',
+        },
+        default        = 4,
+        gui_tooltip    = '''\
+            Select the duration for sword trails.
+        ''',
+        gui_params     = {
+            'randomize_key': 'randomize_all_cosmetics',
+            'distribution': [
+                (4, 1),
+                (10, 1),
+                (15, 1),
+                (20, 1)
+            ]
+        }
+    ),
+
+# SFX
+
+    Checkbutton(
+        name           = 'randomize_all_sfx',
+        gui_text       = 'Randomize All Sound Effects',
+        shared         = False,
+        cosmetic       = True,
+        gui_tooltip    = '''\
+            Randomize all sound effects and music settings (ear safe)
+        ''',
+        default        = False,
+        disable    = {
+            True : {'sections' : [ "generalsfx_section", "menusfx_section", "npcsfx_section" ]
+            }
+        }
     ),
     Combobox(
         name           = 'background_music',
@@ -5060,795 +5918,6 @@ setting_infos = [
         },
         default        = False,
     ),
-    Checkbutton(
-        name           = 'display_dpad',
-        gui_text       = 'Display D-Pad HUD',
-        shared         = False,
-        cosmetic       = True,
-        gui_tooltip    = '''\
-            Shows an additional HUD element displaying
-            current available options on the D-Pad.
-        ''',
-        default        = True,
-    ),
-    Checkbutton(
-        name           = 'dpad_dungeon_menu',
-        gui_text       = 'Display D-Pad Dungeon Info',
-        shared         = False,
-        cosmetic       = True,
-        gui_tooltip    = '''\
-            Shows separated menus on the pause screen for dungeon
-            keys, rewards, and Vanilla/MQ info. If disabled, these
-            menus are still available by holding the A button and
-            one of the D-Pad directions on the pause screen.
-        ''',
-        default        = True,
-    ),
-    Checkbutton(
-        name           = 'correct_model_colors',
-        gui_text       = 'Item Model Colors Match Cosmetics',
-        shared         = False,
-        cosmetic       = True,
-        gui_tooltip    = '''\
-            In-game models for items such as Heart Containers have
-            colors matching the colors chosen for cosmetic settings.
-            Heart and magic drop icons also have matching colors.
-
-            Tunic colors are excluded from this to prevent not being 
-            able to discern freestanding Tunics from each other.
-        ''',
-        default        = False,
-    ),
-    Combobox(
-        name           = 'model_adult',
-        gui_text       = 'Adult Link Model',
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_model_choices(0),
-        gui_tooltip    = '''\
-            Link's model will be replaced by the model selected. 
-            To add more model options, save the .zobj file to 
-            data/Models/Adult.
-            Caution: Any changes to Link's skeleton have the potential 
-            to affect gameplay in significant ways and so are disallowed 
-            for all recorded Racetime races. A note will appear at the top 
-            of the pause screen if an irregular skeleton is detected.
-        ''',
-        default        = 'Default',
-        gui_params     = {
-            "hide_when_disabled": True,
-        }
-    ),
-    Setting_Info('model_adult_filepicker', str, "Adult Link Model", "Fileinput", False, {},
-        gui_params = {
-            "file_types": [
-                {
-                  "name": "Z64 Model Files",
-                  "extensions": [ "zobj" ]
-                },
-                {
-                  "name": "All Files",
-                  "extensions": [ "*" ]
-                }
-            ],
-            "hide_when_disabled": True,
-    }),
-    Combobox(
-        name           = 'model_child',
-        gui_text       = 'Child Link Model',
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_model_choices(1),
-        gui_tooltip    = '''\
-            Link's model will be replaced by the model selected. 
-            To add more model options, save the .zobj file to 
-            data/Models/Child.
-            Caution: Any changes to Link's skeleton have the potential 
-            to affect gameplay in significant ways and so are disallowed 
-            for all recorded Racetime races. A note will appear at the top 
-            of the pause screen if an irregular skeleton is detected.
-        ''',
-        default        = 'Default',
-        gui_params     = {
-            "hide_when_disabled": True,
-        }
-    ),
-    Setting_Info('model_child_filepicker', str, "Child Link Model", "Fileinput", False, {},
-        gui_params = {
-            "file_types": [
-                {
-                  "name": "Z64 Model Files",
-                  "extensions": [ "zobj" ]
-                },
-                {
-                  "name": "All Files",
-                  "extensions": [ "*" ]
-                }
-            ],
-            "hide_when_disabled": True,
-    }),
-    Setting_Info(
-        name           = 'model_unavailable_msg',
-        type           = str,
-        gui_text       = "Models can only be customized when patching.",
-        gui_type       = "Textbox",
-        shared         = False,
-        gui_params     = {
-            "hide_when_disabled": True
-        },
-        choices        = {},
-    ),
-    Checkbutton(
-        name           = 'randomize_all_cosmetics',
-        gui_text       = 'Randomize All Cosmetics',
-        shared         = False,
-        cosmetic       = True,
-        gui_tooltip    = '''\
-            Randomize all cosmetics settings.
-        ''',
-        default        = False,
-        disable    = {
-            True : {'sections' : [ "equipment_color_section", "ui_color_section", "misc_color_section" ]
-            }
-        }
-    ),
-    Setting_Info(
-        name           = 'kokiri_color',
-        type           = str,
-        gui_text       = "Kokiri Tunic",
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_tunic_color_options(),
-        default        = 'Kokiri Green',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-    ),
-    Setting_Info(
-        name           = 'goron_color',
-        type           = str,
-        gui_text       = "Goron Tunic",
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_tunic_color_options(),
-        default        = 'Goron Red',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'zora_color',
-        type           = str,
-        gui_text       = "Zora Tunic",
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_tunic_color_options(),
-        default        = 'Zora Blue',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'navi_color_default_inner',
-        type           = str,
-        gui_text       = "Navi Idle Inner",
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_navi_color_options(),
-        default        = 'White',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'no_line_break' : True,
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-    ),
-    Setting_Info(
-        name           = 'navi_color_default_outer',
-        type           = str,
-        gui_text       = "Outer",
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_navi_color_options(True),
-        default        = '[Same as Inner]',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'navi_color_enemy_inner',
-        type           = str,
-        gui_text       = 'Navi Targeting Enemy Inner',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_navi_color_options(),
-        default        = 'Yellow',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'no_line_break' : True,
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'navi_color_enemy_outer',
-        type           = str,
-        gui_text       = 'Outer',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_navi_color_options(True),
-        default        = '[Same as Inner]',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'navi_color_npc_inner',
-        type           = str,
-        gui_text       = 'Navi Targeting NPC Inner',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_navi_color_options(),
-        default        = 'Light Blue',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'no_line_break' : True,
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'navi_color_npc_outer',
-        type           = str,
-        gui_text       = 'Outer',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_navi_color_options(True),
-        default        = '[Same as Inner]',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'navi_color_prop_inner',
-        type           = str,
-        gui_text       = 'Navi Targeting Prop Inner',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_navi_color_options(),
-        default        = 'Green',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'no_line_break' : True,
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'navi_color_prop_outer',
-        type           = str,
-        gui_text       = 'Outer',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_navi_color_options(True),
-        default        = '[Same as Inner]',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'bombchu_trail_color_inner',
-        type           = str,
-        gui_text       = 'Bombchu Trail Inner',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_bombchu_trail_color_options(),
-        default        = 'Red',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'no_line_break' : True,
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'bombchu_trail_color_outer',
-        type           = str,
-        gui_text       = 'Outer',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_bombchu_trail_color_options(True),
-        default        = '[Same as Inner]',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'boomerang_trail_color_inner',
-        type           = str,
-        gui_text       = 'Boomerang Trail Inner',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_boomerang_trail_color_options(),
-        default        = 'Yellow',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'no_line_break' : True,
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'boomerang_trail_color_outer',
-        type           = str,
-        gui_text       = 'Outer',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_boomerang_trail_color_options(True),
-        default        = '[Same as Inner]',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'sword_trail_color_inner',
-        type           = str,
-        gui_text       = 'Sword Trail Inner',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_sword_trail_color_options(),
-        default        = 'White',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'no_line_break' : True,
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'sword_trail_color_outer',
-        type           = str,
-        gui_text       = 'Outer',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_sword_trail_color_options(True),
-        default        = '[Same as Inner]',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-            'Rainbow': Cycle through a color rainbow.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Combobox(
-        name           = 'sword_trail_duration',
-        gui_text       = 'Sword Trail Duration',
-        shared         = False,
-        cosmetic       = True,
-        choices        = {
-            4: 'Default',
-            10: 'Long',
-            15: 'Very Long',
-            20: 'Lightsaber',
-        },
-        default        = 4,
-        gui_tooltip    = '''\
-            Select the duration for sword trails.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                (4, 1),
-                (10, 1),
-                (15, 1),
-                (20, 1)
-            ]
-        }
-    ),
-    Setting_Info(
-        name           = 'silver_gauntlets_color',
-        type           = str,
-        gui_text       = 'Silver Gauntlets Color',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_gauntlet_color_options(),
-        default        = 'Silver',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'golden_gauntlets_color',
-        type           = str,
-        gui_text       = 'Golden Gauntlets Color',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_gauntlet_color_options(),
-        default        = 'Gold',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'mirror_shield_frame_color',
-        type           = str,
-        gui_text       = 'Mirror Shield Frame Color',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_shield_frame_color_options(),
-        default        = 'Red',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'heart_color',
-        type           = str,
-        gui_text       = 'Heart Color',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_heart_color_options(),
-        default        = 'Red',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'magic_color',
-        type           = str,
-        gui_text       = 'Magic Color',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_magic_color_options(),
-        default        = 'Green',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'a_button_color',
-        type           = str,
-        gui_text       = 'A Button Color',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_a_button_color_options(),
-        default        = 'N64 Blue',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'b_button_color',
-        type           = str,
-        gui_text       = 'B Button Color',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_b_button_color_options(),
-        default        = 'N64 Green',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'c_button_color',
-        type           = str,
-        gui_text       = 'C Button Color',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_c_button_color_options(),
-        default        = 'Yellow',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Setting_Info(
-        name           = 'start_button_color',
-        type           = str,
-        gui_text       = 'Start Button Color',
-        gui_type       = "Combobox",
-        shared         = False,
-        cosmetic       = True,
-        choices        = get_start_button_color_options(),
-        default        = 'N64 Red',
-        gui_tooltip    = '''\
-            'Random Choice': Choose a random
-            color from this list of colors.
-            'Completely Random': Choose a random
-            color from any color the N64 can draw.
-        ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_cosmetics',
-            'distribution': [
-                ('Completely Random', 1),
-            ]
-        }
-
-    ),
-    Checkbutton(
-        name           = 'randomize_all_sfx',
-        gui_text       = 'Randomize All Sound Effects',
-        shared         = False,
-        cosmetic       = True,
-        gui_tooltip    = '''\
-            Randomize all sound effects and music settings (ear safe)
-        ''',
-        default        = False,
-        disable    = {
-            True : {'sections' : [ "generalsfx_section", "menusfx_section", "npcsfx_section" ]
-            }
-        }
-
-    ),
     Combobox(
         name           = 'sfx_low_hp',
         gui_text       = 'Low HP',
@@ -5860,62 +5929,6 @@ setting_infos = [
             'Random Choice': Choose a random sound from this list.
             'Default': Beep. Beep. Beep.
         ''',
-        gui_params     = {
-            'randomize_key': 'randomize_all_sfx',
-            'distribution': [
-                ('random-ear-safe', 1),
-            ]
-        }
-    ),
-    Combobox(
-        name           = 'sfx_navi_overworld',
-        gui_text       = 'Navi Overworld',
-        shared         = False,
-        cosmetic       = True,
-        choices        = sfx.get_setting_choices(sfx.SoundHooks.NAVI_OVERWORLD),
-        default        = 'default',
-        gui_params     = {
-            'randomize_key': 'randomize_all_sfx',
-            'distribution': [
-                ('random-ear-safe', 1),
-            ]
-        }
-    ),
-    Combobox(
-        name           = 'sfx_navi_enemy',
-        gui_text       = 'Navi Enemy',
-        shared         = False,
-        cosmetic       = True,
-        choices        = sfx.get_setting_choices(sfx.SoundHooks.NAVI_ENEMY),
-        default        = 'default',
-        gui_params     = {
-            'randomize_key': 'randomize_all_sfx',
-            'distribution': [
-                ('random-ear-safe', 1),
-            ]
-        }
-    ),
-    Combobox(
-        name           = 'sfx_menu_cursor',
-        gui_text       = 'Menu Cursor',
-        shared         = False,
-        cosmetic       = True,
-        choices        = sfx.get_setting_choices(sfx.SoundHooks.MENU_CURSOR),
-        default        = 'default',
-        gui_params     = {
-            'randomize_key': 'randomize_all_sfx',
-            'distribution': [
-                ('random-ear-safe', 1),
-            ]
-        }
-    ),
-    Combobox(
-        name           = 'sfx_menu_select',
-        gui_text       = 'Menu Select',
-        shared         = False,
-        cosmetic       = True,
-        choices        = sfx.get_setting_choices(sfx.SoundHooks.MENU_SELECT),
-        default        = 'default',
         gui_params     = {
             'randomize_key': 'randomize_all_sfx',
             'distribution': [
@@ -5991,6 +6004,62 @@ setting_infos = [
         }
     ),
     Combobox(
+        name           = 'sfx_menu_cursor',
+        gui_text       = 'Menu Cursor',
+        shared         = False,
+        cosmetic       = True,
+        choices        = sfx.get_setting_choices(sfx.SoundHooks.MENU_CURSOR),
+        default        = 'default',
+        gui_params     = {
+            'randomize_key': 'randomize_all_sfx',
+            'distribution': [
+                ('random-ear-safe', 1),
+            ]
+        }
+    ),
+    Combobox(
+        name           = 'sfx_menu_select',
+        gui_text       = 'Menu Select',
+        shared         = False,
+        cosmetic       = True,
+        choices        = sfx.get_setting_choices(sfx.SoundHooks.MENU_SELECT),
+        default        = 'default',
+        gui_params     = {
+            'randomize_key': 'randomize_all_sfx',
+            'distribution': [
+                ('random-ear-safe', 1),
+            ]
+        }
+    ),
+    Combobox(
+        name           = 'sfx_navi_overworld',
+        gui_text       = 'Navi Overworld',
+        shared         = False,
+        cosmetic       = True,
+        choices        = sfx.get_setting_choices(sfx.SoundHooks.NAVI_OVERWORLD),
+        default        = 'default',
+        gui_params     = {
+            'randomize_key': 'randomize_all_sfx',
+            'distribution': [
+                ('random-ear-safe', 1),
+            ]
+        }
+    ),
+    Combobox(
+        name           = 'sfx_navi_enemy',
+        gui_text       = 'Navi Enemy',
+        shared         = False,
+        cosmetic       = True,
+        choices        = sfx.get_setting_choices(sfx.SoundHooks.NAVI_ENEMY),
+        default        = 'default',
+        gui_params     = {
+            'randomize_key': 'randomize_all_sfx',
+            'distribution': [
+                ('random-ear-safe', 1),
+            ]
+        }
+    ),
+    Combobox(
         name           = 'sfx_link_adult',
         gui_text       = 'Adult Voice',
         shared         = False,
@@ -6038,54 +6107,6 @@ setting_infos = [
             "hide_when_disabled": True
         },
         choices        = {},
-    ),
-    Checkbutton(
-        name           = 'easier_fire_arrow_entry',
-        gui_text       = 'Easier Fire Arrow Entry',
-        gui_tooltip    = '''\
-            It is possible to open the Shadow Temple entrance
-            by lighting the torches with Fire Arrows, but
-            can be difficult to light all 24 torches in time.
-            Enabling this setting allows you to reduce the
-            number of torches that need to be lit to open
-            the entrance, making it easier to perform
-            Fire Arrow Entry.
-
-            Note that this setting does not affect logic.
-            Whether it's used or not, the trick "Shadow Temple
-            Entry with Fire Arrows" must be enabled for it to be
-            in logic.
-        ''',
-        disable        = {
-            False : {'settings' : ['fae_torch_count']}
-        },
-        shared         = True,
-    ),
-    Scale(
-        name           = 'fae_torch_count',
-        gui_text       = 'Fire Arrow Entry Torch Count',
-        default        = 3,
-        min            = 1,
-        max            = 23,
-        gui_tooltip    = '''\
-            The entrance to Shadow Temple will open
-            after the chosen number of torches are lit.
-        ''',
-        shared         = True,
-        gui_params     = {
-            "hide_when_disabled": True,
-        }
-    ),
-    Checkbutton(
-        name           = 'blue_fire_arrows',
-        gui_text       = 'Blue Fire Arrows',
-        gui_tooltip    = '''\
-            Ice arrows gain the power of blue fire.
-            They can be used to melt red ice
-            and break the mud walls in Dodongo's Cavern.
-        ''',
-        default        = False,
-        shared         = True,
     ),
 ]
 
