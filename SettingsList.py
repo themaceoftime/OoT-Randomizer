@@ -1672,7 +1672,7 @@ logic_tricks = {
 }
 
 # Below is the list of possible settings.
-# They are mostly isted in the order in which they appear in the GUI
+# They are mostly listed in the order in which they appear in the GUI
 # (with the exception of major settings like ALR, Rainbow Bridge, Ganon's Boss Key, Triforce Hunt).
 # This makes the Spoiler Log more readable for Support and users.
 
