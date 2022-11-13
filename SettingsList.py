@@ -2871,7 +2871,7 @@ setting_infos = [
             it is more likely to need to enter a dungeon
             multiple times.
 
-            Try different combination out, such as:
+            Try different combinations out, such as:
             'Small Keys: Dungeon' + 'Boss Keys: Anywhere'
             for a milder Keysanity experience.
 
