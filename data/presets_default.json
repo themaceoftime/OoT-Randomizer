@@ -751,7 +751,7 @@
     "ganon_bosskey_tokens": 100,
     "lacs_condition": "vanilla",
     "enhance_map_compass": true,
-    "reachable_locations": "beatable",
+    "reachable_locations": "all",
     "logic_no_night_tokens_without_suns_song": false,
     "disabled_locations": [],
     "allowed_tricks": [
@@ -951,6 +951,7 @@
     "fix_broken_drops": false,
     "item_pool_value": "minimal",
     "junk_ice_traps": "onslaught",
+    "ice_trap_appearance": "anything",
     "adult_trade_start":                       [
       "Pocket Egg"
     ]
