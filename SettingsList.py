@@ -1672,7 +1672,7 @@ logic_tricks = {
 }
 
 # Below is the list of possible settings.
-# They are mostly isted in the order in which they appear in the GUI
+# They are mostly listed in the order in which they appear in the GUI
 # (with the exception of major settings like ALR, Rainbow Bridge, Ganon's Boss Key, Triforce Hunt).
 # This makes the Spoiler Log more readable for Support and users.
 
@@ -2871,7 +2871,7 @@ setting_infos = [
             it is more likely to need to enter a dungeon
             multiple times.
 
-            Try different combination out, such as:
+            Try different combinations out, such as:
             'Small Keys: Dungeon' + 'Boss Keys: Anywhere'
             for a milder Keysanity experience.
 
