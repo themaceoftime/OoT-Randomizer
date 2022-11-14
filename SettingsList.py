@@ -614,7 +614,7 @@ logic_tricks = {
                     '''},
     'Deku Tree Basement without Slingshot': {
         'name'    : 'logic_deku_b1_skip',
-        'tags'    : ("Deku Tree",),
+        'tags'    : ("Deku Tree", "MQ",),
         'tooltip' : '''\
                     A precise jump can be used to skip
                     needing to use the Slingshot to go
@@ -897,7 +897,7 @@ logic_tricks = {
                     '''},
     'Forest Temple East Courtyard Door Frame with Hover Boots': {
         'name'    : 'logic_forest_door_frame',
-        'tags'    : ("Forest Temple",),
+        'tags'    : ("Forest Temple", "MQ",),
         'tooltip' : '''\
                     A precise Hover Boots movement from the upper
                     balconies in this courtyard can be used to get on
@@ -1138,7 +1138,7 @@ logic_tricks = {
                     '''},
     'Water Temple North Basement Ledge with Precise Jump': {
         'name'    : 'logic_water_north_basement_ledge_jump',
-        'tags'    : ("Water Temple",),
+        'tags'    : ("Water Temple", "MQ",),
         'tooltip' : '''\
                     In the northern basement there's a ledge from where, in
                     vanilla Water Temple, boulders roll out into the room.
@@ -1216,7 +1216,7 @@ logic_tricks = {
                     '''},
     'Water Temple Dragon Statue Jump Dive': {
         'name'    : 'logic_water_dragon_jump_dive',
-        'tags'    : ("Water Temple",),
+        'tags'    : ("Water Temple", "MQ",),
         'tooltip' : '''\
                     If you come into the dragon statue room from the
                     serpent river, you can jump down from above and get
@@ -1303,7 +1303,7 @@ logic_tricks = {
                     '''},
     'Shadow Temple Stone Umbrella Skip': {
         'name'    : 'logic_shadow_umbrella',
-        'tags'    : ("Shadow Temple",),
+        'tags'    : ("Shadow Temple", "MQ",),
         'tooltip' : '''\
                     A very precise Hover Boots movement
                     from off of the lower chest can get you
@@ -1313,7 +1313,7 @@ logic_tricks = {
                     '''},
     'Shadow Temple Falling Spikes GS with Hover Boots': {
         'name'    : 'logic_shadow_umbrella_gs',
-        'tags'    : ("Shadow Temple", "Skulltulas",),
+        'tags'    : ("Shadow Temple", "Skulltulas", "MQ",),
         'tooltip' : '''\
                     After killing the Skulltula, a very precise Hover Boots
                     movement from off of the lower chest can get you on top
@@ -1591,7 +1591,7 @@ logic_tricks = {
                     '''},
     'Reach Gerudo Training Ground Fake Wall Ledge with Hover Boots': {
         'name'    : 'logic_gtg_fake_wall',
-        'tags'    : ("Gerudo Training Ground",),
+        'tags'    : ("Gerudo Training Ground", "MQ",),
         'tooltip' : '''\
                     A precise Hover Boots use from the top of the chest can allow
                     you to grab the ledge without needing the usual requirements.
