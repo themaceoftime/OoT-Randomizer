@@ -168,7 +168,7 @@ app.on("activate", () => {
 });
 
 app.on('browser-window-created', (_, window) => {
-  require("@electron/remote/main").enable(window.webContents)
+  remoteMain.enable(window.webContents)
 });
 
 app.on("window-all-closed", () => {
