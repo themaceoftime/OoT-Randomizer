@@ -338,6 +338,17 @@ def rebuild_sequences(rom, sequences):
             rom.write_byte(base, j.instrument_set)
 
 
+def rebuild_pointers_table(rom, sequences):
+    for sequence in [s for s in sequences if s.vanilla_id and s.replaces]:
+        bgm_sequence = rom.original.read_bytes(0xB89AE0 + (sequence.vanilla_id * 0x10), 0x10)
+        bgm_instrument = rom.original.read_int16(0xB89910 + 0xDD + (sequence.vanilla_id * 2))
+        rom.write_bytes(0xB89AE0 + (sequence.replaces * 0x10), bgm_sequence)
+        rom.write_int16(0xB89910 + 0xDD + (sequence.replaces * 2), bgm_instrument)
+
+    # Write Fairy Fountain instrument to File Select (uses same track but different instrument set pointer for some reason)
+    rom.write_int16(0xB89910 + 0xDD + (0x57 * 2), rom.read_int16(0xB89910 + 0xDD + (0x28 * 2)))
+
+
 def randomize_music(rom, settings, log):
     shuffled_sequences = shuffled_fanfare_sequences = []
     sequences = fanfare_sequences = target_sequences = target_fanfare_sequences = bgm_groups = fanfare_groups = {}
@@ -358,8 +369,6 @@ def randomize_music(rom, settings, log):
         rom_version_bytes = rom.read_version_bytes()
         rom_version = f'{rom_version_bytes[0]}.{rom_version_bytes[1]}.{rom_version_bytes[2]}'
         if compare_version(rom_version, '4.11.13') < 0:
-            rom.write_bytes(0xB2E82C, [0x3C, 0x05, 0x80, 0x01, 0x8C, 0xA5, 0xB1, 0x88])  # Load Audioseq using dmadata
-            rom.write_bytes(0xB2E854, [0x3C, 0x05, 0x80, 0x01, 0x8C, 0xA5, 0xB1, 0x98])  # Load Audiotable using dmadata
             log.errors.append("Custom music is not supported by this patch version. Only randomizing vanilla music.")
             custom_sequences_enabled = False
 
@@ -463,7 +472,8 @@ def randomize_music(rom, settings, log):
         shuffled_fanfare_sequences = shuffle_music(log, fanfare_sequences, target_fanfare_sequences, music_mapping, "fanfares")
 
     # Patch the randomized sequences into the ROM.
-    rebuild_sequences(rom, shuffled_sequences + shuffled_fanfare_sequences)
+    patch_music = rebuild_sequences if custom_sequences_enabled else rebuild_pointers_table
+    patch_music(rom, shuffled_sequences + shuffled_fanfare_sequences)
 
     if disabled_target_sequences:
         disable_music(rom, log, disabled_target_sequences.values())
