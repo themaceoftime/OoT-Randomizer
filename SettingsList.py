@@ -159,18 +159,20 @@ logic_tricks = {
                     '''},
     'Fewer Tunic Requirements': {
         'name'    : 'logic_fewer_tunic_requirements',
-        'tags'    : ("General", "Fire Temple", "Water Temple", "Gerudo Training Ground", "Zora's Fountain", "Death Mountain Crater",),
+        'tags'    : ("General", "Fire Temple", "Water Temple", "Gerudo Training Ground", "Zora's Fountain", "Death Mountain Crater", "MQ",),
         'tooltip' : '''\
                     Allows the following possible without Tunics:
-                    - Enter Water Temple. The key below the center
-                    pillar still requires Zora Tunic.
+                    - Enter Water Temple. The area below the center
+                    pillar still requires Zora Tunic. Applies to
+                    MQ also.
                     - Enter Fire Temple. Only the first floor is
-                    accessible, and not Volvagia.
+                    accessible, and not Volvagia. Applies to
+                    MQ also.
                     - Zora's Fountain Bottom Freestanding PoH.
                     Might not have enough health to resurface.
                     - Gerudo Training Ground Underwater
                     Silver Rupee Chest. May need to make multiple
-                    trips.
+                    trips. Applies to MQ also.
                     '''},
     'Beehives with Bombchus' : {
         'name'    : 'logic_beehives_bombchus',
@@ -704,9 +706,9 @@ logic_tricks = {
                     '''},
     'Dodongo\'s Cavern Spike Trap Room Jump without Hover Boots': {
         'name'    : 'logic_dc_jump',
-        'tags'    : ("Dodongo's Cavern",),
+        'tags'    : ("Dodongo's Cavern", "MQ",),
         'tooltip' : '''\
-                    Jump is adult only.
+                    The jump is adult Link only. Applies to both Vanilla and MQ.
                     '''},
     'Dodongo\'s Cavern Smash the Boss Lobby Floor': {
         'name'    : 'logic_dc_hammer_floor',
@@ -878,11 +880,11 @@ logic_tricks = {
                     '''},                                      
     'Forest Temple East Courtyard Vines with Hookshot': {
         'name'    : 'logic_forest_vines',
-        'tags'    : ("Forest Temple",),
+        'tags'    : ("Forest Temple", "MQ",),
         'tooltip' : '''\
                     The vines in Forest Temple leading to where the well
                     drain switch is in the standard form can be barely
-                    reached with just the Hookshot.
+                    reached with just the Hookshot. Applies to MQ also.
                     '''},
     'Forest Temple NE Outdoors Ledge with Hover Boots': {
         'name'    : 'logic_forest_outdoors_ledge',
@@ -1225,7 +1227,7 @@ logic_tricks = {
                     Master Quest. In Vanilla, you must shoot the switch
                     from above with the Bow, and then quickly get
                     through the tunnel before the gate closes.
-                    '''},                                      
+                    '''},
     'Water Temple Dragon Statue Switch from Above the Water as Adult': {
         'name'    : 'logic_water_dragon_adult',
         'tags'    : ("Water Temple",),
@@ -1342,7 +1344,7 @@ logic_tricks = {
                     '''},
     'Shadow Temple Bongo Bongo without projectiles': {
         'name'    : 'logic_shadow_bongo',
-        'tags'    : ("Shadow Temple",),
+        'tags'    : ("Shadow Temple", "Entrance",),
         'tooltip' : '''\
                     Using precise sword slashes, Bongo Bongo can be
                     defeated without using projectiles. This is
