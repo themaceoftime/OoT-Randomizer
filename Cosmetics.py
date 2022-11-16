@@ -11,6 +11,7 @@ from SettingsList import setting_infos
 from Plandomizer import InvalidFileException
 import json
 from N64Patch import apply_patch_file
+import os
 
 
 def patch_targeting(rom, settings, log, symbols):
@@ -778,6 +779,44 @@ def patch_instrument(rom, settings, log, symbols):
     rom.write_byte(0x00B4BF6F, instruments[choice]) # For Lost Woods Skull Kids' minigame in Lost Woods
     log.sfx['Ocarina'] = ocarina_options[choice]
 
+
+def read_default_voice_data(rom):
+    audiobank = 0xD390
+    audiotable = 0x79470
+    soundbank = audiobank + rom.read_int32(audiobank + 0x4)
+    n_sfx = 0x88 # bank 00 sfx ids starting from 00
+
+    # Read sound bank entries. This table (usually at 0x109F0) has information on each entry in the bank
+    # Each entry is 8 bytes, the first 4 are the offset in audiobank, second are almost always 0x3F200000
+    # In the audiobank entry, each sfx has 0x20 bytes of info. The first 4 bytes are the length of the 
+    # raw sample and the following 4 bytes are the offset in the audiotable for the raw sample
+    soundbank_entries = {}
+    for i in range(n_sfx):
+        audiobank_offset = rom.read_int32(soundbank + i*0x8)
+        sfxid = f"00-00{i:02x}"
+        soundbank_entries[sfxid] = {
+            "length": rom.read_int32(audiobank + audiobank_offset),
+            "romoffset": audiotable + rom.read_int32(audiobank + audiobank_offset + 0x4)
+        }
+    return soundbank_entries
+
+
+def apply_voice_patch(rom, voice_path, soundbank_entries):
+    if not os.path.exists(voice_path):
+        return
+
+    # Loop over all the files in the directory and apply each binary sfx file to the rom
+    for binsfxfilename in os.listdir(voice_path):
+        if binsfxfilename.endswith(".bin"):
+            sfxid = binsfxfilename.split('.')[0].lower()
+            # Load the binary sound file and pad it to be the same length as the default file
+            with open(os.path.join(voice_path, binsfxfilename), 'rb') as binsfxin:
+                binsfx = bytearray() + binsfxin.read(-1)
+            binsfx = binsfx.ljust(soundbank_entries[sfxid]["length"], b'\0')
+            # Write the binary sfx to the rom
+            rom.write_bytes(soundbank_entries[sfxid]["romoffset"], binsfx)
+
+
 def patch_voices(rom, settings, log, symbols):
     if settings.disable_custom_music:
         if settings.sfx_link_child != 'default' or settings.sfx_link_adult != 'default':
@@ -786,30 +825,39 @@ def patch_voices(rom, settings, log, symbols):
 
     # Link's Voice Replacement Files
     override_voice(rom, settings)
-    # Resolve random settings
-    if settings.sfx_link_child == 'random-choice':
-        settings.sfx_link_child = random.choice(['default', 'feminine', 'silent'])
-    if settings.sfx_link_adult == 'random-choice':
-        settings.sfx_link_adult = random.choice(['default', 'feminine', 'silent'])
-    # Perform patch
-    if settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'default':
-        patch_voice(rom, settings, data_path('Voices/FemaleChildVoice.zpf'))
-    elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'default':
-        patch_voice(rom, settings, data_path('Voices/SilentChildVoice.zpf'))
-    elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'feminine':
-        patch_voice(rom, settings, data_path('Voices/FemaleAdultVoice.zpf'))
-    elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'silent':
-        patch_voice(rom, settings, data_path('Voices/SilentAdultVoice.zpf'))
-    elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'feminine':
-        patch_voice(rom, settings, data_path('Voices/FeminineVoices.zpf'))
-    elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'silent':
-        patch_voice(rom, settings, data_path('Voices/SilentVoices.zpf'))
-    elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'silent':
-        patch_voice(rom, settings, data_path('Voices/FemChildSilentAdult.zpf'))
-    elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'feminine':
-        patch_voice(rom, settings, data_path('Voices/SilentChildFemAdult.zpf'))
+    soundbank_entries = read_default_voice_data(rom)
+
+    # Parse the settings into 
+    child_voice_path, adult_voice_path = None, None
+    if settings.sfx_link_child not in ['default', 'silent']:
+        child_voice_path = os.path.join('data', 'Voices', f'Child{settings.sfx_link_child.capitalize()}')
+    if settings.sfx_link_adult not in ['default', 'silent']:
+        adult_voice_path = os.path.join('data', 'Voices', f'Adult{settings.sfx_link_adult.capitalize()}')
+
+    # Load and patch the the sfx if a custom pack is used
+    if child_voice_path is not None:
+        print(f"Patching child voice from {child_voice_path}...")
+        apply_voice_patch(rom, child_voice_path, soundbank_entries)
+    if adult_voice_path is not None:
+        print(f"Patching adult voice from {adult_voice_path}...")
+        apply_voice_patch(rom, adult_voice_path, soundbank_entries)
+
+    # Write the settings to the log
     log.sfx['Child Voice'] = settings.sfx_link_child
     log.sfx['Adult Voice'] = settings.sfx_link_adult
+
+
+
+
+
+
+    # Resolve random settings
+    # if settings.sfx_link_child == 'random-choice':
+    #     settings.sfx_link_child = random.choice(['default', 'feminine', 'silent'])
+    # if settings.sfx_link_adult == 'random-choice':
+    #     settings.sfx_link_adult = random.choice(['default', 'feminine', 'silent'])
+
+
 
 def override_voice(rom, settings):
     # Cancel out the entire audiobank because finding specific areas changed was too hard.
