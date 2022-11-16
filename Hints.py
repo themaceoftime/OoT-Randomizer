@@ -1136,6 +1136,13 @@ def buildGossipHints(spoiler, worlds):
                 if item_world.id not in checkedLocations:
                     checkedLocations[item_world.id] = set()
                 checkedLocations[item_world.id].add(location.name)
+        for hint_type, item in world.misc_hint_location_items.items():
+            location = world.get_location(misc_location_hint_table[hint_type]['item_location'])
+            if hint_type in world.settings.misc_hints and can_reach_hint(worlds, world.get_location(misc_location_hint_table[hint_type]['hint_location']), location):
+                item_world = location.world
+                if item_world.id not in checkedLocations:
+                    checkedLocations[item_world.id] = set()
+                checkedLocations[item_world.id].add(location.name)
 
     # Build all the hints.
     for world in worlds:
