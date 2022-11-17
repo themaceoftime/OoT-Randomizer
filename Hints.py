@@ -1620,13 +1620,12 @@ def buildMiscItemHints(world, messages):
 
 def buildMiscLocationHints(world, messages):
     for hint_type, data in misc_location_hint_table.items():
+        text = data['location_fallback']
         if hint_type in world.settings.misc_hints:
             location = world.misc_hint_locations[hint_type]
             if hint_type in world.misc_hint_location_items:
                 item = world.misc_hint_location_items[hint_type]
                 text = data['location_text'].format(item=getHint(getItemGenericName(item), world.settings.clearer_hints).text)
-        else:
-            text = data['location_fallback']
 
         update_message_by_id(messages, data['id'], str(GossipText(text, ['Green'], prefix='')), 0x23)
 
