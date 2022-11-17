@@ -224,6 +224,7 @@ issue. You should always Hard Reset to avoid this issue entirely.
 * Corrected some goal hint colors.
 * Triforce Piece model has been updated so that it is shinier and centered.
 * Goal hints are now selected based on their category rather than their parent goal.
+* Settings and tricks in the spoiler log have been re-ordered to more closely follow the order in the GUI and use more logical groupings, respectively.
 
 ### 6.2
 
