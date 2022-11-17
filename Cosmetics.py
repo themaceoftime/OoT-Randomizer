@@ -802,7 +802,7 @@ def read_default_voice_data(rom):
 
 
 def patch_silent_voice(rom, sfxidlist, soundbank_entries, log):
-    binsfxfilename = os.path.join('data', 'Voices', 'SilentVoiceSFX.bin')
+    binsfxfilename = os.path.join(data_path('Voices'), 'SilentVoiceSFX.bin')
     if not os.path.isfile(binsfxfilename):
         log.errors.append(f"Could not find silent voice sfx at {binsfxfilename}. Skipping voice patching")
         return
@@ -847,16 +847,16 @@ def patch_voices(rom, settings, log, symbols):
     # if settings.sfx_link_adult == 'random-choice':
     #     settings.sfx_link_adult = random.choice(['default', 'feminine', 'silent'])
 
-    # Link's Voice Replacement Files
-    override_voice(rom, settings)
+    # Reset the audiotable back to default to prepare patching voices and read data
+    rom.write_bytes(0x00079470, rom.original.read_bytes(0x00079470, 0x460AD0))
     soundbank_entries = read_default_voice_data(rom)
 
     # Parse the settings into 
     child_voice_path, adult_voice_path = None, None
     if settings.sfx_link_child not in ['default', 'silent']:
-        child_voice_path = os.path.join('data', 'Voices', f'Child{settings.sfx_link_child.capitalize()}')
+        child_voice_path = os.path.join(data_path('Voices'), f'Child{settings.sfx_link_child.capitalize()}')
     if settings.sfx_link_adult not in ['default', 'silent']:
-        adult_voice_path = os.path.join('data', 'Voices', f'Adult{settings.sfx_link_adult.capitalize()}')
+        adult_voice_path = os.path.join(data_path('Voices'), f'Adult{settings.sfx_link_adult.capitalize()}')
 
     # Special case patch the silent voice (this is separate because one .bin file is used for every sfx)
     if settings.sfx_link_child == 'silent':
@@ -879,18 +879,6 @@ def patch_voices(rom, settings, log, symbols):
     # Write the settings to the log
     log.sfx['Child Voice'] = settings.sfx_link_child
     log.sfx['Adult Voice'] = settings.sfx_link_adult
-
-
-def override_voice(rom, settings):
-    # Cancel out the entire audiobank because finding specific areas changed was too hard.
-    original = rom.original.read_bytes(0x0000D390, 0x01CA50)
-    rom.write_bytes(0x0000D390, original)
-    # Cancel out the entire audiotable because finding specific areas changed was too hard.
-    original = rom.original.read_bytes(0x00079470, 0x460AD0)
-    rom.write_bytes(0x00079470, original)
-    # Cancel out random section that's in the game code.
-    original = rom.original.read_bytes(0x00B896B5, 0x258)
-    rom.write_bytes(0x00B896B5, original)
 
 
 legacy_cosmetic_data_headers = [
