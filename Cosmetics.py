@@ -7,7 +7,7 @@ import Music as music
 import Sounds as sfx
 import IconManip as icon
 from JSONDump import dump_obj, CollapseList, CollapseDict, AlignedDict, SortedDict
-from SettingsList import setting_infos
+from SettingsList import setting_infos, get_voice_sfx_choices
 from Plandomizer import InvalidFileException
 import json
 from N64Patch import apply_patch_file
@@ -837,7 +837,7 @@ def apply_voice_patch(rom, voice_path, soundbank_entries):
 
 def patch_voices(rom, settings, log, symbols):
     if settings.disable_custom_music:
-        if settings.sfx_link_child != 'default' or settings.sfx_link_adult != 'default':
+        if settings.sfx_link_child != 'Default' or settings.sfx_link_adult != 'Default':
             log.errors.append("Link's Voice is not patched into outputted ZPF.")
         return
 
@@ -853,17 +853,17 @@ def patch_voices(rom, settings, log, symbols):
 
     # Parse the settings into 
     child_voice_path, adult_voice_path = None, None
-    if settings.sfx_link_child not in ['default', 'silent']:
+    if settings.sfx_link_child not in ['Default', 'Silent']:
         child_voice_path = os.path.join(data_path('Voices'), f'Child{settings.sfx_link_child.capitalize()}')
-    if settings.sfx_link_adult not in ['default', 'silent']:
+    if settings.sfx_link_adult not in ['Default', 'Silent']:
         adult_voice_path = os.path.join(data_path('Voices'), f'Adult{settings.sfx_link_adult.capitalize()}')
 
     # Special case patch the silent voice (this is separate because one .bin file is used for every sfx)
-    if settings.sfx_link_child == 'silent':
+    if settings.sfx_link_child == 'Silent':
         silence_sfxids = [0x14, 0x87] + list(range(0x1c, 0x36+1))
         silence_sfxids += list(range(0x3e, 0x4c+1))
         patch_silent_voice(rom, silence_sfxids, soundbank_entries, log)
-    if settings.sfx_link_adult == 'silent':
+    if settings.sfx_link_adult == 'Silent':
         silence_sfxids = [0x37, 0x38, 0x3c, 0x3d, 0x86] + list(range(0x00, 0x13+1))
         silence_sfxids += list(range(0x15, 0x1b+1)) + list(range(0x4d, 0x58+1))
         patch_silent_voice(rom, silence_sfxids, soundbank_entries, log)

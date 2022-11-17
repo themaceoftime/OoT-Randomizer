@@ -5,6 +5,7 @@ import re
 import math
 import json
 import operator
+import os
 
 from Colors import get_tunic_color_options, get_navi_color_options, get_sword_trail_color_options, \
     get_bombchu_trail_color_options, get_boomerang_trail_color_options, get_gauntlet_color_options, \
@@ -1670,6 +1671,25 @@ logic_tricks = {
                     in Spirit Temple.
                     '''},
 }
+
+
+def get_voice_sfx_choices(age):
+    # Dynamically populate the SettingsList entry for the voice effects
+    # Voice packs should be a folder of .bin files in the Voices directory
+    # The first 5 characters should be either Child or Adult
+    names = ['Default', 'Silent']
+    sfxpath = data_path('Voices')
+    sfxkey = 'Child' if age == 0 else 'Adult'
+    if os.path.exists(sfxpath):
+        for file in os.listdir(sfxpath):
+            if os.path.isdir(os.path.join(sfxpath, file)):
+                if file[:5] == sfxkey:
+                    names.append(file[5:])
+
+    # Add a random if multiple options are available
+    if len(names) > 2:
+        names.append('Random')
+    return names
 
 
 # a list of the possible settings
@@ -5995,13 +6015,8 @@ setting_infos = [
         gui_text       = 'Adult Voice',
         shared         = False,
         cosmetic       = True,
-        choices        = {
-            'default':       'Default',
-            'feminine':      'Feminine',
-            'silent':        'Silent',
-            'random-choice': 'Random Choice',
-        },
-        default        = 'default',
+        choices        = get_voice_sfx_choices(1),
+        default        = 'Default',
         gui_tooltip    = '''\
             Change Link's adult voice.
         ''',
@@ -6014,13 +6029,8 @@ setting_infos = [
         gui_text       = 'Child Voice',
         shared         = False,
         cosmetic       = True,
-        choices        = {
-            'default':       'Default',
-            'feminine':      'Feminine',
-            'silent':        'Silent',
-            'random-choice': 'Random Choice',
-        },
-        default        = 'default',
+        choices        = get_voice_sfx_choices(0),
+        default        = 'Default',
         gui_tooltip    = '''\
             Change Link's child voice.
         ''',
