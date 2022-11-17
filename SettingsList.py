@@ -1673,7 +1673,7 @@ logic_tricks = {
 }
 
 
-def get_voice_sfx_choices(age):
+def get_voice_sfx_choices(age, include_random=True):
     # Dynamically populate the SettingsList entry for the voice effects
     # Voice packs should be a folder of .bin files in the Voices directory
     # The first 5 characters should be either Child or Adult
@@ -1687,7 +1687,7 @@ def get_voice_sfx_choices(age):
                     names.append(file[5:])
 
     # Add a random if multiple options are available
-    if len(names) > 2:
+    if len(names) > 2 and include_random:
         names.append('Random')
     return names
 

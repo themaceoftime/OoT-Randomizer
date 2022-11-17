@@ -841,11 +841,13 @@ def patch_voices(rom, settings, log, symbols):
             log.errors.append("Link's Voice is not patched into outputted ZPF.")
         return
 
-    # Resolve random settings
-    # if settings.sfx_link_child == 'random-choice':
-    #     settings.sfx_link_child = random.choice(['default', 'feminine', 'silent'])
-    # if settings.sfx_link_adult == 'random-choice':
-    #     settings.sfx_link_adult = random.choice(['default', 'feminine', 'silent'])
+    # Resolve Random option
+    if settings.sfx_link_child == 'Random':
+        optlist = get_voice_sfx_choices(0, include_random=False)
+        settings.sfx_link_child = random.choice(optlist)
+    if settings.sfx_link_adult == 'Random':
+        optlist = get_voice_sfx_choices(1, include_random=False)
+        settings.sfx_link_adult = random.choice(optlist)
 
     # Reset the audiotable back to default to prepare patching voices and read data
     rom.write_bytes(0x00079470, rom.original.read_bytes(0x00079470, 0x460AD0))
