@@ -256,6 +256,8 @@ ITEM_MESSAGES = {
     0x90FA: "\x08\x06\x49\x05\x41WINNER\x05\x40!\x04\x08\x13\x73You got a \x05\x41Piece of Heart\x05\x40!\x01You are already at\x01maximum health.",
     0x9002: "\x08You are a \x05\x43FOOL\x05\x40!",
     0x9003: "\x08You found a piece of the \x05\x41Triforce\x05\x40!",
+    0x9019: "\x08\x13\x09You found a \x05\x41Bombchu Bag\x05\x40!\x01You found \x05\x4120 Bombchus\x05\x40 inside!\x01Find more in tall grass and enemy drops!",
+    0x9020: "\x08\x13\x09You found a \x05\x41Bombchu Bag\x05\x40!\x01You found \x05\x4110 Bombchus\x05\x40 inside!",
 }
 
 KEYSANITY_MESSAGES = {

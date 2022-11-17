@@ -436,7 +436,7 @@ hintTable = {
     'Magic Bean':                                               (["a wizardly legume"], "a Magic Bean", 'item'),
     'Buy Magic Bean':                                           (["a wizardly legume"], "a Magic Bean", 'item'),
     'Magic Bean Pack':                                          (["wizardly legumes"], "Magic Beans", 'item'),
-    'Bombchus':                                                 (["mice bombs", "proximity mice", "wall crawlers", "trail blazers"], "Bombchus", 'item'),
+    'Bombchu Bag':                                              (["a bag of mice bombs", "a bag of proximity mice", "a bag of wall crawlers", "a bag of trail blazers"], "a Bombchu Bag", 'item'),
     'Bombchus (5)':                                             (["a few mice bombs", "a few proximity mice", "a few wall crawlers", "a few trail blazers"], "Bombchus (5 pieces)", 'item'),
     'Bombchus (10)':                                            (["some mice bombs", "some proximity mice", "some wall crawlers", "some trail blazers"], "Bombchus (10 pieces)", 'item'),
     'Bombchus (20)':                                            (["plenty of mice bombs", "plenty of proximity mice", "plenty of wall crawlers", "plenty of trail blazers"], "Bombchus (20 pieces)", 'item'),

@@ -159,3 +159,12 @@ void open_mask_shop(z64_file_t *save, int16_t arg1, int16_t arg2) {
         save->event_chk_inf[8] = save->event_chk_inf[8] | 0xF000; // "Paid Back Mask Fees"
     }
 }
+
+void give_bombchu_bag(z64_file_t *save, int16_t arg1, int16_t arg2) {
+    if (save->items[Z64_SLOT_BOMBCHU] == -1) {
+        save->items[Z64_SLOT_BOMBCHU] = Z64_ITEM_BOMBCHU;
+        save->ammo[8] = 20; // 20 Bombchus
+    } else {
+        save->ammo[8] += 10; // 10 Bombchus
+    }
+}

@@ -85,12 +85,9 @@ uint16_t magic_upgrade(z64_file_t *save, uint16_t item_id) {
 
 uint16_t bombchu_upgrade(z64_file_t *save, uint16_t item_id) {
     if (save->items[Z64_SLOT_BOMBCHU] == -1) {
-        return 0x6B; // Bombchu 20 pack
+        return 0xD4; // Initial Bombchu Bag with 20 inside
     }
-    if (save->ammo[8] <= 5) {
-        return 0x03; // Bombchu 10 pack
-    }
-    return 0x6A; // Bombchu 5 pack
+    return 0xD5; // Upgrade Bombchu Bag with 10 inside
 }
 
 uint16_t ocarina_upgrade(z64_file_t *save, uint16_t item_id) {
@@ -106,6 +103,10 @@ uint16_t arrows_to_rupee(z64_file_t *save, uint16_t item_id) {
 
 uint16_t bombs_to_rupee(z64_file_t *save, uint16_t item_id) {
     return save->bomb_bag ? item_id : 0x4D; // Blue Rupee
+}
+
+uint16_t bombchus_to_bag(z64_file_t *save, uint16_t item_id) {
+    return save->items[Z64_SLOT_BOMBCHU] != -1 ? item_id : 0xD4; // Custom Bombchu Bag model
 }
 
 uint16_t seeds_to_rupee(z64_file_t *save, uint16_t item_id) {

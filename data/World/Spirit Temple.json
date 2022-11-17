@@ -85,21 +85,21 @@
                     (Small_Key_Spirit_Temple, 5)) or
                 (is_adult and has_projectile(adult) and
                     ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts or
-                    ((Small_Key_Spirit_Temple, 2) and bombchus_in_logic and not entrance_shuffle))) or
+                    ((Small_Key_Spirit_Temple, 2) and not entrance_shuffle))) or
                 has_projectile(both)",
             "Spirit Temple Child Climb East Chest": "
                 (is_child and has_projectile(child) and
                     (Small_Key_Spirit_Temple, 5)) or
                 (is_adult and has_projectile(adult) and
                     ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts or
-                    ((Small_Key_Spirit_Temple, 2) and bombchus_in_logic and not entrance_shuffle))) or
+                    ((Small_Key_Spirit_Temple, 2) and not entrance_shuffle))) or
                 has_projectile(both)",
             "Spirit Temple GS Sun on Floor Room": "
                 (is_child and has_projectile(child) and
                     (Small_Key_Spirit_Temple, 5)) or
                 (is_adult and (has_projectile(adult) or can_take_damage) and
                     ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts or
-                    ((Small_Key_Spirit_Temple, 2) and bombchus_in_logic and not entrance_shuffle))) or
+                    ((Small_Key_Spirit_Temple, 2) and not entrance_shuffle))) or
                 has_projectile(both) or can_use(Dins_Fire) or
                 (can_take_damage and (Sticks or Kokiri_Sword or has_projectile(child)))"
         },
@@ -118,14 +118,14 @@
                 (is_adult and (has_fire_source or (logic_spirit_map_chest and Bow)) and
                     ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts)) or
                 ((can_use(Dins_Fire) or (((Magic_Meter and Fire_Arrows) or logic_spirit_map_chest) and Bow and Sticks)) and
-                    (has_explosives or ((Small_Key_Spirit_Temple, 2) and bombchus_in_logic and not entrance_shuffle)))",
+                    (has_explosives or ((Small_Key_Spirit_Temple, 2) and not entrance_shuffle)))",
             "Spirit Temple Sun Block Room Chest": "
                 (is_child and Sticks and
                     (Small_Key_Spirit_Temple, 5)) or
                 (is_adult and (has_fire_source or (logic_spirit_sun_chest and Bow)) and
                     ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts)) or
                 ((can_use(Dins_Fire) or (((Magic_Meter and Fire_Arrows) or logic_spirit_sun_chest) and Bow and Sticks)) and
-                    (has_explosives or ((Small_Key_Spirit_Temple, 2) and bombchus_in_logic and not entrance_shuffle)))",
+                    (has_explosives or ((Small_Key_Spirit_Temple, 2) and not entrance_shuffle)))",
             #With longshot and explosives, right hand is reachable as adult after opening either
             #upper door. Because some of the keys cannot be spent without adult accessing the
             #main body of the dungeon, this route is able to be age-unknown, where child can be
@@ -140,14 +140,14 @@
                 (is_adult and Hookshot and
                     ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts)) or
                 (Boomerang and Hookshot and
-                    (has_explosives or ((Small_Key_Spirit_Temple, 2) and bombchus_in_logic and not entrance_shuffle)))",
+                    (has_explosives or ((Small_Key_Spirit_Temple, 2) and not entrance_shuffle)))",
             "Spirit Temple GS Lobby": "
                 (is_child and logic_spirit_lobby_gs and Boomerang and
                     (Small_Key_Spirit_Temple, 5)) or
                 (is_adult and (Hookshot or Hover_Boots or logic_spirit_lobby_jump) and
                     ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts)) or
                 (logic_spirit_lobby_gs and Boomerang and (Hookshot or Hover_Boots or logic_spirit_lobby_jump) and
-                    (has_explosives or ((Small_Key_Spirit_Temple, 2) and bombchus_in_logic and not entrance_shuffle)))"
+                    (has_explosives or ((Small_Key_Spirit_Temple, 2) and not entrance_shuffle)))"
         },
         "exits": {
             "Child Spirit Temple Climb": "True",
