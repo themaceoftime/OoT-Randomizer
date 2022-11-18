@@ -10,7 +10,7 @@ from JSONDump import dump_obj, CollapseList, CollapseDict, AlignedDict, SortedDi
 from SettingsList import setting_infos
 from Plandomizer import InvalidFileException
 import json
-from N64Patch import apply_patch_file
+from itertools import chain
 import os
 
 
@@ -836,57 +836,52 @@ def apply_voice_patch(rom, voice_path, soundbank_entries):
 
 
 def patch_voices(rom, settings, log, symbols):
-    # Make sure things work if plando wrong case
-    settings.sfx_link_child = settings.sfx_link_child.capitalize()
-    settings.sfx_link_adult = settings.sfx_link_adult.capitalize()
+    # Reset the audiotable back to default to prepare patching voices and read data
+    rom.write_bytes(0x00079470, rom.original.read_bytes(0x00079470, 0x460AD0))
 
     if settings.disable_custom_music:
         if settings.sfx_link_child != 'Default' or settings.sfx_link_adult != 'Default':
             log.errors.append("Link's Voice is not patched into outputted ZPF.")
         return
 
-    # Resolve Random option
-    if settings.sfx_link_child == 'Random':
-        optlist = sfx.get_voice_sfx_choices(0, include_random=False)
-        settings.sfx_link_child = random.choice(optlist)
-    if settings.sfx_link_adult == 'Random':
-        optlist = sfx.get_voice_sfx_choices(1, include_random=False)
-        settings.sfx_link_adult = random.choice(optlist)
-
-    # Reset the audiotable back to default to prepare patching voices and read data
-    rom.write_bytes(0x00079470, rom.original.read_bytes(0x00079470, 0x460AD0))
     soundbank_entries = read_default_voice_data(rom)
+    voice_ages = (
+        ('Child', settings.sfx_link_child, sfx.get_voice_sfx_choices(0, False), chain([0x14, 0x87], range(0x1C, 0x36+1), range(0x3E, 0x4C+1))),
+        ('Adult', settings.sfx_link_adult, sfx.get_voice_sfx_choices(1, False), chain([0x37, 0x38, 0x3C, 0x3D, 0x86], range(0x00, 0x13+1), range(0x15, 0x1B+1), range(0x4D, 0x58+1)))
+    )
 
-    # Parse the settings into 
-    child_voice_path, adult_voice_path = None, None
-    if settings.sfx_link_child not in ['Default', 'Silent']:
-        child_voice_path = os.path.join(data_path('Voices'), f'Child{settings.sfx_link_child.capitalize()}')
-    if settings.sfx_link_adult not in ['Default', 'Silent']:
-        adult_voice_path = os.path.join(data_path('Voices'), f'Adult{settings.sfx_link_adult.capitalize()}')
+    for name, voice_setting, choices, silence_sfx_ids in voice_ages:
+        # Handle Plando
+        log_key = f'{name} Voice'
+        voice_setting = log.src_dict['sfx'][log_key] if log.src_dict.get('sfx', {}).get(log_key, '') else voice_setting
 
-    # Special case patch the silent voice (this is separate because one .bin file is used for every sfx)
-    if settings.sfx_link_child == 'Silent':
-        silence_sfxids = [0x14, 0x87] + list(range(0x1c, 0x36+1))
-        silence_sfxids += list(range(0x3e, 0x4c+1))
-        print("Patching Silent child voice...")
-        patch_silent_voice(rom, silence_sfxids, soundbank_entries, log)
-    if settings.sfx_link_adult == 'Silent':
-        silence_sfxids = [0x37, 0x38, 0x3c, 0x3d, 0x86] + list(range(0x00, 0x13+1))
-        silence_sfxids += list(range(0x15, 0x1b+1)) + list(range(0x4d, 0x58+1))
-        print("Patching Silent adult voice...")
-        patch_silent_voice(rom, silence_sfxids, soundbank_entries, log)
+        # Resolve Random option
+        if voice_setting == 'Random':
+            voice_setting = random.choice(choices)
 
-    # Load and patch the the sfx if a custom pack is used
-    if child_voice_path is not None:
-        print(f"Patching child voice from {child_voice_path}...")
-        apply_voice_patch(rom, child_voice_path, soundbank_entries)
-    if adult_voice_path is not None:
-        print(f"Patching adult voice from {adult_voice_path}...")
-        apply_voice_patch(rom, adult_voice_path, soundbank_entries)
+        # Special case patch the silent voice (this is separate because one .bin file is used for every sfx)
+        if voice_setting == 'Silent':
+            patch_silent_voice(rom, silence_sfx_ids, soundbank_entries, log)
+        elif voice_setting != 'Default':
+            age_path = os.path.join(data_path('Voices'), name)
+            voice_path = os.path.join(age_path, voice_setting) if os.path.isdir(os.path.join(age_path, voice_setting)) else None
 
-    # Write the settings to the log
-    log.sfx['Child Voice'] = settings.sfx_link_child
-    log.sfx['Adult Voice'] = settings.sfx_link_adult
+            # If we don't have a confirmed directory for this voice, do a case-insensitive directory search.
+            if voice_path is None:
+                voice_dirs = [f for f in os.listdir(age_path) if os.path.isdir(os.path.join(age_path, f))] if os.path.isdir(age_path) else []
+                for directory in voice_dirs:
+                    if directory.casefold() == voice_setting.casefold():
+                        voice_path = os.path.join(age_path, directory)
+                        break
+
+            if voice_path is None:
+                log.errors.append(f"{name} Voice not patched: Cannot find voice data directory: {os.path.join(age_path, voice_setting)}")
+                break
+
+            apply_voice_patch(rom, voice_path, soundbank_entries)
+
+        # Write the setting to the log
+        log.sfx[log_key] = voice_setting
 
 
 legacy_cosmetic_data_headers = [
