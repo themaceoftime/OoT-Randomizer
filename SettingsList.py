@@ -1839,7 +1839,7 @@ setting_infos = [
     Checkbutton('check_version', None),
     Checkbutton('output_settings', None),
     Checkbutton('patch_without_output', None),
-    Checkbutton('disable_custom_music', None),
+    Checkbutton('generating_patch_file', None),
     Checkbutton(
         name           = 'generate_from_file',
         gui_text       = 'Generate From Patch File',

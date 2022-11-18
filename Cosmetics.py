@@ -838,7 +838,7 @@ def patch_voices(rom, settings, log, symbols):
     # Reset the audiotable back to default to prepare patching voices and read data
     rom.write_bytes(0x00079470, rom.original.read_bytes(0x00079470, 0x460AD0))
 
-    if settings.disable_custom_music:
+    if settings.generating_patch_file:
         if settings.sfx_link_child != 'Default' or settings.sfx_link_adult != 'Default':
             log.errors.append("Link's Voice is not patched into outputted ZPF.")
         return
