@@ -93,6 +93,17 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     # Add it to the extended object table
     add_to_extended_object_table(rom, 0x195, keyring_obj_file)
 
+    # Load Bombchu Bag model into a file
+    chubag_obj_file = File({ 'Name': 'object_gi_chubag' })
+    chubag_obj_file.copy(rom)
+    with open(data_path('ChuBag.zobj'), 'rb') as stream:
+        obj_data = stream.read()
+        rom.write_bytes(chubag_obj_file.start, obj_data)
+        chubag_obj_file.end = chubag_obj_file.start + len(obj_data)
+    update_dmadata(rom, chubag_obj_file)
+    # Add it to the extended object table
+    add_to_extended_object_table(rom, 0x196, chubag_obj_file)
+
     # Create the textures for pots/crates. Note: No copyrighted material can be distributed w/ the randomizer. Because of this, patch files are used to create the new textures from the original texture in ROM.
     # Apply patches for custom textures for pots and crates and add as new files in rom
     # Crates are ci4 textures in the normal ROM but for pot/crate textures match contents were upgraded to ci8 to support more colors
@@ -214,9 +225,6 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     # Remove the unused locked door in water temple
     if not world.dungeon_mq['Water Temple']:
         rom.write_byte(0x25B8197, 0x3F)
-
-    if world.settings.bombchus_in_logic:
-        rom.write_int32(rom.sym('BOMBCHUS_IN_LOGIC'), 1)
 
     # show seed info on file select screen
     def makebytes(txt, size):
@@ -2029,12 +2037,6 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
     SILVER_CHEST = 13
     SKULL_CHEST_SMALL = 14
     SKULL_CHEST_BIG =  15
-    if world.settings.bombchus_in_logic or world.settings.minor_items_as_major_chest:
-        bombchu_ids = [0x6A, 0x03, 0x6B]
-        for i in bombchu_ids:
-            item = read_rom_item(rom, i)
-            item['chest_type'] = GILDED_CHEST
-            write_rom_item(rom, i, item)
     if world.settings.bridge == 'tokens' or world.settings.lacs_condition == 'tokens' or world.settings.shuffle_ganon_bosskey == 'tokens':
         item = read_rom_item(rom, 0x5B)
         item['chest_type'] = SKULL_CHEST_BIG

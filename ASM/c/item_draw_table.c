@@ -134,6 +134,7 @@ item_draw_table_entry_t item_draw_table[] = {
     //Rando-added functions
     [0x75] = { draw_gi_various_opa0,        { 0x06000A30 } }, // Triforce Piece
     [0x76] = { draw_gi_various_opa0,        { 0x060015E8 } }, // Key Ring
+    [0x77] = { draw_gi_various_opa0,        { 0x060016A0 } }, // Bombchu Bag
 };
 
 void base_draw_gi_model(z64_game_t *game, uint32_t draw_id) {
