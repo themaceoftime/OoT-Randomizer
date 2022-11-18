@@ -497,17 +497,6 @@
             font-size: 1rem;
             font-weight: 500;
           }
-          
-          &.status-info {
-            bottom: 13px;
-            padding: 0.75rem 1.5rem;
-            background-color: nb-theme(color-info-500);
-            border-color: nb-theme(color-info-500);
-            color: nb-theme(color-info-300);
-            font-family: Exo;
-            font-size: 1rem;
-            font-weight: 500;
-          }
 
           &.status-primary, &.status-basic {
             color: nb-theme(color-info-300);
