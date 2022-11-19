@@ -186,16 +186,21 @@ void collectible_draw_other(z64_actor_t *actor, z64_game_t *game) {
         draw_model(model, actor, game, 10.0);
         return;
     }
-    
-    lookup_model_by_override(&model, this->override);
-    
-    if (Get_CollectibleOverrideFlag(this) && collectible_mutex != this) {
-        base_collectable_draw(actor, game);
-        return;
-    }
 
-    if (collectible_mutex != this) {
-        draw_model(model, actor, game, 10.0);
+    // Probably don't need this check. We convert all dropped overridden collectibles to rupees. 
+    // Pretty sure there are no freestanding collectibles of these types. But let's just do it anyway
+    if(this->override.key.all)
+    {
+        lookup_model_by_override(&model, this->override);
+        if (model.object_id != 0x0000) {
+            if (collectible_mutex != this) {
+                draw_model(model, actor, game, 25.0);
+            }
+        }
+    }
+    else
+    {
+        base_collectable_draw(actor, game);
     }
 }
 
