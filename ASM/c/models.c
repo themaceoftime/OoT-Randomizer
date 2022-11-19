@@ -180,7 +180,7 @@ void collectible_draw_other(z64_actor_t *actor, z64_game_t *game) {
 
     // Handle keys separately for now.
     int collectible_type = actor->variable & 0xFF;
-    if(collectible_type == 0x12)
+    if(collectible_type == 0x11)
     {
         lookup_model(&model, actor, game,0);
         draw_model(model, actor, game, 10.0);
