@@ -5,7 +5,6 @@
         "shuffle_ganon_bosskey":                   "hearts",
         "ganon_bosskey_hearts":                    20,
         "item_pool_value":                         "balanced",
-        "bombchus_in_logic":                       false,
         "trials_random":                           false,
         "trials":                                  0,
         "shuffle_child_trade":                     "vanilla",

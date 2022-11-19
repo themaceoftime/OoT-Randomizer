@@ -5,7 +5,6 @@
         "shuffle_ganon_bosskey":                   "medallions",
         "ganon_bosskey_medallions":                6,
         "item_pool_value":                         "minimal",
-        "bombchus_in_logic":                       false,
         "trials_random":                           false,
         "trials":                                  0,
         "shuffle_child_trade":                     "vanilla",

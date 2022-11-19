@@ -6,7 +6,6 @@
         "triforce_count_per_world":                30,
         "triforce_goal_per_world":                 20,
         "item_pool_value":                         "minimal",
-        "bombchus_in_logic":                       false,
         "trials_random":                           false,
         "trials":                                  0,
         "shuffle_child_trade":                     "vanilla",

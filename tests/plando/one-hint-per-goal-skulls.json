@@ -5,7 +5,6 @@
         "shuffle_ganon_bosskey":                   "tokens",
         "ganon_bosskey_tokens":                    100,
         "item_pool_value":                         "minimal",
-        "bombchus_in_logic":                       false,
         "trials_random":                           false,
         "trials":                                  0,
         "shuffle_child_trade":                     "vanilla",
