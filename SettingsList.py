@@ -609,7 +609,7 @@ logic_tricks = {
 
     # Dungeons
 
-        'Deku Tree Basement Vines GS with Jump Slash': {
+    'Deku Tree Basement Vines GS with Jump Slash': {
         'name'    : 'logic_deku_basement_gs',
         'tags'    : ("Deku Tree", "Skulltulas",),
         'tooltip' : '''\
