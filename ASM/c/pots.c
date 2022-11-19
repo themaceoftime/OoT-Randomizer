@@ -70,18 +70,14 @@ void draw_pot(z64_actor_t *actor, z64_game_t *game) {
         chest_type = &((EnTuboTrap*)actor)->chest_type;
 
     // get override texture
-    if (POTCRATE_TEXTURES_MATCH_CONTENTS == PTMC_UNCHECKED) {
+    if (*chest_type == GILDED_CHEST) {
         side_texture = get_texture(TEXTURE_ID_POT_GOLD);
-    } else if (POTCRATE_TEXTURES_MATCH_CONTENTS == PTMC_CONTENTS) {
-        if (*chest_type == GILDED_CHEST) {
-            side_texture = get_texture(TEXTURE_ID_POT_GOLD);
-        } else if (*chest_type == SILVER_CHEST) {
-            side_texture = get_texture(TEXTURE_ID_POT_KEY);
-        } else if (*chest_type == GOLD_CHEST) {
-            side_texture = get_texture(TEXTURE_ID_POT_BOSSKEY);
-        } else if (*chest_type == SKULL_CHEST_SMALL || *chest_type == SKULL_CHEST_BIG) {
-            side_texture = get_texture(TEXTURE_ID_POT_SKULL);
-        }
+    } else if (*chest_type == SILVER_CHEST) {
+        side_texture = get_texture(TEXTURE_ID_POT_KEY);
+    } else if (*chest_type == GOLD_CHEST) {
+        side_texture = get_texture(TEXTURE_ID_POT_BOSSKEY);
+    } else if (*chest_type == SKULL_CHEST_SMALL || *chest_type == SKULL_CHEST_BIG) {
+        side_texture = get_texture(TEXTURE_ID_POT_SKULL);
     }
 
     // push custom dlist (that sets the texture) to segment 09

@@ -75,7 +75,7 @@ void Actor_After_UpdateAll_Hack(z64_actor_t *actor, z64_game_t* game) {
     }
     if(override.key.all != 0)
     {
-        if(POTCRATE_TEXTURES_MATCH_CONTENTS == PTMC_UNCHECKED)
+        if(POTCRATE_TEXTURES_MATCH_CONTENTS == PTMC_UNCHECKED && override.key.all > 0)
         {
             *p = GILDED_CHEST;
         }
