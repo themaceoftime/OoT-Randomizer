@@ -4665,7 +4665,7 @@ setting_infos = [
     Combobox(
         name           = 'correct_potcrate_appearances',
         gui_text       = 'Pot & Crate Appearance Matches Contents',
-        default        = 'off',
+        default        = 'textures_unchecked',
         choices        = {
             'off':                'Off',
             'textures_content':   'Texture (Match Content)',
