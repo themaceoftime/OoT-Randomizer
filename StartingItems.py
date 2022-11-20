@@ -1,25 +1,21 @@
 from collections import namedtuple
 from itertools import chain
-import math
 
-    
-_Entry = namedtuple("_Entry", ['settingname', 'itemname', 'available', 'guitext', 'special', 'ammo'])
+
+_Entry = namedtuple("_Entry", ['settingname', 'itemname', 'available', 'guitext', 'special', 'ammo', 'i'])
 def _entry(settingname, itemname=None, available=1, guitext=None, special=False, ammo=None):
     if itemname is None:
         itemname = settingname.capitalize()
     if guitext is None:
         guitext = itemname
-    if available == 1:
-        return [(settingname, _Entry(settingname, itemname, available, guitext, special, ammo))]
-    else:
-        result = []
-        for i in range(available):
-            if i == 0:
-                name = settingname
-            else:
-                name = "{}{}".format(settingname, i+1)
-            result.append((name, _Entry(name, itemname, available, guitext, special, ammo)))
-        return result
+    result = []
+    for i in range(available):
+        if i == 0:
+            name = settingname
+        else:
+            name = "{}{}".format(settingname, i+1)
+        result.append((name, _Entry(name, itemname, available, guitext, special, ammo, i)))
+    return result
 
 # Ammo items must be declared in ItemList.py.
 inventory = dict(chain(
@@ -31,7 +27,7 @@ inventory = dict(chain(
     _entry('dins_fire', 'Dins Fire', guitext="Din's Fire"),
     _entry('slingshot', available=3, ammo={'Deku Seeds': (30, 40, 50)}),
     _entry('ocarina', available=2),
-    _entry('bombchus', ammo={'Bombchus': (19,)}), # start with additional bombchus
+    _entry('bombchus', ammo={'Bombchus': (20,)}), # start with additional bombchus
     _entry('hookshot', 'Progressive Hookshot', available=2),
     _entry('ice_arrow', 'Ice Arrows'),
     _entry('farores_wind', 'Farores Wind', guitext="Farore's Wind"),

@@ -186,7 +186,7 @@ Gameplay_InitSkybox:
     jal     give_master_sword
 
 ; Replaces:
-;   lui/addiu a1, 0x8011A5D0
+;   lui/addiu a1, 0x8011A5D0 (start of Inventory_SwapAgeEquipment)
 .orga 0xAE5764
     j       before_time_travel
     nop
@@ -194,7 +194,7 @@ Gameplay_InitSkybox:
 ; After time travel
 ; Replaces:
 ;   jr      ra
-.orga 0xAE59E0 ; In memory: 0x8006FA80
+.orga 0xAE59E0 ; In memory: 0x8006FA80 (end of Inventory_SwapAgeEquipment)
     j       after_time_travel
 
 ;==================================================================================================
@@ -217,6 +217,405 @@ Gameplay_InitSkybox:
 .orga 0xDF2647 :: .byte 0x76 ; Ocarina memory game
 .orga 0xE2F093 :: .byte 0x34 ; Market Bombchu Bowling Bomb Bag
 .orga 0xEC9CE7 :: .byte 0x7A ; Deku Theater Mask of Truth
+
+; en_item00_update() hacks - 0x80012938
+
+; Runs when player collides w/ Collectible (inside en_item00_update()) start of switch case at 0x80012CA4
+
+; Override Item_Give(RUPEE_GREEN)
+; Replaces:
+;   OR      A0, S1, R0
+;   JAL     0x8006FDCC
+;   addiu   a1, r0, 0x0084
+.orga 0xA88C0C ; In memory: 80012CAC
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Item_Give(RUPEE_BLUE)
+; Replaces:
+;   OR      A0, S1, R0
+;   JAL     0x8006FDCC
+;   addiu   a1, r0, 0x0084
+.orga 0xA88C20 ; In memory: 80012CC0)
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Item_Give(RUPEE_RED)
+; Replaces:
+;   OR      A0, S1, R0
+;   JAL     0x8006FDCC
+;   addiu   a1, r0, 0x0084
+.orga 0xA88C34 ; In memory: 80012CD4)
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Item_Give(RUPEE_PURPLE)
+; Replaces:
+;   OR      A0, S1, R0
+;   JAL     0x8006FDCC
+;   addiu   a1, r0, 0x0084
+.orga 0xA88C48 ; In memory: 80012CE8)
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Stick Collectible
+.orga 0xA88C70 ; In memory: 0x80012D10
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Nut Collectible
+.orga 0xA88C7C ; In memory: 0x80012D1C
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Item_Give(ITEM_HEART)
+; Replaces:
+;   or      A0, S1, R0
+;   JAL     0x8006FDCC
+;   ADDIU   A1, R0, 0x0083
+.orga 0xA88C88 ; In memory: 0x80012D28
+    j       item_give_hook
+    or      A2, S0, R0 ;pass actor pointer to function
+
+
+; Override Bombs Collectible
+.orga 0xA88CB0 ; In memory 0x80012D50
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Arrows Single Collectible
+.orga 0xA88CC4 ; In memory 0x80012D64
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Arrows Small Collectible
+.orga 0xA88CD8 ; In memory 0x80012D78
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Arrows Medium Collectible
+.orga 0xA88CEC ; In memory  0x80012D8C
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Arrows Large Collectible
+.orga 0xA88D00 ; In memory  0x80012DA0
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Seeds Collectible (as adult: 0x80012D78 and calls item_give, as child: 0x80012DB4 and uses getitemid)
+.orga 0xA88D14 ; In memory: 0x80012DB4
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Magic Large Collectible
+.orga 0xA88D44 ; In memory: 0x80012DE4
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Override Magic Small Collectible
+.orga 0xA88D50 ; In memory: 0x80012DF0
+    j       item_give_hook
+    or      A2, S0, R0
+
+; Hack save slot table offsets to only use 2 saves
+; save slot table is stored at B71E60 in ROM
+.headersize( 0x800FBF00 - 0xB71E60)
+.orga 0xB71E60
+SRAM_SLOTS:
+.halfword 0x0020 ; slot 1
+.halfword 0x2018 ; slot 2
+.halfword 0x0000 ;remove slot 3
+.halfword 0x4010 ; slot 1 backup
+.halfword 0x6008 ; slot 2 backup
+.halfword 0x0000 ; remove slot 3 backup
+
+; Hack Write_Save function to store additional collectible flags
+;.org 0x800905D4
+;.orga 0xB065F4 ; In memory: 0x80090694
+;   jal     Save_Write_Hook
+;.orga 0xB06668 ; In memory: 0x80090708
+;   jal     Save_Write_Hook
+.org 0x800905D4
+    j       Sram_WriteSave
+
+; Hack Open_Save function to retrieve additional collectible flags
+; At the start of the Sram_OpenSave function, SramContext address is stored in A0 and also on the stack at 0x20(SP)
+; Overwrite the memcpy function at 0x800902E8
+;   jal     0x80057030
+;   addu    A1, T9, A3
+.orga 0xB06248 ; In memory: 0x800902E8
+    jal     open_save_hook
+    nop
+
+; Hack Init_Save function to zero the additional collectible flags
+; Overwrite the SsSram_Read_Write call at 0x80090D84
+.orga 0xB06CE4 ; In Memory: 0x80090D84
+    jal     Save_Init_Write_Hook
+
+; Verify And Load all saves function to only check slots 1 and 2.
+; Overwrite the loop calculation at 0x80090974
+;   slti    at, s4, 0x0003
+;.orga  0xB068D4 ; In memory: 0x80090974
+;   slti    at, s4, 0x0002
+.org 0x80090720
+    j       Sram_VerifyAndLoadAllSaves
+    nop
+
+; Hack Sram_CopySave to use our new version of the function
+.org 0x80090FD0
+    j       Sram_CopySave
+    nop
+
+; Increase the size of EnItem00 instances to store the override
+.orga 0xB5D6BE ; Address in ROM of the enitem00 init params
+    .halfword 0x01AC
+
+; Increase the size of pot instances to store chest type 
+.orga 0xDE8A5E ; Address in ROM of the ObjTsubo init params
+    .halfword 0x01A0 ; New data starts at 0x0190
+
+; Increase the size of flying pot instances to store chest type
+.orga 0xDFB03A ; Address in ROM of the En_Tubo_Trap Init params
+    .halfword 0x01AC ; New data starts at 0x019C
+
+; Increase the size of crate instances to store chest type
+.orga 0xEC856E ; Address in ROM of Obj_Kibako2 Init params
+    .halfword 0x01B8 ; New data starts at 0x01A8
+
+; Increase the size of small crate instances to store chest type
+.orga 0xDE7B0E ; Address in ROM of Obj_Kibako Init params
+    .halfword 0x019C ; New data starts at 0x018C
+
+; Increase the size of beehive instances to store chest type
+.orga 0xEC783E ; Address in ROM of Obj_Comb Init params
+    .halfword 0x01B4 ; New data starts at 0x01A4
+
+; Hack EnItem00_Init when it checks the scene flags to prevent killing the actor if its being overridden.
+; replaces
+;   jal     0x80020EB4
+;.orga 0x0A87B10; In Memory 0x80011BB0
+;   jal     Item00_KillActorIfFlagIsSet
+.headersize(0x80011B98 - 0xA87AF8)
+.orga 0xA87AF8 ; In Memory 0x80011B98
+    jal     Item00_KillActorIfFlagIsSet
+    or      a0, s0, r0
+    bnez    v0, 0x800121A4
+    lw      RA, 0x001c(sp)
+    b       0x80011Bc0
+    nop
+    nop
+    nop
+    nop
+.headersize(0)
+
+; Hack EnItem00 Action Function (func_8001E304 from decomp, 0x8001251C in 1.0) used by Item_DropCollectible to not increment the time to live if its < 0
+; replaces
+;   lh      t6, 0x014A(s0)
+;   lh      v0, 0x001C(s0)
+;   addiu   at, r0, 0x0003
+;   addiu   t7, t6, 0x0001
+;   bne     v0, vt, 0x80012630
+;   sh      t7, 0x014A(s0)
+.orga 0xA88490 ; In Memory 0x80012530
+    jal     EnItem00_DropCollectibleFallAction_Hack
+    nop
+    lh      v0, 0x001C(s0)
+    addiu   at, r0, 0x0003
+    .skip 4
+    nop
+    
+; Override the drop_id convert function s16 func_8001F404(s16 dropId) from decomp
+.orga 0xA89490 ; in memory 0x80013530
+    j get_override_drop_id
+    nop
+
+; Hack Item_DropCollectible when room index of the spawned actor gets set to -1.
+; replaces
+;   addiu   t7, r0, 0x00DC
+;   addiu   at, r0, 0x0011
+;   beq     v0, at, 0x80013888
+;   sh      t7, 0x014a(s2)
+;   addiu   at, r0, 0x0006      
+;   beq     v0, at, 0x80013888
+;   addiu   at, r0, 0x0007
+;   beq     v0, at, 0x80013888
+;   addiu   t8, r0, 0xFFFF
+;   sb      t8, 0x0003(s2)
+.orga 0xA897C0; in memory 0x80013860
+    jal     drop_collectible_room_hook
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+
+; Hack Item_DropCollectible call to Actor_Spawn to set override
+; replaces
+;   jal     0x80025110
+.orga 0xA8972C; in memory 0x800137B8
+    jal     Item_DropCollectible_Actor_Spawn_Override
+
+; Hack Item_DropCollectible2 call to Actor_Spawn to set override
+; replaces
+;   jal     0x80025110
+.orga 0xA89958; in memory 0x800139E0
+    jal     Item_DropCollectible_Actor_Spawn_Override
+
+; Hack ObjTsubo_SpawnCollectible (Pot) to call our overridden spawn function
+.orga 0xDE7C60
+    j		ObjTsubo_SpawnCollectible_Hack
+    nop
+
+; Hack ObjKibako2_SpawnCollectible (Large crates) to call our overridden spawn function
+;
+.orga 0xEC8264
+    j       ObjKibako2_SpawnCollectible_Hack
+    nop
+
+; Hack ObjKibako_SpawnCollectible (Small wooden crates) to call our overriden spawn function
+.orga 0xDE6F60
+    j		ObjKibako_SpawnCollectible_Hack
+    nop
+
+; Hack En_tubo_trap (flying pots) to call our overriden spawn function
+.orga 0xDFA520
+    j		EnTuboTrap_DropCollectible_Hack
+    nop
+    
+
+; Hack ObjKibako2_Init (Large Crates) to not delete our extended flag
+.orga 0xEC832C
+    or      T8, T7, R0
+
+; Hack ObjMure3 Function that spawns the rupee circle (6 green + 1 red in the center)
+; replaces
+;   or      a1, s6, r0
+;   addiu   a2, r0, 0x4000
+.orga 0xED0AEC
+    jal     obj_mure3_hack
+    nop
+; Hack the red rupee part
+; replaces
+;   lwc1    f8, 0x002c(s2)
+;   addiu   a2, r0, 0x4002
+.orga 0xED0B48
+    jal     obj_mure3_redrupee_hack
+    lwc1    f8, 0x002c(s2)
+
+; Hack bg_haka_tubo (shadow spinning pots) to drop flagged collectibles
+; replaces
+;   or      a0, s6, r0
+;   addiu   a1, sp, 0x005c
+.orga 0xD30FDC
+    jal     bg_haka_tubo_hack
+    or      a0, s6, r0
+
+; Hack bg_spot18_basket (goron city spinning pot), bomb drops
+; the actor pointer starts in s0, gets deleted so s0 can be used for the loop variable.
+; Need to use a different loop variable and need to move the branch point up to make a little room for the hack
+; replaces
+;   or      s0, r0, r0 ;outside the loop
+;   or      a0, s4, r0 ;outside the loop
+;   or      a1, s3, r0 ;inside the loop
+.orga 0xE47C08
+    or      s7, r0, r0 ;use s7 as our loop variable
+bg_spot18_basket_bombs_loopstart:
+    jal     bg_spot18_basket_bombs_hack
+    or      a0, s4, r0
+.skip 4
+    ori     a2, r0, 0x0004
+.skip 4
+    sll     t6, s7, 1
+.skip 16
+    addiu   s7, s7, 0x0001
+    bnel    s7, s1, bg_spot18_basket_bombs_loopstart ; move the branch point up a little bit
+
+; Hack bg_spot18_basket (Goron city spinning pot), 3 green rupee drops
+; the actor pointer starts in s0, gets deleted so s0 can be used for the loop variable.
+; Need to use a different loop variable and need to move the branch point up to make a little room for the hack
+; replaces
+;   or      so, r0, r0
+;   addiu   s3, sp, 0x0044
+;   addiu   s1, r0, 0x0003
+.orga 0xE47C5C
+    or      s7, r0, r0 ; use s7 as our loop variable
+bg_spot18_basket_rupees_loopstart: ; our new loop branch target
+    jal     bg_spot18_basket_rupees_hack
+.skip 16
+    nop ; replaces or a2, r0, r0 because our hack will set a2 correctly.
+.skip 4
+    sll     t9, s7, 1
+.skip 16
+    addiu   s7, s7, 0x0001
+    bnel    s7, s1, bg_spot18_basket_rupees_loopstart
+
+; Hack bg_spot18_basket (Goron city spinning pot), rupee drops with heart piece
+; Replaces
+;   or      a0, s4, r0
+;   or      a1, s3, r0
+.orga 0xE47D6C
+    jal     bg_spot18_basket_drop_heartpiece_rupees
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    lw      ra, 0x0034(sp)
+.skip 4
+    nop
+
+; Hack obj_comb (beehives) to drop flagged collectibles. Get rid of the random 50% drop
+; replaces
+;   sh      a2, 0x001e(sp) <- keep
+;   jal     0xb00cdccc    <- keep
+;   sw      a3, 0x0020(sp) <- keep
+;   lui     at, 0x3F00
+;   mtc     at, f4
+;   lh      a2, 0x001e(sp)
+;   lw      a3, 0x0020(sp)
+;   c.lt.s  f0, f4
+;   nop
+;   bc1f    0xb0ec7490
+;   nop
+;   addiu   a2, r0, 0xffff
+.orga 0xec746c
+    j       obj_comb_hook
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+
+
+; Hook at the end of Actor_SetWorldToHome to zeroize anything we use to store additional flag data
+.orga 0xA96E5C ; In memory: 0x80020EFC
+; Replaces:
+;   jr      ra
+    j       Actor_SetWorldToHome_Hook
+
+; Hook Actor_UpdateAll when each actor is being initialized. At the call to Actor_SpawnEntry
+; Used to set the flag (z-rotation) of the actor to its position in the actor table.
+.orga 0xA99D48; In memory: 0x80023DE8
+; Replaces:
+;   jal 0x800255C4
+    jal Actor_UpdateAll_Hook
 
 ; Runs when storing an incoming item to the player instance
 ; Replaces:
@@ -266,6 +665,19 @@ Gameplay_InitSkybox:
     nop
     nop
     nop
+
+; Change graphic ID to be treated as unsigned
+; Replaces: lb      t9, 0x0852(s0)
+.orga 0xBE6538
+    lbu     t9, 0x0852(s0)
+
+; Replaces: lb      v0, 0x0852(s0)
+.orga 0xAF1398
+    lbu     v0, 0x0852(s0)
+
+; Replaces: lb      v0, 0x0852(s0)
+.orga 0xAF13AC
+    lbu     v0, 0x0852(s0)
 
 ; Override chest speed
 ; Replaces:
@@ -347,9 +759,43 @@ Gameplay_InitSkybox:
     move    a0, s0
 .endarea
 
+;Hack to EnItem00_Init to spawn deku shield, hylian shield, and tunic objects
+.orga 0xA87DC8 ;In memory 0x80011E68
+    jal object_index_or_spawn ;Replace call to z64_ObjectIndex
+.orga 0xA87E24 ;In memory 0x80011EC4
+    jal object_index_or_spawn ;Replace call to z64_ObjectIndex
+.orga 0xA87E80 ;In memory 0x80011F20
+    jal object_index_or_spawn ;Replace call to z64_ObjectIndex
+
+; Fix autocollect magic jar wonder items
+; Replaces:
+;   jal     func_80022CF4
+.orga 0xA880D4
+    jal     enitem00_set_link_incoming_item_id
+
 ;==================================================================================================
 ; Freestanding models
 ;==================================================================================================
+
+;Replaces:
+;   who knows ; Draw Rupee Function
+.headersize(0x80013004 - 0xA88F64)
+.orga 0xA88F64 ; In memory: 0x80013004
+    jal     rupee_draw_hook
+.headersize(0)
+
+;Replaces:
+;   LH      V0, 0x014a(A2)
+;   ADDIU   AT, R0, 0xFFFF
+.headersize(0x8001303C - 0xA88F9C)
+.orga 0xA88F9C ; In memory: 0x8001303C
+;   or      A0, A2, R0
+    jal     recovery_heart_draw_hook
+    nop
+after_recovery_heart_hook:
+.skip 0x6C
+end_of_recovery_draw:
+.headersize(0)
 
 ; Replaces:
 ;   jal     0x80013498 ; Piece of Heart draw function
@@ -359,7 +805,7 @@ Gameplay_InitSkybox:
 ; Replaces:
 ;   jal     0x80013498 ; Collectable draw function
 .orga 0xA89048 ; In memory: 0x800130E8
-    jal     small_key_draw
+    jal     collectible_draw_other
 
 ; Replaces:
 ;   addiu   sp, sp, -0x48
@@ -940,6 +1386,96 @@ skip_GS_BGS_text:
 @@continue:
 
 ;==================================================================================================
+; Roll Collision / Bonks Kill Player
+;==================================================================================================
+
+; Set player health to zero on last frame of bonk animation
+; z_player func_80844708, conditional where this->unk_850 != 0 and temp >= 0 || sp44
+; Replaces:
+;   or      a0, s0, $zero
+;   jal     func_80838178
+;   lw      a1, 0x0054($sp)
+;   b       lbl_80842AE8
+;   lw      $ra, 0x0024($sp)
+;   lwc1    $f4, 0x0828(s0)
+;   mtc1    $at, $f6
+;   nop
+.orga 0xBE0228
+; Load APPLY_BONK_DAMAGE address as throwaway instructions. Replacing the jump call causes
+; problems when overlay relocation is applied, breaking both replacement jump calls and nop'ing
+; the instruction. By chance, these two instructions (equivalent to `la APPLY_BONK_DAMAGE`) do
+; not crash after relocation, and so are kept here even though they do nothing.
+    lui     t8, 0x8040
+    addiu   t8, t8, 0x2D04
+; Replace original function call with hook to apply damage if the setting is on.
+; The original function is called in the new function before applying damage.
+; Since the player actor always ends up in the same location in RAM, the jump
+; address there is hardcoded.
+    jal     BONK_LAST_FRAME
+    lw      a1, 0x0054($sp)
+; The branch address is shifted to an alternate location where lw $ra... is run.
+; Required as la t8, APPLY_BONK_DAMAGE gets expanded to two commands.
+    b       0xBE0494
+    lw      $ra, 0x0024($sp)
+    lwc1    $f4, 0x0828(s0)
+    mtc1    $at, $f6
+
+; Prevent set and reset of player state3 flag 4, which is re-used for storing bonk state if the
+; player manages to cancel the roll/bonk animation before the last frame.
+; The flag does not appear to be used by the vanilla game.
+; Replaces:
+;   sb      t4, 0x0682(s0)
+.orga 0xBE3798
+    nop
+; Replaces:
+;   sb      t5, 0x0682(s0)
+.orga 0xBE55E4
+    nop
+
+; Hook to set flag if player starts bonk animation
+; Flag is unset on player death
+; Replaces:
+;   or      a0, s0, $zero
+;   addiu   a1, $zero, 0x00FF
+.orga 0xBE035C
+    jal     SET_BONK_FLAG
+    nop
+
+; Hook into Player_UpdateCommon to check if bonk animation was canceled.
+; If so, kill the dirty cheater.
+; Replaces:
+;   addiu   $at, $zero, 0x0002
+;   lui     t1, 0x8012
+.orga 0xBE5328
+    jal     CHECK_FOR_BONK_CANCEL
+    nop
+
+; Hook to Game Over cutscene init in Player actor to prevent adding a subcamera
+; in scenes with fixed cameras like Link's House or outside Temple of Time.
+; The game crashes in these areas if the cutscene subcamera to rotate around
+; Link as he dies is added.
+; Replaces
+;   sll     a2, v0, 16
+;   sra     a2, a2, 16
+.orga 0xBD200C
+    jal     CHECK_ROOM_MESH_TYPE
+    nop
+
+;==================================================================================================
+; Roll Collision / Bonks Kills King Dodongo
+;==================================================================================================
+
+; King Dodongo tracks the number of wall hits when rolling in order to transition from
+; the rolling animation to walking. Add a hook to the actor update function to check
+; this variable and set actor health to zero if bonks are not zero.
+; Replaces:
+;   lh      t2, 0x0032(s1)
+;   mtc1    $zero, $f16
+.orga 0xC3DC04
+    jal     KING_DODONGO_BONKS
+    nop
+
+;==================================================================================================
 ; Skip Scarecrow Song
 ;==================================================================================================
 
@@ -1206,12 +1742,167 @@ skip_GS_BGS_text:
 .orga 0xC07230
     lbu     v0,0x01EC(s0)
 
-; Chest Color
-; Replaces lbu   t9,0x01E9(t8)
-.orga 0xC075A8
-    lbu     t9,0x01ED(t8)
-.orga 0xC07648
-    lbu     t9,0x01ED(t8)
+;==================================================================================================
+; Draw Chest Base and Lid
+;==================================================================================================
+
+.org 0xC0754C
+    j   draw_chest
+    nop
+
+; set chest_base front texture
+.org 0xFEB000 + 0x6F0 - 0x3296C0 + 0x3296D8
+.word   0xDE000000, 0x09000000
+
+.org 0xFEB000 + 0x6F0 - 0x3296C0 + 0x3297B8
+.word   0xDE000000, 0x09000000
+
+; set chest_base base texture
+.org 0xFEB000 + 0x6F0 - 0x3296C0 + 0x329758
+.word   0xDE000000, 0x09000010
+
+.org 0xFEB000 + 0x6F0 - 0x3296C0 + 0x329810
+.word   0xDE000000, 0x09000010
+
+; set chest_lid front texture
+.org 0xFEB000 + 0x10C0 - 0x32A090 + 0x32A0A8
+.word   0xDE000000, 0x09000000
+.org 0xFEB000 + 0x10C0 - 0x32A090 + 0x32A1C8
+.word   0xDE000000, 0x09000000
+
+; set chest_lid base texture
+.org 0xFEB000 + 0x10C0 - 0x32A090 + 0x32A158
+.word   0xDE000000, 0x09000010
+
+;==================================================================================================
+; Increase transparency of red ice in CTMC
+;==================================================================================================
+
+; In a function called by red ice init
+; Replaces addiu    t7, $zero, 0x00FF
+.orga 0xDB3244
+    j       red_ice_alpha
+;   sw      t6, 0x0154(a0) ; delay slot unchanged, sets the idle action function
+; Next 3 instructions are skipped, now done in red_ice_alpha instead.
+;   sh      t7, 0x01F0(a0)
+;   jr      ra
+;   nop
+
+;==================================================================================================
+; Invisible Chests
+;==================================================================================================
+
+; z_actor, offset 0x5F58
+; Hooks into actor draw logic for invisible actors and lens of truth.
+; If invisible chests is enabled, chests in rooms with inverted lens
+; functionality (hide instead of show) will not be drawn at all unless
+; lens is active.
+; replaces
+;   lw      v0, 0x0004(s0)
+;   andi    t3, v0, 0x0060
+.orga 0xA9AAF0
+    jal     SHOW_CHEST_WITH_INVERTED_LENS
+    nop
+; replaces
+;   sll     t9, s2,  2
+;   addu    t0, s7, t9
+.orga 0xA9AB0C
+    jal     HIDE_CHEST_WITH_INVERTED_LENS
+    nop
+
+; Draw Pot Textures
+;==================================================================================================
+
+; replaces ObjTsubo_Draw
+.org 0xDE89FC
+    j       draw_pot_hack
+    nop
+
+; replaces EnGSwitch_DrawPot
+.orga 0xDF3FC0
+    j       draw_hba_pot_hack
+    nop
+
+; replaces EnTuboTrap_Draw
+.orga 0xDFAFC4
+    j       draw_flying_pot_hack
+    nop
+
+.org 0xF6D000 + 0x17870 + 0x18 ; gameplay_dangeon_keep file start + dlist offset + gDPSetTextureImage offset
+.word   0xDE000000, 0x09000000 ; jump to the custom dlist at segment 09
+
+.org 0xF6D000 + 0x17870 + 0x138 ; gameplay_dangeon_keep file start + dlist offset + gDPSetTextureImage offset
+.word   0xDE000000, 0x09000000 ; jump to the custom dlist at segment 09
+
+.org 0x1738000 + 0x17C0 + 0x18 ; object_tsubo file start + dlist offset + gDPSetTextureImage offset
+.word   0xDE000000, 0x09000000 ; jump to the custom dlist at segment 09
+
+;==================================================================================================
+; Draw Crate Textures
+;==================================================================================================
+
+.orga 0xEC8528
+    j       ObjKibako2_Draw
+    nop
+
+.orga 0x18B6000 + 0x960 + 0x18 ; load top texture
+.word   0xDE000000, 0x09000000
+.orga 0x18B6000 + 0x960 + 0x50 ; load palette
+.word   0xDE000000, 0x09000010
+.orga 0x18B6000 + 0x960 + 0xC0 ; load side texture
+.word   0xDE000000, 0x09000020
+
+; hacks to use ci8 textures instead of ci4
+.orga 0x18B6990 ; hack loadblock (top)
+.word 0xF3000000, 0x073FF200 ; load 1024 texels to tmem, 512b per line (8 words)
+
+.orga 0x18B69A0 ; hack settile (top)
+.word 0xF5480800, 0x00098250 ; texel size G_IM_SIZ_8b, 256b per line (4 words)
+
+.orga 0x18B69D0 ; loadTLUT
+.word 0xF0000000, 0x073FF000 ; 256 color palette
+
+.orga 0x18B6A38 ; hack loadblock (side)
+.word 0xF3000000, 0x073FF200
+
+.orga 0x18B6A48 ; hack settile (side)
+.word 0xF5480800, 0x00098250
+
+;==================================================================================================
+; Draw Small Crate Textures
+;==================================================================================================
+
+.orga 0xDE7AC8
+    j       ObjKibako_Draw
+    nop
+
+.orga 0xF6D000 + 0x5290 + 0x18 ; gameplay_dangeon_keep file start + dlist offset + gDPSetTextureImage offset
+.word   0xDE000000, 0x09000000 ; jump to the custom dlist at segment 09
+
+;==================================================================================================
+; Draw Beehive Textures
+;==================================================================================================
+
+;Hook ObjComb_Update to use our new function
+.orga 0xEC764C
+    j       ObjComb_Update
+    nop
+
+
+;Hook ObjComb_Draw call to set up custom dlist stuff
+;Replaces:
+;   addiu   sp, sp, -0x30
+;   sw      s0, 0x0014(sp)
+;   sw      ra, 0x001c(sp)
+;   sw      s1, 0x0018(sp)
+;.orga 0xEC76C4
+;   addiu   sp, sp, -0x30
+;   sw      ra, 0x001c(sp)
+;   jal     ObjComb_Draw_Hook
+;   nop
+
+;.orga 0xF5F000 + 0x95B0 + 0x18 ; gameplay_field_keep file start + beehive dlist offset + gDPSetTextureImage offset
+;.word   0xDE000000, 0x09000000 ; jump to the custom dlist at segment 09
 
 ;==================================================================================================
 ; Cast Fishing Rod without B Item
@@ -2283,3 +2974,86 @@ skip_GS_BGS_text:
 .orga 0xCCE9A4
     jal     kill_door_of_time_col ; Replaces lui     $at, 0x3F80 
     lw      a0, 0x011C(s0) ; replaces mtc1    $at, $f6 
+
+;===================================================================================================
+; Don't grey out Goron's Bracelet as adult.
+;===================================================================================================
+.orga 0xBB66DC
+    sh      zero, 0x025E(s6) ; Replaces: sh      v1, 0x025E(s6)
+.orga 0xBC780C
+    .byte 0x09               ; Replaces: 0x01
+
+;==================================================================================================
+; Prevent Mask de-equip if not on a C-button
+;==================================================================================================
+.orga 0xBCF8CC
+    jal     mask_check_trade_slot   ; sb      zero, 0x014F(t0)
+
+;===================================================================================================
+; Randomize Frog Song Purple Rupees
+;===================================================================================================
+; Replaces: addiu   t1, zero, 0x55
+.orga 0xDB1338
+    addiu   t1, v0, 0x65
+
+;===================================================================================================
+; Allow ice arrows to melt red ice
+;===================================================================================================
+.orga 0xDB32C8
+    jal blue_fire_arrows ; replaces addiu at, zero, 0x00F0
+
+;===================================================================================================
+; Give each cursed skulltula house resident a different text ID, for skulltula reward hints
+;===================================================================================================
+.orga 0xEA2664
+	addiu	t1, t1, 0x9003
+
+;==================================================================================================
+; Base Get Item Draw Override
+;==================================================================================================
+.orga 0xACD020
+.area 0x44
+    addiu   sp, sp, -0x18
+    sw      ra, 0x0014(sp)
+    jal     base_draw_gi_model
+    nop
+    lw      ra, 0x0014(sp)
+    jr      ra
+    addiu   sp, sp, 0x18
+.endarea
+
+;==================================================================================================
+; TEMPORARILY COMMENTED OUT: Until issues with increasing the allocation size of the model are resolved
+; Increases max size of GI Models
+;==================================================================================================
+; Replaces: addiu   a0, $zero, 0x2008
+; .orga 0xBE2930
+;    addiu   a0, $zero, 0x6000
+
+;===================================================================================================
+; Remove the cutscene when throwing a bomb at the rock in front of Dodongo's cavern
+;===================================================================================================
+.orga 0xD55998
+	nop
+	nop
+	nop
+	nop
+	nop
+	
+.orga 0xD55A80
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+
+;==================================================================================================
+; Seeding RNG
+;==================================================================================================
+
+; Truth spinner seeding RNG
+; Replaces:
+;   jal     func_800CDCCC
+.orga 0xDB9E14
+    jal     rand_seed_truth_spinner

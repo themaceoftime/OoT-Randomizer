@@ -2,6 +2,7 @@ import copy
 from collections import defaultdict
 import itertools
 
+from LocationList import location_groups
 from Region import TimeOfDay
 from State import State
 
@@ -272,7 +273,9 @@ class Search(object):
                 if world_filter is not None and state.world.id != world_filter:
                     continue
                 valid_goals[category_name]['stateReverse'][state.world.id] = []
-                world_category = state.world.goal_categories[category_name]
+                world_category = state.world.goal_categories.get(category_name, None)
+                if world_category is None:
+                    continue
                 for goal in world_category.goals:
                     if goal.name not in valid_goals[category_name]:
                         valid_goals[category_name][goal.name] = []
@@ -285,13 +288,16 @@ class Search(object):
         return valid_goals
 
 
-    def collect_pseudo_starting_items(self):
+    def iter_pseudo_starting_locations(self):
         for state in self.state_list:
-            # Skip Child Zelda and Link's Pocket are not technically starting items, so collect them now
-            if state.world.settings.skip_child_zelda:
-                self.collect(state.world.get_location('Song from Impa').item)
-            self.collect(state.world.get_location('Links Pocket').item)
+            for location in state.world.distribution.skipped_locations:
+                self._cache['visited_locations'].add(location)
+                yield location
 
+
+    def collect_pseudo_starting_items(self):
+        for location in self.iter_pseudo_starting_locations():
+            self.collect(location.item)
 
     # Use the cache in the search to determine region reachability.
     # Implicitly requires is_starting_age or Time_Travel.
