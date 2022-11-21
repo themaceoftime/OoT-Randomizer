@@ -8,6 +8,7 @@ This is a randomizer for _The Legend of Zelda: Ocarina of Time_ for the Nintendo
   * [Settings](#settings)
   * [Known Issues](#known-issues)
 * [Changelog](#changelog)
+  * [7.0](#70)
   * [6.2](#62)
   * [6.1](#61)
   * [6.0](#60)
@@ -106,7 +107,7 @@ issue. You should always Hard Reset to avoid this issue entirely.
 
 ## Changelog
 
-### Dev
+### 7.0
 
 #### New Features
 
