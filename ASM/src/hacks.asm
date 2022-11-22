@@ -1657,6 +1657,12 @@ skip_GS_BGS_text:
     nop
     nop
 
+; en_js actor changes to prevent buying bombchus before finding a shuffled source
+.orga 0xE5B5C8
+    jal     logic_chus__carpet_dude_1
+.orga 0xE5B5DC
+    jal     logic_chus__carpet_dude_2
+
 ;==================================================================================================
 ; Override Collectible 05 to be a Bombchus (5) drop instead of the unused Arrow (1) drop
 ;==================================================================================================

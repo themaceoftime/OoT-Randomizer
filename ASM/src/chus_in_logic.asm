@@ -80,6 +80,49 @@ logic_chus__shopkeeper:
     nop
 
 
+logic_chus__carpet_dude_1:
+    ; don't do anything if carpet dude is shuffled
+    lb      t0, SHUFFLE_CARPET_SALESMAN
+    lb      t7, -0x59B4(t6)     ; bombchu inventory slot item
+    bnez    t0, @@return        ; skip if the salesman is randomized
+    lh      t6, -0x59FC(t6)     ; displaced code
+
+    bgtz    t7, @@return    ; allow purchase if bombchu slot isn't empty
+    nop
+
+    ; Simulate empty wallet to prevent giving bombchus.
+    ; Text ID is modified in logic_chus__carpet_dude_1 to
+    ; clarify a bombchu bag is needed
+    ori     t6, $zero, 0x0000
+
+@@return:
+    jr      $ra
+    nop
+
+
+logic_chus__carpet_dude_2:
+    addiu   $sp, $sp, -0x18
+    sw      $ra, 0x0014($sp)
+    ; don't do anything if carpet dude is shuffled
+    lb      t0, SHUFFLE_CARPET_SALESMAN
+    bnez    t0, @@not_enough_rupees   ; skip if the salesman is randomized
+    nop
+
+    bgtz    t7, @@not_enough_rupees   ; bombchu inventory slot isn't empty
+    nop
+    jal     0x800DCE80
+    addiu   a1, $zero, 0x9020   ; custom text ID for missing bombchu bag
+    b       @@return
+    nop
+
+@@not_enough_rupees:
+    jal     0x800DCE80
+    addiu   a1, $zero, 0x6075
+@@return:
+    lw      $ra, 0x0014($sp)
+    jr      $ra
+    addiu   $sp, $sp, 0x18
+
 ; Override the segment offset to use to draw bombchu drops (Collectible 05)
 ; a1 = drop icon segment offset to use for this collectible
 chu_drop_draw:
