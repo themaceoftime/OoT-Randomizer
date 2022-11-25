@@ -1,22 +1,18 @@
 import os
 import random
 from enum import IntEnum
+from Utils import data_path
 
 
 def get_model_choices(age):
     names = ["Default"]
-    path = "data/Models/Adult"
+    path = data_path("Models/Adult")
     if age == 1:
-        path = "data/Models/Child"
-    if not os.path.exists(path): # GUI loaded, path different
-        path = "../" + path
-        if not os.path.exists(path): # If it STILL doesn't exist, this is web, doesn't matter
-            return [""]
-    for file in os.listdir(path):
-        dotsplit = file.split('.')
-        # Make sure this is a file and a zobj
-        if len(dotsplit) > 1 and dotsplit[1] == "zobj":
-            names.append(dotsplit[0])
+        path = data_path("Models/Child")
+    if os.path.exists(path):
+        for file in os.listdir(path):
+            if file.endswith(".zobj"):
+                names.append(file[:-5])
     if len(names) > 2:
         # If more than 2 non-default model choices, add random option
         names.insert(1, "Random")
@@ -414,7 +410,7 @@ def CheckDiff(limb, skeleton):
     # Return true if diff is too big
     return diff > TOLERANCE
 
-def CheckSkeleton(zobj, skeleton, agestr):
+def CorrectSkeleton(zobj, skeleton, agestr):
     # Get the hierarchy pointer
     hierarchy = FindHierarchy(zobj, agestr)
     # Get what the hierarchy pointer points to (pointer to limb 0)
@@ -464,7 +460,7 @@ def LoadModel(rom, model, age):
     hierarchy = ADULT_HIERARCHY
     postconstantstart = ADULT_POST_START
     pieces = AdultPieces
-    path = 'data/Models/Adult/'
+    path = data_path('Models/Adult')
     skips = adultSkips
     skeleton = adultSkeleton
     agestr = "adult" # Just used for error messages
@@ -474,7 +470,7 @@ def LoadModel(rom, model, age):
         hierarchy = CHILD_HIERARCHY
         postconstantstart = CHILD_POST_START
         pieces = ChildPieces
-        path = 'data/Models/Child/'
+        path = data_path('Models/Child')
         skips = childSkips
         skeleton = childSkeleton
         agestr = "child"
@@ -537,14 +533,14 @@ def LoadModel(rom, model, age):
             zobj[LUT_START+i] = byte
             i += 1 
         # Set constants in the LUT
-        file = open(path + 'Constants/preconstants.zobj', "rb")
+        file = open(os.path.join(path, 'Constants/preconstants.zobj'), "rb")
         constants = file.read()
         file.close()
         i = 0
         for byte in constants:
             zobj[PRE_CONSTANT_START + i] = byte
             i += 1
-        file = open(path + 'Constants/postconstants.zobj', "rb")
+        file = open(os.path.join(path, 'Constants/postconstants.zobj'), "rb")
         constants = file.read()
         file.close()
         i = 0
@@ -561,10 +557,8 @@ def LoadModel(rom, model, age):
         # # Save zobj for testing
         # with open(path + "Test_Processed.zobj", "wb") as f:
         #     f.write(zobj)
-    # Check skeleton
-    if not CheckSkeleton(zobj, skeleton, agestr):
-        # If skeleton not vanilla, display message in pause screen informing of this
-        rom.write_int16(rom.sym('illegal_model'), 1)
+    # Correct skeleton if it should be corrected
+    CorrectSkeleton(zobj, skeleton, agestr)
     # Write zobj to vanilla object (object_link_boy or object_link_child)
     rom.write_bytes(linkstart, zobj)
     # Finally, want to return an address with a DF instruction for use when writing the model data
@@ -584,12 +578,13 @@ def patch_model_adult(rom, settings, log):
             choices.remove("Default")
             choices.remove("Random")
             model = random.choice(choices)
-        model = os.path.join('data', 'Models', 'Adult', model + '.zobj')
+        model = data_path(f'Models/Adult/{model}.zobj')
     pathsplit = os.path.basename(model)
     log.settings.model_adult = pathsplit.split('.')[0]
 
     # Load and process model
     dfAddress = LoadModel(rom, model, 0)
+    dfAddress = dfAddress | 0x06000000 # Add segment to DF address
 
     # Write adult Link pointer data
     writer = ModelPointerWriter(rom)
@@ -755,12 +750,13 @@ def patch_model_child(rom, settings, log):
             choices.remove("Default")
             choices.remove("Random")
             model = random.choice(choices)
-        model = os.path.join('data', 'Models', 'Child', model + '.zobj')
+        model = data_path(f'Models/Child/{model}.zobj')
     pathsplit = os.path.basename(model)
     log.settings.model_child = pathsplit.split('.')[0]
 
     # Load and process model
     dfAddress = LoadModel(rom, model, 1)
+    dfAddress = dfAddress | 0x06000000 # Add segment to DF address
 
     # Write child Link pointer data
     writer = ModelPointerWriter(rom)

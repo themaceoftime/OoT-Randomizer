@@ -12,7 +12,7 @@ from Utils import is_bundled, subprocess_args, local_path, data_path, default_ou
 from ntype import BigStream, uint32
 from crc import calculate_crc
 from Models import restrictiveBytes
-from version import __version__
+from version import base_version, branch_identifier, supplementary_version
 
 DMADATA_START = 0x7430
 
@@ -56,8 +56,7 @@ class Rom(BigStream):
         self.original = self.copy()
 
         # Add version number to header.
-        self.write_bytes(0x35, get_version_bytes(__version__)[:3])
-        self.force_patch.extend([0x35, 0x36, 0x37])
+        self.write_version_bytes()
 
 
     def copy(self):
@@ -145,8 +144,7 @@ class Rom(BigStream):
         self.changed_dma = {}
         self.force_patch = []
         self.last_address = None
-        self.write_bytes(0x35, get_version_bytes(__version__)[:3])
-        self.force_patch.extend([0x35, 0x36, 0x37])
+        self.write_version_bytes()
 
 
     def sym(self, symbol_name):
@@ -163,6 +161,13 @@ class Rom(BigStream):
     def update_header(self):
         crc = calculate_crc(self)
         self.write_bytes(0x10, crc)
+
+
+    def write_version_bytes(self):
+        version_bytes = get_version_bytes(base_version, branch_identifier, supplementary_version)
+        self.write_bytes(0x19, version_bytes)
+        self.write_bytes(0x35, version_bytes[:3])
+        self.force_patch.extend([0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x35, 0x36, 0x37])
 
 
     def read_rom(self, file):

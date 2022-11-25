@@ -3,7 +3,6 @@
 # See `python -m unittest -h` or `pytest -h` for more options.
 
 from collections import Counter, defaultdict
-from fileinput import filename
 import json
 import logging
 import os
@@ -12,11 +11,13 @@ import re
 import unittest
 
 from EntranceShuffle import EntranceShuffleError
+from Fill import ShuffleError
+from Hints import HintArea, buildMiscItemHints
 from Item import ItemInfo
-from ItemPool import remove_junk_items, remove_junk_ludicrous_items, ludicrous_items_base, ludicrous_items_extended, trade_items, ludicrous_exclusions, item_groups
-from LocationList import location_groups, location_is_viewable
-from Main import main, resolve_settings, build_world_graphs, place_items
-from Search import Search
+from ItemPool import remove_junk_items, remove_junk_ludicrous_items, ludicrous_items_base, ludicrous_items_extended, trade_items, ludicrous_exclusions
+from LocationList import location_is_viewable
+from Main import main, resolve_settings, build_world_graphs
+from Messages import Message
 from Settings import Settings, get_preset_files
 
 test_dir = os.path.join(os.path.dirname(__file__), 'tests')
@@ -26,11 +27,11 @@ os.makedirs(output_dir, exist_ok=True)
 logging.basicConfig(level=logging.INFO, filename=os.path.join(output_dir, 'LAST_TEST_LOG'), filemode='w')
 
 # items never required:
-# refills, maps, compasses, capacity upgrades, masks (not listed in logic)
+# refills, maps, compasses, capacity upgrades (not listed in logic)
 never_prefix = ['Bombs', 'Arrows', 'Rupee', 'Deku Seeds', 'Map', 'Compass']
 never_suffix = ['Capacity']
 never = {
-    'Bunny Hood', 'Recovery Heart', 'Milk', 'Ice Arrows', 'Ice Trap',
+    'Recovery Heart', 'Milk', 'Ice Trap',
     'Double Defense', 'Biggoron Sword', 'Giants Knife',
 } | {name for name, item in ItemInfo.items.items() if item.priority
      or any(map(name.startswith, never_prefix)) or any(map(name.endswith, never_suffix))}
@@ -46,10 +47,10 @@ bottles = {name for name, item in ItemInfo.items.items() if item.special.get('bo
 junk = set(remove_junk_items)
 shop_items = {i for i, nfo in ItemInfo.items.items() if nfo.type == 'Shop'}
 ludicrous_junk = set(remove_junk_ludicrous_items)
-ludicrous_set = set(ludicrous_items_base) | set(ludicrous_items_extended) | ludicrous_junk | {i for t, i in trade_items.items()} | set(bottles) | set(ludicrous_exclusions) | set(['Bottle with Big Poe']) | shop_items
+ludicrous_set = set(ludicrous_items_base) | set(ludicrous_items_extended) | ludicrous_junk | set(trade_items) | set(bottles) | set(ludicrous_exclusions) | set(['Bottle with Big Poe']) | shop_items
 
 
-def make_settings_for_test(settings_dict, seed=None, outfilename=None):
+def make_settings_for_test(settings_dict, seed=None, outfilename=None, strict=True):
     # Some consistent settings for testability
     settings_dict.update({
         'create_patch_file': False,
@@ -62,7 +63,7 @@ def make_settings_for_test(settings_dict, seed=None, outfilename=None):
     })
     if seed and 'seed' not in settings_dict:
         settings_dict['seed'] = seed
-    return Settings(settings_dict, strict=True)
+    return Settings(settings_dict, strict=strict)
 
 
 def load_settings(settings_file, seed=None, filename=None):
@@ -88,7 +89,7 @@ def load_spoiler(json_file):
         return json.load(f)
 
 
-def generate_with_plandomizer(filename, live_copy=False):
+def generate_with_plandomizer(filename, live_copy=False, max_attempts=10):
     distribution_file = load_spoiler(os.path.join(test_dir, 'plando', filename + '.json'))
     try:
         settings = load_settings(distribution_file['settings'], seed='TESTTESTTEST', filename=filename)
@@ -105,7 +106,7 @@ def generate_with_plandomizer(filename, live_copy=False):
             'output_file': os.path.join(test_dir, 'Output', filename),
             'seed': 'TESTTESTTEST'
         })
-    spoiler = main(settings)
+    spoiler = main(settings, max_attempts=max_attempts)
     if not live_copy:
         spoiler = load_spoiler('%s_Spoiler.json' % settings.output_file)
     return distribution_file, spoiler
@@ -188,24 +189,30 @@ class TestPlandomizer(unittest.TestCase):
             self.assertNotEqual(excess_item, test_item)
         self.assertNotIn(excess_item, spoiler['item_pool'])
 
-    def test_ammo_max_out_of_bounds_use_last_list_element(self):
-        # This issue only appeared while patching
+    def test_rom_patching(self):
+        # This makes sure there are no crashes while patching.
+        if not os.path.exists('./ZOOTDEC.z64'):
+            self.skipTest("Base ROM file not available.")
         filename = "plando-ammo-max-out-of-bounds"
-        settings = Settings({
-            'enable_distribution_file': True,
-            'distribution_file': os.path.join(test_dir, 'plando', filename + '.json'),
-            'patch_without_output': True,
-            'create_patch_file': False,
-            'create_compressed_rom': False,
-            'create_wad_file': False,
-            'create_uncompressed_rom': False,
-            'count': 1,
-            'create_spoiler': True,
-            'create_cosmetics_log': False,
-            'output_file': os.path.join(test_dir, 'Output', filename),
-            'seed': 'TESTTESTTEST'
-        })
-        main(settings)  # Should not crash
+        logic_rules_settings = ['glitchless', 'glitched', 'none']
+        for logic_rules_setting in logic_rules_settings:
+            with self.subTest(f"Logic Rules: {logic_rules_setting}"):
+                settings = Settings({
+                    'enable_distribution_file': True,
+                    'distribution_file': os.path.join(test_dir, 'plando', filename + '.json'),
+                    'patch_without_output': True,
+                    'create_patch_file': False,
+                    'create_compressed_rom': False,
+                    'create_wad_file': False,
+                    'create_uncompressed_rom': False,
+                    'count': 1,
+                    'create_spoiler': True,
+                    'create_cosmetics_log': False,
+                    'output_file': os.path.join(test_dir, 'Output', filename),
+                    'seed': 'TESTTESTTEST',
+                    'logic_rules': logic_rules_setting
+                })
+                main(settings)  # Should not crash
 
     def test_ice_traps(self):
         filenames = [
@@ -278,6 +285,13 @@ class TestPlandomizer(unittest.TestCase):
             "dual-hints",
             "negative-pattern-test",
             "dual-hints-custom-text",
+            "dual-hints-with-upgrade",
+            "plando-freestanding-nomq",
+            "plando-freestanding-allmq",
+            "plando-potscrates-nomq",
+            "plando-potscrates-allmq",
+            "plando-beehives",
+            "plando-freestanding-pots-crates-beehives-triforcehunt",
         ]
         for filename in filenames:
             with self.subTest(filename):
@@ -366,7 +380,7 @@ class TestPlandomizer(unittest.TestCase):
         shuffled_one = "plando-egg-shuffled-one-pool"
         distribution_file, spoiler = generate_with_plandomizer(shuffled_one)
         self.assertEqual(spoiler['item_pool']['Weird Egg'], 1)
-        # Shuffled, two in pool: Shouldn't have more than one, will remove force to 1 in pool
+        # Shuffled, two in pool: Valid config, will end with 2 in pool
         shuffled_two = "plando-egg-shuffled-two-pool"
         distribution_file, spoiler = generate_with_plandomizer(shuffled_two)
         self.assertEqual(spoiler['item_pool']['Weird Egg'], 1)
@@ -436,6 +450,70 @@ class TestPlandomizer(unittest.TestCase):
         self.assertNotIn('Small Key Ring (Forest Temple)', spoiler['locations'].values())
         self.assertGreater(get_actual_pool(spoiler)['Small Key (Thieves Hideout)'], 5)
         self.assertNotIn('Small Key Ring (Thieves Hideout)', spoiler['locations'].values())
+    
+    def test_empty_dungeons(self):
+        filenames = [
+            "empty-dungeons-all-dungeon-er",
+            "empty-dungeons-all-dungeon-item-any-dungeon",
+            "empty-dungeons-all-dungeon-item-anywhere",
+            "empty-dungeons-all-dungeon-item-remove",
+            "empty-dungeons-all-mq-all",
+            "empty-dungeons-all-mq-random",
+            "empty-dungeons-all-plentiful",
+            "empty-dungeons-all-songs-dungeon",
+            "empty-dungeons-half-boss-shuffle",
+            "empty-dungeons-half-dungeon-er",
+            "empty-dungeons-half-dungeon-item-any-dungeon",
+            "empty-dungeons-half-dungeon-item-anywhere",
+            "empty-dungeons-half-dungeon-item-remove",
+            "empty-dungeons-half-mq-all",
+            "empty-dungeons-half-mq-random",
+            "empty-dungeons-half-plentiful",
+            "empty-dungeons-half-songs-dungeon"
+        ]
+        dungeons = {
+            HintArea.DEKU_TREE: "Queen Gohma",
+            HintArea.DODONGOS_CAVERN: "King Dodongo",
+            HintArea.JABU_JABUS_BELLY: "Barinade",
+            HintArea.FOREST_TEMPLE: "Phantom Ganon",
+            HintArea.FIRE_TEMPLE: "Volvagia",
+            HintArea.WATER_TEMPLE: "Morpha",
+            HintArea.SHADOW_TEMPLE: "Bongo Bongo",
+            HintArea.SPIRIT_TEMPLE: "Twinrova"
+        }
+        for filename in filenames:
+            with self.subTest(filename):
+                distribution_file, spoiler = generate_with_plandomizer(filename)
+                # Proper rewards should be given on file select
+                if spoiler['settings']['shuffle_bosses'] == 'off':
+                    for dungeon, boss in dungeons.items():
+                        if spoiler['empty_dungeons'][dungeon.dungeon_name]:
+                            self.assertIn(boss, spoiler[':skipped_locations'])
+                # Empty dungeons should be barren (except in settings where keys or tokens are major items)
+                if spoiler['settings']['shuffle_smallkeys'] not in ['dungeon', 'vanilla']:
+                    continue
+                if spoiler['settings']['shuffle_bosskeys'] not in ['dungeon', 'vanilla']:
+                    continue
+                if spoiler['settings']['bridge'] == 'tokens' or spoiler['settings']['shuffle_ganon_bosskey'] == 'tokens':
+                    continue
+                if spoiler['settings']['shuffle_ganon_bosskey'] == 'on_lacs' and spoiler['settings']['lacs_condition'] == 'tokens':
+                    continue
+                for dungeon in dungeons:
+                    if spoiler['empty_dungeons'][dungeon.dungeon_name]:
+                        self.assertIn(str(dungeon), spoiler[':barren_regions'])
+
+
+    def test_fix_broken_drops(self):
+        # Setting off
+        distribution_file, spoiler = generate_with_plandomizer("plando-fix-broken-drops-off")
+        self.assertEqual(len([sphere for sphere in spoiler[':playthrough'].values() if 'Child Spirit Beyond Metal Bridges Deku Shield Pot' in sphere]), 0)
+
+        # No deku shield available, fail to generate
+        self.assertRaises(ShuffleError, lambda : generate_with_plandomizer("plando-fix-broken-drops-bad", max_attempts=1))
+
+        # Deku shield available only via spirit shield pot
+        distribution_file, spoiler = generate_with_plandomizer("plando-fix-broken-drops-good")
+        self.assertEqual(len([sphere for sphere in spoiler[':playthrough'].values() if 'Child Spirit Beyond Metal Bridges Deku Shield Pot' in sphere]), 1)
 
 class TestHints(unittest.TestCase):
     def test_skip_zelda(self):
@@ -446,6 +524,8 @@ class TestHints(unittest.TestCase):
         self.assertIn('Hyrule Castle', woth)
 
     def test_ganondorf(self):
+        if not os.path.exists('./ZOOTDEC.z64'):
+            self.skipTest("Base ROM file not available.")
         filenames = [
             "light-arrows-1",
             "light-arrows-2",
@@ -455,9 +535,71 @@ class TestHints(unittest.TestCase):
         for filename in filenames:
             with self.subTest(filename):
                 _, spoiler = generate_with_plandomizer(filename, live_copy=True)
-                self.assertIsNotNone(spoiler.worlds[0].light_arrow_location)
-                self.assertNotEqual('Ganons Tower Boss Key Chest', spoiler.worlds[0].light_arrow_location.name)
+                self.assertIsNotNone(spoiler.worlds[0].misc_hint_item_locations["ganondorf"])
+                self.assertNotEqual('Ganons Tower Boss Key Chest', spoiler.worlds[0].misc_hint_item_locations["ganondorf"].name)
+    
+    # Test that every goal in every goal category is hinted at least once
+    # if the bridge and Ganon's Boss Key conditions are for the same type
+    # of win condition, such as 4 medallion bridge and 6 medallion GBK.
+    def test_one_hint_per_goal(self):
+        # To ensure there are no empty goals, one required item per dungeon is plando'd
+        # in song of storms grottos for bridge goals, and in light trial for Ganon's Boss
+        # Key goals. Careful placement with minimal item pool guarantees every goal will
+        # have more hintable items than there are goals in the category. This prevents
+        # goals from being skipped because all items for it were already hinted.
+        filenames = [
+            "one-hint-per-goal-medallions",
+            "one-hint-per-goal-stones",
+            "one-hint-per-goal-dungeons",
+            "one-hint-per-goal-skulls",
+            "one-hint-per-goal-hearts",
+            "one-hint-per-goal-triforce-hunt"
+        ]
+        for filename in filenames:
+            with self.subTest(filename):
+                _, spoiler = generate_with_plandomizer(filename)
+                goals = list(goal_name for goal in list(spoiler[':goal_locations'].values()) for goal_name in list(goal.keys()))
+                # If the hint distro in the plando removes goal hints in the future, alert that the test is broken
+                # A custom distro is used to prevent this, but just in case...
+                self.assertGreater(len(goals), 0)
+                found_goals = []
+                for g in range(len(goals)):
+                    # Triforce Hunt, Skull, and Heart goals all add total available collectables
+                    # in parentheses to the path name. Remove for the hint text search.
+                    try:
+                        goals[g] = goals[g][:goals[g].index(' (')]
+                    except:
+                        pass
+                    # We need at least one hint per goal, but it doesn't matter if there are duplicates
+                    # of a goal hint or more than one hint for the goal.
+                    for hint in spoiler['gossip_stones'].values():
+                        if goals[g].lower() in hint['text'].replace('#','').lower():
+                            found_goals.append(goals[g])
+                            break
+                self.assertEqual(found_goals, goals)
+        # 1 stone bridge / 3 stone gbk
+        # 5 med bridge / 6 med bridge
+        # 5 dungeon bridge / 9 dungeon gbk 
+        # 99 skull bridge / 100 skull gbk
+        # 19 heart bridge / 20 heart gbk
+        # TH
 
+    # Test that Ganondorf hints light arrows in the pots within Ganon's Tower as "those pots over there"
+    # This seems to break every time the hint system changes slightly.
+    def test_those_pots_over_there(self):
+        filename = "those_pots_over_there"
+        # Ganondorf should say "those pots over there" when light arrows are in a pot below
+        _, spoiler = generate_with_plandomizer(filename, live_copy=True)
+        world = spoiler.worlds[0]
+        location = spoiler.worlds[0].misc_hint_item_locations["ganondorf"]
+        area = HintArea.at(location, use_alt_hint=True).text(world.settings.clearer_hints, world=None if location.world.id == world.id else location.world.id + 1)
+        self.assertEqual(area, "#Ganondorf's Chamber#")
+        # Build a test message with the same ID as the ganondorf hint (0x70CC)
+        messages = [Message("Test", 0, 0x70CC, 0,0,0)]
+        buildMiscItemHints(spoiler.worlds[0], messages)
+        for message in messages:
+            if(message.id == 0x70CC): # Ganondorf hint message
+                self.assertTrue("thosepotsoverthere" in message.text.replace('\n', '').replace(' ', ''))
 
 class TestEntranceRandomizer(unittest.TestCase):
     def test_spawn_point_invalid_areas(self):
@@ -633,7 +775,7 @@ class TestValidSpoilers(unittest.TestCase):
                 ofile = 'preset_' + re.sub(r'[^a-zA-Z0-9_-]+', '_', name)
                 with self.subTest(name, filename=ofile):
                     settings = make_settings_for_test(
-                            settings_dict, seed='TESTTESTTEST', outfilename=ofile)
+                            settings_dict, seed='TESTTESTTEST', outfilename=ofile, strict=False)
                     main(settings)
                     spoiler = load_spoiler('%s_Spoiler.json' % settings.output_file)
                     self.verify_woth(spoiler)

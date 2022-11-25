@@ -23,7 +23,7 @@ export class GUIGlobal {
   @HostBinding('class.indigo-pink') materialStyleIndigo: boolean = true;
 
   @Output() globalEmitter: EventEmitter<object> = new EventEmitter();
-  
+
   constructor(private http: HttpClient) {
     this.globalVars = new Map<string, any>([
       ["appReady", false],
@@ -370,7 +370,7 @@ export class GUIGlobal {
             adjustedUserPresets[presetName] = { settings: userPresets[presetName] };
         });
 
-        Object.assign(res.presets, adjustedUserPresets);       
+        Object.assign(res.presets, adjustedUserPresets);
       }
     }
 
@@ -415,7 +415,36 @@ export class GUIGlobal {
 
       this.generator_tabsVisibilityMap[tab.name] = true;
 
-      tab.sections.forEach(section => {
+      for (let sectionIndex = 0; sectionIndex < tab.sections.length; sectionIndex++) {
+
+        let section = tab.sections[sectionIndex];
+
+        //Skip sections that don't belong to this app and delete them from the guiSettings
+        if ("app_type" in section && section.app_type && section.app_type.indexOf(this.getGlobalVar("appType")) == -1) {
+
+          tab.sections.splice(sectionIndex, 1);
+          sectionIndex--;
+
+          let foundInCosmeticsTab = guiSettings.cosmeticsArray.find(entryTab => {
+
+            let index = entryTab.sections.findIndex(entry => entry.name == section.name);
+
+            if (index != -1) {
+              entryTab.sections.splice(index, 1);
+              return true;
+            }
+
+            return false;
+          });
+
+          delete guiSettings.settingsObj[tab.name].sections[section.name];
+
+          if (foundInCosmeticsTab) {
+            delete guiSettings.cosmeticsObj[foundInCosmeticsTab.name].sections[section.name];
+          }
+
+          continue;
+        }
         section.settings.forEach(setting => {
 
           this.generator_settingsVisibilityMap[setting.name] = true;
@@ -474,11 +503,12 @@ export class GUIGlobal {
             }
           }
         });
-      });
+      }
     }
 
     //Add GUI only options
     this.generator_settingsMap["settings_string"] = userSettings && "settings_string" in userSettings ? userSettings["settings_string"] : "";
+    this.generator_settingsMap["theme"] = userSettings && "theme" in userSettings ? userSettings["theme"] : "";
     this.generator_settingsVisibilityMap["settings_string"] = true;
 
     console.log("JSON Settings Data:", guiSettings);
@@ -505,28 +535,48 @@ export class GUIGlobal {
 
       var event = await post.send(window, 'getCurrentSourceVersion');
 
-      var res: string = event.data;
+      type VersionData = {
+        baseVersion: string;
+        supplementaryVersion: number;
+        fullVersion: string;
+        branchUrl: string;
+      };
+
+      var local: VersionData = event.data;
       var result = { hasUpdate: false, currentVersion: "", latestVersion: "" };
 
-      if (res && res.length > 0) {
+      if (local !== null) {
 
-        console.log("Local:", res);
-        result.currentVersion = res;
+        console.log("Local:", local);
+        result.currentVersion = local.fullVersion;
 
-        this.globalEmitter.emit({ name: "local_version_checked", version: res });
+        this.globalEmitter.emit({ name: "local_version_checked", version: local.fullVersion, branchUrl: local.branchUrl });
 
-        var remoteFile = await this.http.get("https://raw.githubusercontent.com/Roman971/OoT-Randomizer/Dev-R/version.py", { responseType: "text" }).toPromise();
+        let remote: VersionData = { baseVersion : "", supplementaryVersion : 0, fullVersion : "", branchUrl : "" }
+        let url = local.branchUrl.replace("https://github.com", "https://raw.githubusercontent.com").replace("tree/", "") + "/version.py";
+        console.log("URL: ", url)
+        var remoteFile = await this.http.get(url, { responseType: "text" }).toPromise();
 
-        let remoteVersion = remoteFile.substr(remoteFile.indexOf("'") + 1);
-        remoteVersion = remoteVersion.substr(0, remoteVersion.indexOf("'"));
+        let baseMatch = remoteFile.match(/^[ \t]*__version__ = ['"](.+)['"]/m);
+        let supplementaryMatch = remoteFile.match(/^[ \t]*supplementary_version = (\d+)$/m);
+        let fullMatch = remoteFile.match(/^[ \t]*__version__ = f['"]*(.+)['"]/m);
+        let urlMatch = remoteFile.match(/^[ \t]*branch_url = ['"](.+)['"]/m);
 
-        console.log("Remote:", remoteVersion);
-        result.latestVersion = remoteVersion;
+        remote.baseVersion = baseMatch != null && baseMatch[1] !== undefined ? baseMatch[1] : "";
+        remote.supplementaryVersion = supplementaryMatch != null && supplementaryMatch[1] !== undefined ? parseInt(supplementaryMatch[1]) : 0;
+        remote.fullVersion = fullMatch != null && fullMatch[1] !== undefined ? fullMatch[1] : remote.baseVersion;
+        remote.fullVersion = remote.fullVersion
+          .replace('{base_version}', remote.baseVersion)
+          .replace('{supplementary_version}', remote.supplementaryVersion.toString())
+        remote.branchUrl = urlMatch != null && urlMatch[1] !== undefined ? urlMatch[1] : "";
+
+        console.log("Remote:", remote);
+        result.latestVersion = remote.fullVersion;
 
         //Compare versions
-        result.hasUpdate = this.isVersionNewer(remoteVersion, res);
+        result.hasUpdate = this.isVersionNewer(remote.baseVersion, local.baseVersion, remote.supplementaryVersion, local.supplementaryVersion);
 
-        return result;  
+        return result;
       }
       else {
         return result;
@@ -538,7 +588,7 @@ export class GUIGlobal {
     }
   }
 
-  isVersionNewer(newVersion: string, oldVersion: string) {
+  isVersionNewer(newVersion: string, oldVersion: string, newSubVersion: number = 0, oldSubVersion: number = 0) {
 
     //Strip away dev strings
     if (oldVersion.startsWith("dev") && oldVersion.includes("_"))
@@ -547,16 +597,20 @@ export class GUIGlobal {
     if (newVersion.startsWith("dev") && newVersion.includes("_"))
       newVersion = newVersion.split("_")[1];
 
-    let oldSplit = oldVersion.replace('R-', '').replace('v', '').replace(' ', '.').split('.');
-    let newSplit = newVersion.replace('R-', '').replace(' ', '.').split('.');
+    let oldSplit = oldVersion.replace('v', '').replace(' ', '.').split('.');
+    let newSplit = newVersion.replace(' ', '.').split('.');
 
     //Version is not newer if the new version doesn't satisfy the format
     if (newSplit.length < 4)
       return false;
+    else if (newSplit.length == 4)
+      newSubVersion = newSubVersion == 0 ? Number(newSplit[3]) : 0;
 
     //Version is newer if the old version doesn't satisfy the format
     if (oldSplit.length < 4)
       return true;
+    else if (oldSplit.length == 4)
+      oldSubVersion = oldSubVersion == 0 ? Number(oldSplit[3]) : 0;
 
     //Compare major.minor.revision.r
     if (Number(newSplit[0]) > Number(oldSplit[0])) {
@@ -571,7 +625,7 @@ export class GUIGlobal {
           return true;
         }
         else if (Number(newSplit[2]) == Number(oldSplit[2])) {
-          if (Number(newSplit[3]) > Number(oldSplit[3])) {
+          if (newSubVersion > oldSubVersion) {
             return true;
           }
         }
@@ -612,7 +666,7 @@ export class GUIGlobal {
     }
     else if (typeof (settingValue) == "string") { //Try to cast it
 
-      if (Number(parseInt(settingValue)) != Number(settingValue)) { //Cast failed, not numeric    
+      if (Number(parseInt(settingValue)) != Number(settingValue)) { //Cast failed, not numeric
         error = true;
       }
       else {
@@ -753,7 +807,7 @@ export class GUIGlobal {
         section.settings.forEach(setting => {
 
           if (setting.name in cleanSettings) {
-            this.generator_settingsMap[setting.name] = setting.default; 
+            this.generator_settingsMap[setting.name] = setting.default;
           }
         });
       });
@@ -812,8 +866,8 @@ export class GUIGlobal {
 
             if (error) { //Input could not be recovered, abort
               invalidSettingsList.push(setting.text);
-            }       
-          }     
+            }
+          }
         });
       });
     });
@@ -1123,7 +1177,7 @@ export class GUIGlobal {
       fileReader.onload = function (event) {
 
         console.log("Read in file successfully");
-        resolve(event.target["result"]); 
+        resolve(event.target["result"]);
       };
 
       if (useArrayBuffer)
@@ -1187,7 +1241,7 @@ export class GUIGlobal {
       return plandoFileText;
     }
     catch (ex) {
-      switch (ex.error) {       
+      switch (ex.error) {
         case "file_read_error": {
           throw { error: `An error occurred during the loading of the ${settingText}! Please try to enter it again.` };
         }

@@ -10,6 +10,7 @@ from JSONDump import dump_obj, CollapseList, CollapseDict, AlignedDict, SortedDi
 from SettingsList import setting_infos
 from Plandomizer import InvalidFileException
 import json
+from N64Patch import apply_patch_file
 
 
 def patch_targeting(rom, settings, log, symbols):
@@ -43,10 +44,10 @@ def patch_music(rom, settings, log, symbols):
 
 
 def patch_model_colors(rom, color, model_addresses):
-    main_addresses, dark_addresses = model_addresses
+    main_addresses, dark_addresses, light_addresses = model_addresses
 
     if color is None:
-        for address in main_addresses + dark_addresses:
+        for address in main_addresses + dark_addresses + light_addresses:
             original = rom.original.read_bytes(address, 3)
             rom.write_bytes(address, original)
         return
@@ -54,9 +55,13 @@ def patch_model_colors(rom, color, model_addresses):
     for address in main_addresses:
         rom.write_bytes(address, color)
 
-    darkened_color = list(map(lambda light: int(max((light - 0x32) * 0.6, 0)), color))
+    darkened_color = list(map(lambda main_color: int(max((main_color - 0x32) * 0.6, 0)), color))
     for address in dark_addresses:
         rom.write_bytes(address, darkened_color)
+
+    lightened_color = list(map(lambda main_color: int(min((main_color / 0.6) + 0x32, 255)), color))
+    for address in light_addresses:
+        rom.write_bytes(address, lightened_color)
 
 
 def patch_tunic_icon(rom, tunic, color):
@@ -104,9 +109,9 @@ def patch_tunic_colors(rom, settings, log, symbols):
         else:
             color = hex_to_color(tunic_option)
             tunic_option = 'Custom'
-        # "Weird" weirdshots will crash if the Kokiri Tunic Green value is > 0x99. Brickwall it.
+        # "Weird" weirdshots will crash if the Kokiri Tunic Green value is > 0x99 and possibly 0x98. Brickwall it.
         if settings.logic_rules != 'glitchless' and tunic == 'Kokiri Tunic':
-            color[1] = min(color[1],0x98)
+            color[1] = min(color[1], 0x97)
         rom.write_bytes(address, color)
 
         # patch the tunic icon
@@ -435,9 +440,9 @@ def patch_gauntlet_colors(rom, settings, log, symbols):
     # patch gauntlet colors
     gauntlets = [
         ('Silver Gauntlets', 'silver_gauntlets_color', 0x00B6DA44,
-            ([0x173B4CC], [0x173B4D4, 0x173B50C, 0x173B514])), # GI Model DList colors
+            ([0x173B4CC], [0x173B4D4, 0x173B50C, 0x173B514], [])), # GI Model DList colors
         ('Gold Gauntlets', 'golden_gauntlets_color',  0x00B6DA47,
-            ([0x173B4EC], [0x173B4F4, 0x173B52C, 0x173B534])), # GI Model DList colors
+            ([0x173B4EC], [0x173B4F4, 0x173B52C, 0x173B534], [])), # GI Model DList colors
     ]
     gauntlet_color_list = get_gauntlet_colors()
 
@@ -476,7 +481,7 @@ def patch_shield_frame_colors(rom, settings, log, symbols):
     shield_frames = [
         ('Mirror Shield Frame', 'mirror_shield_frame_color',
             [0xFA7274, 0xFA776C, 0xFAA27C, 0xFAC564, 0xFAC984, 0xFAEDD4],
-            ([0x1616FCC], [0x1616FD4])),
+            ([0x1616FCC], [0x1616FD4], [])),
     ]
     shield_frame_color_list = get_shield_frame_colors()
 
@@ -517,9 +522,10 @@ def patch_heart_colors(rom, settings, log, symbols):
     # patch heart colors
     hearts = [
         ('Heart Color', 'heart_color', symbols['CFG_HEART_COLOR'], 0xBB0994,
-            ([0x14DA474, 0x14DA594, 0x14B701C, 0x14B70DC],
+            ([0x14DA474, 0x14DA594, 0x14B701C, 0x14B70DC, 0x160929C, 0x1609304, 0x160939C],
              [0x14B70FC, 0x14DA494, 0x14DA5B4, 0x14B700C, 0x14B702C, 0x14B703C, 0x14B704C, 0x14B705C,
-              0x14B706C, 0x14B707C, 0x14B708C, 0x14B709C, 0x14B70AC, 0x14B70BC, 0x14B70CC])), # GI Model DList colors
+              0x14B706C, 0x14B707C, 0x14B708C, 0x14B709C, 0x14B70AC, 0x14B70BC, 0x14B70CC, 0x16092A4],
+             [0x16092FC, 0x1609394])), # GI Model and Potion DList colors
     ]
     heart_color_list = get_heart_colors()
 
@@ -565,7 +571,9 @@ def patch_magic_colors(rom, settings, log, symbols):
     # patch magic colors
     magic = [
         ('Magic Meter Color', 'magic_color', symbols["CFG_MAGIC_COLOR"],
-            ([0x154C654, 0x154CFB4], [0x154C65C, 0x154CFBC])), # GI Model DList colors
+            ([0x154C654, 0x154CFB4, 0x160927C, 0x160927C, 0x16092E4, 0x1609344],
+             [0x154C65C, 0x154CFBC, 0x1609284],
+             [0x16092DC, 0x160933C])), # GI Model and Potion DList colors
     ]
     magic_color_list = get_magic_colors()
 
@@ -692,19 +700,19 @@ def patch_button_colors(rom, settings, log, symbols):
 def patch_extra_equip_colors(rom, settings, log, symbols):
     # Various equipment color patches
     extra_equip_patches = [
-        ('Mirror Shield Main', [0xFA722C, 0xFA7724, 0xFAA234, 0xFAC5D4, 0xFAC9F4, 0xFAEE44], ([0x16170FC], [0x1617104])),
-        ('Mirror Shield Symbol', [0xFA763C, 0xFA7A34, 0xFAA624, 0xFAC89C, 0xFACBE4, 0xFAEEE4], ([0x16171E4], [0x16171EC])),
-        ('Gauntlets Crystal', [0xFAB404, 0xFAB564, 0xFAB784, 0xFAB8E4], ([0x173B79C], [0x173B7A4])),
-        ('Kokiri Sword Blade', [0xFD216C, 0xFD5844], ([0x196897C], [0x1968984])),
-        ('Master Sword Blade', [0xFA7FEC, 0xFAD21C, 0xFD36F4], ([0x125CC24], [0x125CC2C])),
-        ('Biggoron Sword Blade', [0xFA9A84, 0xFA9F0C, 0xFAE9A4, 0xFAF39C], ([0x163F61C], [0x163F624])),
-        ('Hammer Metal', [0xFA94EC, 0xFAE394], ([0x163D9EC, 0x163DBB4], [])),
-        ('Hammer Handle', [0xFA945C, 0xFAE304], ([0x163DC2C], [0x163DC34])),
-        ('Bow Tip', [0xFA8E5C, 0xFADC34, 0xFB033C], ([0x1605BF4], [0x1605BFC])),
-        ('Bow Limbs', [0xFA8E8C, 0xFADC5C, 0xFB0374], ([0x16059AC], [0x16059B4])),
-        ('Bow Riser', [0xFA8E24, 0xFADC04, 0xFB02C4], ([0x1605AFC], [0x1605B04])),
-        ('Boomerang Main', [0xFD2744, 0xFD4944, 0xF0F7A4], ([0x1604A4C], [0x1604A54])),
-        ('Boomerang Crystal', [0xFD26CC, 0xF0F734], ([0x1604C8C], [0x1604C94])),
+        ('Mirror Shield Main', [0xFA722C, 0xFA7724, 0xFAA234, 0xFAC5D4, 0xFAC9F4, 0xFAEE44], ([0x16170FC], [0x1617104], [])),
+        ('Mirror Shield Symbol', [0xFA763C, 0xFA7A34, 0xFAA624, 0xFAC89C, 0xFACBE4, 0xFAEEE4], ([0x16171E4], [0x16171EC], [])),
+        ('Gauntlets Crystal', [0xFAB404, 0xFAB564, 0xFAB784, 0xFAB8E4], ([0x173B79C], [0x173B7A4], [])),
+        ('Kokiri Sword Blade', [0xFD216C, 0xFD5844], ([0x196897C], [0x1968984], [])),
+        ('Master Sword Blade', [0xFA7FEC, 0xFAD21C, 0xFD36F4], ([0x125CC24], [0x125CC2C], [])),
+        ('Biggoron Sword Blade', [0xFA9A84, 0xFA9F0C, 0xFAE9A4, 0xFAF39C], ([0x163F61C], [0x163F624], [])),
+        ('Hammer Metal', [0xFA94EC, 0xFAE394], ([0x163D9EC, 0x163DBB4], [], [])),
+        ('Hammer Handle', [0xFA945C, 0xFAE304], ([0x163DC2C], [0x163DC34], [])),
+        ('Bow Tip', [0xFA8E5C, 0xFADC34, 0xFB033C], ([0x1605BF4], [0x1605BFC], [])),
+        ('Bow Limbs', [0xFA8E8C, 0xFADC5C, 0xFB0374], ([0x16059AC], [0x16059B4], [])),
+        ('Bow Riser', [0xFA8E24, 0xFADC04, 0xFB02C4], ([0x1605AFC], [0x1605B04], [])),
+        ('Boomerang Main', [0xFD2744, 0xFD4944, 0xF0F7A4], ([0x1604A4C], [0x1604A54], [])),
+        ('Boomerang Crystal', [0xFD26CC, 0xF0F734], ([0x1604C8C], [0x1604C94], [])),
     ]
 
     for name, addresses, model_addresses in extra_equip_patches:
@@ -811,12 +819,57 @@ def patch_instrument(rom, settings, log, symbols):
     rom.write_byte(0x00B4BF6F, instruments[choice]) # For Lost Woods Skull Kids' minigame in Lost Woods
     log.sfx['Ocarina'] = ocarina_options[choice]
 
+def patch_voices(rom, settings, log, symbols):
+    # Link's Voice Replacement Files
+    override_voice(rom, settings)
+    # Resolve random settings
+    if settings.sfx_link_child == 'random-choice':
+        settings.sfx_link_child = random.choice(['default', 'feminine', 'silent'])
+    if settings.sfx_link_adult == 'random-choice':
+        settings.sfx_link_adult = random.choice(['default', 'feminine', 'silent'])
+    # Perform patch
+    if settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'default':
+        patch_voice(rom, settings, data_path('Voices/FemaleChildVoice.zpf'))
+    elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'default':
+        patch_voice(rom, settings, data_path('Voices/SilentChildVoice.zpf'))
+    elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'feminine':
+        patch_voice(rom, settings, data_path('Voices/FemaleAdultVoice.zpf'))
+    elif settings.sfx_link_child == 'default' and settings.sfx_link_adult == 'silent':
+        patch_voice(rom, settings, data_path('Voices/SilentAdultVoice.zpf'))
+    elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'feminine':
+        patch_voice(rom, settings, data_path('Voices/FeminineVoices.zpf'))
+    elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'silent':
+        patch_voice(rom, settings, data_path('Voices/SilentVoices.zpf'))
+    elif settings.sfx_link_child == 'feminine' and settings.sfx_link_adult == 'silent':
+        patch_voice(rom, settings, data_path('Voices/FemChildSilentAdult.zpf'))
+    elif settings.sfx_link_child == 'silent' and settings.sfx_link_adult == 'feminine':
+        patch_voice(rom, settings, data_path('Voices/SilentChildFemAdult.zpf'))
+    log.sfx['Child Voice'] = settings.sfx_link_child
+    log.sfx['Adult Voice'] = settings.sfx_link_adult
+
+def override_voice(rom, settings):
+    # Cancel out the entire audiobank because finding specific areas changed was too hard.
+    original = rom.original.read_bytes(0x0000D390, 0x01CA50)
+    rom.write_bytes(0x0000D390, original)
+    # Cancel out the entire audiotable because finding specific areas changed was too hard.
+    original = rom.original.read_bytes(0x00079470, 0x460AD0)
+    rom.write_bytes(0x00079470, original)
+    # Cancel out random section that's in the game code.
+    original = rom.original.read_bytes(0x00B896B5, 0x258)
+    rom.write_bytes(0x00B896B5, original)
+
+def patch_voice(rom, settings, voice_file):
+    patch_file = settings.patch_file
+    settings.patch_file = voice_file
+    apply_patch_file(rom, settings)
+    settings.patch_file = patch_file
 
 legacy_cosmetic_data_headers = [
     0x03481000,
     0x03480810,
 ]
 
+patch_sets = {}
 global_patch_sets = [
     patch_targeting,
     patch_music,
@@ -826,113 +879,95 @@ global_patch_sets = [
     patch_gauntlet_colors,
     patch_shield_frame_colors,
     patch_extra_equip_colors,
+    patch_voices,
     patch_sfx,
     patch_instrument,
 ]
 
-patch_sets = {
-    0x1F04FA62: {
-        "patches": [
-            patch_dpad,
-            patch_sword_trails,
-        ],
-        "symbols": {
-            "CFG_DISPLAY_DPAD": 0x0004,
-            "CFG_RAINBOW_SWORD_INNER_ENABLED": 0x0005,
-            "CFG_RAINBOW_SWORD_OUTER_ENABLED": 0x0006,
-        },
+# 3.14.1
+patch_sets[0x1F04FA62] = {
+    "patches": [
+        patch_dpad,
+        patch_sword_trails,
+    ],
+    "symbols": {
+        "CFG_DISPLAY_DPAD": 0x0004,
+        "CFG_RAINBOW_SWORD_INNER_ENABLED": 0x0005,
+        "CFG_RAINBOW_SWORD_OUTER_ENABLED": 0x0006,
     },
-    0x1F05D3F9: {
-        "patches": [
-            patch_dpad,
-            patch_sword_trails,
-        ],
-        "symbols": {
-            "CFG_DISPLAY_DPAD": 0x0004,
-            "CFG_RAINBOW_SWORD_INNER_ENABLED": 0x0005,
-            "CFG_RAINBOW_SWORD_OUTER_ENABLED": 0x0006,
-        },
-    },
-    0x1F0693FB: {
-        "patches": [
-            patch_dpad,
-            patch_sword_trails,
-            patch_heart_colors,
-            patch_magic_colors,
-        ],
-        "symbols": {
-            "CFG_MAGIC_COLOR": 0x0004,
-            "CFG_HEART_COLOR": 0x000A,
-            "CFG_DISPLAY_DPAD": 0x0010,
-            "CFG_RAINBOW_SWORD_INNER_ENABLED": 0x0011,
-            "CFG_RAINBOW_SWORD_OUTER_ENABLED": 0x0012,
-        }
-    },
-    0x1F073FC9: {
-        "patches": [
-            patch_dpad,
-            patch_sword_trails,
-            patch_heart_colors,
-            patch_magic_colors,
-            patch_button_colors,
-        ],
-        "symbols": {
-            "CFG_MAGIC_COLOR": 0x0004,
-            "CFG_HEART_COLOR": 0x000A,
-            "CFG_A_BUTTON_COLOR": 0x0010,
-            "CFG_B_BUTTON_COLOR": 0x0016,
-            "CFG_C_BUTTON_COLOR": 0x001C,
-            "CFG_TEXT_CURSOR_COLOR": 0x0022,
-            "CFG_SHOP_CURSOR_COLOR": 0x0028,
-            "CFG_A_NOTE_COLOR": 0x002E,
-            "CFG_C_NOTE_COLOR": 0x0034,
-            "CFG_DISPLAY_DPAD": 0x003A,
-            "CFG_RAINBOW_SWORD_INNER_ENABLED": 0x003B,
-            "CFG_RAINBOW_SWORD_OUTER_ENABLED": 0x003C,
-        }
-    },
-    0x1F073FD8: {
-        "patches": [
-            patch_dpad,
-            patch_navi_colors,
-            patch_sword_trails,
-            patch_heart_colors,
-            patch_magic_colors,
-            patch_button_colors,
-            patch_boomerang_trails,
-            patch_bombchu_trails,
-        ],
-        "symbols": {
-            "CFG_MAGIC_COLOR": 0x0004,
-            "CFG_HEART_COLOR": 0x000A,
-            "CFG_A_BUTTON_COLOR": 0x0010,
-            "CFG_B_BUTTON_COLOR": 0x0016,
-            "CFG_C_BUTTON_COLOR": 0x001C,
-            "CFG_TEXT_CURSOR_COLOR": 0x0022,
-            "CFG_SHOP_CURSOR_COLOR": 0x0028,
-            "CFG_A_NOTE_COLOR": 0x002E,
-            "CFG_C_NOTE_COLOR": 0x0034,
-            "CFG_BOOM_TRAIL_INNER_COLOR": 0x003A,
-            "CFG_BOOM_TRAIL_OUTER_COLOR": 0x003D,
-            "CFG_BOMBCHU_TRAIL_INNER_COLOR": 0x0040,
-            "CFG_BOMBCHU_TRAIL_OUTER_COLOR": 0x0043,
-            "CFG_DISPLAY_DPAD": 0x0046,
-            "CFG_RAINBOW_SWORD_INNER_ENABLED": 0x0047,
-            "CFG_RAINBOW_SWORD_OUTER_ENABLED": 0x0048,
-            "CFG_RAINBOW_BOOM_TRAIL_INNER_ENABLED": 0x0049,
-            "CFG_RAINBOW_BOOM_TRAIL_OUTER_ENABLED": 0x004A,
-            "CFG_RAINBOW_BOMBCHU_TRAIL_INNER_ENABLED": 0x004B,
-            "CFG_RAINBOW_BOMBCHU_TRAIL_OUTER_ENABLED": 0x004C,
-            "CFG_RAINBOW_NAVI_IDLE_INNER_ENABLED": 0x004D,
-            "CFG_RAINBOW_NAVI_IDLE_OUTER_ENABLED": 0x004E,
-            "CFG_RAINBOW_NAVI_ENEMY_INNER_ENABLED": 0x004F,
-            "CFG_RAINBOW_NAVI_ENEMY_OUTER_ENABLED": 0x0050,
-            "CFG_RAINBOW_NAVI_NPC_INNER_ENABLED": 0x0051,
-            "CFG_RAINBOW_NAVI_NPC_OUTER_ENABLED": 0x0052,
-            "CFG_RAINBOW_NAVI_PROP_INNER_ENABLED": 0x0053,
-            "CFG_RAINBOW_NAVI_PROP_OUTER_ENABLED": 0x0054,
-        }
-    },
+}
+
+# 3.14.11
+patch_sets[0x1F05D3F9] = {
+    "patches": patch_sets[0x1F04FA62]["patches"] + [],
+    "symbols": {**patch_sets[0x1F04FA62]["symbols"]},
+}
+
+# 4.5.7
+patch_sets[0x1F0693FB] = {
+    "patches": patch_sets[0x1F05D3F9]["patches"] + [
+        patch_heart_colors,
+        patch_magic_colors,
+    ],
+    "symbols": {
+        "CFG_MAGIC_COLOR": 0x0004,
+        "CFG_HEART_COLOR": 0x000A,
+        "CFG_DISPLAY_DPAD": 0x0010,
+        "CFG_RAINBOW_SWORD_INNER_ENABLED": 0x0011,
+        "CFG_RAINBOW_SWORD_OUTER_ENABLED": 0x0012,
+    }
+}
+
+# 5.2.6
+patch_sets[0x1F073FC9] = {
+    "patches": patch_sets[0x1F0693FB]["patches"] + [
+        patch_button_colors,
+    ],
+    "symbols": {
+        "CFG_MAGIC_COLOR": 0x0004,
+        "CFG_HEART_COLOR": 0x000A,
+        "CFG_A_BUTTON_COLOR": 0x0010,
+        "CFG_B_BUTTON_COLOR": 0x0016,
+        "CFG_C_BUTTON_COLOR": 0x001C,
+        "CFG_TEXT_CURSOR_COLOR": 0x0022,
+        "CFG_SHOP_CURSOR_COLOR": 0x0028,
+        "CFG_A_NOTE_COLOR": 0x002E,
+        "CFG_C_NOTE_COLOR": 0x0034,
+        "CFG_DISPLAY_DPAD": 0x003A,
+        "CFG_RAINBOW_SWORD_INNER_ENABLED": 0x003B,
+        "CFG_RAINBOW_SWORD_OUTER_ENABLED": 0x003C,
+    }
+}
+
+# 5.2.76
+patch_sets[0x1F073FD8] = {
+    "patches": patch_sets[0x1F073FC9]["patches"] + [
+        patch_navi_colors,
+        patch_boomerang_trails,
+        patch_bombchu_trails,
+    ],
+    "symbols": {
+        **patch_sets[0x1F073FC9]["symbols"],
+        "CFG_BOOM_TRAIL_INNER_COLOR": 0x003A,
+        "CFG_BOOM_TRAIL_OUTER_COLOR": 0x003D,
+        "CFG_BOMBCHU_TRAIL_INNER_COLOR": 0x0040,
+        "CFG_BOMBCHU_TRAIL_OUTER_COLOR": 0x0043,
+        "CFG_DISPLAY_DPAD": 0x0046,
+        "CFG_RAINBOW_SWORD_INNER_ENABLED": 0x0047,
+        "CFG_RAINBOW_SWORD_OUTER_ENABLED": 0x0048,
+        "CFG_RAINBOW_BOOM_TRAIL_INNER_ENABLED": 0x0049,
+        "CFG_RAINBOW_BOOM_TRAIL_OUTER_ENABLED": 0x004A,
+        "CFG_RAINBOW_BOMBCHU_TRAIL_INNER_ENABLED": 0x004B,
+        "CFG_RAINBOW_BOMBCHU_TRAIL_OUTER_ENABLED": 0x004C,
+        "CFG_RAINBOW_NAVI_IDLE_INNER_ENABLED": 0x004D,
+        "CFG_RAINBOW_NAVI_IDLE_OUTER_ENABLED": 0x004E,
+        "CFG_RAINBOW_NAVI_ENEMY_INNER_ENABLED": 0x004F,
+        "CFG_RAINBOW_NAVI_ENEMY_OUTER_ENABLED": 0x0050,
+        "CFG_RAINBOW_NAVI_NPC_INNER_ENABLED": 0x0051,
+        "CFG_RAINBOW_NAVI_NPC_OUTER_ENABLED": 0x0052,
+        "CFG_RAINBOW_NAVI_PROP_INNER_ENABLED": 0x0053,
+        "CFG_RAINBOW_NAVI_PROP_OUTER_ENABLED": 0x0054,
+    }
 }
 
 
@@ -945,6 +980,7 @@ def patch_cosmetics(settings, rom):
     log = CosmeticsLog(settings)
 
     # try to detect the cosmetic patch data format
+    cosmetic_version = None
     versioned_patch_set = None
     cosmetic_context = rom.read_int32(rom.sym('RANDO_CONTEXT') + 4)
     if cosmetic_context >= 0x80000000 and cosmetic_context <= 0x80F7FFFC:

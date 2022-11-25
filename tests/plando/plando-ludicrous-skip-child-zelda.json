@@ -1,6 +1,9 @@
 {
   "settings": {
     "item_pool_value": "ludicrous",
-    "skip_child_zelda": true
+    "shuffle_child_trade": [],
+    "starting_items": [
+      "zeldas_letter"
+    ]
   }
 }
